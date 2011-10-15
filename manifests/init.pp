@@ -49,6 +49,8 @@ class jenkins::repo {
                       File["/etc/apt/sources.list.d/jenkins.list"],
                       File["/root/jenkins-ci.org.key"],
                       ],
+          # Don't install the key unless it's not already installed
+          unless  => "/usr/bin/apt-key list | grep 'D50582E6'",
           command => "/usr/bin/apt-key add /root/jenkins-ci.org.key";
   }
 }
