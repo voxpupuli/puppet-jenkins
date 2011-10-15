@@ -69,7 +69,7 @@ define install-jenkins-plugin($name, $version=0) {
   if (!defined(File["${plugin_dir}"])) {
     file {
       "${plugin_dir}" :
-        ensure => present;
+        ensure => directory;
     }
   }
 
