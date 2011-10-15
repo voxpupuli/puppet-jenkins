@@ -56,22 +56,25 @@ class jenkins::repo {
 }
 
 define install-jenkins-plugin($name, $version=0) {
-  $base_url   = "http://updates.jenkins-ci.org/latest/"
-
   $plugin     = "${name}.hpi"
   $plugin_dir = "/var/lib/jenkins/plugins"
 
   if ($version != 0) {
     $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
   }
+  else {
+    $base_url   = "http://updates.jenkins-ci.org/latest/"
+  }
 
-  file {
-    "${plugin_dir}" :
-      ensure => directory;
+  if (!defined(File["${plugin_dir}"])) {
+    file {
+      "${plugin_dir}" :
+        ensure => present;
+    }
   }
 
   exec {
-    "download-plugin" :
+    "download-${name}" :
       command  => "wget --no-check-certificate ${base_url}${plugin}",
       cwd      => "${plugin_dir}",
       require  => File["${plugin_dir}"],
