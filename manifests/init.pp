@@ -52,3 +52,30 @@ class jenkins::repo {
           command => "/usr/bin/apt-key add /root/jenkins-ci.org.key";
   }
 }
+
+define install-jenkins-plugin($name, $version=0) {
+  $base_url   = "http://updates.jenkins-ci.org/latest/"
+
+  $plugin     = "${name}.hpi"
+  $plugin_dir = "/var/lib/jenkins/plugins"
+
+  if ($version != 0) {
+    $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
+  }
+
+  file {
+    "${plugin_dir}" :
+      ensure => directory;
+  }
+
+  exec {
+    "download-plugin" :
+      command  => "wget --no-check-certificate ${base_url}${plugin}",
+      cwd      => "${plugin_dir}",
+      require  => File["${plugin_dir}"],
+      path     => ["/usr/bin", "/usr/sbin",],
+      unless   => "test -f ${plugin_dir}/${plugin}",
+  }
+}
+
+# vim: ts=2 et sw=2 autoindent
