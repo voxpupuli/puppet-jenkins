@@ -69,7 +69,15 @@ define install-jenkins-plugin($name, $version=0) {
   if (!defined(File["${plugin_dir}"])) {
     file {
       "${plugin_dir}" :
+        owner  => "jenkins",
         ensure => directory;
+    }
+  }
+
+  if (!defined(User["jenkins"])) {
+    user {
+      "jenkins" :
+        ensure => present;
     }
   }
 
@@ -79,7 +87,8 @@ define install-jenkins-plugin($name, $version=0) {
       cwd      => "${plugin_dir}",
       require  => File["${plugin_dir}"],
       path     => ["/usr/bin", "/usr/sbin",],
-      unless   => "test -f ${plugin_dir}/${plugin}",
+      user     => "jenkins",
+      unless   => "test -f ${plugin_dir}/${plugin}";
   }
 }
 
