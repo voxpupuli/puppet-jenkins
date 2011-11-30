@@ -6,6 +6,12 @@ class jenkins {
   Class["jenkins::repo"] -> Class["jenkins::package"] -> Class["jenkins::service"]
 }
 
+class jenkins::git {
+  install-jenkins-plugin { "git-plugin" :
+    name => "git";
+  }
+}
+
 class jenkins::service {
   case $::operatingsystem {
     centos, redhat, oel: {
