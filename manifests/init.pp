@@ -14,6 +14,37 @@ class jenkins::package {
 }
 
 class jenkins::repo {
+  # JJM These anchors work around #8040
+  anchor { 'jenkins::repo::alpha': }
+  anchor { 'jenkins::repo::omega': }
+  case $operatingsystem {
+    centos, redhat, oel: {
+      class { 'jenkins::repo::el':
+        require => Anchor['jenkins::repo::alpha'],
+        before  => Anchor['jenkins::repo::omega'],
+      }
+    }
+    default: {
+      class { 'jenkins::repo::debian':
+        require => Anchor['jenkins::repo::alpha'],
+        before  => Anchor['jenkins::repo::omega'],
+      }
+    }
+  }
+}
+
+class jenkins::repo::el {
+  File {
+    owner => 0,
+    group => 0,
+    mode  => 0644,
+  }
+  file { '/etc/yum.repos.d/jenkins.repo':
+    content => template("${module_name}/jenkins.repo"),
+  }
+}
+
+class jenkins::repo::debian {
   file {
       "/etc/apt/sources.list.d" :
           ensure => directory;
