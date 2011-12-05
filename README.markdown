@@ -59,4 +59,9 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
             version => "1.1.11";
     }
 
+# Puppet Module Tool
+
+This module is compatible with the puppet module tool.  To build a package file
+of this module, please use the `rake build` task.  The resulting package file
+may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
 
