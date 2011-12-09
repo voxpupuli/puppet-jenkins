@@ -1,9 +1,30 @@
-
 class jenkins {
   include jenkins::repo
   include jenkins::package
+  include jenkins::service
 
-  Class["jenkins::repo"] -> Class["jenkins::package"]
+  Class["jenkins::repo"] -> Class["jenkins::package"] -> Class["jenkins::service"]
+}
+
+class jenkins::git {
+  install-jenkins-plugin { "git-plugin" :
+    name => "git";
+  }
+}
+
+class jenkins::service {
+  case $::operatingsystem {
+    centos, redhat, oel: {
+      service { 'jenkins':
+        ensure     => running,
+        enable     => true,
+        hasstatus  => true,
+        hasrestart => true,
+      }
+    }
+    # Stay as a no-op to preserve previous behavior
+    default: { }
+  }
 }
 
 class jenkins::package {
@@ -14,6 +35,45 @@ class jenkins::package {
 }
 
 class jenkins::repo {
+  # JJM These anchors work around #8040
+  anchor { 'jenkins::repo::alpha': }
+  anchor { 'jenkins::repo::omega': }
+  case $operatingsystem {
+    centos, redhat, oel: {
+      class { 'jenkins::repo::el':
+        require => Anchor['jenkins::repo::alpha'],
+        before  => Anchor['jenkins::repo::omega'],
+      }
+    }
+    default: {
+      class { 'jenkins::repo::debian':
+        require => Anchor['jenkins::repo::alpha'],
+        before  => Anchor['jenkins::repo::omega'],
+      }
+    }
+  }
+}
+
+class jenkins::repo::el {
+  File {
+    owner => 0,
+    group => 0,
+    mode  => 0644,
+  }
+  file { '/etc/yum.repos.d/jenkins.repo':
+    content => template("${module_name}/jenkins.repo"),
+  }
+  file { '/etc/yum/jenkins-ci.org.key':
+    content => template("${module_name}/jenkins-ci.org.key"),
+  }
+  exec { 'rpm --import /etc/yum/jenkins-ci.org.key':
+    path    => "/bin:/usr/bin",
+    require => File['/etc/yum/jenkins-ci.org.key'],
+    unless  => "rpm -q gpg-pubkey-d50582e6-4a3feef6",
+  }
+}
+
+class jenkins::repo::debian {
   file {
       "/etc/apt/sources.list.d" :
           ensure => directory;
