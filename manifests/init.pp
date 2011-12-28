@@ -117,6 +117,7 @@ class jenkins::repo::debian {
 
 define install-jenkins-plugin($name, $version=0) {
   $plugin     = "${name}.hpi"
+  $plugin_parent_dir = "/var/lib/jenkins"
   $plugin_dir = "/var/lib/jenkins/plugins"
 
   if ($version != 0) {
@@ -128,7 +129,7 @@ define install-jenkins-plugin($name, $version=0) {
 
   if (!defined(File["${plugin_dir}"])) {
     file {
-      "${plugin_dir}" :
+      [$plugin_parent_dir, $plugin_dir]:
         owner  => "jenkins",
         ensure => directory;
     }
