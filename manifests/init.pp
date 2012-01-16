@@ -8,7 +8,7 @@ class jenkins {
   define plugin($version=0) {
     install-jenkins-plugin {
       $name :
-        version : $version;
+        version => $version;
     }
   }
 }
