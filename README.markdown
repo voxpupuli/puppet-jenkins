@@ -11,7 +11,14 @@ Git, puppet tree:
     % git submodule add git://github.com/rtyler/puppet-jenkins.git modules/jenkins
     % git submodule update --init
 
-That should be all you need
+
+### Dependencies
+
+The dependencies for this module currently are:
+
+* [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
+
+
 
 ### Depending on Jenkins
 
