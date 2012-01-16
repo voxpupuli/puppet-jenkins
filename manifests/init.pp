@@ -7,8 +7,8 @@ class jenkins {
 }
 
 class jenkins::git {
-  install-jenkins-plugin { "git-plugin" :
-    name => "git";
+  install-jenkins-plugin {
+    'git' : ;
   }
 }
 
@@ -115,7 +115,7 @@ class jenkins::repo::debian {
   }
 }
 
-define install-jenkins-plugin($name, $version=0) {
+define install-jenkins-plugin($version=0) {
   $plugin     = "${name}.hpi"
   $plugin_parent_dir = "/var/lib/jenkins"
   $plugin_dir = "/var/lib/jenkins/plugins"
