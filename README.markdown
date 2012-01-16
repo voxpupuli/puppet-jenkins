@@ -49,9 +49,8 @@ site](http://updates.jenkins-ci.org/download/plugins)
 By default, the resource will install the latest plugin, i.e.:
 
 
-    install-jenkins-plugin {
-        "git-plugin" :
-            name => "git";
+    jenkins::plugin {
+      "git" : ;
     }
 
 
@@ -60,10 +59,9 @@ By default, the resource will install the latest plugin, i.e.:
 
 If you need to peg a specific version, simply specify that as a string, i.e.:
 
-    install-jenkins-plugin {
-        "git-plugin" :
-            name    => "git,
-            version => "1.1.11";
+    jenkins::plugin {
+      "git" :
+        version => "1.1.11";
     }
 
 # Puppet Module Tool
