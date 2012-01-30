@@ -9,6 +9,10 @@ class jenkins::repo {
         before  => Anchor['jenkins::repo::omega'],
       }
     }
+    opensuse: {
+      # XXX: Need to figure out how to set up the zypper repo for openSUSE
+    }
+
     default: {
       class { 'jenkins::repo::debian':
         require => Anchor['jenkins::repo::alpha'],
