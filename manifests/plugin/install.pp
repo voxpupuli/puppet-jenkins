@@ -14,6 +14,7 @@ define jenkins::plugin::install($version=0) {
     file {
       [$plugin_parent_dir, $plugin_dir]:
         owner  => "jenkins",
+        group  => "jenkins",
         ensure => directory;
     }
   }
