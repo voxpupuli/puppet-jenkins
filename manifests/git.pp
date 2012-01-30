@@ -1,6 +1,4 @@
 class jenkins::git {
-  jenkins::plugin { "git-plugin" :
-    name => "git";
-  }
+  jenkins::plugin { "git" : }
 }
 
