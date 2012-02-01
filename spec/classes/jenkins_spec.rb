@@ -31,11 +31,3 @@ describe 'jenkins' do
     end
   end
 end
-
-describe 'jenkins::git' do
-  # The jenkins::git class also needs the jenkins class in the catalog
-  let(:pre_condition) { 'include jenkins' }
-
-  it { should contain_class 'jenkins::git' }
-  it { should contain_resource 'Install-jenkins-plugin[git-plugin]' }
-end
