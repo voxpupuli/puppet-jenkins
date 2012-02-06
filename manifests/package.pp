@@ -1,6 +1,6 @@
 class jenkins::package {
   package {
-    "jenkins" :
+    'jenkins' :
       ensure => installed;
   }
 }
