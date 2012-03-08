@@ -22,6 +22,24 @@ describe 'jenkins' do
   end
 
   deb_operatingsystems.each do |os|
+    let :pre_condition do
+      " define apt::source (
+          $location          = '',
+          $release           = $lsbdistcodename,
+          $repos             = 'main',
+          $include_src       = true,
+          $required_packages = false,
+          $key               = false,
+          $key_server        = 'keyserver.ubuntu.com',
+          $key_content       = false,
+          $key_source        = false,
+          $pin               = false
+        ) {
+          notify { 'mock apt::source $title':; }
+        }
+      "
+    end
+
     describe "on #{os}" do
       let(:facts) do
         { 'operatingsystem' => os }
