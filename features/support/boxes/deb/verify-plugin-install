@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+if ARGV.first.nil?
+  puts "I need a plugin name stupid"
+  exit 1
+end
+
+unless File.exists? "/var/lib/jenkins/plugins/#{ARGV.first}.hpi"
+  puts "#{ARGV.first}.hpi does not exist"
+  exit 1
+end
+
+exit 0

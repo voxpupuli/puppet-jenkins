@@ -8,5 +8,6 @@ group :development do
   gem 'rspec'
   gem 'rspec-puppet'
   gem 'vagrant'
+  gem 'sahara'
   gem 'cucumber'
 end

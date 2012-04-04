@@ -12,11 +12,21 @@ Feature: Support adding Jenkins via Puppet on Debian machines
   Scenario: Install Jenkins via Puppet
     Given the manifest:
       """
-        node default {
-          # This sucks
-          group { 'puppet' : ensure => present ; }
-          include jenkins
+        include jenkins
+      """
+    When I provision the machine
+    Then I should have Jenkins installed
+
+  Scenario: Install the git plugin
+    Given the manifest:
+      """
+        include jenkins
+        jenkins::plugin {
+          'git' :
+            ensure  => present,
+            require => Class['jenkins'];
         }
       """
     When I provision the machine
     Then I should have Jenkins installed
+    And I should have the "git" plugin installed

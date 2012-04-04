@@ -4,10 +4,17 @@ require 'vagrant'
 
 Given /^I have a running Ubuntu VM$/ do
   puts "Bringing up VM, this may take a while"
+  $stdout.flush
   @vagrant_root = File.join(@project_root, 'features', 'support', 'boxes', 'deb')
-  File.exists?(File.join(@vagrant_root, '/Vagrantfile')).should == true
-  @vagrant = Vagrant::Environment.new(:cwd => @vagrant_root)
-  @vagrant.cli('up', '--no-provision')
+  @pwd = Dir.pwd
+  File.exists?(File.join(@vagrant_root, 'Vagrantfile')).should == true
+  if $vagrant.nil?
+    $vagrant = Vagrant::Environment.new(:cwd => @vagrant_root)
+    $vagrant.cli('up', '--no-provision')
+    invoke_sandbox_command(@vagrant_root, 'on')
+  else
+    invoke_sandbox_command(@vagrant_root, 'rollback')
+  end
 end
 
 Given /^I have Puppet installed$/ do
@@ -33,6 +40,13 @@ Given /^the manifest:$/ do |manifest|
     File.unlink(@manifest_path)
   end
 
+  manifest = <<END
+node default {
+  group { 'puppet' : ensure => present; }
+  #{manifest}
+}
+END
+
   File.open(@manifest_path, 'w') do |f|
     f.write(manifest)
   end
@@ -44,4 +58,8 @@ end
 
 Then /^I should have Jenkins installed$/ do
   run_command('/vagrant/verify-jenkins-install')
+end
+
+Then /^I should have the "([^"]*)" plugin installed$/ do |plugin_name|
+  run_command("/vagrant/verify-plugin-install #{plugin_name}")
 end

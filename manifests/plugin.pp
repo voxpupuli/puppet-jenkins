@@ -13,9 +13,17 @@ define jenkins::plugin($version=0) {
   if (!defined(File["${plugin_dir}"])) {
     file {
       [$plugin_parent_dir, $plugin_dir]:
-        owner  => "jenkins",
-        group  => "jenkins",
-        ensure => directory;
+        owner   => "jenkins",
+        group   => "jenkins",
+        ensure  => directory,
+        require => [Group['jenkins'], User['jenkins']];
+    }
+  }
+
+  if (!defined(Group['jenkins'])) {
+    group {
+      'jenkins' :
+        ensure => present;
     }
   }
 
