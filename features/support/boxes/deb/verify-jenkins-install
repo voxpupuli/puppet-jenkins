@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+
+unless File.exists? '/etc/init.d/jenkins'
+  puts 'Jenkins start/stop script does not exist'
+  exit 1
+end
+
+unless File.exists? '/var/lib/jenkins'
+  puts 'Jenkins home directory does not exist'
+  exit 1
+end
+
+exit 0
