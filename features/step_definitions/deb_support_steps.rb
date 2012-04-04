@@ -15,8 +15,8 @@ Given /^I have Puppet installed$/ do
 end
 
 Given /^the Jenkins module is on the machine$/ do
-  tarball = Dir['pkg/rtyler-jenkins*.tar.gz'].last
-  package_path = File.join(@project_root, tarball)
+  tarball = Dir['pkg/rtyler-jenkins*.tar.gz'].last.gsub('pkg/', '')
+  package_path = File.join(@project_root, 'pkg', tarball)
   FileUtils.cp(package_path, @vagrant_root)
 
   puts 'Installing module pre-requisites'
