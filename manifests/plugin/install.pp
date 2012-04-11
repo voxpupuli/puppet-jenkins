@@ -19,10 +19,17 @@ define jenkins::plugin::install($version=0) {
     }
   }
 
+  if (!defined(Group['jenkins'])) {
+    group {
+      'jenkins' :
+        ensure => present;
+    }
+  }
   if (!defined(User['jenkins'])) {
     user {
       'jenkins' :
-        ensure => present;
+        ensure => present,
+        gid    => 'jenkins';
     }
   }
 
