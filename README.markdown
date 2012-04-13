@@ -17,7 +17,7 @@ Git, puppet tree:
 The dependencies for this module currently are:
 
 * [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
-* [apt module](https://github.com/puppetlabs/puppet-apt) (for Debian/Ubuntu users) (*note:* this isn't on the [forge](http://forge.puppetlabs.com) which is silly and may break the dependency in the `Modulefile`)
+* [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
 
 
 
