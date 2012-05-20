@@ -9,6 +9,7 @@ group :development do
   gem 'puppet-lint'
   gem 'rspec'
   gem 'rspec-puppet'
+  gem 'blimpy', '~> 0.3'
   gem 'sahara'
   gem 'vagrant'
 end

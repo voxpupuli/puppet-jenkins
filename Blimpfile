@@ -1,0 +1,11 @@
+# vim: ft=ruby
+# Blimpfile created on 2012-05-20 12:26:38 -0700
+
+Blimpy.fleet do |fleet|
+  fleet.add(:aws) do |ship|
+    ship.name = 'puppet-jenkins'
+    ship.group = 'default'
+    ship.livery = :cwd
+    ship.flavor = 'm1.small'
+  end
+end
