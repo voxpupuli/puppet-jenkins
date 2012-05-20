@@ -17,8 +17,8 @@ end
 
 desc "Check puppet manifests with puppet-lint"
 task :lint do
-  system("puppet-lint manifests")
-  system("puppet-lint tests")
+  sh 'puppet-lint manifests'
+  sh 'puppet-lint tests'
 end
 
 desc "Build package"
