@@ -15,6 +15,12 @@ RSpec::Core::RakeTask.new(:spec_task) do |t|
   t.fail_on_error = false
 end
 
+desc "Check puppet manifests with puppet-lint"
+task :lint do
+  system("puppet-lint manifests")
+  system("puppet-lint tests")
+end
+
 desc "Build package"
 task :build do
   sh 'puppet-module build'
@@ -23,7 +29,7 @@ end
 
 namespace :test do
   desc "Run the full integration test suite (slow!)"
-  task :integration => [:spec, :build, :cucumber] do
+  task :integration => [:lint, :spec, :build, :cucumber] do
   end
 
   desc "Make sure some of the rspec-puppet directories/files are in place"
