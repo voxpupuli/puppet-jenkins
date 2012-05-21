@@ -4,7 +4,7 @@
 Blimpy.fleet do |fleet|
   fleet.add(:aws) do |ship|
     ship.name = 'puppet-jenkins'
-    ship.group = 'default'
+    ship.ports = [22, 8080]
     ship.livery = :cwd
     ship.flavor = 'm1.small'
   end
