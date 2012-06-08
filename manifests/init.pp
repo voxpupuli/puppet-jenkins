@@ -1,11 +1,14 @@
-class jenkins {
+class jenkins($version = 'installed') {
   package {
     'jre':
         ensure => '1.7.0',
         noop   => true
   }
   include jenkins::repo
-  include jenkins::package
+  class {
+    'jenkins::package':
+      version => $version,
+  }
   include jenkins::service
   include jenkins::firewall
 

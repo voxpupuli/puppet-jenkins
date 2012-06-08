@@ -1,7 +1,7 @@
-class jenkins::package {
+class jenkins::package($version = 'installed') {
   package {
     'jenkins' :
-      ensure => installed;
+      ensure => $version;
   }
 }
 
