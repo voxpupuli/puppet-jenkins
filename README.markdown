@@ -83,7 +83,9 @@ To quickly try this module with the puppet module tool:
     info: Loading facts in facter_dot_d
     info: Loading facts in facter_dot_d
     info: Applying configuration version '1323459431'
-    notice: /Stage[main]/Jenkins::Repo::El/File[/etc/yum.repos.d/jenkins.repo]/ensure: defined content as '{md5}0a907e1f316e481ab145edaa6ba66d39'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/descr: descr changed '' to 'Jenkins'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/baseurl: baseurl changed '' to 'http://pkg.jenkins-ci.org/redhat/'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/gpgcheck: gpgcheck changed '' to '1'
     notice: /Stage[main]/Jenkins::Repo::El/File[/etc/yum/jenkins-ci.org.key]/ensure: defined content as '{md5}9fa06089848262c5a6383ec27fdd2575'
     notice: /Stage[main]/Jenkins::Repo::El/Exec[rpm --import /etc/yum/jenkins-ci.org.key]/returns: executed successfully
     notice: /Stage[main]/Jenkins::Package/Package[jenkins]/ensure: created

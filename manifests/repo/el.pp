@@ -4,8 +4,10 @@ class jenkins::repo::el {
     group => 'root',
     mode  => 0644,
   }
-  file { '/etc/yum.repos.d/jenkins.repo':
-    content => template("${module_name}/jenkins.repo"),
+  yumrepo {'jenkins':
+    descr    => 'Jenkins',
+    baseurl  => 'http://pkg.jenkins-ci.org/redhat/',
+    gpgcheck => 1,
   }
   file { '/etc/yum/jenkins-ci.org.key':
     content => template("${module_name}/jenkins-ci.org.key"),
