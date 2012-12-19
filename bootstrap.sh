@@ -14,7 +14,7 @@ if [ $? -ne 0 ]; then
                     libopenssl-ruby1.8 \
                     rubygems
 
-    gem install puppet --no-ri --no-rdoc
+    gem install puppet --version "~> 2.7" --no-ri --no-rdoc
 fi
 
 
