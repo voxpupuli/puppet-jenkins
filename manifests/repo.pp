@@ -3,7 +3,6 @@ class jenkins::repo ( $lts = 0, $repo = 1 )
   # JJM These anchors work around #8040
   anchor { 'jenkins::repo::alpha': }
   anchor { 'jenkins::repo::omega': }
-  notify {"Repos with \$lts ${lts} .  \$repo ${repo} ":}
   
   if $repo == 1 {
 	  case $::osfamily {
