@@ -11,7 +11,7 @@
 
 
 class jenkins($version = 'installed', $lts=0, $repo=1) {
-  
+
   class { 
 	  'jenkins::repo':
 	  		lts  => $lts,
