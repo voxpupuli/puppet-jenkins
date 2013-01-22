@@ -5,3 +5,4 @@ class jenkins::package($version = 'installed') {
   }
 }
 
+# Note:  Jenkins should install java, but it doesn't.  You may have to do it on your own.
