@@ -70,11 +70,11 @@ class jenkins::slave (
   
   
   if $ui_user { 
-    $ui_user_flag = "-user $ui_user" 
+    $ui_user_flag = "-username $ui_user" 
   }
   
   if $ui_pass { 
-    $ui_pass_flag = "-user $ui_pass" 
+    $ui_pass_flag = "-password $ui_pass" 
   }
   
   if $masterurl { 
