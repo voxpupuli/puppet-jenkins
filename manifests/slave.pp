@@ -86,7 +86,7 @@ class jenkins::slave (
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
     user => $slave_user,
     #refreshonly => true,
-    onlyif => "pgrep -f -u $slave_user  $client_jar",
+    unless => "pgrep -f -u $slave_user  $client_jar",
     ## needs to be fixed if you create another version..
   }
  
