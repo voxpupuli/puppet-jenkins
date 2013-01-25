@@ -94,6 +94,31 @@ To quickly try this module with the puppet module tool:
 
 Then the service should be running at [http://my.host.name:8080/](http://my.host.name:8080/).
 
+
+## Slaves
+
+An example:
+
+    node /jenkins-slave.*/ {
+      class { 'jenkins::slave':
+        ensure => 'enabled',
+        masterurl => 'http://jenkins-master1.domain.com:8080',
+        ui_user => 'adminuser',
+        ui_pass => 'adminpass',
+      }
+    }
+    
+    node /jenkins-master.*/ {
+        include jenkins
+        jenkins::plugin {'swarm':}
+        
+    }
+
+Some notes:
+- The slaves are installed through ssh, with the provided ssh keys, you can change them (or improve the way they are used :) )
+- It uses the web ui as anonymous to check if the slave is running, if it has no acces it will not able to tell if it's online or offline, and it will assume that it's offline each time.
+
+
 # RSpec Testing
 
 This module has behavior tests written using [RSpec
