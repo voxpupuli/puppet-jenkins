@@ -10,7 +10,7 @@ class jenkins::slave (
   $version = '1.8',
   $executors = 2,
   $manage_slave_user = 1,
-  $slave_user = 'jenkins_slave',
+  $slave_user = 'jenkins-slave',
   $slave_uid = undef,
   $slave_home = undef,
   )
@@ -61,7 +61,7 @@ class jenkins::slave (
   exec { 'get_swarm_client':
     command => "wget -O $slave_home/$client_jar $client_url ",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
-    user => 'jenkins-slave',
+    user => "$slave_user",
     #refreshonly => true,
     creates => "$slave_home/$client_jar"
     ## needs to be fixed if you create another version..
@@ -82,11 +82,11 @@ class jenkins::slave (
   }
   
   exec { 'run_swarm_client':
-    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &",
+    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag & > /tmp/java.log",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
-    user => 'jenkins-slave',
+    user => $slave_user,
     #refreshonly => true,
-    onlyif => "pgrep -f -u jenkins-slave $client_jar",
+    onlyif => "pgrep -f -u $slave_user  $client_jar",
     ## needs to be fixed if you create another version..
   }
  
