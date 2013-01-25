@@ -59,7 +59,7 @@ class jenkins::slave (
   }
 
   exec { 'get_swarm_client':
-    command => "wget -O $slave_home/$client_jar $client_url ",
+    command => "wget -O $slave_home/$client_jar $client_url/$client_jar",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
     user => "$slave_user",
     #refreshonly => true,
@@ -82,7 +82,7 @@ class jenkins::slave (
   }
   
   exec { 'run_swarm_client':
-    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag & > /tmp/java.log",
+    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
     user => $slave_user,
     #refreshonly => true,
