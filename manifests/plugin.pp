@@ -24,7 +24,7 @@ define jenkins::plugin($version=0) {
     group {
       'jenkins' :
         ensure => present;
-    }
+    } 
   }
 
   if (!defined(User['jenkins'])) {
@@ -36,12 +36,18 @@ define jenkins::plugin($version=0) {
 
   exec {
     "download-${name}" :
-      command  => "wget --no-check-certificate ${base_url}${plugin}",
-      cwd      => $plugin_dir,
-      require  => File[$plugin_dir],
-      path     => ['/usr/bin', '/usr/sbin',],
-      user     => 'jenkins',
-      unless   => "test -f ${plugin_dir}/${plugin}",
-      notify   => Service['jenkins'];
+      command    => "wget --no-check-certificate ${base_url}${plugin}",
+      cwd        => $plugin_dir,
+      require    => File[$plugin_dir],
+      path       => ['/usr/bin', '/usr/sbin',],
+      unless     => "test -f ${plugin_dir}/${plugin}",
+  }
+
+  file {
+    "$plugin_dir/$plugin" :
+      require => Exec["download-${name}"],
+      owner   => 'jenkins',
+      mode    => 644,
+      notify  => Service['jenkins']
   }
 }
