@@ -81,8 +81,16 @@ class jenkins::slave (
     $masterurl_flag = "-master $masterurl" 
   }
   
+  file { "$slave_home/swarm.sh":
+    ensure => file,
+    content => "#!/bin/bash \njava -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag\n",
+    mode => 755,
+    owner => $slave_user,
+    
+  }
+  
   exec { 'run_swarm_client':
-    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &",
+    command => "/bin/bash -c $slave_home/swarm.sh &",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
     user => $slave_user,
     #refreshonly => true,
@@ -91,6 +99,6 @@ class jenkins::slave (
   }
  
   
-  Package["$java_package"] -> Exec['get_swarm_client'] -> Exec['run_swarm_client']
+  Package["$java_package"] -> Exec['get_swarm_client'] -> File["$slave_home/swarm.sh"] -> Exec['run_swarm_client']
   
 }
