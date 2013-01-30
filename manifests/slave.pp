@@ -82,9 +82,8 @@ class jenkins::slave (
   }
   
   exec { 'run_swarm_client':
-    command => "java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &",
+    command => "su - $slave_user -c 'java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &'",
     path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
-    user => $slave_user,
     cwd => "$slave_home",
     #refreshonly => true,
     unless => "pgrep -f -u $slave_user  $client_jar",
