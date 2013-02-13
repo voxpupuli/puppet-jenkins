@@ -81,16 +81,22 @@ class jenkins::slave (
     $masterurl_flag = "-master $masterurl" 
   }
   
-  exec { 'run_swarm_client':
-    command => "su - $slave_user -c 'java -jar $slave_home/$client_jar  $ui_user_flag  $ui_pass_flag  -name $fqdn -executors $executors $masterurl_flag &'",
-    path => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
-    cwd => "$slave_home",
-    #refreshonly => true,
-    unless => "pgrep -f -u $slave_user  $client_jar",
-    ## needs to be fixed if you create another version..
+
+  file { "/etc/init.d/jenkins-slave":
+      ensure => file,
+      mode => 700,
+      user => root,
+      source => template("jenkins-slave.erb"),
+      notify => Service['jenkins-slave']
   }
  
-  
-  Package["$java_package"] -> Exec['get_swarm_client'] -> Exec['run_swarm_client']
+  service { "jenkins-slave":
+  ensure     => running,
+  enable     => true,
+  hasstatus  => true,
+  hasrestart => true,
+  }
+   
+  Package["$java_package"] -> Exec['get_swarm_client'] -> Service['jenkins-slave']
   
 }
