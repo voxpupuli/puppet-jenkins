@@ -86,7 +86,7 @@ class jenkins::slave (
       ensure => file,
       mode => 700,
       user => root,
-      source => template("jenkins-slave.erb"),
+      source => template("${module_name}/jenkins-slave.erb"),
       notify => Service['jenkins-slave']
   }
  
