@@ -13,7 +13,6 @@ RETVAL=0
 PID_FILE=/var/run/jenkins-slave.pid
 LOCK_FILE=/var/lock/jenkins-slave
 
-<%= name -%>
 slave_start() {
   echo Starting Jenkins Slave...
   runuser - <%= slave_user -%> -c 'java -jar <%= slave_home -%>/<%= client_jar -%> <%= ui_user_flag -%> <%= ui_pass_flag -%> -name <%= fqdn -%> -executors <%= executors -%> <%= masterurl_flag -%> &'
