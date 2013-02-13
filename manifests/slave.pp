@@ -85,8 +85,9 @@ class jenkins::slave (
   file { "/etc/init.d/jenkins-slave":
       ensure => file,
       mode => 700,
-      user => root,
-      source => template("${module_name}/jenkins-slave.erb"),
+      owner => root,
+      group => root,
+      content => template("${module_name}/jenkins-slave.erb"),
       notify => Service['jenkins-slave']
   }
  
