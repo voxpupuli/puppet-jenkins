@@ -12,7 +12,7 @@ class jenkins::slave (
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
-  $slave_home = undef,
+  $slave_home = "/home/$slave_user",
   )
   {
   
@@ -22,6 +22,9 @@ class jenkins::slave (
   
   case $::osfamily {
     'RedHat': {
+      $java_package = 'java-1.6.0-openjdk'
+    }
+    'Linux': {
       $java_package = 'java-1.6.0-openjdk'
     }
     'Debian': {
@@ -41,7 +44,7 @@ class jenkins::slave (
 
 	#add jenkins slave if necessary.
   
-  if $manage_slave_user == 1 {
+  if $manage_slave_user == 1 and $slave_uid {
     user { "jenkins-slave_user":
       name => "$slave_user",
       comment => "Jenkins Slave user",
@@ -50,8 +53,17 @@ class jenkins::slave (
   		managehome => true,
       uid => "$slave_uid"
   	}
-  }  
+  } 
    
+  if ($manage_slave_user == 1) and (! $slave_uid) {
+    user { "jenkins-slave_user":
+      name => "$slave_user",
+      comment => "Jenkins Slave user",
+  		home => "$slave_home",
+  		ensure => present,
+  		managehome => true,
+  	}
+  }
    
   package {   
     "$java_package" :
@@ -72,14 +84,20 @@ class jenkins::slave (
   if $ui_user { 
     $ui_user_flag = "-username $ui_user" 
   }
+  else {$ui_user_flag = ''}
+  
   
   if $ui_pass { 
     $ui_pass_flag = "-password $ui_pass" 
   }
+  else {$ui_pass_flag = ''}
+  
   
   if $masterurl { 
     $masterurl_flag = "-master $masterurl" 
   }
+  else {$masterurl_flag = ''}
+  
   
 
   file { "/etc/init.d/jenkins-slave":
