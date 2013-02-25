@@ -94,6 +94,27 @@ To quickly try this module with the puppet module tool:
 
 Then the service should be running at [http://my.host.name:8080/](http://my.host.name:8080/).
 
+
+## Slaves
+
+An example:
+
+    node /jenkins-slave.*/ {
+      class { 'jenkins::slave':
+        ensure => 'enabled',
+        masterurl => 'http://jenkins-master1.domain.com:8080',
+        ui_user => 'adminuser',
+        ui_pass => 'adminpass',
+      }
+    }
+    
+    node /jenkins-master.*/ {
+        include jenkins
+        jenkins::plugin {'swarm':}
+        
+    }
+
+
 # RSpec Testing
 
 This module has behavior tests written using [RSpec

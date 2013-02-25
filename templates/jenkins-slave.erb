@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# /etc/init.d/jenkins-slave
+# init script for Jenkins Slave Swarm Client.
+#
+# chkconfig: 2345 90 60
+# description: Jenkins Slave Swarm Client
+#
+RETVAL=0
+
+. /etc/init.d/functions
+
+PID_FILE=/var/run/jenkins-slave.pid
+LOCK_FILE=/var/lock/jenkins-slave
+
+slave_start() {
+  echo Starting Jenkins Slave...
+  runuser - <%= slave_user -%> -c 'java -jar <%= slave_home -%>/<%= client_jar -%> <%= ui_user_flag -%> <%= ui_pass_flag -%> -name <%= fqdn -%> -executors <%= executors -%> <%= masterurl_flag -%> &'
+  pgrep -f -u <%= slave_user -%> <%= client_jar -%> > $PID_FILE
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+}
+slave_stop() {
+  echo Stopping Jenkins Slave...
+  pid=`cat $PID_FILE`
+
+  killproc -p $PID_FILE 
+  
+  # Wait until the monitor exits
+  while (checkpid $pid)
+  do
+      usleep 100000
+  done
+  
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+}
+
+slave_restart() {
+  echo Restarting Jenkins Slave...
+  slave_stop
+  slave_start
+  
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+}
+slave_status() {
+  echo Jenkins Slave status:
+  status -p $PID_FILE
+  RETVAL=$?
+}
+case "$1" in
+  start)
+    slave_start
+    ;;
+  stop)
+    slave_stop
+    ;;
+  restart)
+    slave_restart
+    ;;
+  status)
+    slave_status
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit $RETVAL
