@@ -1,4 +1,5 @@
-class jenkins::repo::debian {
+class jenkins::repo::debian ( $lts=0 )
+{
 
   include 'jenkins::repo'
 
