@@ -33,8 +33,7 @@ define jenkins::plugin::install($version=0) {
     }
   }
 
-  exec {
-    "download-${name}" :
+  exec { "download-${name}" :
       command  => "wget --no-check-certificate ${base_url}${plugin}",
       cwd      => $plugin_dir,
       require  => File[$plugin_dir],
