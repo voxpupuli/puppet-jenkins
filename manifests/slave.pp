@@ -90,14 +90,6 @@ class jenkins::slave (
   } else {
     $masterurl_flag = ''
   }
-  
-  file { "/etc/init.d/jenkins-slave":
-      ensure => file,
-      mode => 700,
-      owner => root,
-      group => root,
-
-
 
   file { '/etc/init.d/jenkins-slave':
       ensure  => 'file',
