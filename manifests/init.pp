@@ -19,11 +19,37 @@
 #   config_hash => { 'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' } } 
 # }
 # 
+# plugin_hash = undef (Default)
+# Hash with config plugins to install
+#
+# Example use
+# 
+# class{ 'jenkins::plugins': 
+#   plugin_hash => { 
+#     'git' -> { version => '1.1.1' },
+#     'parameterized-trigger' => {},
+#     'multiple-scms' => {},
+#     'git-client' => {},
+#     'token-macro' => {},
+#   }
+# }
+# 
+# OR in Hiera
+# 
+# jenkins::plugin_hash:
+#    'git': 
+#       version: 1.1.1
+#    'parameterized-trigger': {}
+#    'multiple-scms': {}
+#    'git-client': {}
+#    'token-macro': {}
+#
 class jenkins(
   $version     = 'installed', 
   $lts         = 0, 
   $repo        = 1,
   $config_hash = undef,
+  $plugin_hash = undef,
 ) {
 
   class { 'jenkins::repo':
@@ -37,6 +63,10 @@ class jenkins(
 
   class { 'jenkins::config':
       config_hash => $config_hash,
+  }
+
+  class { 'jenkins::plugins':
+      plugin_hash => $plugin_hash,
   }
 
   include jenkins::service
