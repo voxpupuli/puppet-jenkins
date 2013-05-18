@@ -1,6 +1,6 @@
 class jenkins::firewall {
   if defined('::firewall') {
-    ::firewall {
+    firewall {
       '500 allow Jenkins inbound traffic':
         action => 'accept',
         state  => 'NEW',
