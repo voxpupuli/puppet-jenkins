@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem 'rake'
-gem 'puppet'
+gem 'puppet', '~> 2.7'
 gem 'puppet-module'
 
 group :development do
