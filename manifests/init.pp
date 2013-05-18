@@ -9,9 +9,48 @@
 # repo = 0
 #   Do NOT install a repo.  This means you'll manage a repo manually, outside this module.
 # This is for folks that use a custom repo, or the like.
-
-
-class jenkins($version = 'installed', $lts=0, $repo=1) {
+#
+# config_hash = undef (Default)
+# Hash with config options to set in sysconfig/jenkins defaults/jenkins
+#
+# Example use
+# 
+# class{ 'jenkins::config': 
+#   config_hash => { 'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' } } 
+# }
+# 
+# plugin_hash = undef (Default)
+# Hash with config plugins to install
+#
+# Example use
+# 
+# class{ 'jenkins::plugins': 
+#   plugin_hash => { 
+#     'git' -> { version => '1.1.1' },
+#     'parameterized-trigger' => {},
+#     'multiple-scms' => {},
+#     'git-client' => {},
+#     'token-macro' => {},
+#   }
+# }
+# 
+# OR in Hiera
+# 
+# jenkins::plugin_hash:
+#    'git': 
+#       version: 1.1.1
+#    'parameterized-trigger': {}
+#    'multiple-scms': {}
+#    'git-client': {}
+#    'token-macro': {}
+#
+class jenkins(
+  $version     = 'installed', 
+  $lts         = 0, 
+  $repo        = 1,
+  $config_hash = undef,
+  $plugin_hash = undef,
+) {
 
   class { 'jenkins::repo':
     lts  => $lts,
@@ -20,6 +59,14 @@ class jenkins($version = 'installed', $lts=0, $repo=1) {
 
   class { 'jenkins::package':
       version => $version,
+  }
+
+  class { 'jenkins::config':
+      config_hash => $config_hash,
+  }
+
+  class { 'jenkins::plugins':
+      plugin_hash => $plugin_hash,
   }
 
   include jenkins::service
