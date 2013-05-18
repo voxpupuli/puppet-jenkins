@@ -1,19 +1,9 @@
 require 'rake'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
+require 'puppetlabs_spec_helper/rake_tasks'
 
 task :default => [:spec]
-
-
-# This task is here because I can't figure out how to properly make a dependent
-# task for :spec_task
-desc "Run all module spec tests (Requires rspec-puppet gem)"
-task :spec => [:"test:check", :spec_task] do
-end
-
-RSpec::Core::RakeTask.new(:spec_task) do |t|
-  t.fail_on_error = false
-end
 
 desc "Check puppet manifests with puppet-lint"
 task :lint do
