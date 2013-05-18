@@ -7,8 +7,9 @@ task :default => [:spec]
 
 desc "Check puppet manifests with puppet-lint"
 task :lint do
-  sh 'puppet-lint manifests'
-  sh 'puppet-lint tests'
+  linter = "puppet-lint --with-filename --no-80chars-check"
+  sh "#{linter} manifests"
+  sh "#{linter} tests"
 end
 
 desc "Build package"
@@ -17,11 +18,15 @@ task :build do
 end
 
 
-namespace :test do
-  desc "Run the full integration test suite (slow!)"
-  task :integration => [:lint, :spec, :build, :cucumber] do
-  end
+Cucumber::Rake::Task.new do |t|
+  t.cucumber_opts = ['--color', '--format pretty', '--format junit -o test_reports']
+end
 
+
+desc "Run the full integration test suite (slow!)"
+task :integration => [:lint, :spec, :build, :cucumber]
+
+namespace :spec do
   desc "Make sure some of the rspec-puppet directories/files are in place"
   task :check do
     dot_puppet = File.expand_path('~/.puppet')
@@ -42,10 +47,5 @@ namespace :test do
         fd.write('')
       end
     end
-  end
-
-  Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = ['--color', '--format pretty',
-              '--format junit -o test_reports']
   end
 end
