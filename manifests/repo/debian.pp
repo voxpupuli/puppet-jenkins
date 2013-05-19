@@ -1,3 +1,5 @@
+# Class: jenkins::repo::debian
+#
 class jenkins::repo::debian ( $lts=0 )
 {
 

@@ -1,3 +1,5 @@
+# Class: jenkins::repo::el
+#
 class jenkins::repo::el ( $lts=0 )
 {
 
