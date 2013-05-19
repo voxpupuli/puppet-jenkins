@@ -17,18 +17,20 @@
 # Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
 # Example use
-# 
-# class{ 'jenkins::config': 
-#   config_hash => { 'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' } } 
+#
+# class{ 'jenkins::config':
+#   config_hash => {
+#     'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
+#   }
 # }
-# 
+#
 # plugin_hash = undef (Default)
 # Hash with config plugins to install
 #
 # Example use
-# 
-# class{ 'jenkins::plugins': 
-#   plugin_hash => { 
+#
+# class{ 'jenkins::plugins':
+#   plugin_hash => {
 #     'git' -> { version => '1.1.1' },
 #     'parameterized-trigger' => {},
 #     'multiple-scms' => {},
@@ -36,11 +38,11 @@
 #     'token-macro' => {},
 #   }
 # }
-# 
+#
 # OR in Hiera
-# 
+#
 # jenkins::plugin_hash:
-#    'git': 
+#    'git':
 #       version: 1.1.1
 #    'parameterized-trigger': {}
 #    'multiple-scms': {}
@@ -48,8 +50,8 @@
 #    'token-macro': {}
 #
 class jenkins(
-  $version     = 'installed', 
-  $lts         = 0, 
+  $version     = 'installed',
+  $lts         = 0,
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,

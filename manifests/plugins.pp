@@ -1,3 +1,5 @@
+# Class: jenkins::plugins
+#
 class jenkins::plugins (
   $plugin_hash = {}
 ) {
