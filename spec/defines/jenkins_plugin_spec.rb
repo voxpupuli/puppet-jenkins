@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # Note, rspec-puppet determines the define name from the top level describe
 # string.
-describe 'jenkins::plugin::install' do
+describe 'jenkins::plugin' do
   let(:title) { 'git' }
 
   describe "on RedHat" do
