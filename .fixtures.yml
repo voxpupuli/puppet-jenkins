@@ -1,0 +1,6 @@
+fixtures:
+  repositories:
+    apt: "git://github.com/puppetlabs/puppetlabs-apt"
+    stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
+  symlinks:
+    "jenkins": "#{source_dir}"

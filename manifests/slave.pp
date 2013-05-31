@@ -1,7 +1,9 @@
 # Class: jenkins::slave
 #
 #
-#  ensure is not immplemented yet, since i'm assuming you want to actually run the slave by declaring it..
+#  ensure is not immplemented yet, since i'm
+#  assuming you want to actually run the slave
+#  by declaring it..
 #
 class jenkins::slave (
   $masterurl = undef,

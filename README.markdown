@@ -5,12 +5,62 @@ This is intended to be a re-usable
 include in your own tree.
 
 
+## Using puppet-jenkins
+
+
+### With librarian
+
+If you use [librarian-puppet](https://github.com/rodjek/librarian-puppet), add
+the following to your `Puppetfile`:
+
+```ruby
+mod "jenkins",
+  :git => "git://github.com/jenkinsci/puppet-jenkins.git"
+
+mod "apt",
+  :git => "git://github.com/puppetlabs/puppetlabs-apt.git"
+
+mod "stdlib",
+  :git => "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+```
+
+### With git-submodule(1)
+
 In order to add this module, run the following commands in your own, presumably
 Git, puppet tree:
 
     % git submodule add git://github.com/rtyler/puppet-jenkins.git modules/jenkins
     % git submodule update --init
 
+### With the "puppet module" tool
+
+This module is compatible with the puppet module tool.  To build a package file
+of this module, please use the `rake build` task.  The resulting package file
+may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
+
+
+To quickly try this module with the puppet module tool:
+
+    % rake build
+    % cd /etc/puppet/modules
+    % sudo puppet-module install /tmp/rtyler-jenkins-0.0.1.tar.gz
+    Installed "rtyler-jenkins-0.0.1" into directory: jenkins
+    % sudo puppet apply -v -e 'include jenkins'
+    info: Loading facts in facter_dot_d
+    info: Loading facts in facter_dot_d
+    info: Applying configuration version '1323459431'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/descr: descr changed '' to 'Jenkins'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/baseurl: baseurl changed '' to 'http://pkg.jenkins-ci.org/redhat/'
+    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/gpgcheck: gpgcheck changed '' to '1'
+    notice: /Stage[main]/Jenkins::Repo::El/File[/etc/yum/jenkins-ci.org.key]/ensure: defined content as '{md5}9fa06089848262c5a6383ec27fdd2575'
+    notice: /Stage[main]/Jenkins::Repo::El/Exec[rpm --import /etc/yum/jenkins-ci.org.key]/returns: executed successfully
+    notice: /Stage[main]/Jenkins::Package/Package[jenkins]/ensure: created
+    notice: /Stage[main]/Jenkins::Service/Service[jenkins]/ensure: ensure changed 'stopped' to 'running'
+    notice: Finished catalog run in 27.46 seconds
+
+Then the service should be running at [http://my.host.name:8080/](http://my.host.name:8080/).
+
+----
 
 ### Dependencies
 
@@ -34,7 +84,7 @@ the following `require` statement:
 
 
 
-### Installing Jenkins plugins
+## Installing Jenkins plugins
 
 
 The Jenkins puppet module defines the `install-jenkins-plugin` resource which
@@ -45,7 +95,7 @@ The names of the plugins can be found on the [update
 site](http://updates.jenkins-ci.org/download/plugins)
 
 
-#### Latest
+### Latest
 
 By default, the resource will install the latest plugin, i.e.:
 
@@ -55,8 +105,7 @@ By default, the resource will install the latest plugin, i.e.:
     }
 
 
-
-#### By version
+### By version
 
 If you need to peg a specific version, simply specify that as a string, i.e.:
 
@@ -65,39 +114,12 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
         version => "1.1.11";
     }
 
-# Puppet Module Tool
-
-This module is compatible with the puppet module tool.  To build a package file
-of this module, please use the `rake build` task.  The resulting package file
-may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
-
-## Quick Start
-
-To quickly try this module with the puppet module tool:
-
-    % rake build
-    % cd /etc/puppet/modules
-    % sudo puppet-module install /tmp/rtyler-jenkins-0.0.1.tar.gz
-    Installed "rtyler-jenkins-0.0.1" into directory: jenkins
-    % sudo puppet apply -v -e 'include jenkins'
-    info: Loading facts in facter_dot_d
-    info: Loading facts in facter_dot_d
-    info: Applying configuration version '1323459431'
-    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/descr: descr changed '' to 'Jenkins'
-    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/baseurl: baseurl changed '' to 'http://pkg.jenkins-ci.org/redhat/'
-    notice: /Stage[main]/Jenkins::Repo::El/Yumrepo[jenkins]/gpgcheck: gpgcheck changed '' to '1'
-    notice: /Stage[main]/Jenkins::Repo::El/File[/etc/yum/jenkins-ci.org.key]/ensure: defined content as '{md5}9fa06089848262c5a6383ec27fdd2575'
-    notice: /Stage[main]/Jenkins::Repo::El/Exec[rpm --import /etc/yum/jenkins-ci.org.key]/returns: executed successfully
-    notice: /Stage[main]/Jenkins::Package/Package[jenkins]/ensure: created
-    notice: /Stage[main]/Jenkins::Service/Service[jenkins]/ensure: ensure changed 'stopped' to 'running'
-    notice: Finished catalog run in 27.46 seconds
-
-Then the service should be running at [http://my.host.name:8080/](http://my.host.name:8080/).
-
 
 ## Slaves
 
 An example:
+
+```puppet
 
     node /jenkins-slave.*/ {
       class { 'jenkins::slave':
@@ -107,21 +129,24 @@ An example:
         ui_pass => 'adminpass',
       }
     }
-    
+
     node /jenkins-master.*/ {
         include jenkins
         jenkins::plugin {'swarm':}
-        
+
     }
+```
 
 
-# RSpec Testing
+# Developing/Contributing
 
-This module has behavior tests written using [RSpec
-2](https://www.relishapp.com/rspec).  The goal of these tests are to validate
-the expected behavior of the module.  As more features and platform support are
-added to this module the tests provide an automated way to validate the
-expectations previous contributors have specified.
+## RSpec Testing
+
+This module has behavior tests written using [RSpec 2](https://www.relishapp.com/rspec).
+The goal of these tests are to validate the expected behavior of the module.
+As more features and platform support are added to this module the tests
+provide an automated way to validate the expectations previous contributors
+have specified.
 
 In order to validate the behavior, please run the `rake spec` task.
 
@@ -131,7 +156,7 @@ In order to validate the behavior, please run the `rake spec` task.
     Finished in 0.31279 seconds
     1 example, 0 failures
 
-## RSpec Testing Requirements
+### RSpec Testing Requirements
 
 The spec tests require the `rspec-puppet` gem to be installed.  These tests
 have initially be tested with the following integration of components in
@@ -146,7 +171,7 @@ automatically add this parent directory to the Puppet module search path.
  * facter 1.6.3
  * stdlib 2.2.0
 
-## Installing RSpec Testing Requirements
+### Installing RSpec Testing Requirements
 
 To install the testing requirements:
 
@@ -159,7 +184,7 @@ To install the testing requirements:
     Successfully installed rspec-puppet-0.1.0
     6 gems installed
 
-## Adding Tests
+### Adding Tests
 
 Please see the [rspec-puppet](https://github.com/rodjek/rspec-puppet) project
 for information on writing tests.  A basic test that validates the class is
