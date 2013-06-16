@@ -43,7 +43,7 @@ define jenkins::plugin($version=0) {
       cwd        => $plugin_dir,
       require    => File[$plugin_dir],
       path       => ['/usr/bin', '/usr/sbin',],
-      unless     => "test -f ${plugin_dir}/${plugin}",
+      unless     => "test -f ${plugin_dir}/${name}.hpi || test -f ${plugin_dir}/${name}.jpi",
   }
 
   file {
