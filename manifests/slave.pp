@@ -22,7 +22,7 @@ class jenkins::slave (
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
-  if(installjava){}
+  if(installjava){
     case $::osfamily {
      'RedHat': {
         $java_package = 'java-1.6.0-openjdk'
