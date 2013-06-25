@@ -15,31 +15,33 @@ class jenkins::slave (
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
   $slave_home = '/home/jenkins-slave',
-  $labels = undef
+  $labels = undef,
+  $installjava = true
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
-  case $::osfamily {
-    'RedHat': {
-      $java_package = 'java-1.6.0-openjdk'
-    }
-    'Linux': {
-      $java_package = 'java-1.6.0-openjdk'
-    }
-    'Debian': {
-      #needs java package for debian.
-      fail( "Unsupported OS family: ${::osfamily}" )
-  #    $java_package=''
+  if(installjava){}
+    case $::osfamily {
+     'RedHat': {
+        $java_package = 'java-1.6.0-openjdk'
+      }
+      'Linux': {
+        $java_package = 'java-1.6.0-openjdk'
+      }
+      'Debian': {
+        #needs java package for debian.
+        fail( "Unsupported OS family: ${::osfamily}" )
+    #    $java_package=''
 
-    }
+      }
 
-    default: {
-      fail( "Unsupported OS family: ${::osfamily}" )
+      default: {
+        fail( "Unsupported OS family: ${::osfamily}" )
+      }
     }
   }
-
 
   #add jenkins slave if necessary.
 
