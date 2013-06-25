@@ -14,7 +14,8 @@ class jenkins::slave (
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
-  $slave_home = '/home/jenkins-slave'
+  $slave_home = '/home/jenkins-slave',
+  $labels = undef
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -91,6 +92,12 @@ class jenkins::slave (
     $masterurl_flag = "-master ${masterurl}"
   } else {
     $masterurl_flag = ''
+  }
+  
+  if $labels {
+    $labels_flag = "-labels ${$labels.join(',')}"
+  } else {
+    $labels_flag = ''
   }
 
   file { '/etc/init.d/jenkins-slave':
