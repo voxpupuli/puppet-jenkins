@@ -45,6 +45,7 @@ class jenkins::slave (
 
   exec { 'test_java_installed':
     command => 'java -version',
+    path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
   }
 
   exec { 'get_swarm_client':
