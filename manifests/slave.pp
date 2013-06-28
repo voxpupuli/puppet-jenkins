@@ -14,7 +14,9 @@ class jenkins::slave (
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
-  $slave_home = '/home/jenkins-slave'
+  $slave_home = '/home/jenkins-slave',
+  $labels = 'default',
+  $broadcast_address = '255.255.255.255'
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -76,7 +78,7 @@ class jenkins::slave (
 
 
 
-  file { '/etc/init.d/jenkins-slave':
+  file { '/etc/init/jenkins-slave.conf':
       ensure  => 'file',
       mode    => '0700',
       owner   => 'root',
