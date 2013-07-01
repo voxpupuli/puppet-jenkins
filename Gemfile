@@ -10,7 +10,6 @@ group :development do
   gem 'puppetlabs_spec_helper'
   gem 'rspec'
   gem 'rspec-puppet'
-  gem 'blimpy', '~> 0.3'
-  gem 'sahara'
+  gem 'blimpy'
   gem 'vagrant'
 end
