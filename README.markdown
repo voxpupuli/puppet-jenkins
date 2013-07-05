@@ -29,7 +29,7 @@ mod "stdlib",
 In order to add this module, run the following commands in your own, presumably
 Git, puppet tree:
 
-    % git submodule add git://github.com/rtyler/puppet-jenkins.git modules/jenkins
+    % git submodule add git://github.com/jenkinsci/puppet-jenkins.git modules/jenkins
     % git submodule update --init
 
 ### With the "puppet module" tool
