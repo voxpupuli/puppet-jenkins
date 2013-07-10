@@ -87,11 +87,12 @@ class jenkins::slave (
       notify  => Service['jenkins-slave']
   }
 
+  # FIXME: Forcing stop+start to workaround upstart restart.
   service { 'jenkins-slave':
     ensure     => running,
     enable     => true,
     hasstatus  => true,
-    hasrestart => true,
+    hasrestart => false,
   }
 
   Exec['test_java_installed']
