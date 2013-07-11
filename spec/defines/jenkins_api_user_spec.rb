@@ -17,20 +17,20 @@ describe 'jenkins::api_user' do
     it 'should contain parent directory with correct props' do
       should contain_file('/var/lib/jenkins/users/slave').with(
         :ensure => 'directory',
-        :owner => 'root',
-        :group => 'root',
-        :mode => '0644',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0644',
         :notify => 'Class[Jenkins::Service]'
       )
     end
 
     it 'should contain config file with correct props' do
       should contain_file('/var/lib/jenkins/users/slave/config.xml').with(
-        :ensure => 'present',
-        :owner => 'root',
-        :group => 'root',
-        :mode => '0644',
-        :notify => 'Class[Jenkins::Service]',
+        :ensure  => 'present',
+        :owner   => 'root',
+        :group   => 'root',
+        :mode    => '0644',
+        :notify  => 'Class[Jenkins::Service]',
         :content => /^\s+<apiToken>mekmitasdigoat<\/apiToken>$/
       )
     end
@@ -50,7 +50,7 @@ describe 'jenkins::api_user' do
 
   describe 'ensure absent' do
     let(:params) {{
-      :ensure => 'absent',
+      :ensure     => 'absent',
       :token_hash => 'mekmitasdigoat',
     }}
 
@@ -61,7 +61,7 @@ describe 'jenkins::api_user' do
   describe 'custom state directory' do
     let(:params) {{
       :token_hash => 'mekmitasdigoat',
-      :users_dir => '/opt/jenkins/users',
+      :users_dir  => '/opt/jenkins/users',
     }}
 
     it { should contain_file('/opt/jenkins/users/slave') }
