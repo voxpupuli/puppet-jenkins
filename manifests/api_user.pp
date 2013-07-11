@@ -4,6 +4,9 @@
 # value. Unfortunately the Jenkins API doesn't expose the ability to
 # create/modify users, so this is a bit of a hack. The configurations are
 # owned by root:root to prevent them from being modified in the Jenkins UI.
+# 
+# The name of the instance ($title) is used as the name of the account 
+# created. 
 #
 # === Parameters
 #
