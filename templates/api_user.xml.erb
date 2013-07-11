@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <user>
-  <fullName><%= @title -%></fullName>
+  <fullName>api_user: <%= @title -%></fullName>
+  <description>WARNING!&#xd;
+&#xd;
+This user has been created and assigned an API token by Puppet.&#xd;
+You will not be able to make any changes through the Jenkins UI due to file permissions.</description>
   <properties>
     <jenkins.security.ApiTokenProperty>
       <apiToken><%= @token_hash -%></apiToken>

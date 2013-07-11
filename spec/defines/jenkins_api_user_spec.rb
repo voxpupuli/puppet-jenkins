@@ -37,7 +37,7 @@ describe 'jenkins::api_user' do
 
     it 'should set fullName in config file' do
       should contain_file('/var/lib/jenkins/users/slave/config.xml').with_content(
-        /^\s+<fullName>slave<\/fullName>$/
+        /^\s+<fullName>api_user: slave<\/fullName>$/
       )
     end
 
