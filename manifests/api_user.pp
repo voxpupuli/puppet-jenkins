@@ -1,17 +1,15 @@
 # == Define: jenkins::api_user
 #
-# Create an account within Jenkins and set it's API token to a pre-hashed
-# value. Unfortunately the Jenkins API doesn't expose the ability to
-# create/modify users, so this is a bit of a hack. The configurations are
-# owned by root:root to prevent them from being modified in the Jenkins UI.
+# Create an account within Jenkins that will subsequently be used for API
+# access. No API token will be set as it needs to be hashed against a seed
+# that it specific to that installation of Jenkins. You will need to
+# subsequently generate a token through the Jenkins UI. The contents of the
+# user config file will not be managed after initial creation to prevent
+# conflicts with the Jenkins UI.
 # 
-# The name of the instance ($title) is used as the name of the account 
-# created. 
+# The name of the instance ($title) is used as the account name.
 #
 # === Parameters
-#
-# [*token_hash*]
-#   Hashed token that will be written to the user's `config.xml`.
 #
 # [*ensure*]
 #   Standard ensure param. Can be used to remove an existing user.
@@ -23,7 +21,6 @@
 #   Default: /var/lib/jenkins/users
 #
 define jenkins::api_user(
-  $token_hash,
   $ensure = present,
   $users_dir = '/var/lib/jenkins/users'
 ) {
@@ -33,9 +30,8 @@ define jenkins::api_user(
   }
 
   File {
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+    owner  => 'jenkins',
+    mode   => '0640',
     notify => Class['jenkins::service'],
   }
 
@@ -49,5 +45,6 @@ define jenkins::api_user(
   file { "${users_dir}/${title}/config.xml":
     ensure  => $ensure,
     content => template('jenkins/api_user.xml.erb'),
+    replace => false,
   }
 }

@@ -1,13 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <user>
   <fullName>api_user: <%= @title -%></fullName>
-  <description>WARNING!&#xd;
-&#xd;
-This user has been created and assigned an API token by Puppet.&#xd;
-You will not be able to make any changes through the Jenkins UI due to file permissions.</description>
+  <description>This local user has been created, but not subsequently managed, by Puppet.&#xd;
+Before first use you will need to generate an API token below.&#xd;
+That API token should then be distributed to any clients.</description>
   <properties>
     <jenkins.security.ApiTokenProperty>
-      <apiToken><%= @token_hash -%></apiToken>
+      <apiToken>REGENERATE_THIS_USING_THE_JENKINS_UI</apiToken>
     </jenkins.security.ApiTokenProperty>
     <com.cloudbees.plugins.credentials.UserCredentialsProvider_-UserCredentialsProperty plugin="credentials@1.3.1">
       <credentials/>
