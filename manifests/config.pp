@@ -13,6 +13,13 @@
 class jenkins::config(
   $config_hash = {},
 ) {
+
+  file { '/var/lib/jenkins/users':
+    ensure => 'directory',
+    owner  => 'jenkins',
+    mode   => '0755',
+  }
+
   Class['Jenkins::Package']->Class['Jenkins::Config']
   create_resources( 'jenkins::sysconfig', $config_hash )
 }
