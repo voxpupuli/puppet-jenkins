@@ -54,7 +54,7 @@ class jenkins(
   $lts         = 0,
   $repo        = 1,
   $config_hash = undef,
-  $plugin_hash = undef,
+  $plugin_hash = undef
 ) {
 
   class {

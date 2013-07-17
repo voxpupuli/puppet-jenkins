@@ -9,36 +9,39 @@ class jenkins::slave (
   $masterurl = undef,
   $ui_user = undef,
   $ui_pass = undef,
-  $version = '1.8',
+  $version = '1.9',
   $executors = 2,
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
-  $slave_home = '/home/jenkins-slave'
+  $slave_home = '/home/jenkins-slave',
+  $labels = undef,
+  $installjava = true
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
-  case $::osfamily {
-    'RedHat': {
-      $java_package = 'java-1.6.0-openjdk'
-    }
-    'Linux': {
-      $java_package = 'java-1.6.0-openjdk'
-    }
-    'Debian': {
-      #needs java package for debian.
-      fail( "Unsupported OS family: ${::osfamily}" )
-  #    $java_package=''
+  if(installjava){
+    case $::osfamily {
+     'RedHat': {
+        $java_package = 'java-1.6.0-openjdk'
+      }
+      'Linux': {
+        $java_package = 'java-1.6.0-openjdk'
+      }
+      'Debian': {
+        #needs java package for debian.
+        fail( "Unsupported OS family: ${::osfamily}" )
+    #    $java_package=''
 
-    }
+      }
 
-    default: {
-      fail( "Unsupported OS family: ${::osfamily}" )
+      default: {
+        fail( "Unsupported OS family: ${::osfamily}" )
+      }
     }
   }
-
 
   #add jenkins slave if necessary.
 
@@ -91,6 +94,12 @@ class jenkins::slave (
     $masterurl_flag = "-master ${masterurl}"
   } else {
     $masterurl_flag = ''
+  }
+
+  if $labels {
+    $labels_flag = "-labels \"${labels}\""
+  } else {
+    $labels_flag = ''
   }
 
   file { '/etc/init.d/jenkins-slave':
