@@ -2,15 +2,10 @@ require 'rake'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet-lint/tasks/puppet-lint'
 
 task :default => [:spec]
 
-desc "Check puppet manifests with puppet-lint"
-task :lint do
-  linter = "puppet-lint --with-filename --no-80chars-check"
-  sh "#{linter} manifests"
-  sh "#{linter} tests"
-end
 
 desc "Build package"
 task :build do
