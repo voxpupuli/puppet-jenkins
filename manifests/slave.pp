@@ -95,9 +95,9 @@ class jenkins::slave (
   } else {
     $masterurl_flag = ''
   }
-  
+
   if $labels {
-    $labels_flag = "-labels ${$labels.join(',')}"
+    $labels_flag = "-labels ${labels.join(',')}"
   } else {
     $labels_flag = ''
   }
