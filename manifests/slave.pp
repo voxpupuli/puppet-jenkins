@@ -14,7 +14,8 @@ class jenkins::slave (
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
-  $slave_home = '/home/jenkins-slave'
+  $slave_home = '/home/jenkins-slave',
+  $java_version = '1.6.0'
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -22,10 +23,10 @@ class jenkins::slave (
 
   case $::osfamily {
     'RedHat': {
-      $java_package = 'java-1.6.0-openjdk'
+      $java_package = "java-${$java_version}-openjdk"
     }
     'Linux': {
-      $java_package = 'java-1.6.0-openjdk'
+      $java_package = "java-${$java_version}-openjdk"
     }
     'Debian': {
       #needs java package for debian.
