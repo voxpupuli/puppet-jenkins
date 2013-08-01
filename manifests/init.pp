@@ -23,6 +23,8 @@
 #     'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
 #   }
 # }
+# The config hash on opensuse has a prefix JENKINS_ (JENKINS_PORT)
+# 
 #
 # plugin_hash = undef (Default)
 # Hash with config plugins to install

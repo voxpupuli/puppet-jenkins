@@ -24,6 +24,9 @@ class jenkins::slave (
     'RedHat': {
       $java_package = 'java-1.6.0-openjdk'
     }
+    'Suse': {
+      $java_package = 'java_1_7_0-openjdk'
+    }
     'Linux': {
       $java_package = 'java-1.6.0-openjdk'
     }
