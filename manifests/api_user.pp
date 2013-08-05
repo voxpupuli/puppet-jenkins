@@ -6,7 +6,7 @@
 # subsequently generate a token through the Jenkins UI. The contents of the
 # user config file will not be managed after initial creation to prevent
 # conflicts with the Jenkins UI.
-# 
+#
 # The name of the instance ($title) is used as the account name.
 #
 # === Parameters
