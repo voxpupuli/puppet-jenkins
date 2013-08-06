@@ -55,6 +55,8 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
+  $proxy_host = undef,
+  $proxy_port = undef,
 ) {
 
   class {
@@ -72,6 +74,15 @@ class jenkins(
 
   class { 'jenkins::plugins':
       plugin_hash => $plugin_hash,
+  }
+
+  if $proxy_host {
+    class { 'jenkins::proxy':
+      host => $proxy_host,
+      port => $proxy_port,
+      require => Package['jenkins'],
+      notify => Service['jenkins']
+    }
   }
 
   include jenkins::service
