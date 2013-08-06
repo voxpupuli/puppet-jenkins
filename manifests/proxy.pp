@@ -1,4 +1,4 @@
-class jenkins::plugins (
+class jenkins::proxy (
   $host = undef,
   $port = undef,
 ) {
