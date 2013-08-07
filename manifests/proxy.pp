@@ -7,7 +7,7 @@ class jenkins::proxy (
     content => template('jenkins/proxy.xml.erb'),
     owner => 'jenkins',
     group => 'jenkins',
-    mode => '644'
+    mode => '0644'
   }
 
 }
