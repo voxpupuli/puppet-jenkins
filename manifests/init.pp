@@ -55,6 +55,8 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
+  $proxy_host = undef,
+  $proxy_port = undef,
   $configure_firewall = true
 ) {
   anchor {'jenkins::begin':}
@@ -64,7 +66,7 @@ class jenkins(
       lts  => $lts,
       repo => $repo;
   }
-  
+
   class {'jenkins::package' :
       version => $version;
   }
@@ -77,19 +79,27 @@ class jenkins(
       plugin_hash => $plugin_hash,
   }
 
+  if $proxy_host {
+    class { 'jenkins::proxy':
+      host => $proxy_host,
+      port => $proxy_port,
+      require => Package['jenkins'],
+      notify => Service['jenkins']
+    }
+  }
+
   class {'jenkins::service':}
 
   if ($configure_firewall){
-      class {'jenkins::firewall':}
-    }
+    class {'jenkins::firewall':}
+  }
 
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
       Class['jenkins::package'] ->
-        Class['jenkins::config'] 
+        Class['jenkins::config']
           Class['jenkins::plugins']~>
-            Class['jenkins::service'] -> 
-              Class['jenkins::firewall'] ->
+            Class['jenkins::service'] ->
                 Anchor['jenkins::end']
 }
 # vim: ts=2 et sw=2 autoindent
