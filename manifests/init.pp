@@ -55,6 +55,7 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
+  $configure_firewall = true
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -77,7 +78,10 @@ class jenkins(
   }
 
   class {'jenkins::service':}
-  class {'jenkins::firewall':}
+
+  if($configure_firewall){
+      class {'jenkins::firewall':}
+    }
 
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
@@ -87,7 +91,5 @@ class jenkins(
             Class['jenkins::service'] -> 
               Class['jenkins::firewall'] ->
                 Anchor['jenkins::end']
-
-}
 
 # vim: ts=2 et sw=2 autoindent
