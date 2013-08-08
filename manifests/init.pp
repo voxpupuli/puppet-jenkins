@@ -82,13 +82,12 @@ class jenkins(
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
       Class['jenkins::package'] ->
-        Class['jenkins::config'] ~>
-          Class['jenkins::service'] ->
-            Anchor['jenkins::end']
+        Class['jenkins::config'] 
+          Class['jenkins::plugins']~>
+            Class['jenkins::service'] -> 
+              Class['jenkins::firewall'] ->
+                Anchor['jenkins::end']
 
-  Anchor['jenkins::begin'] -> Class['jenkins::plugins'] -> Anchor['jenkins::end']
-  Anchor['jenkins::begin'] -> Class['jenkins::service'] -> Anchor['jenkins::end']
-  Anchor['jenkins::begin'] -> Class['jenkins::firewall'] -> Anchor['jenkins::end']
 }
 
 # vim: ts=2 et sw=2 autoindent
