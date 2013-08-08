@@ -55,6 +55,7 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
+  $configure_firewall = true
 ) {
 
   class {
@@ -75,7 +76,10 @@ class jenkins(
   }
 
   include jenkins::service
-  include jenkins::firewall
+
+  if($configure_firewall){
+    include jenkins::firewall
+  }
 
   Class['jenkins::repo'] ->
     Class['jenkins::package'] ->
