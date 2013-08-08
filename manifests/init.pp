@@ -60,12 +60,12 @@ class jenkins(
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
 
-  class {
-    'jenkins::repo':
+  class {'jenkins::repo':
       lts  => $lts,
       repo => $repo;
-
-    'jenkins::package' :
+  }
+  
+  class {'jenkins::package' :
       version => $version;
   }
 
@@ -79,7 +79,7 @@ class jenkins(
 
   class {'jenkins::service':}
 
-  if($configure_firewall){
+  if ($configure_firewall){
       class {'jenkins::firewall':}
     }
 
@@ -91,5 +91,5 @@ class jenkins(
             Class['jenkins::service'] -> 
               Class['jenkins::firewall'] ->
                 Anchor['jenkins::end']
-
+}
 # vim: ts=2 et sw=2 autoindent
