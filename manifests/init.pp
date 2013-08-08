@@ -91,8 +91,8 @@ class jenkins(
   class {'jenkins::service':}
 
   if ($configure_firewall){
-      class {'jenkins::firewall':}
-    }
+    class {'jenkins::firewall':}
+  }
 
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
