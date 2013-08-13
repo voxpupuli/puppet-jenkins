@@ -4,7 +4,7 @@
 #
 # The package might not specify a dependency on Java, so you may need to
 # specify that yourself
-class jenkins::package($version = 'installed') {
+class jenkins::package($version = 'latest') {
   package {
     'jenkins' :
       ensure => $version;

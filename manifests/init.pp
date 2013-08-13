@@ -56,9 +56,7 @@ class jenkins(
   $config_hash = undef,
   $plugin_hash = undef,
   $configure_firewall = true
-) {
-  anchor {'jenkins::begin':}
-  anchor {'jenkins::end':}
+){
 
   class {'jenkins::repo':
       lts  => $lts,
@@ -66,7 +64,8 @@ class jenkins(
   }
   
   class {'jenkins::package' :
-      version => $version;
+      version => $version,
+      require => Class['oracle_java'],
   }
 
   class { 'jenkins::config':
@@ -78,18 +77,12 @@ class jenkins(
   }
 
   class {'jenkins::service':}
-
+  
   if ($configure_firewall){
       class {'jenkins::firewall':}
     }
 
-  Anchor['jenkins::begin'] ->
-    Class['jenkins::repo'] ->
-      Class['jenkins::package'] ->
-        Class['jenkins::config'] 
-          Class['jenkins::plugins']~>
-            Class['jenkins::service'] -> 
-              Class['jenkins::firewall'] ->
-                Anchor['jenkins::end']
-}
+    Class['jenkins::repo'] -> Class['jenkins::package'] -> Class['jenkins::config'] -> Class['jenkins::plugins'] ~> Class['jenkins::service']
+
 # vim: ts=2 et sw=2 autoindent
+}
