@@ -50,7 +50,7 @@
 #    'token-macro': {}
 #
 class jenkins(
-  $version     = 'installed',
+  $version     = 'latest',
   $lts         = 0,
   $repo        = 1,
   $config_hash = undef,
