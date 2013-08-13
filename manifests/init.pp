@@ -86,7 +86,7 @@ class jenkins(
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
       Class['jenkins::package'] ->
-        Class['jenkins::config']
+        Class['jenkins::config'] ->
           Class['jenkins::plugins']~>
             Class['jenkins::service'] ->
                 Anchor['jenkins::end']
