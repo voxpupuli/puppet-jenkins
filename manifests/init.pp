@@ -74,6 +74,7 @@ class jenkins(
 
   class { 'jenkins::plugins':
       plugin_hash => $plugin_hash,
+      require => Package['wget'],
   }
 
   class {'jenkins::service':}
