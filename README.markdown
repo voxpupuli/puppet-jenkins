@@ -123,7 +123,6 @@ An example:
 
     node /jenkins-slave.*/ {
       class { 'jenkins::slave':
-        ensure => 'enabled',
         masterurl => 'http://jenkins-master1.domain.com:8080',
         ui_user => 'adminuser',
         ui_pass => 'adminpass',
