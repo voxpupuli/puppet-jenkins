@@ -2,7 +2,8 @@
 #
 #
 define jenkins::plugin($version=0) {
-  $plugin            = "${name}.hpi"
+  $plugin            = "${name}.jpi"
+  $plugin_dl         = "${name}.hpi"
   $plugin_dir        = '/var/lib/jenkins/plugins'
   $plugin_parent_dir = '/var/lib/jenkins'
 
@@ -39,11 +40,11 @@ define jenkins::plugin($version=0) {
 
   exec {
     "download-${name}" :
-      command    => "wget --no-check-certificate ${base_url}${plugin}",
+      command    => "wget --no-check-certificate ${base_url}${plugin_dl} -O ${plugin}",
       cwd        => $plugin_dir,
       require    => File[$plugin_dir],
       path       => ['/usr/bin', '/usr/sbin',],
-      unless     => "test -f ${plugin_dir}/${name}.hpi || test -f ${plugin_dir}/${name}.jpi",
+      unless     => "test -f ${plugin_dir}/${plugin}",
   }
 
   file {
