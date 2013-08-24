@@ -9,7 +9,7 @@ class jenkins::slave (
   $masterurl = undef,
   $ui_user = undef,
   $ui_pass = undef,
-  $version = '1.8',
+  $version = '1.9',
   $executors = 2,
   $manage_slave_user = 1,
   $slave_user = 'jenkins-slave',
