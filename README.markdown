@@ -134,11 +134,11 @@ An example:
     }
 
     node /jenkins-master.*/ {
-    	class { 'java': }
-        class { 'jenkins': }
-        jenkins::plugin {'swarm':}
+      class { 'java': }
+      class { 'jenkins': }
+      jenkins::plugin {'swarm':}
 
-        Class['java'] -> Class['jenkins']
+      Class['java'] -> Class['jenkins']
     }
 ```
 
