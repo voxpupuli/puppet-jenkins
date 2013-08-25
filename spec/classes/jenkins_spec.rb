@@ -10,7 +10,10 @@ describe 'jenkins' do
     it { should contain_class 'jenkins' }
     it { should contain_class 'jenkins::repo' }
     it { should contain_class 'jenkins::package' }
+    it { should contain_class 'jenkins::config' }
+    it { should contain_class 'jenkins::plugins' }
     it { should contain_class 'jenkins::service' }
+    it { should contain_class 'jenkins::firewall' }
     it { should contain_class 'jenkins::repo::el' }
     it { should_not contain_class 'jenkins::repo::debian' }
   end
@@ -40,7 +43,10 @@ describe 'jenkins' do
     it { should contain_class 'jenkins' }
     it { should contain_class 'jenkins::repo' }
     it { should contain_class 'jenkins::package' }
+    it { should contain_class 'jenkins::config' }
+    it { should contain_class 'jenkins::plugins' }
     it { should contain_class 'jenkins::service' }
+    it { should contain_class 'jenkins::firewall' }
     it { should contain_class 'jenkins::repo::debian' }
     it { should_not contain_class 'jenkins::repo::el' }
   end
