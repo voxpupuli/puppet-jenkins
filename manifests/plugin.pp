@@ -26,14 +26,16 @@ define jenkins::plugin($version=0) {
   if (!defined(Group['jenkins'])) {
     group {
       'jenkins' :
-        ensure => present;
+        ensure => present,
+        require => Package['jenkins'];
     }
   }
 
   if (!defined(User['jenkins'])) {
     user {
       'jenkins' :
-        ensure => present;
+        ensure => present,
+        require => Package['jenkins'];
     }
   }
 
