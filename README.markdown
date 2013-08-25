@@ -87,7 +87,7 @@ the following `require` statement:
 ## Installing Jenkins plugins
 
 
-The Jenkins puppet module defines the `install-jenkins-plugin` resource which
+The Jenkins puppet module defines the `jenkins::plugin` resource which
 will download and install the plugin "[by
 hand](https://wiki.jenkins-ci.org/display/JENKINS/Plugins#Plugins-Byhand)"
 
