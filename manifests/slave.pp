@@ -2,8 +2,10 @@
 #
 #
 #  ensure is not immplemented yet, since i'm
-#  assuming you want to actually run the slave
+#  assuming you want to actually install the slave
 #  by declaring it..
+#
+# enable is being added to allow you to not autostart the the slave, if necessary.
 #
 class jenkins::slave (
   $masterurl = undef,
@@ -16,7 +18,8 @@ class jenkins::slave (
   $slave_uid = undef,
   $slave_home = '/home/jenkins-slave',
   $labels = undef,
-  $install_java       = $jenkins::params::install_java
+  $install_java       = $jenkins::params::install_java,
+  $enable = true
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -95,7 +98,7 @@ class jenkins::slave (
 
   service { 'jenkins-slave':
     ensure     => running,
-    enable     => true,
+    enable     => $enable,
     hasstatus  => true,
     hasrestart => true,
   }
