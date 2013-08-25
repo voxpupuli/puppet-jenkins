@@ -1,11 +1,11 @@
 # Parameters:
-# lts = 0  (Default)
+# lts = false  (Default)
 #   Use the most up to date version of jenkins
 #
-# lts = 1
+# lts = true
 #   Use LTS verison of jenkins
 #
-# repo = 1 (Default)
+# repo = true (Default)
 #   install the jenkins repo.
 #
 # repo = 0
@@ -49,20 +49,37 @@
 #    'git-client': {}
 #    'token-macro': {}
 #
+#
+# configure_firewall = true (default)
+#   For folks that want to manage the puppetlabs firewall module. 
+#    -  If it's not present, it will not be installed and nothing happens
+#    - This default could change in the future.
+#
+#
+# installl_java = true (Default)
+#   - use puppetlabs-java module to install the correct version of a JDK.  
+#   - Jenkins requires a JRE 
+#
 class jenkins(
-  $version     = 'installed',
-  $lts         = 0,
-  $repo        = 1,
-  $config_hash = undef,
-  $plugin_hash = undef,
-  $configure_firewall = true
+  $version            = $jenkins::params::version,
+  $lts                = $jenkins::params::lts,
+  $repo               = $jenkins::params::repo,
+  $config_hash        = undef,
+  $plugin_hash        = undef,
+  $configure_firewall = $jenkins::params::configure_firewall,
+  $install_java       = $jenkins::params::install_java
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
 
-  class {'jenkins::repo':
-      lts  => $lts,
-      repo => $repo;
+  if $install_java {
+    class {java:
+      distribution => 'jdk'
+    }
+  }
+    
+  if $repo {
+      class {'jenkins::repo':}
   }
 
   class {'jenkins::package' :
@@ -84,12 +101,25 @@ class jenkins(
     }
 
   Anchor['jenkins::begin'] ->
-    Class['jenkins::repo'] ->
-      Class['jenkins::package'] ->
-        Class['jenkins::config'] ->
-          Class['jenkins::plugins']~>
-            Class['jenkins::service'] ->
-                Anchor['jenkins::end']
+    Class['jenkins::package'] ->
+      Class['jenkins::config'] ->
+        Class['jenkins::plugins']~>
+          Class['jenkins::service'] ->
+              Anchor['jenkins::end']
+
+  if $install_java {
+    Anchor['jenkins::begin'] ->
+      Class['jenkins::install_java'] ->
+        Class['jenkins::package'] ->
+          Anchor['jenkins::end']
+  }
+  
+  if $repo {
+    Anchor['jenkins::begin'] ->
+      Class['jenkins::repo'] ->
+        Class['jenkins::package'] ->
+          Anchor['jenkins::end']
+  }
 
   if $configure_firewall {
     Class['jenkins::service'] ->
