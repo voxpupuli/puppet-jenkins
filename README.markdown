@@ -131,7 +131,7 @@ An example:
 
     node /jenkins-master.*/ {
         include jenkins
-        jenkins::plugin {'swarm':}
+        include jenkins::master
 
     }
 ```
