@@ -1,11 +1,13 @@
 # Class: jenkins::slave
 #
+#  FYI: this module needs testing on OS's other than RHEL/Centos.  
 #
-#  ensure is not immplemented yet, since i'm
+#  ensure is not immplemented, since I'm
 #  assuming you want to actually install the slave
 #  by declaring it..
 #
 # enable is being added to allow you to not autostart the the slave, if necessary.
+#
 #
 class jenkins::slave (
   $masterurl = undef,
