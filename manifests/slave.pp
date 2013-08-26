@@ -27,7 +27,6 @@ class jenkins::slave (
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
-
   if $install_java {
     class {java:
       distribution => 'jdk'
@@ -105,8 +104,7 @@ class jenkins::slave (
     hasrestart => true,
   }
 
-  Package[ $java_package ]
-  -> Exec['get_swarm_client']
+  Exec['get_swarm_client']
   -> Service['jenkins-slave']
 
 }
