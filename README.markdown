@@ -122,17 +122,22 @@ An example:
 ```puppet
 
     node /jenkins-slave.*/ {
+      class { 'java': }
       class { 'jenkins::slave':
         masterurl => 'http://jenkins-master1.domain.com:8080',
         ui_user => 'adminuser',
         ui_pass => 'adminpass',
       }
+
+      Class['java'] -> Class['jenkins']
     }
 
     node /jenkins-master.*/ {
-        include jenkins
-        jenkins::plugin {'swarm':}
+      class { 'java': }
+      class { 'jenkins': }
+      jenkins::plugin {'swarm':}
 
+      Class['java'] -> Class['jenkins']
     }
 ```
 
