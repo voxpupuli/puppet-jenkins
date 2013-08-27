@@ -23,17 +23,13 @@ class jenkins::slave (
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
   case $::osfamily {
-    'RedHat': {
-      $java_package = "java-${$java_version}-openjdk"
-    }
-    'Linux': {
+    'RedHat', 'Linux': {
       $java_package = "java-${$java_version}-openjdk"
     }
     'Debian': {
       #needs java package for debian.
       fail( "Unsupported OS family: ${::osfamily}" )
   #    $java_package=''
-
     }
 
     default: {

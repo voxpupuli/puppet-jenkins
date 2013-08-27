@@ -13,6 +13,9 @@
 class jenkins::config(
   $config_hash = {},
 ) {
+
+  include jenkins::package
+
   Class['Jenkins::Package']->Class['Jenkins::Config']
   create_resources( 'jenkins::sysconfig', $config_hash )
 }
