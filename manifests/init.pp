@@ -53,7 +53,7 @@ class jenkins(
   $version     = 'installed',
   $lts         = 0,
   $repo        = 1,
-  $config_hash = undef,
+  $config_hash = {},
   $plugin_hash = {},
   $configure_firewall = true
 ) {
