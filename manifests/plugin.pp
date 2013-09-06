@@ -36,14 +36,27 @@ define jenkins::plugin($version=0) {
         ensure => present;
     }
   }
+  
+  if $jenkins::use_http_proxy {
+    if $jenkins::http_proxy_username != undef {
+      $auth = "${jenkins::http_proxy_username}:${jenkins::http_proxy_password}@"
+    } else {
+      $auth = ''
+    }
+    $proxy = "${auth}${jenkins::http_proxy_host}:${jenkins::http_proxy_port}"
+  }
 
   exec {
     "download-${name}" :
-      command    => "wget --no-check-certificate ${base_url}${plugin}",
-      cwd        => $plugin_dir,
-      require    => File[$plugin_dir],
-      path       => ['/usr/bin', '/usr/sbin',],
-      unless     => "test -f ${plugin_dir}/${name}.hpi || test -f ${plugin_dir}/${name}.jpi",
+      command     => "wget --no-check-certificate ${base_url}${plugin}",
+      environment => [
+        "http_proxy=http://${proxy}",
+        "https_proxy=http://${proxy}",
+      ],
+      cwd         => $plugin_dir,
+      require     => File[$plugin_dir],
+      path        => ['/usr/bin', '/usr/sbin',],
+      unless      => "test -f ${plugin_dir}/${name}.hpi || test -f ${plugin_dir}/${name}.jpi",
   }
 
   file {

@@ -16,6 +16,21 @@
 # config_hash = undef (Default)
 # Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# use_http_proxy = false
+#   use an HTTP proxy to download plugins
+#
+# http_proxy_host
+#   proxy host
+#
+# http_proxy_port
+#   proxy port
+#
+# http_proxy_username
+#   username for proxy
+#
+# http_proxy_password
+#   password for proxy
+#
 # Example use
 #
 # class{ 'jenkins::config':
@@ -55,10 +70,28 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
-  $configure_firewall = true
+  $configure_firewall  = true,
+  $use_http_proxy      = false,
+  $http_proxy_host     = undef,
+  $http_proxy_port     = undef,
+  $http_proxy_username = undef,
+  $http_proxy_password = undef,
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
+
+  validate_bool ($use_http_proxy)
+  if $use_http_proxy
+      and ($http_proxy_host == undef or $http_proxy_port == undef) {
+    fail 'To use proxy you must define $http_proxy_host and $http_proxy_port'
+  } else {
+    if !is_integer($http_proxy_port) {
+      fail '$http_proxy_port should be an integer'
+    }
+    if $http_proxy_username != undef and $http_proxy_password == undef {
+      fail 'if you have to authenticate to the proxy, you need to define both username and password'
+    }
+  }
 
   class {'jenkins::repo':
       lts  => $lts,
