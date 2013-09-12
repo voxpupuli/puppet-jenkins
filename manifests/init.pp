@@ -55,7 +55,7 @@ class jenkins(
   $repo        = 1,
   $config_hash = undef,
   $plugin_hash = undef,
-  $configure_firewall = true
+  $configure_firewall = true,
   $proxy_host = undef,
   $proxy_port = undef,
 ) {
