@@ -56,6 +56,8 @@ class jenkins(
   $config_hash = undef,
   $plugin_hash = undef,
   $configure_firewall = true
+  $proxy_host = undef,
+  $proxy_port = undef,
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -75,6 +77,15 @@ class jenkins(
 
   class { 'jenkins::plugins':
       plugin_hash => $plugin_hash,
+  }
+
+  if $proxy_host {
+    class { 'jenkins::proxy':
+      host => $proxy_host,
+      port => $proxy_port,
+      require => Package['jenkins'],
+      notify => Service['jenkins']
+    }
   }
 
   class {'jenkins::service':}
