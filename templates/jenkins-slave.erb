@@ -1,9 +1,13 @@
 start on runlevel [2345]
 stop on runlevel [!2345]
 
-exec start-stop-daemon --start -c <%= slave_user -%> --exec /usr/bin/java \
-        --name jenkins-slave --  -jar <%= slave_home -%>/<%= client_jar -%> \
-        <%= ui_user_flag -%> <%= ui_pass_flag -%> \
-        -name <%= fqdn -%> -executors <%= executors -%> \
-        -autoDiscoveryAddress <%= broadcast_address -%> \
-        -fsroot <%= slave_home -%> -labels <%= labels -%>
+script
+        test -f /etc/default/locale && . /etc/default/locale || true
+        export LANG
+        exec start-stop-daemon --start -c <%= slave_user -%> --exec /usr/bin/java \
+                --name jenkins-slave --  -jar <%= slave_home -%>/<%= client_jar -%> \
+                <%= ui_user_flag -%> <%= ui_pass_flag -%> \
+                -name <%= fqdn -%> -executors <%= executors -%> \
+                -autoDiscoveryAddress <%= broadcast_address -%> \
+                -fsroot <%= slave_home -%> -labels <%= labels -%>
+end script
