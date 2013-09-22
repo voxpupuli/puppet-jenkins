@@ -16,6 +16,9 @@
 # config_hash = undef (Default)
 # Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# jenkins_home = '/var/lib/jenkins'
+#   Home directory of jenkins user.
+#
 # Example use
 #
 # class{ 'jenkins::config':
@@ -58,6 +61,7 @@ class jenkins(
   $configure_firewall = true,
   $proxy_host = undef,
   $proxy_port = undef,
+  $jenkins_home = '/var/lib/jenkins',
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -72,7 +76,8 @@ class jenkins(
   }
 
   class { 'jenkins::config':
-      config_hash => $config_hash,
+      config_hash  => $config_hash,
+      jenkins_home => $jenkins_home,
   }
 
   class { 'jenkins::plugins':
