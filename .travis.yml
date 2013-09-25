@@ -1,0 +1,18 @@
+language: ruby
+before_install:
+  - gem install bundler
+
+script: 
+  - rake build
+  - rake spec
+  
+#notifications:
+#  email:
+#  - # uncomment it and add the maintainer e-mail if you want to receive e-mails on error
+
+rvm:
+  - ruby-head # to ensure that the nex ruby version will not create problems
+  - 2.0.0    
+  - 1.9.3
+  - 1.8.7
+  - jruby-19mode
