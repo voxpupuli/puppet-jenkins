@@ -58,6 +58,7 @@ class jenkins(
   $configure_firewall = true,
   $proxy_host = undef,
   $proxy_port = undef,
+  $required_class = undef,
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -68,7 +69,8 @@ class jenkins(
   }
 
   class {'jenkins::package' :
-      version => $version;
+      version        => $version,
+      required_class => $required_class,
   }
 
   class { 'jenkins::config':
