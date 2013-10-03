@@ -68,6 +68,7 @@ The dependencies for this module currently are:
 
 * [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
+* [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
 
 
 
