@@ -81,10 +81,10 @@ class jenkins(
 
   if $proxy_host {
     class { 'jenkins::proxy':
-      host => $proxy_host,
-      port => $proxy_port,
+      host    => $proxy_host,
+      port    => $proxy_port,
       require => Package['jenkins'],
-      notify => Service['jenkins']
+      notify  => Service['jenkins']
     }
   }
 
