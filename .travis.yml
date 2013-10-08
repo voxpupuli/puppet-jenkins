@@ -8,7 +8,6 @@ rvm:
 script:
   - "rake lint"
   - "rake spec SPEC_OPTS='--format documentation'"
-  - "rake spec"
 env:
   - PUPPET_VERSION="~> 2.7.0"
   - PUPPET_VERSION="~> 3.0.0"
