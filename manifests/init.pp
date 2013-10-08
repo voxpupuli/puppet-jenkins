@@ -53,9 +53,11 @@ class jenkins(
   $version     = 'installed',
   $lts         = 0,
   $repo        = 1,
-  $config_hash = {},
-  $plugin_hash = {},
-  $configure_firewall = true
+  $config_hash = undef,
+  $plugin_hash = undef,
+  $configure_firewall = true,
+  $proxy_host = undef,
+  $proxy_port = undef,
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -77,11 +79,20 @@ class jenkins(
       plugin_hash => $plugin_hash,
   }
 
+  if $proxy_host {
+    class { 'jenkins::proxy':
+      host => $proxy_host,
+      port => $proxy_port,
+      require => Package['jenkins'],
+      notify => Service['jenkins']
+    }
+  }
+
   class {'jenkins::service':}
 
   if ($configure_firewall){
-      class {'jenkins::firewall':}
-    }
+    class {'jenkins::firewall':}
+  }
 
   Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
