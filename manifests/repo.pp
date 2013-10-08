@@ -9,16 +9,7 @@ class jenkins::repo ($lts=0, $repo=1) {
   if ($repo == 1) {
     case $::osfamily {
 
-      'RedHat': {
-        class {
-          'jenkins::repo::el':
-            lts     => $lts,
-            require => Anchor['jenkins::repo::alpha'],
-            before  => Anchor['jenkins::repo::omega'],
-        }
-      }
-
-      'Linux': {
+      'RedHat', 'Linux': {
         class {
           'jenkins::repo::el':
             lts     => $lts,
