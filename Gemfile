@@ -1,15 +1,10 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 gem 'rake'
-gem 'puppet', '~> 2.7'
-gem 'puppet-module'
+gem 'puppet-lint'
+gem 'rspec-puppet'
+gem 'puppetlabs_spec_helper'
+gem 'puppet-syntax'
+gem 'cucumber-puppet'
+gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.2.0'
 
-group :development do
-  gem 'cucumber'
-  gem 'puppet-lint'
-  gem 'puppetlabs_spec_helper'
-  gem 'rspec'
-  gem 'rspec-puppet'
-  gem 'blimpy'
-  gem 'vagrant'
-end
