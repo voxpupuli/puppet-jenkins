@@ -6,7 +6,7 @@
 #
 # class{ 'jenkins::config':
 #   config_hash => {
-#     'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
+#     'HTTP_PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
 #   }
 # }
 #
