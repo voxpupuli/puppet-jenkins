@@ -1,3 +1,4 @@
+#
 class jenkins::proxy (
   $host = undef,
   $port = undef,
