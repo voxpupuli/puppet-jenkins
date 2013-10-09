@@ -57,14 +57,14 @@
 #
 #
 # configure_firewall = true (default)
-#   For folks that want to manage the puppetlabs firewall module. 
+#   For folks that want to manage the puppetlabs firewall module.
 #    -  If it's not present, it will not be installed and nothing happens
 #    - This default could change in the future.
 #
 #
 # installl_java = true (Default)
-#   - use puppetlabs-java module to install the correct version of a JDK.  
-#   - Jenkins requires a JRE 
+#   - use puppetlabs-java module to install the correct version of a JDK.
+#   - Jenkins requires a JRE
 #
 class jenkins(
   $version            = $jenkins::params::version,
@@ -82,7 +82,7 @@ class jenkins(
   anchor {'jenkins::end':}
 
   if $install_java {
-    class {java:
+    class {'java':
       distribution => 'jdk'
     }
   }
@@ -131,7 +131,7 @@ class jenkins(
         Class['jenkins::package'] ->
           Anchor['jenkins::end']
   }
-  
+
   if $repo {
     Anchor['jenkins::begin'] ->
       Class['jenkins::repo'] ->

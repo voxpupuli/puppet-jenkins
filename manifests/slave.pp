@@ -75,7 +75,7 @@ class jenkins::slave (
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
   if $install_java {
-    class {java:
+    class {'java':
       distribution => 'jdk'
     }
   }
