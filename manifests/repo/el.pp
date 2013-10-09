@@ -1,6 +1,6 @@
 # Class: jenkins::repo::el
 #
-class jenkins::repo::el inherits jenkins ()
+class jenkins::repo::el inherits jenkins
 {
 
   if $lts{

@@ -1,6 +1,6 @@
 # Class: jenkins::repo::debian
 #
-class jenkins::repo::debian inherits jenkins ()
+class jenkins::repo::debian inherits jenkins
 {
   if $lts  {
     apt::source { 'jenkins':

@@ -1,7 +1,7 @@
 #
 # jenkins::repo handles pulling in the platform specific repo classes
 #
-class jenkins::repo () {
+class jenkins::repo {
   # JJM These anchors work around #8040
   anchor { 'jenkins::repo::alpha': }
   anchor { 'jenkins::repo::omega': }
