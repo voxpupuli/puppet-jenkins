@@ -4,7 +4,7 @@
 #
 # https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin
 #
-# It allows users to add more workers to Jenkins without having to specifically add them on the Jenkins master. 
+# It allows users to add more workers to Jenkins without having to specifically add them on the Jenkins master.
 #
 # === Parameters
 #
@@ -21,11 +21,11 @@
 #   Number of executors for this slave.  (How many jenkins jobs can run simultaneously on this host.)
 #
 # [*manage_slave_user*]
-#   Should the class add a user to run the slave code?  1 is currently true  
+#   Should the class add a user to run the slave code?  1 is currently true
 #   TODO: should be updated to use boolean.
 #
-# [*slave_user*]  
-#   Defaults to 'jenkins-slave'. Change it if you'd like..  
+# [*slave_user*]
+#   Defaults to 'jenkins-slave'. Change it if you'd like..
 #
 # [*slave_uid*]
 #   Not required.  Puppet will let your system add the user, with the new UID if necessary.
