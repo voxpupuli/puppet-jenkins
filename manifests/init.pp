@@ -73,7 +73,7 @@ class jenkins(
   $config_hash        = undef,
   $plugin_hash        = undef,
   $configure_firewall = $jenkins::params::configure_firewall,
-  $install_java       = $jenkins::params::install_java
+  $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
   $proxy_port         = undef,
 ) inherits jenkins::params {
