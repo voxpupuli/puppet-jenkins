@@ -86,7 +86,7 @@ class jenkins(
       distribution => 'jdk'
     }
   }
-    
+
   if $repo {
       class {'jenkins::repo':}
   }
