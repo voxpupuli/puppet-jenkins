@@ -57,18 +57,18 @@
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 
 class jenkins::slave (
-  $masterurl = undef,
-  $ui_user = undef,
-  $ui_pass = undef,
-  $version = $jenkins::params::swarm_version,
-  $executors = 2,
+  $masterurl         = undef,
+  $ui_user           = undef,
+  $ui_pass           = undef,
+  $version           = $jenkins::params::swarm_version,
+  $executors         = 2,
   $manage_slave_user = true,
-  $slave_user = 'jenkins-slave',
-  $slave_uid = undef,
-  $slave_home = '/home/jenkins-slave',
-  $labels = undef,
-  $install_java       = $jenkins::params::install_java,
-  $enable = true
+  $slave_user        = 'jenkins-slave',
+  $slave_uid         = undef,
+  $slave_home        = '/home/jenkins-slave',
+  $labels            = undef,
+  $install_java      = $jenkins::params::install_java,
+  $enable            = true
 ) inherits jenkins::params {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
