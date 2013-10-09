@@ -63,7 +63,7 @@ It requires the swarm plugin on the master & the class jenkins::slave on the sla
 
     node /jenkins-master.*/ {
         include jenkins
-        jenkins::plugin {'swarm':}
+        include jenkins::master
     }
 ```
 
