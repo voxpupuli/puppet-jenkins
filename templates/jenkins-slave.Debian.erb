@@ -1,0 +1,89 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        jenkins-slave
+# Require-Start:   $remote_fs $syslog
+# Require-Stop:    
+# X-Start-Before:  
+# Default-Start:   2 3 4 5
+# Default-Stop:    
+# Short-Description: Provides a Jenkins slave client.
+# Description: Jenkins Slave Swarm Client
+### END INIT INFO
+
+RETVAL=0
+
+. /lib/lsb/init-functions
+
+
+PID_FILE=/var/run/jenkins-slave.pid
+LOCK_FILE=/var/lock/jenkins-slave
+LOG_FILE=/var/log/jenkins-slave
+
+slave_start() {
+  echo Starting Jenkins Slave...
+  if [ ! -f $LOCK_FILE ]; then
+    nohup java -jar /home/jenkins-slave/swarm-client-1.8-jar-with-dependencies.jar -name ubuntu1204x64client.skybeam.com -executors 2 -master nick.com 2>> $LOG_FILE >> $LOG_FILE &
+    echo $! > $PID_FILE
+    touch $LOCK_FILE
+  else
+    echo "Jenkins-Slav is already running ..."
+  fi
+}
+
+slave_stop() {
+  echo -n "  Stopping Jenkins Slave: "
+  pid='0'
+  if [ -e $PID_FILE ]; then
+    pid=`cat $PID_FILE`
+    kill -9 $pid
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE && rm -f $PID_FILE
+    echo "Stopped"
+  else
+    echo "Error: No PID file: '${PID_FILE}'\n"
+  fi
+}
+
+slave_restart() {
+  echo Restarting Jenkins Slave...
+  slave_stop
+  slave_start
+  
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+}
+slave_status() {
+  echo -n "  Jenkins Slave status: "
+  state="Stopped"
+
+  if [ -e $PID_FILE ]; then
+    pid=`cat $PID_FILE`
+    ps -fp $pid | grep -q jenkins-slave
+    if [ $? -eq 0 ]; then
+      state="Running"
+    fi
+  fi
+  echo $state
+}
+
+case "$1" in
+  start)
+    slave_start
+    ;;
+  stop)
+    slave_stop
+    ;;
+  restart)
+    slave_restart
+    ;;
+  status)
+    slave_status
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit $RETVAL
