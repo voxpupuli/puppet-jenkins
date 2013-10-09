@@ -10,3 +10,4 @@ project_page 'https://github.com/rtyler/puppet-jenkins'
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>= 2.0.0'
 dependency 'puppetlabs/apt', '>= 0.0.3'
+dependency 'darin/zypprepo', '>= 1.0.1'

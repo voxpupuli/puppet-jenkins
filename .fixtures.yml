@@ -2,5 +2,6 @@ fixtures:
   repositories:
     apt: "git://github.com/puppetlabs/puppetlabs-apt"
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
+    zypprepo: "git://github.com/deadpoint/puppet-zypprepo.git"
   symlinks:
     "jenkins": "#{source_dir}"
