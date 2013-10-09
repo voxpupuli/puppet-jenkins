@@ -1,6 +1,6 @@
 # Parameters:
 # version = 'installed' (Default)
-#   Will NOT update jenkins to the most recent version. 
+#   Will NOT update jenkins to the most recent version.
 # version = 'latest'
 #    Will automatically update the version of jenkins to the current version available via your pacakge manager.
 #
