@@ -25,15 +25,15 @@ class jenkins::slave (
   case $::osfamily {
     'RedHat': {
       $java_package = "java-${$java_version}-openjdk"
+      $template_name = 'jenkins-slave.RedHat.erb' 
     }
     'Linux': {
       $java_package = "java-${$java_version}-openjdk"
+      $template_name = 'jenkins-slave.RedHat.erb' 
     }
     'Debian': {
-      #needs java package for debian.
-      fail( "Unsupported OS family: ${::osfamily}" )
-  #    $java_package=''
-
+      $java_package='openjdk-6-jre'
+      $template_name = 'jenkins-slave.Debian.erb' 
     }
 
     default: {
@@ -106,7 +106,7 @@ class jenkins::slave (
       mode    => '0700',
       owner   => 'root',
       group   => 'root',
-      content => template("${module_name}/jenkins-slave.erb"),
+      content => template("${module_name}/${template_name}"),
       notify  => Service['jenkins-slave']
   }
 
