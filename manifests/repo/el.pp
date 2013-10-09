@@ -1,18 +1,9 @@
 # Class: jenkins::repo::el
 #
-class jenkins::repo::el ()
+class jenkins::repo::el inherits jenkins ()
 {
 
-
-  if $jenkins::params::lts == 0 {
-    yumrepo {'jenkins':
-      descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/redhat/',
-      gpgcheck => 1,
-      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
-    }
-  }
-  elsif $jenkins::params::lts == 1 {
+  if $lts{
     yumrepo {'jenkins':
       descr    => 'Jenkins',
       baseurl  => 'http://pkg.jenkins-ci.org/redhat-stable/',
@@ -21,5 +12,12 @@ class jenkins::repo::el ()
     }
   }
 
+  else {
+    yumrepo {'jenkins':
+      descr    => 'Jenkins',
+      baseurl  => 'http://pkg.jenkins-ci.org/redhat/',
+      gpgcheck => 1,
+      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
+    }
+  }
 }
-

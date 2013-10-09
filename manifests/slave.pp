@@ -15,14 +15,14 @@ class jenkins::slave (
   $ui_pass = undef,
   $version = $jenkins::params::swarm_version,
   $executors = 2,
-  $manage_slave_user = 1,
+  $manage_slave_user = true,
   $slave_user = 'jenkins-slave',
   $slave_uid = undef,
   $slave_home = '/home/jenkins-slave',
   $labels = undef,
   $install_java       = $jenkins::params::install_java,
   $enable = true
-) {
+) inherits jenkins::params {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
@@ -35,7 +35,7 @@ class jenkins::slave (
 
   #add jenkins slave user if necessary.
 
-  if $manage_slave_user == 1 and $slave_uid {
+  if $manage_slave_user and $slave_uid {
     user { 'jenkins-slave_user':
       ensure     => present,
       name       => $slave_user,
@@ -46,7 +46,7 @@ class jenkins::slave (
     }
   }
 
-  if ($manage_slave_user == 1) and (! $slave_uid) {
+  if ($manage_slave_user) and (! $slave_uid) {
     user { 'jenkins-slave_user':
       ensure     => present,
       name       => $slave_user,
@@ -107,4 +107,8 @@ class jenkins::slave (
   Exec['get_swarm_client']
   -> Service['jenkins-slave']
 
+  if $install_java {
+      Class['java'] ->
+        Service['jenkins-slave']
+  }
 }

@@ -8,19 +8,12 @@ class jenkins::repo () {
 
   case $::osfamily {
 
-    'RedHat': {
-      class {
-        'jenkins::repo::el':
-          require => Anchor['jenkins::repo::alpha'],
-          before  => Anchor['jenkins::repo::omega'],
-      }
-    }
-
-    'Linux': {
-      class {
-        'jenkins::repo::el':
-          require => Anchor['jenkins::repo::alpha'],
-          before  => Anchor['jenkins::repo::omega'],
+      'RedHat', 'Linux': {
+        class {
+          'jenkins::repo::el':
+            require => Anchor['jenkins::repo::alpha'],
+            before  => Anchor['jenkins::repo::omega'],
+        }
       }
     }
 

@@ -20,7 +20,7 @@
 #
 # class{ 'jenkins::config':
 #   config_hash => {
-#     'PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
+#     'HTTP_PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
 #   }
 # }
 #
@@ -68,7 +68,10 @@ class jenkins(
   $plugin_hash        = undef,
   $configure_firewall = $jenkins::params::configure_firewall,
   $install_java       = $jenkins::params::install_java
-) {
+  $proxy_host         = undef,
+  $proxy_port         = undef,
+) inherits jenkins::params {
+
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
 
@@ -94,11 +97,20 @@ class jenkins(
       plugin_hash => $plugin_hash,
   }
 
+  if $proxy_host {
+    class { 'jenkins::proxy':
+      host    => $proxy_host,
+      port    => $proxy_port,
+      require => Package['jenkins'],
+      notify  => Service['jenkins']
+    }
+  }
+
   class {'jenkins::service':}
 
   if ($configure_firewall){
-      class {'jenkins::firewall':}
-    }
+    class {'jenkins::firewall':}
+  }
 
   Anchor['jenkins::begin'] ->
     Class['jenkins::package'] ->
@@ -109,7 +121,7 @@ class jenkins(
 
   if $install_java {
     Anchor['jenkins::begin'] ->
-      Class['jenkins::install_java'] ->
+      Class['java'] ->
         Class['jenkins::package'] ->
           Anchor['jenkins::end']
   }
