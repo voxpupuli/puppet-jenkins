@@ -9,12 +9,13 @@ class jenkins::cli {
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
 
-  exec { 'jenkins-cli':
-    command => "${extract_jar} && ${move_jar} && ${remove_dir}",
-    path    => ['/bin', '/usr/bin'],
-    cwd     => '/tmp',
-    creates => $jar,
-    require => Package['jenkins'],
+  exec {
+    'jenkins-cli' :
+      command => "${extract_jar} && ${move_jar} && ${remove_dir}",
+      path    => ['/bin', '/usr/bin'],
+      cwd     => '/tmp',
+      creates => $jar,
+      require => Package['jenkins'];
   }
 
 }
