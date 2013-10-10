@@ -92,20 +92,20 @@ class jenkins(
     }
   }
 
-  if $repo {
-      class {'jenkins::repo':}
+  if $repo_real {
+    class {'jenkins::repo':}
   }
 
   class {'jenkins::package' :
-      version => $version;
+    version => $version;
   }
 
   class { 'jenkins::config':
-      config_hash => $config_hash,
+    config_hash => $config_hash,
   }
 
   class { 'jenkins::plugins':
-      plugin_hash => $plugin_hash,
+    plugin_hash => $plugin_hash,
   }
 
   if $proxy_host {
@@ -119,7 +119,7 @@ class jenkins(
 
   class {'jenkins::service':}
 
-  if ($firewall_real){
+  if $firewall_real {
     class {'jenkins::firewall':}
   }
 
