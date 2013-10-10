@@ -63,7 +63,7 @@ It requires the swarm plugin on the master & the class jenkins::slave on the sla
 
     node /jenkins-master.*/ {
         include jenkins
-        jenkins::plugin {'swarm':}
+        include jenkins::master
     }
 ```
 
@@ -73,6 +73,7 @@ The dependencies for this module currently are:
 
 * [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
+* [java module](http://github.com/puppetlabs/puppetlabs-java) 
 
 
 
@@ -93,6 +94,7 @@ the following `require` statement:
 2. Config Hash - jennkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
+
 
 ## Using from Github / source
 
@@ -125,6 +127,7 @@ Git, puppet tree:
 This module is compatible with the puppet module tool.  To build a package file
 of this module, please use the `rake build` task.  The resulting package file
 may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
+
 
 
 To quickly try this module with the puppet module tool:
