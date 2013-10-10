@@ -7,9 +7,10 @@
 name=$1
 desired_ver=$2
 plugin_dir="<%= scope.lookupvar('plugin_dir') %>"
+manifest="${plugin_dir}/${name}/META-INF/MANIFEST.MF"
 
 if [ -z $name ]; then
-  echo "Plugin name must be specified" 1>&2
+  echo 'Plugin name must be specified' 1>&2
   exit 1
 fi
 
@@ -29,8 +30,14 @@ fi
 
 # Check the plugin manifest file for the installed version and compare that with
 # the provided desired plugin version and exit with an appropriate code
-manifest="${plugin_dir}/${name}/META-INF/MANIFEST.MF"
-installed_ver=`cat $manifest | grep -e "Plugin-Version:"`
+
+if [ ! -f $manifest ]; then
+  echo 'Unable to determine plugin version' 1>&2
+  exit 1
+fi
+
+installed_ver=`cat $manifest | grep -e 'Plugin-Version:'`
+
 echo $installed_ver | grep -e "\s${desired_ver}\s" >/dev/null
 if [ $? -ne 0 ]; then
   echo "Installed: ${name} ${installed_ver}" 1>&2
