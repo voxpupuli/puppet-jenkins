@@ -2,7 +2,8 @@
 #
 class jenkins::repo::debian
 {
-  if $::jenkins::lts  {
+  $lts = str2bool($::jenkins::lts)
+  if $lts  {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian-stable',
       release     => 'binary/',
