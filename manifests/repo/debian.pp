@@ -1,11 +1,18 @@
 # Class: jenkins::repo::debian
 #
-class jenkins::repo::debian ( $lts=0 )
+class jenkins::repo::debian
 {
-
-  include 'jenkins::repo'
-
-  if $lts == 0 {
+  if $::jenkins::lts_real  {
+    apt::source { 'jenkins':
+      location    => 'http://pkg.jenkins-ci.org/debian-stable',
+      release     => 'binary/',
+      repos       => '',
+      key         => 'D50582E6',
+      key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
+      include_src => false,
+      }
+    }
+  else {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian',
       release     => 'binary/',
@@ -14,17 +21,8 @@ class jenkins::repo::debian ( $lts=0 )
       key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
       include_src => false,
     }
-
   }
-  elsif $lts == 1 {
-    apt::source { 'jenkins':
-      location    => 'http://pkg.jenkins-ci.org/debian-stable',
-      release     => 'binary/',
-      repos       => '',
-      key         => 'D50582E6',
-      key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
-      include_src => false,
-    }
-  }
-
 }
+
+
+
