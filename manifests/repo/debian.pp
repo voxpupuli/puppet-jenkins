@@ -1,8 +1,8 @@
 # Class: jenkins::repo::debian
 #
-class jenkins::repo::debian inherits jenkins
+class jenkins::repo::debian
 {
-  if $lts  {
+  if $::jenkins::lts_real  {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian-stable',
       release     => 'binary/',
