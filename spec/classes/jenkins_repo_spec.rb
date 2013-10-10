@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'jenkins::repo' do
 
   describe 'default' do
+    let(:pre_condition) { ['class jenkins { $repo = 1 }', 'include jenkins'] }
     describe 'RedHat' do
       let(:facts) { { :osfamily => 'RedHat' } }
       it { should contain_class('jenkins::repo::el') }
@@ -25,7 +26,7 @@ describe 'jenkins::repo' do
   end
 
   describe 'repo = 0' do
-    let(:params) { { :repo => 0 } }
+    let(:pre_condition) { ['class jenkins { $repo = 0 }', 'include jenkins'] }
     it { should_not contain_class('jenkins::repo::el') }
     it { should_not contain_class('jenkins::repo::debian') }
   end

@@ -5,7 +5,7 @@ require 'spec_helper'
 describe 'jenkins' do
   describe "on RedHat" do
     let(:facts) do
-      { :osfamily => 'RedHat' }
+      { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
     end
     it { should contain_class 'jenkins' }
     it { should contain_class 'jenkins::repo' }
@@ -18,28 +18,28 @@ describe 'jenkins' do
     it { should_not contain_class 'jenkins::repo::debian' }
   end
 
-  let(:facts) do
-    { :osfamily => 'Debian' }
-  end
-  let :pre_condition do
-    " define apt::source (
-        $location          = '',
-        $release           = $lsbdistcodename,
-        $repos             = 'main',
-        $include_src       = true,
-        $required_packages = false,
-        $key               = false,
-        $key_server        = 'keyserver.ubuntu.com',
-        $key_content       = false,
-        $key_source        = false,
-        $pin               = false
-      ) {
-        notify { 'mock apt::source $title':; }
-      }
-    "
-  end
-
   describe "on Debian" do
+    let(:facts) do
+      { :osfamily => 'Debian', :lsbdistcodename => 'precise' }
+    end
+    let :pre_condition do
+      " define apt::source (
+          $location          = '',
+          $release           = $lsbdistcodename,
+          $repos             = 'main',
+          $include_src       = true,
+          $required_packages = false,
+          $key               = false,
+          $key_server        = 'keyserver.ubuntu.com',
+          $key_content       = false,
+          $key_source        = false,
+          $pin               = false
+        ) {
+          notify { 'mock apt::source $title':; }
+        }
+      "
+    end
+
     it { should contain_class 'jenkins' }
     it { should contain_class 'jenkins::repo' }
     it { should contain_class 'jenkins::package' }

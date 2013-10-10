@@ -1,9 +1,9 @@
 # Class: jenkins::repo::el
 #
-class jenkins::repo::el inherits jenkins
+class jenkins::repo::el
 {
 
-  if $lts{
+  if $::jenkins::lts  {
     yumrepo {'jenkins':
       descr    => 'Jenkins',
       baseurl  => 'http://pkg.jenkins-ci.org/redhat-stable/',
