@@ -3,8 +3,8 @@
 #
 define jenkins::plugin($version=0) {
   $plugin            = "${name}.hpi"
-  $plugin_dir        = '/var/lib/jenkins/plugins'
-  $plugin_parent_dir = '/var/lib/jenkins'
+  $plugin_dir        = "${jenkins::jenkins_home}/plugins"
+  $plugin_parent_dir = "${jenkins::jenkins_home}"
 
   if ($version != 0) {
     $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
