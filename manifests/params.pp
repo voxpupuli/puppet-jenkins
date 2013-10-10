@@ -1,7 +1,7 @@
 # Class: jenkins::params
 #
 #
-class jenkins::params (){
+class jenkins::params {
   $version            = 'installed'
   $lts                = false
   $repo               = true
