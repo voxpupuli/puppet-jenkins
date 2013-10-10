@@ -78,10 +78,15 @@ class jenkins(
   $proxy_port         = undef,
 ) inherits jenkins::params {
 
+  $lts_real = str2bool($lts)
+  $java_real = str2bool($install_java)
+  $repo_real = str2bool($repo)
+  $firewall_real = str2bool($configure_firewall)
+
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
 
-  if $install_java {
+  if $java_real {
     class {'java':
       distribution => 'jdk'
     }
@@ -114,7 +119,7 @@ class jenkins(
 
   class {'jenkins::service':}
 
-  if ($configure_firewall){
+  if ($firewall_real){
     class {'jenkins::firewall':}
   }
 
@@ -125,7 +130,7 @@ class jenkins(
           Class['jenkins::service'] ->
               Anchor['jenkins::end']
 
-  if $install_java {
+  if $java_real {
     Anchor['jenkins::begin'] ->
       Class['java'] ->
         Class['jenkins::package'] ->
@@ -139,7 +144,7 @@ class jenkins(
           Anchor['jenkins::end']
   }
 
-  if $configure_firewall {
+  if $firewall_real {
     Class['jenkins::service'] ->
       Class['jenkins::firewall'] ->
         Anchor['jenkins::end']

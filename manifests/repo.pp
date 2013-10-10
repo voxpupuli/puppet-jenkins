@@ -6,8 +6,7 @@ class jenkins::repo {
   anchor { 'jenkins::repo::alpha': }
   anchor { 'jenkins::repo::omega': }
 
-  $include_repo = str2bool($::jenkins::repo)
-  if ( $include_repo ) {
+  if ( $::jenkins::repo_real ) {
     case $::osfamily {
 
       'RedHat', 'Linux': {

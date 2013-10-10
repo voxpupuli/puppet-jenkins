@@ -8,8 +8,8 @@ describe 'jenkins::repo::debian' do
     it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian') }
   end
 
-  describe 'lts = 1' do
-    let(:pre_condition) { ['class jenkins { $lts = 1 }', 'include jenkins'] }
+  describe 'lts = true' do
+    let(:pre_condition) { ['class jenkins { $lts_real = true }', 'include jenkins'] }
     it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
   end
 
