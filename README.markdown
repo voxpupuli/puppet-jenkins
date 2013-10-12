@@ -73,8 +73,8 @@ The dependencies for this module currently are:
 
 * [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
-* [java module](http://github.com/puppetlabs/puppetlabs-java) 
-
+* [java module](http://github.com/puppetlabs/puppetlabs-java)
+* [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
 
 
 ### Depending on Jenkins

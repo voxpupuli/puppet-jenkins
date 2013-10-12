@@ -13,6 +13,11 @@ describe 'jenkins::repo' do
       let(:facts) { { :osfamily => 'Linux' } }
       it { should contain_class('jenkins::repo::el') }
     end
+    
+    describe 'Suse' do
+      let(:facts) { { :osfamily => 'Suse' } }
+      it { should contain_class('jenkins::repo::suse') }
+    end
 
     describe 'Debian' do
       let(:facts) { { :osfamily => 'Debian' } }
@@ -28,6 +33,7 @@ describe 'jenkins::repo' do
   describe 'repo = 0' do
     let(:pre_condition) { ['class jenkins { $repo = 0 }', 'include jenkins'] }
     it { should_not contain_class('jenkins::repo::el') }
+    it { should_not contain_class('jenkins::repo::suse') }
     it { should_not contain_class('jenkins::repo::debian') }
   end
 end

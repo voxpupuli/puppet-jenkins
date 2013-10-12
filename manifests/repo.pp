@@ -25,6 +25,13 @@ class jenkins::repo {
         }
       }
 
+      'Suse' : {
+        class { 'jenkins::repo::suse':
+          require => Anchor['jenkins::repo::alpha'],
+          before  => Anchor['jenkins::repo::omega'],
+        }
+      }
+
       default: {
         fail( "Unsupported OS family: ${::osfamily}" )
       }
