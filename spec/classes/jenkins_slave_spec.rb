@@ -3,10 +3,9 @@ require 'spec_helper'
 describe 'jenkins::slave' do
 
   describe 'RedHat' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS' } }
 
     describe 'default' do
-      it { should contain_package('java-1.6.0-openjdk') }
       it { should contain_exec('get_swarm_client') }
       it { should contain_file('/etc/init.d/jenkins-slave') }
       it { should contain_service('jenkins-slave') }
