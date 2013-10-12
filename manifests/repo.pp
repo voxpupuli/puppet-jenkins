@@ -24,13 +24,13 @@ class jenkins::repo {
             before  => Anchor['jenkins::repo::omega'],
         }
       }
-	  
-      'Suse'            : {
+
+      'Suse' : {
         class { 'jenkins::repo::suse':
           require => Anchor['jenkins::repo::alpha'],
           before  => Anchor['jenkins::repo::omega'],
         }
-      	  
+      }
 
       default: {
         fail( "Unsupported OS family: ${::osfamily}" )

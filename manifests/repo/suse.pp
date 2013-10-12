@@ -1,19 +1,9 @@
 # Class: jenkins::repo::suse
 #
-class jenkins::repo::suse ( $lts=0 )
+class jenkins::repo::suse
 {
 
-  include 'jenkins::repo'
-
-  if $lts == 0 {
-    zypprepo {'jenkins':
-      descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/opensuse/',
-      gpgcheck => 1,
-      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
-    }
-  }
-  elsif $lts == 1 {
+  if $::jenkins::lts_real {
     zypprepo {'jenkins':
       descr    => 'Jenkins',
       baseurl  => 'http://pkg.jenkins-ci.org/opensuse-stable/',
@@ -22,4 +12,12 @@ class jenkins::repo::suse ( $lts=0 )
     }
   }
 
+  else {
+    zypprepo {'jenkins':
+      descr    => 'Jenkins',
+      baseurl  => 'http://pkg.jenkins-ci.org/opensuse/',
+      gpgcheck => 1,
+      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
+    }
+  }
 }
