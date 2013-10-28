@@ -137,7 +137,7 @@ class jenkins(
           Anchor['jenkins::end']
   }
 
-  if $repo {
+  if $repo_real {
     Anchor['jenkins::begin'] ->
       Class['jenkins::repo'] ->
         Class['jenkins::package'] ->
