@@ -15,5 +15,17 @@ class jenkins::config(
 ) {
   Class['Jenkins::Package']->Class['Jenkins::Config']
   create_resources( 'jenkins::sysconfig', $config_hash )
+
+  #
+  # The jenkins.model.JenkinsLocationConfiguration.xml file is not
+  # created until a save is performed via the Web UI.  We are
+  # providing one for the initial configuration.
+  #
+  file { '/var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml':
+    ensure  => file,
+    require => Package['jenkins'],
+    content => template("jenkins/jenkinsUrlFile.erb"),
+  }
+
 }
 
