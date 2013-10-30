@@ -23,7 +23,8 @@ LOG_FILE=/var/log/jenkins-slave
 slave_start() {
   echo Starting Jenkins Slave...
   if [ ! -f $LOCK_FILE ]; then
-    nohup java -jar <%= slave_home -%>/<%= client_jar -%> -name <%= fqdn -%> -executors <%= executors -%> <%= masterurl_flag -%> <%= labels_flag -%> 2>> $LOG_FILE >> $LOG_FILE &
+    #nohup java -jar <%= slave_home -%>/<%= client_jar -%> -name <%= fqdn -%> -executors <%= executors -%> <%= masterurl_flag -%> <%= labels_flag -%> 2>> $LOG_FILE >> $LOG_FILE &
+    nohup java -jar <%= slave_home -%>/<%= client_jar -%> -executors <%= executors -%> 2>> $LOG_FILE >> $LOG_FILE &
     echo $! > $PID_FILE
     touch $LOCK_FILE
   else
