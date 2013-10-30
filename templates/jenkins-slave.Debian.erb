@@ -18,14 +18,15 @@ RETVAL=0
 
 PID_FILE=/var/run/jenkins-slave.pid
 LOCK_FILE=/var/lock/jenkins-slave
-LOG_FILE=/var/log/jenkins-slave
+LOG_FILE=<%= slave_home -%>/slave.log
 
 slave_start() {
   echo Starting Jenkins Slave...
   if [ ! -f $LOCK_FILE ]; then
-    nohup java -jar /home/jenkins-slave/swarm-client-1.8-jar-with-dependencies.jar -name ubuntu1204x64client.skybeam.com -executors 2 -master nick.com 2>> $LOG_FILE >> $LOG_FILE &
-    echo $! > $PID_FILE
-    touch $LOCK_FILE
+    su - <%= slave_user %> -c "java -jar <%= slave_home -%>/<%= client_jar -%> -fsroot <%= slave_home -%> -name `hostname -f` -executors <%= executors -%> <%= masterurl_flag -%> <%= labels_flag -%> >> $LOG_FILE 2>> $LOG_FILE &"
+    pgrep -f -u <%= slave_user -%> <%= client_jar -%> > $PID_FILE
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && touch $LOCK_FILE
   else
     echo "Jenkins-Slav is already running ..."
   fi
