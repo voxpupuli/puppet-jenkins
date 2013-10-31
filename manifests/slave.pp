@@ -82,13 +82,13 @@ class jenkins::slave (
 
   case $::osfamily {
     'RedHat': {
-      $template_name = 'jenkins-slave.RedHat.erb' 
+      $template_name = 'jenkins-slave.RedHat.erb'
     }
     'Linux': {
-      $template_name = 'jenkins-slave.RedHat.erb' 
+      $template_name = 'jenkins-slave.RedHat.erb'
     }
     'Debian': {
-      $template_name = 'jenkins-slave.Debian.erb' 
+      $template_name = 'jenkins-slave.Debian.erb'
     }
 
     default: {
