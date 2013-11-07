@@ -57,7 +57,7 @@ class jenkins(
   $plugin_hash = undef,
 ) {
 
-  anchor { 'jenkins::start':}
+  anchor { 'jenkins::begin':}
   class {
     'jenkins::repo':
       lts  => $lts,
@@ -80,7 +80,7 @@ class jenkins(
   include jenkins::service
   include jenkins::firewall
 
-  Anchor['jenkins::start'] ->
+  Anchor['jenkins::begin'] ->
     Class['jenkins::repo'] ->
     Class['jenkins::package'] ->
     Class['jenkins::service'] ->
