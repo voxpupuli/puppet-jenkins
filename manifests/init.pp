@@ -57,6 +57,7 @@ class jenkins(
   $plugin_hash = undef,
 ) {
 
+  anchor { 'jenkins::start':}
   class {
     'jenkins::repo':
       lts  => $lts,
@@ -74,12 +75,16 @@ class jenkins(
       plugin_hash => $plugin_hash,
   }
 
+  anchor { 'jenkins::end':}
+
   include jenkins::service
   include jenkins::firewall
 
-  Class['jenkins::repo'] ->
-      Class['jenkins::package'] ->
-          Class['jenkins::service']
+  Anchor['jenkins::start'] ->
+    Class['jenkins::repo'] ->
+    Class['jenkins::package'] ->
+    Class['jenkins::service'] ->
+  Anchor['jenkins::end']
 }
 
 # vim: ts=2 et sw=2 autoindent
