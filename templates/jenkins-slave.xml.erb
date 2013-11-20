@@ -36,8 +36,8 @@ THE SOFTWARE.
     if you'd like to run Jenkins with a specific version of Java, specify a full path to java.exe.
     The following value assumes that you have java in your PATH.
   -->
-  <executable>C:\Program Files (x86)\Jenkins\jre\bin\java.exe</executable>
-  <arguments>-Xrs  -jar "%BASE%\slave.jar" -jnlpUrl http://localhost:8080/computer/r2client/slave-agent.jnlp -secret 94a5f14a20833736a338487d64a15e4a38e72d962bd313b6730f43d2b86b06c3</arguments>
+  <executable><%= @java_path -%>\java.exe</executable>
+  <arguments>-Xrs  -jar "<%= @windows_slave_home -%>\<%= @client_jar -%>"</arguments>
   <!--
     interactive flag causes the empty black Java window to be displayed.
     I'm still debugging this.
