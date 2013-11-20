@@ -90,29 +90,33 @@ class jenkins::slave (
         require     => File[$windows_slave_home],
       }
 
-	  file { "${windows_slave_home}\\jenkins-slave.exe":
-	    ensure  => file,
-		source  => "puppet:///modules/jenkins/jenkins-slave.exe",
-		require  => File[ "${windows_slave_home}" ],
-	  }
+      file { "${windows_slave_home}\\jenkins-slave.exe":
+        ensure  => file,
+        source  => "puppet:///modules/jenkins/jenkins-slave.exe",
+        require  => File[ "${windows_slave_home}" ],
+      }
 	  
-	  file { "${windows_slave_home}\\jenkins-slave.xml":
-	    ensure  => file,
-		content => template("jenkins/jenkins-slave.xml.erb"),
-		require  => File[ "${windows_slave_home}" ],
-	  }
+      file { "${windows_slave_home}\\jenkins-slave.xml":
+        ensure  => file,
+        content => template("jenkins/jenkins-slave.xml.erb"),
+        require  => File[ "${windows_slave_home}" ],
+      }
 	  
-	  file { "${windows_slave_home}\\jenkins-slave.exe.config":
-	    ensure  => file,
-		content => template("jenkins/jenkins-slave.exe.config.erb"),
-		require  => File["${windows_slave_home}"],
-	  }
+      file { "${windows_slave_home}\\jenkins-slave.exe.config":
+        ensure  => file,
+        content => template("jenkins/jenkins-slave.exe.config.erb"),
+        require  => File["${windows_slave_home}"],
+      }
 	  
-	  exec {  'sc_create_service':
-	    command => "${systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${windows_slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
-        require => File[ "${windows_slave_home}\\jenkins-slave.exe", "${windows_slave_home}\\jenkins-slave.xml" ],
-	  }
+      exec {  'sc_create_service':
+        command => "${systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${windows_slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
+        require => File[ "${windows_slave_home}\\jenkins-slave.exe", "${windows_slave_home}\\jenkins-slave.xml" ]
+      }
 	  
+      exec { 'sc_start_jenkinsslave':
+        command => "${systemdrive}\\windows\\system32\\sc.exe start JenkinsSlave",
+        require => Exec[ "sc_create_service" ],
+      }
     }
     default: {
       #
