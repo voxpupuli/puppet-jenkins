@@ -65,7 +65,7 @@ class jenkins::slave (
   $manage_slave_user = true,
   $slave_user        = 'jenkins-slave',
   $slave_uid         = undef,
-  $slave_home        = '/home/jenkins-slave',
+  $slave_home        = $::osfamily ? { 'windows' => "${systemdrive}\\ProgramData\\jenkins-slave, default => "/home/jenkins-slave", },
   $labels            = undef,
   $install_java      = $jenkins::params::install_java,
   $enable            = true
@@ -131,8 +131,7 @@ class jenkins::slave (
   #
   case $::osfamily {
   'windows': {
-    #    Install the Jenkins swarm client as a Windows Service on a
-    #    Windows Server system.
+    #    Install the Jenkins swarm client as a Windows Service.
     #
     #    The Jenkins swarm client is a Java application.  To run
     #    a Java application as a Windows service, you need a
@@ -149,7 +148,7 @@ class jenkins::slave (
     #    Note: The following depends on the windows_common module.
     #
 
-    $windows_slave_home = "${systemdrive}\\ProgramData\\jenkins_slave"
+    #$slave_home = "${systemdrive}\\ProgramData\\jenkins_slave"
 
     windows_common::configuration::feature { 'NET-Framework-Features':
       ensure => present,
@@ -161,37 +160,37 @@ class jenkins::slave (
     #$java_path = ${::java::params::java_path}
     $java_path = "${systemdrive}\\Program Files (x86)\\Java\\jdk1.7.0_21\\bin"
   
-    file { $windows_slave_home:
+    file { $slave_home:
       ensure => directory,
     }
 
     windows_common::remote_file { 'swarm_client':
       source      => "${client_url}/${client_jar}",
-      destination => "${windows_slave_home}/${client_jar}",
-      require     => File[$windows_slave_home],
+      destination => "${slave_home}/${client_jar}",
+      require     => File[$slave_home],
     }
 
-    file { "${windows_slave_home}\\jenkins-slave.exe":
+    file { "${slave_home}\\jenkins-slave.exe":
       ensure  => file,
       source  => "puppet:///modules/jenkins/jenkins-slave.exe",
-      require  => File[ "${windows_slave_home}" ],
+      require  => File[ "${slave_home}" ],
     }
 	  
-    file { "${windows_slave_home}\\jenkins-slave.xml":
+    file { "${slave_home}\\jenkins-slave.xml":
       ensure  => file,
       content => template("jenkins/jenkins-slave.xml.erb"),
-      require  => File[ "${windows_slave_home}" ],
+      require  => File[ "${slave_home}" ],
     }
 	  
-    file { "${windows_slave_home}\\jenkins-slave.exe.config":
+    file { "${slave_home}\\jenkins-slave.exe.config":
       ensure  => file,
       content => template("jenkins/jenkins-slave.exe.config.erb"),
-      require  => File["${windows_slave_home}"],
+      require  => File["${slave_home}"],
     }
 	  
     exec {  'sc_create_service':
-      command => "${systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${windows_slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
-      require => File[ "${windows_slave_home}\\jenkins-slave.exe", "${windows_slave_home}\\jenkins-slave.xml" ]
+      command => "${systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
+      require => File[ "${slave_home}\\jenkins-slave.exe", "${slave_home}\\jenkins-slave.xml" ]
     }
 	  
     exec { 'sc_start_jenkinsslave':
