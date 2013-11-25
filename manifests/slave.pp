@@ -156,7 +156,7 @@ class jenkins::slave (
       # Bug - need to modify windows_java to export the java_path variable
       #
       #$java_path = ${::java::params::java_path}
-      $java_path = "${systemdrive}\\Program Files (x86)\\Java\\jre7\\bin"
+      $java_path = "${systemdrive}\\Program Files\\Java\\jre7\\bin"
   
       file { $slave_home:
         ensure => directory,
