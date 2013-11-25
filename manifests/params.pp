@@ -12,18 +12,16 @@ class jenkins::params {
   $swarm_version      = '1.9'
 
   case $::osfamily {
-    'Red Hat': {
-      $slave_home = "/home/jenkins-slave"
-      $service_file = "jenkins-slave.erb"
-    }
     'Debian': {
       $slave_home = "/home/jenkins-slave"
-      $service_file = "jenkins-slave-debian.erb"
+      $service_file = "jenkins-slave.Debian.erb"
     }
     'windows': {
       $slave_home = "${systemdrive}\\ProgramData\\jenkins-slave"
     }
     default: {
+      $slave_home = "/home/jenkins-slave"
+      $service_file = "jenkins-slave.erb"
     }
   }
 }
