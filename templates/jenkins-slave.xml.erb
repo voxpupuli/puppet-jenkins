@@ -37,7 +37,7 @@ THE SOFTWARE.
     The following value assumes that you have java in your PATH.
   -->
   <executable><%= @java_path -%>\java.exe</executable>
-  <arguments>-Xrs  -jar "<%= @windows_slave_home -%>\<%= @client_jar -%>"</arguments>
+  <arguments>-Xrs  -jar "<%= @slave_home -%>\<%= @client_jar -%>" -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%></arguments>
   <!--
     interactive flag causes the empty black Java window to be displayed.
     I'm still debugging this.
