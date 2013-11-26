@@ -15,8 +15,8 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::config' }
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
-      it { should contain_class 'jenkins::firewall' }
       it { should contain_class 'jenkins::repo::el' }
+      it { should_not contain_class 'jenkins::firewall' }
       it { should_not contain_class 'jenkins::proxy' }
       it { should_not contain_class 'jenkins::repo::debian' }
       it { should_not contain_class 'jenkins::repo::suse' }
@@ -37,9 +37,9 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'without firewall' do
-      let(:params) { { :configure_firewall => false } }
-      it { should_not contain_class 'jenkins::firewall' }
+    describe 'with firewall' do
+      let(:params) { { :configure_firewall => true } }
+      it { should contain_class 'jenkins::firewall' }
     end
   end
 
@@ -55,8 +55,8 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::config' }
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
-      it { should contain_class 'jenkins::firewall' }
       it { should contain_class 'jenkins::repo::suse' }
+      it { should_not contain_class 'jenkins::firewall' }
       it { should_not contain_class 'jenkins::proxy' }
       it { should_not contain_class 'jenkins::repo::debian' }
       it { should_not contain_class 'jenkins::repo::el' }
@@ -77,9 +77,9 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'without firewall' do
-      let(:params) { { :configure_firewall => false } }
-      it { should_not contain_class 'jenkins::firewall' }
+    describe 'with firewall' do
+      let(:params) { { :configure_firewall => true } }
+      it { should contain_class 'jenkins::firewall' }
     end
   end
 
@@ -113,8 +113,8 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::config' }
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
-      it { should contain_class 'jenkins::firewall' }
       it { should contain_class 'jenkins::repo::debian' }
+      it { should_not contain_class 'jenkins::firewall' }
       it { should_not contain_class 'jenkins::proxy' }
       it { should_not contain_class 'jenkins::repo::el' }
       it { should_not contain_class 'jenkins::repo::suse' }
@@ -135,9 +135,9 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'without firewall' do
-      let(:params) { { :configure_firewall => false } }
-      it { should_not contain_class 'jenkins::firewall' }
+    describe 'with firewall' do
+      let(:params) { { :configure_firewall => true } }
+      it { should contain_class 'jenkins::firewall' }
     end
   end
 end

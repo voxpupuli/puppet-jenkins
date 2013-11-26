@@ -7,7 +7,7 @@ class jenkins::params {
   $repo               = true
   $service_enable     = true
   $service_ensure     = 'running'
-  $configure_firewall = true
+  $configure_firewall = false
   $install_java       = true
   $swarm_version      = '1.9'
 }
