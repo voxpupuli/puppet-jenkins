@@ -9,9 +9,11 @@ define jenkins::plugin($version=0) {
 
   if ($version != 0) {
     $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
+    $search   = "${name} ${version},"
   }
   else {
     $base_url = 'http://updates.jenkins-ci.org/latest/'
+    $search   = "${name} "
   }
 
   if (!defined(File[$plugin_dir])) {
@@ -47,21 +49,14 @@ define jenkins::plugin($version=0) {
     }
   }
 
-  if (!defined(File[$plugin_installed])) {
-    file {
-      $plugin_installed :
-        mode    => '0777',
-        content => template("jenkins/plugin-is-installed.erb");
+  if (empty(grep([ $::jenkins_plugins ], $search))) {
+    exec {
+      "download-${name}" :
+        command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
+        cwd        => $plugin_dir,
+        require    => [File[$plugin_dir], Package['wget']],
+        path       => ['/usr/bin', '/usr/sbin',],
     }
-  }
-
-  exec {
-    "download-${name}" :
-      command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
-      cwd        => $plugin_dir,
-      require    => [File[$plugin_dir], Package['wget'], File[$plugin_installed]],
-      path       => ['/usr/bin', '/usr/sbin',],
-      unless     => "bash ${plugin_installed} ${name} ${version}";
   }
 
   file {
@@ -71,4 +66,5 @@ define jenkins::plugin($version=0) {
       mode    => '0644',
       notify  => Service['jenkins'];
   }
+
 }
