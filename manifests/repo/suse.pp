@@ -1,21 +1,21 @@
-# Class: jenkins::repo::el
+# Class: jenkins::repo::suse
 #
-class jenkins::repo::el
+class jenkins::repo::suse
 {
 
-  if $::jenkins::lts_real  {
-    yumrepo {'jenkins':
+  if $::jenkins::lts_real {
+    zypprepo {'jenkins':
       descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/redhat-stable/',
+      baseurl  => 'http://pkg.jenkins-ci.org/opensuse-stable/',
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
     }
   }
 
   else {
-    yumrepo {'jenkins':
+    zypprepo {'jenkins':
       descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/redhat/',
+      baseurl  => 'http://pkg.jenkins-ci.org/opensuse/',
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key'
     }

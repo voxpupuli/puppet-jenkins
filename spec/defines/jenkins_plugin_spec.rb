@@ -1,29 +1,23 @@
 require 'spec_helper'
 
-# Note, rspec-puppet determines the define name from the top level describe
-# string.
 describe 'jenkins::plugin' do
-  let(:title) { 'git' }
+  let(:title) { 'myplug' }
 
-  describe "on RedHat" do
-    let(:facts) do
-      { :osfamily => 'RedHat' }
-    end
-    it { should contain_user('jenkins') }
-    it { should contain_group('jenkins') }
-    it { should contain_file('/var/lib/jenkins') }
-    it { should contain_file('/var/lib/jenkins/plugins') }
-    it { should contain_exec('download-git') }
+  it { should contain_file('/var/lib/jenkins') }
+  it { should contain_file('/var/lib/jenkins/plugins') }
+  it { should contain_group('jenkins') }
+  it { should contain_user('jenkins') }
+
+  describe 'without version' do
+    it { should contain_exec('download-myplug').with_command('wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi') }
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
-  describe "on Debian" do
-    let(:facts) do
-      { :osfamily => 'Debian' }
-    end
-    it { should contain_user('jenkins') }
-    it { should contain_group('jenkins') }
-    it { should contain_file('/var/lib/jenkins') }
-    it { should contain_file('/var/lib/jenkins/plugins') }
-    it { should contain_exec('download-git') }
+
+  describe 'with version' do
+    let(:params) { { :version => '1.2.3' } }
+
+    it { should contain_exec('download-myplug').with_command('wget --no-check-certificate http://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi') }
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
+
 end
-
