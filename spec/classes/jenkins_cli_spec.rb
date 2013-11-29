@@ -1,4 +1,4 @@
-re 'spec_helper'
+require 'spec_helper'
 
 describe 'jenkins::cli' do
 
