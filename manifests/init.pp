@@ -63,6 +63,7 @@ class jenkins(
   $configure_firewall = true,
   $proxy_host = undef,
   $proxy_port = undef,
+  $cli        = undef,
 ) {
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
@@ -97,6 +98,10 @@ class jenkins(
 
   if ($configure_firewall){
     class {'jenkins::firewall':}
+  }
+
+  if $cli {
+    class {'jenkins::cli':}
   }
 
   Anchor['jenkins::begin'] ->
