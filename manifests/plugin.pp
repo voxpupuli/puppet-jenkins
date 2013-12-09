@@ -8,9 +8,11 @@ define jenkins::plugin($version=0) {
 
   if ($version != 0) {
     $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
+    $search   = "${name} ${version},"
   }
   else {
     $base_url = 'http://updates.jenkins-ci.org/latest/'
+    $search   = "${name} "
   }
 
   if (!defined(File[$plugin_dir])) {
@@ -46,13 +48,14 @@ define jenkins::plugin($version=0) {
     }
   }
 
-  exec {
-    "download-${name}" :
-      command    => "wget --no-check-certificate ${base_url}${plugin}",
-      cwd        => $plugin_dir,
-      require    => [File[$plugin_dir], Package['wget']],
-      path       => ['/usr/bin', '/usr/sbin',],
-      unless     => "test -f ${plugin_dir}/${name}.hpi || test -f ${plugin_dir}/${name}.jpi",
+  if (empty(grep([ $::jenkins_plugins ], $search))) {
+    exec {
+      "download-${name}" :
+        command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
+        cwd        => $plugin_dir,
+        require    => [File[$plugin_dir], Package['wget']],
+        path       => ['/usr/bin', '/usr/sbin',],
+    }
   }
 
   file {
@@ -60,6 +63,7 @@ define jenkins::plugin($version=0) {
       require => Exec["download-${name}"],
       owner   => 'jenkins',
       mode    => '0644',
-      notify  => Service['jenkins']
+      notify  => Service['jenkins'];
   }
+
 }
