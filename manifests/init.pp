@@ -78,7 +78,7 @@ class jenkins(
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
   $proxy_port         = undef,
-  $cli				  = undef,
+  $cli				        = undef,
 ) inherits jenkins::params {
 
   $lts_real = str2bool($lts)
