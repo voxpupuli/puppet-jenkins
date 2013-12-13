@@ -7,7 +7,7 @@ jenkins_home = Facter::Util::Resolution.exec("echo ~jenkins")
 plugins = "#{jenkins_home}/plugins"
 jenkins_plugins = ''
 
-if File.directory?(jenkins_home)
+if File.directory?(plugins)
   # Get a list of all plugins + versions
   Dir.entries(plugins).select do |plugin|
     if (File.directory?("#{plugins}/#{plugin}") == true) && !(plugin == '..' || plugin == '.')
