@@ -48,6 +48,13 @@ define jenkins::plugin($version=0) {
     }
   }
 
+  file {
+    "${plugin_dir}/${plugin}" :
+      owner   => 'jenkins',
+      mode    => '0644',
+      notify  => Service['jenkins'];
+  }
+
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     exec {
       "download-${name}" :
@@ -56,14 +63,10 @@ define jenkins::plugin($version=0) {
         require    => [File[$plugin_dir], Package['wget']],
         path       => ['/usr/bin', '/usr/sbin', '/bin'],
     }
-  }
 
-  file {
-    "${plugin_dir}/${plugin}" :
-      require => Exec["download-${name}"],
-      owner   => 'jenkins',
-      mode    => '0644',
-      notify  => Service['jenkins'];
+    File["${plugin_dir}/${plugin}"] {
+      require => Exec["download-${name}"]
+    }
   }
 
 }
