@@ -170,6 +170,7 @@ class jenkins::slave (
 
       file { "${slave_home}\\jenkins-slave.exe":
         ensure  => file,
+        mode    => 0777,
         source  => "puppet:///modules/jenkins/jenkins-slave.exe",
         require  => File[ "${slave_home}" ],
       }
