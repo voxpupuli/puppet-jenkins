@@ -47,7 +47,7 @@ define jenkins::plugin($version=0) {
         ensure => present;
     }
   }
-  
+
   file {
     "${plugin_dir}/${plugin}" :
       owner   => 'jenkins',
