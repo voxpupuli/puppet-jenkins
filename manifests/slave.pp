@@ -80,6 +80,22 @@ class jenkins::slave (
     }
   }
 
+  case $::osfamily {
+    'RedHat': {
+      $template_name = 'jenkins-slave.RedHat.erb'
+    }
+    'Linux': {
+      $template_name = 'jenkins-slave.RedHat.erb'
+    }
+    'Debian': {
+      $template_name = 'jenkins-slave.Debian.erb'
+    }
+
+    default: {
+      fail( "Unsupported OS family: ${::osfamily}" )
+    }
+  }
+
   #add jenkins slave user if necessary.
 
   if $manage_slave_user and $slave_uid {
@@ -140,7 +156,7 @@ class jenkins::slave (
       mode    => '0700',
       owner   => 'root',
       group   => 'root',
-      content => template("${module_name}/jenkins-slave.erb"),
+      content => template("${module_name}/${template_name}"),
       notify  => Service['jenkins-slave']
   }
 
