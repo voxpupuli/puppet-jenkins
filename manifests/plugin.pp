@@ -36,8 +36,9 @@ define jenkins::plugin($version=0) {
   if (!defined(User['jenkins'])) {
     user {
       'jenkins' :
-        ensure  => present,
-        require => Package['jenkins'];
+        ensure     => present,
+        managehome => true,
+        require    => Package['jenkins'];
     }
   }
 
