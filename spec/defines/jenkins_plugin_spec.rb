@@ -6,7 +6,7 @@ describe 'jenkins::plugin' do
   it { should contain_file('/var/lib/jenkins') }
   it { should contain_file('/var/lib/jenkins/plugins') }
   it { should contain_group('jenkins') }
-  it { should contain_user('jenkins').with('managehome' => 'true') }
+  it { should contain_user('jenkins').with('home' => '/var/lib/jenkins') }
 
   describe 'without version' do
     it { should contain_exec('download-myplug').with_command('rm -rf myplug myplug.* && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi') }
