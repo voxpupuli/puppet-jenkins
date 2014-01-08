@@ -1,24 +1,30 @@
 # == Class: jenkins::slave
 #
-# This module setups up a swarm client for a jenkins server.  It requires the swarm plugin on the Jenkins master.
+# This module setups up a swarm client for a jenkins server.
+# It requires the swarm plugin on the Jenkins master.
 #
 # https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin
 #
-# It allows users to add more workers to Jenkins without having to specifically add them on the Jenkins master.
+# It allows users to add more workers to Jenkins without
+# having to specifically add them on the Jenkins master.
 #
 # === Parameters
 #
 # [*masterurl*]
-#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
+#   Specify the URL of the master server.  Not required, the plugin will
+#   do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
 # [*ui_user*] & [*ui_pass*]
-#   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
+#   User name & password for the Jenkins UI.  Not required, but may be ncessary
+#   for your config, depending on your security model.
 #
 # [*version*]
-#   The version of the swarm client code. Must match the pluging version on the master.  Typically it's the latest available.
+#   The version of the swarm client code. Must match the pluging version on
+#   the master.  Typically it's the latest available.
 #
 # [*executors*]
-#   Number of executors for this slave.  (How many jenkins jobs can run simultaneously on this host.)
+#   Number of executors for this slave.
+#   (How many jenkins jobs can run simultaneously on this host.)
 #
 # [*manage_slave_user*]
 #   Should the class add a user to run the slave code?  1 is currently true
@@ -28,13 +34,16 @@
 #   Defaults to 'jenkins-slave'. Change it if you'd like..
 #
 # [*slave_uid*]
-#   Not required.  Puppet will let your system add the user, with the new UID if necessary.
+#   Not required.  Puppet will let your system add the
+#   user, with the new UID if necessary.
 #
 # [*slave_home*]
-#   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
+#   Defaults to '/home/jenkins-slave'.  This is where the code
+#   will be installed, and the workspace will end up.
 #
 # [*labels*]
-#   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
+#   Not required.  Single string of whitespace-separated list
+#   of labels to be assigned for this slave.
 #
 # [*jave_version*]
 #   Specified which version of java will be used.
@@ -156,8 +165,8 @@ class jenkins::slave (
       # Bug - need to modify windows_java to export the java_path variable
       #
       #$java_path = ${::java::params::java_path}
-      $java_path = "${systemdrive}\\Program Files\\Java\\jre7\\bin"
-  
+      $java_path = "${::systemdrive}\\Program Files\\Java\\jre7\\bin"
+
       file { $slave_home:
         ensure => directory,
       }
@@ -170,31 +179,34 @@ class jenkins::slave (
 
       file { "${slave_home}\\jenkins-slave.exe":
         ensure  => file,
-        mode    => 0777,
-        source  => "puppet:///modules/jenkins/jenkins-slave.exe",
-        require  => File[ "${slave_home}" ],
+        mode    => '0777',
+        source  => 'puppet:///modules/jenkins/jenkins-slave.exe',
+        require => File[$slave_home],
+        backup  => false,
       }
-	  
+
       file { "${slave_home}\\jenkins-slave.xml":
         ensure  => file,
-        content => template("jenkins/jenkins-slave.xml.erb"),
-        require  => File[ "${slave_home}" ],
+        content => template('jenkins/jenkins-slave.xml.erb'),
+        require => File[ $slave_home ],
+        backup  => false,
       }
-	  
+
       file { "${slave_home}\\jenkins-slave.exe.config":
         ensure  => file,
-        content => template("jenkins/jenkins-slave.exe.config.erb"),
-        require  => File["${slave_home}"],
+        content => template('jenkins/jenkins-slave.exe.config.erb'),
+        require => File[$slave_home],
+        backup  => false,
       }
-	  
+
       exec {  'sc_create_service':
-        command => "${systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
+        command => "${::systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
         require => File[ "${slave_home}\\jenkins-slave.exe", "${slave_home}\\jenkins-slave.xml" ],
       }
-	  
+
       exec { 'sc_start_jenkinsslave':
-        command => "${systemdrive}\\windows\\system32\\sc.exe start JenkinsSlave",
-        require => Exec[ "sc_create_service" ],
+        command => "${::systemdrive}\\windows\\system32\\sc.exe start JenkinsSlave",
+        require => Exec[ 'sc_create_service' ],
       }
     }
     default: {
@@ -212,7 +224,7 @@ class jenkins::slave (
         mode    => '0700',
         owner   => 'root',
         group   => 'root',
-        content => template("${module_name}/${service_file}"),
+        content => template("${::module_name}/${::service_file}"),
         notify  => Service['jenkins-slave']
       }
 
