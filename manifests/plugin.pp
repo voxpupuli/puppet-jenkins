@@ -37,6 +37,7 @@ define jenkins::plugin($version=0) {
     user {
       'jenkins' :
         ensure  => present,
+        home    => $plugin_parent_dir,
         require => Package['jenkins'];
     }
   }
