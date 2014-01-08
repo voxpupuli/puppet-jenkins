@@ -224,7 +224,7 @@ class jenkins::slave (
         mode    => '0700',
         owner   => 'root',
         group   => 'root',
-        content => template("${::module_name}/${::service_file}"),
+        content => template("jenkins/${service_file}"),
         notify  => Service['jenkins-slave']
       }
 
