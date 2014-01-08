@@ -177,22 +177,22 @@ class jenkins::slave (
         require     => File[$slave_home],
       }
 
-      file { "${slave_home}\\jenkins-slave.exe":
-        ensure  => file,
-        mode    => '0777',
-        source  => 'puppet:///modules/jenkins/jenkins-slave.exe',
-        require => File[$slave_home],
-        backup  => false,
+      file { "${slave_home}\\jenkinsslave.exe":
+        ensure             => file,
+        source_permissions => ignore,
+        source             => 'puppet:///modules/jenkins/jenkins-slave.exe',
+        require            => File[$slave_home],
+        backup             => false,
       }
 
-      file { "${slave_home}\\jenkins-slave.xml":
+      file { "${slave_home}\\jenkinsslave.xml":
         ensure  => file,
         content => template('jenkins/jenkins-slave.xml.erb'),
         require => File[ $slave_home ],
         backup  => false,
       }
 
-      file { "${slave_home}\\jenkins-slave.exe.config":
+      file { "${slave_home}\\jenkinsslave.exe.config":
         ensure  => file,
         content => template('jenkins/jenkins-slave.exe.config.erb'),
         require => File[$slave_home],
@@ -200,8 +200,8 @@ class jenkins::slave (
       }
 
       exec {  'sc_create_service':
-        command => "${::systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkins-slave.exe displayName=\"Jenkins Slave\"",
-        require => File[ "${slave_home}\\jenkins-slave.exe", "${slave_home}\\jenkins-slave.xml" ],
+        command => "${::systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkinsslave.exe displayName=\"Jenkins Slave\"",
+        require => File[ "${slave_home}\\jenkinsslave.exe", "${slave_home}\\jenkinsslave.xml" ],
       }
 
       exec { 'sc_start_jenkinsslave':
