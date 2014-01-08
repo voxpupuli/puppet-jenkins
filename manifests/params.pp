@@ -13,15 +13,15 @@ class jenkins::params {
 
   case $::osfamily {
     'Debian': {
-      $slave_home = "/home/jenkins-slave"
-      $service_file = "jenkins-slave.Debian.erb"
+      $slave_home = '/home/jenkins-slave'
+      $service_file = 'jenkins-slave.Debian.erb'
     }
     'windows': {
-      $slave_home = "${systemdrive}\\ProgramData\\jenkins-slave"
+      $slave_home = "${::systemdrive}\\ProgramData\\jenkins-slave"
     }
     default: {
-      $slave_home = "/home/jenkins-slave"
-      $service_file = "jenkins-slave.erb"
+      $slave_home = '/home/jenkins-slave'
+      $service_file = 'jenkins-slave.erb'
     }
   }
 }
