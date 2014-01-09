@@ -202,6 +202,7 @@ class jenkins::slave (
       exec {  'sc_create_service':
         command => "${::systemdrive}\\windows\\system32\\sc.exe create JenkinsSlave start=auto binPath=${slave_home}\\jenkinsslave.exe displayName=\"Jenkins Slave\"",
         require => File[ "${slave_home}\\jenkinsslave.exe", "${slave_home}\\jenkinsslave.xml" ],
+        unless  => "${::systemdrive}\\windows\\system32\\sc.exe getdisplayname JenkinsSlave",
       }
 
       exec { 'sc_start_jenkinsslave':
