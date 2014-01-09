@@ -205,12 +205,6 @@ class jenkins::slave (
         unless  => "${::systemdrive}\\windows\\system32\\sc.exe getdisplayname JenkinsSlave",
       }
 
-      #exec { 'sc_start_jenkinsslave':
-      #  command => "${::systemdrive}\\windows\\system32\\sc.exe start JenkinsSlave",
-      #  returns => [0, 1056],
-      #  require => Exec[ 'sc_create_service' ],
-      #}
-
       service { 'jenkinsslave':
         ensure  => running,
         enable  => true,
