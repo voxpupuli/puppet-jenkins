@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'jenkins::repo' do
 
   describe 'default' do
-    let(:pre_condition) { ['class jenkins { $repo_real = 1 }', 'include jenkins'] }
+    let(:pre_condition) { ['class jenkins { $repo = true }', 'include jenkins'] }
     describe 'RedHat' do
       let(:facts) { { :osfamily => 'RedHat' } }
       it { should contain_class('jenkins::repo::el') }
@@ -13,7 +13,7 @@ describe 'jenkins::repo' do
       let(:facts) { { :osfamily => 'Linux' } }
       it { should contain_class('jenkins::repo::el') }
     end
-    
+
     describe 'Suse' do
       let(:facts) { { :osfamily => 'Suse' } }
       it { should contain_class('jenkins::repo::suse') }
@@ -31,7 +31,7 @@ describe 'jenkins::repo' do
   end
 
   describe 'repo = 0' do
-    let(:pre_condition) { ['class jenkins { $repo = 0 }', 'include jenkins'] }
+    let(:pre_condition) { ['class jenkins { $repo = false }', 'include jenkins'] }
     it { should_not contain_class('jenkins::repo::el') }
     it { should_not contain_class('jenkins::repo::suse') }
     it { should_not contain_class('jenkins::repo::debian') }
