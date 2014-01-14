@@ -75,9 +75,7 @@ class jenkins::slave (
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
   if $install_java {
-    class {'java':
-      distribution => 'jdk'
-    }
+    class {'jenkins::java':}
   }
 
   #add jenkins slave user if necessary.
@@ -155,7 +153,7 @@ class jenkins::slave (
   -> Service['jenkins-slave']
 
   if $install_java {
-      Class['java'] ->
+      Class['jenkins::java'] ->
         Service['jenkins-slave']
   }
 }

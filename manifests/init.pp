@@ -89,9 +89,7 @@ class jenkins(
   anchor {'jenkins::end':}
 
   if $java_real {
-    class {'java':
-      distribution => 'jdk'
-    }
+    class {'jenkins::java':}
   }
 
   if $repo_real {
@@ -134,7 +132,7 @@ class jenkins(
 
   if $java_real {
     Anchor['jenkins::begin'] ->
-      Class['java'] ->
+      Class['jenkins::java'] ->
         Class['jenkins::package'] ->
           Anchor['jenkins::end']
   }
