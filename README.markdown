@@ -45,6 +45,9 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
         version => "1.1.11";
     }
 
+#### Plugin dependencies
+Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
+
 ### Slaves
 You can automatically add slaves to jenkins, and have them auto register themselves.  Most options are actually optional, as nodes will autodiscover the master, and connect.
 
