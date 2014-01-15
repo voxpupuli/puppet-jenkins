@@ -55,7 +55,6 @@
 # === Copyright
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
-
 class jenkins::slave (
   $masterurl         = undef,
   $ui_user           = undef,
