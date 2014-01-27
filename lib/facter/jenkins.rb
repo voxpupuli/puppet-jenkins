@@ -18,7 +18,7 @@ Facter.add('jenkins_plugins') do
         if (File.directory?("#{plugins}/#{plugin}") == true) && !(plugin == '..' || plugin == '.')
           begin
             contents = File.read("#{plugins}/#{plugin}/META-INF/MANIFEST.MF")
-            contents =~ (/Plugin\-Version:\s+([\d\.]+)/)
+            contents =~ (/Plugin\-Version:\s+([\d\.\-]+)/)
             version = $1
             jenkins_plugins = "#{plugin} #{version}, " + jenkins_plugins
           rescue
