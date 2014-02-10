@@ -1,7 +1,7 @@
 #
 #
 #
-define jenkins::plugin($version=0) {
+define jenkins::plugin($version=0, $plugin_owner='jenkins', $plugin_group='jenkins') {
   $plugin            = "${name}.hpi"
   $plugin_dir        = '/var/lib/jenkins/plugins'
   $plugin_parent_dir = '/var/lib/jenkins'
@@ -19,23 +19,23 @@ define jenkins::plugin($version=0) {
     file {
       [$plugin_parent_dir, $plugin_dir]:
         ensure  => directory,
-        owner   => 'jenkins',
-        group   => 'jenkins',
+        owner   => $plugin_owner,
+        group   => $plugin_group,
         require => [Group['jenkins'], User['jenkins']];
     }
   }
 
-  if (!defined(Group['jenkins'])) {
+  if (!defined(Group[$plugin_group])) {
     group {
-      'jenkins' :
+      $plugin_group :
         ensure  => present,
         require => Package['jenkins'];
     }
   }
 
-  if (!defined(User['jenkins'])) {
+  if (!defined(User[$plugin_owner])) {
     user {
-      'jenkins' :
+      $plugin_owner :
         ensure  => present,
         home    => $plugin_parent_dir,
         require => Package['jenkins'];
