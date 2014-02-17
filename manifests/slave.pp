@@ -33,6 +33,9 @@
 # [*slave_home*]
 #   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
 #
+# [*slave_mode*]
+#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
+#
 # [*labels*]
 #   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
 #
@@ -65,6 +68,7 @@ class jenkins::slave (
   $slave_user        = 'jenkins-slave',
   $slave_uid         = undef,
   $slave_home        = '/home/jenkins-slave',
+  $slave_mode        = 'normal',
   $labels            = undef,
   $install_java      = $jenkins::params::install_java,
   $enable            = true
