@@ -55,6 +55,7 @@ define jenkins::plugin($version=0) {
         command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
         cwd        => $plugin_dir,
         require    => [File[$plugin_dir], Package['wget']],
+        creates    => "$plugin_dir/$plugin",
         path       => ['/usr/bin', '/usr/sbin', '/bin'];
     }
 
