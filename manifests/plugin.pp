@@ -51,6 +51,16 @@ define jenkins::plugin($version=0) {
   }
 
   if (empty(grep([ $::jenkins_plugins ], $search))) {
+
+    if ($jenkins::proxy_host){
+      Exec {
+        environment => [
+          "http_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}",
+          "https_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}"
+        ]
+      }
+    }
+
     exec {
       "download-${name}" :
         command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
