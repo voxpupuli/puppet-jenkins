@@ -3,7 +3,7 @@
 #
 class jenkins::repo {
 
-  if ( $::jenkins::repo_real ) {
+  if ( $::jenkins::repo ) {
     case $::osfamily {
 
       'RedHat', 'Linux': {

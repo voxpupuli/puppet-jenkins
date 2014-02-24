@@ -9,7 +9,7 @@ describe 'jenkins::repo::el' do
   end
 
   describe 'lts = true' do
-    let(:pre_condition) { ['class jenkins { $lts_real = true }', 'include jenkins'] }
+    let(:pre_condition) { ['class jenkins { $lts = true }', 'include jenkins'] }
     it { should contain_yumrepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/redhat-stable/') }
   end
 

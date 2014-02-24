@@ -3,7 +3,7 @@
 class jenkins::repo::el
 {
 
-  if $::jenkins::lts_real  {
+  if $::jenkins::lts  {
     yumrepo {'jenkins':
       descr    => 'Jenkins',
       baseurl  => 'http://pkg.jenkins-ci.org/redhat-stable/',

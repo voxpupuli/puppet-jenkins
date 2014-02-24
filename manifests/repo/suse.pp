@@ -3,7 +3,7 @@
 class jenkins::repo::suse
 {
 
-  if $::jenkins::lts_real {
+  if $::jenkins::lts {
     zypprepo {'jenkins':
       descr    => 'Jenkins',
       baseurl  => 'http://pkg.jenkins-ci.org/opensuse-stable/',
