@@ -21,6 +21,7 @@ define jenkins::plugin($version=0) {
         ensure  => directory,
         owner   => 'jenkins',
         group   => 'jenkins',
+        mode    => 755,
         require => [Group['jenkins'], User['jenkins']];
     }
   }
