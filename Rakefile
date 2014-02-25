@@ -14,9 +14,6 @@ exclude_paths = [
 PuppetLint.configuration.log_format = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
 PuppetLint.configuration.fail_on_warnings = true
 PuppetLint.configuration.send("disable_80chars")
-PuppetLint.configuration.send("disable_autoloader_layout")
-PuppetLint.configuration.send("disable_quoted_booleans")
-PuppetLint.configuration.send('disable_class_parameter_defaults')
 PuppetLint.configuration.send('disable_class_inherits_from_params_class')
 PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths = exclude_paths
