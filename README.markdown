@@ -166,9 +166,10 @@ As more features and platform support are added to this module the tests
 provide an automated way to validate the expectations previous contributors
 have specified.
 
-In order to validate the behavior, please run the `rake spec` task.
+In order to validate behavior setup fixtures with `rake spec_prep` and then
+execute code with `rake spec_standalone`.
 
-    % rake spec
+    % rake spec_standalone
     (in /Users/jeff/vms/puppet/modules/jenkins)
     .
     Finished in 0.31279 seconds
