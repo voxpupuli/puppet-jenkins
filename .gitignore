@@ -8,3 +8,5 @@ README.pdf
 .rvmrc
 .ruby-*
 Gemfile.lock
+*.swp
+spec/fixtures
