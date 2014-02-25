@@ -1,8 +1,10 @@
 .project
+.blimpy.d
 .vagrant
 pkg/*
 tmp/*
 README.pdf
 /test_reports
 .rvmrc
+.ruby-*
 Gemfile.lock
