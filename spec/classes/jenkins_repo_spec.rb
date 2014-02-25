@@ -20,7 +20,7 @@ describe 'jenkins::repo' do
     end
 
     describe 'Debian' do
-      let(:facts) { { :osfamily => 'Debian' } }
+      let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian' } }
       it { should contain_class('jenkins::repo::debian') }
     end
 
