@@ -23,5 +23,5 @@ PuppetSyntax.exclude_paths = exclude_paths
 
 desc "Build package"
 task :build do
-  sh 'puppet-module build'
+  sh 'puppet module build'
 end
