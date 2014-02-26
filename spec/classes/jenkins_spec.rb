@@ -15,7 +15,7 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::config' }
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
-      it { should contain_class 'jenkins::firewall' }
+      it { should_not contain_class 'jenkins::firewall' }
       it { should contain_class 'jenkins::repo::el' }
       it { should_not contain_class 'jenkins::proxy' }
       it { should_not contain_class 'jenkins::repo::debian' }
@@ -37,7 +37,14 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'without firewall' do
+    describe 'with firewall_manage' do
+      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
+      let(:params) { { :configure_firewall => true } }
+      it { should contain_class 'jenkins::firewall' }
+    end
+
+    describe 'with firewall dont manage' do
+      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end
@@ -113,7 +120,7 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::config' }
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
-      it { should contain_class 'jenkins::firewall' }
+      it { should_not contain_class 'jenkins::firewall' }
       it { should contain_class 'jenkins::repo::debian' }
       it { should_not contain_class 'jenkins::proxy' }
       it { should_not contain_class 'jenkins::repo::el' }
@@ -135,7 +142,14 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
+    describe 'with firewall_manage' do
+      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
+      let(:params) { { :configure_firewall => true } }
+      it { should contain_class 'jenkins::firewall' }
+    end
+
     describe 'without firewall' do
+      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end

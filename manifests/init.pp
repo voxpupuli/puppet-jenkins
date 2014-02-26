@@ -56,10 +56,12 @@
 #    'token-macro': {}
 #
 #
-# configure_firewall = true (default)
+# configure_firewall = undef (default)
 #   For folks that want to manage the puppetlabs firewall module.
-#    - If it's not present, it will not be installed and nothing happens
-#    - This default could change in the future.
+#    - If it's not present in the catalog, nothing happens.
+#    - If it is, you need to explicitly set this true / false.
+#       - We didn't want you to have a service opened automatically, or unreachable inexplicably.
+#    - This default changed in v1.0 to be undef.
 #
 #
 # install_java = true (default)
@@ -74,7 +76,7 @@ class jenkins(
   $service_ensure     = $jenkins::params::service_ensure,
   $config_hash        = undef,
   $plugin_hash        = undef,
-  $configure_firewall = $jenkins::params::configure_firewall,
+  $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
   $proxy_port         = undef,
@@ -119,10 +121,11 @@ class jenkins(
 
   class {'jenkins::service':}
 
-  if $configure_firewall {
-    class {'jenkins::firewall':}
+  if defined('::firewall') {
+    if $configure_firewall {
+      class {'jenkins::firewall':}
+    }
   }
-
   if $cli {
     class {'jenkins::cli':}
   }
