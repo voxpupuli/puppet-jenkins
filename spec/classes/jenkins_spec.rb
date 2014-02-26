@@ -21,6 +21,7 @@ describe 'jenkins' do
       it { should_not contain_class 'jenkins::repo::debian' }
       it { should_not contain_class 'jenkins::repo::suse' }
     end
+
     describe 'without java' do
       let(:params) { { :install_java => false } }
       it { should_not contain_class 'java' }
@@ -36,17 +37,23 @@ describe 'jenkins' do
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'with firewall_manage' do
-      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
+    describe 'with firewall manage' do
+      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       let(:params) { { :configure_firewall => true } }
       it { should contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall dont manage' do
-      let(:pre_condition) { [ 'class firewall {}', 'include firewall']}
+      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end
+
+    describe 'with firewall configure unset' do
+      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+      it { expect { should raise_error(Puppet::Error) } }
+    end
+
   end
 
   describe "on Suse" do
