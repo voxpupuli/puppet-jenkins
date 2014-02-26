@@ -83,7 +83,11 @@ class jenkins(
   $cli                = undef,
 ) inherits jenkins::params {
 
-  validate_bool($lts, $install_java, $repo, $configure_firewall)
+  validate_bool($lts, $install_java, $repo)
+
+  if $configure_firewall {
+    validate_bool($configure_firewall)
+  }
 
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
