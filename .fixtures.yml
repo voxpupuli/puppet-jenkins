@@ -4,6 +4,5 @@ fixtures:
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
     java: "git://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "git://github.com/deadpoint/puppet-zypprepo.git"
-    firewall: "git://github.com/puppetlabs/puppetlabs-firewall.git"
   symlinks:
     "jenkins": "#{source_dir}"
