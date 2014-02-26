@@ -10,4 +10,5 @@ gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.2.0'
 group :development do
   gem 'vagrant'
   gem 'rcov'
+  gem 'parallel_tests'
 end
