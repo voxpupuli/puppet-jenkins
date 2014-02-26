@@ -7,6 +7,5 @@ README.pdf
 /test_reports
 .rvmrc
 .ruby-*
-Gemfile.lock
 *.swp
 spec/fixtures

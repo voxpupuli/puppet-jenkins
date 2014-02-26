@@ -11,4 +11,5 @@ group :development do
   gem 'vagrant'
   gem 'rcov'
   gem 'parallel_tests'
+  gem 'ci_reporter'
 end
