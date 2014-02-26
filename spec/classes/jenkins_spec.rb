@@ -7,7 +7,7 @@ describe 'jenkins' do
     let(:facts) do
       { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
     end
-    describe 'defalut' do
+    describe 'default' do
       it { should contain_class 'jenkins' }
       it { should contain_class 'java' }
       it { should contain_class 'jenkins::repo' }
