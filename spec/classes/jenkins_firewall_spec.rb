@@ -8,8 +8,4 @@ describe 'jenkins::firewall' do
     it { should contain_firewall('500 allow Jenkins inbound traffic') }
   end
 
-  describe 'without firewall' do
-    it { should_not contain_firewall('500 allow Jenkins inbound traffic') }
-  end
-
 end

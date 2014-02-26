@@ -5,14 +5,12 @@
 class jenkins::firewall(
   $port = 8080
 ) {
-  if defined('::firewall') {
-    firewall {
-      '500 allow Jenkins inbound traffic':
-        action => 'accept',
-        state  => 'NEW',
-        dport  => [$port],
-        proto  => 'tcp',
-    }
+  firewall {
+    '500 allow Jenkins inbound traffic':
+      action => 'accept',
+      state  => 'NEW',
+      dport  => [$port],
+      proto  => 'tcp',
   }
 }
 
