@@ -113,38 +113,18 @@ If you use [librarian-puppet](https://github.com/rodjek/librarian-puppet), add
 the following to your `Puppetfile`:
 
 ```ruby
-mod "jenkins",
-  :git => "git://github.com/jenkinsci/puppet-jenkins.git"
-
-mod "apt",
-  :git => "git://github.com/puppetlabs/puppetlabs-apt.git"
-
-mod "stdlib",
-  :git => "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+mod "rtyler/jenkins"
 ```
-
-### With git-submodule(1)
-
-In order to add this module, run the following commands in your own, presumably
-Git, puppet tree:
-
-    % git submodule add git://github.com/jenkinsci/puppet-jenkins.git modules/jenkins
-    % git submodule update --init
 
 ### With the "puppet module" tool
 
-This module is compatible with the puppet module tool.  To build a package file
-of this module, please use the `rake build` task.  The resulting package file
-may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
-
-
+This module is compatible with the puppet module tool. Appropriately this
+module has been released to the [Puppet Forge](http://forge.puppetlabs.com/),
+allowing you to easily install the released version of the module
 
 To quickly try this module with the puppet module tool:
 
-    % rake build
-    % cd /etc/puppet/modules
-    % sudo puppet module install /tmp/rtyler-jenkins-0.0.1.tar.gz
-    Installed "rtyler-jenkins-0.0.1" into directory: jenkins
+    % sudo puppet module install rtyler/jenkins
     % sudo puppet apply -v -e 'include jenkins'
     info: Loading facts in facter_dot_d
     info: Loading facts in facter_dot_d
@@ -157,78 +137,4 @@ To quickly try this module with the puppet module tool:
     notice: /Stage[main]/Jenkins::Package/Package[jenkins]/ensure: created
     notice: /Stage[main]/Jenkins::Service/Service[jenkins]/ensure: ensure changed 'stopped' to 'running'
     notice: Finished catalog run in 27.46 seconds
-
-----
-
-
-# Developing/Contributing
-
-## Testing
-
-This module has behavior tests written using [RSpec 2](https://www.relishapp.com/rspec),
-is syntax checked with [puppet-syntax](https://github.com/gds-operations/puppet-syntax), and style checked with [puppet-lint](http://puppet-lint.com/).
-The goal of these tests are to validate the expected behavior of the module.
-As more features and platform support are added to this module the tests
-provide an automated way to validate the expectations previous contributors
-have specified.
-
-In order to validate behavior setup fixtures with `rake spec_prep` and then
-execute code with `rake spec_standalone`.
-
-    % rake spec_standalone
-    (in /Users/jeff/vms/puppet/modules/jenkins)
-    .
-    Finished in 0.31279 seconds
-    1 example, 0 failures
-
-Lint, spec, and syntax checks can be run by using the default rake task by
-simply running 'rake'.
-
-### Lint checking
-
-The lint checks require the `puppet-lint` gem to be installed.  Running
-'rake lint' will lint check all of the *.pp files to ensure they conform to the
-puppet style guide.
-
-### RSpec Testing Requirements
-
-The spec tests require the `rspec-puppet` gem to be installed.  Running 'rake spec'
-will automatically check out all of the modules in the .fixtures.yml needed to run
-the tests.
-
-### Syntax checking
-
-The syntax checks require the `puppet-syntax` gem to be installed.  Running
-'rake syntax' will sytanx check the manifests and templates.
-
-### Installing Testing Requirements
-
-To install the testing requirements:
-
-    % gem install rspec-puppet puppet-lint puppet-syntax --no-ri --no-rdoc
-    Successfully installed rspec-core-2.14.5
-    Successfully installed diff-lcs-1.2.4
-    Successfully installed rspec-expectations-2.14.3
-    Successfully installed rspec-mocks-2.14.3
-    Successfully installed rspec-2.14.1
-    Successfully installed rspec-puppet-0.1.6
-    Successfully installed puppet-lint-0.3.2
-    Successfully installed rake-10.1.0
-    Successfully installed puppet-syntax-1.1.0
-    10 gems installed
-
-### Adding Tests
-
-Please see the [rspec-puppet](https://github.com/rodjek/rspec-puppet) project
-for information on writing tests.  A basic test that validates the class is
-declared in the catalog is provided in the file
-`spec/classes/jenkins_spec.rb`.  `rspec-puppet` automatically uses the top
-level description as the name of a module to include in the catalog.
-Resources may be validated in the catalog using:
-
- * `contain_class('myclass')`
- * `contain_service('sshd')`
- * `contain_file('/etc/puppet')`
- * `contain_package('puppet')`
- * And so forth for other Puppet resources.
 
