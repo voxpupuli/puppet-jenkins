@@ -6,6 +6,7 @@ Blimpy.fleet do |fleet|
     ship.name = 'puppet-jenkins'
     ship.ports = [22, 8080]
     ship.region = 'us-west-2'
+    ship.image_id = 'ami-fa9cf1ca'
     ship.livery = Blimpy::Livery::CWD
     ship.flavor = 'm1.small'
   end
