@@ -4,16 +4,39 @@
 
 export PATH=/var/lib/gems/1.8/bin:$PATH
 
-which puppet
+function provision_ubuntu() {
+    which puppet
 
-if [ $? -ne 0 ]; then
-    deb="puppetlabs-release-precise.deb"
-    wget "http://apt.puppetlabs.com/${deb}"
-    dpkg -i ./${deb}
-    apt-get update
-    apt-get install -y puppet
-fi
+    if [ $? -ne 0 ]; then
+        deb="puppetlabs-release-precise.deb"
+        wget "http://apt.puppetlabs.com/${deb}"
+        dpkg -i ./${deb}
+        apt-get update
+        apt-get install -y puppet
+    fi
+}
 
+function provision_rhel() {
+    which puppet
+
+    if [ $? -ne 0 ]; then
+        rpm -ivh https://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-7.noarch.rpm
+        yum install -y puppet
+    fi
+
+}
+
+grep -i "ubuntu" /etc/issue
+if [ $? -eq 0 ]; then
+    provision_ubuntu;
+fi;
+
+grep -i "red hat" /etc/issue
+if [ $? -eq 0 ]; then
+    provision_rhel
+fi;
+
+# Install all our stupid dependencies
 for module in "stdlib" "apt" "java"; do
     ls /etc/puppet/modules | grep $module
 
