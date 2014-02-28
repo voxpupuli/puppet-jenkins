@@ -113,28 +113,17 @@ If you use [librarian-puppet](https://github.com/rodjek/librarian-puppet), add
 the following to your `Puppetfile`:
 
 ```ruby
-mod "jenkins",
-  :git => "git://github.com/jenkinsci/puppet-jenkins.git"
-
-mod "apt",
-  :git => "git://github.com/puppetlabs/puppetlabs-apt.git"
-
-mod "stdlib",
-  :git => "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+mod "rtyler/jenkins"
 ```
 
 ### With the "puppet module" tool
 
-This module is compatible with the puppet module tool.  To build a package file
-of this module, please use the `rake build` task.  The resulting package file
-may be uploaded to the [Puppet Forge](http://forge.puppetlabs.com/).
-
-
+This module is compatible with the puppet module tool. Appropriately this
+module has been released to the [Puppet Forge](http://forge.puppetlabs.com/),
+allowing you to easily install the released version of the module
 
 To quickly try this module with the puppet module tool:
 
-    % rake build
-    % cd /etc/puppet/modules
     % sudo puppet module install rtyler/jenkins
     % sudo puppet apply -v -e 'include jenkins'
     info: Loading facts in facter_dot_d
