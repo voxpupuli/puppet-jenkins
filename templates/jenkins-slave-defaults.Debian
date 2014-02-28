@@ -1,0 +1,46 @@
+# defaults for jenkins slave swarm clients
+
+# pulled in from the init script; makes things easier.
+NAME=jenkins-slave
+
+# location of java
+JAVA=/usr/bin/java
+
+# arguments to pass to java
+#JAVA_ARGS="-Xmx256m"
+#JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
+
+PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
+
+# user id to be invoked as (otherwise will run as root; not wise!)
+JENKINS_SLAVE_USER=<%= @slave_user -%>
+
+# jenkins home location
+JENKINS_SLAVE_HOME=<%= @slave_home -%>
+
+# location of the jenkins war file
+JENKINS_SLAVE_JAR="${JENKINS_SLAVE_HOME}/<%= @client_jar -%>"
+
+# set this to false if you don't want Hudson to run by itself
+# in this set up, you are expected to provide a servlet container
+# to host jenkins.
+RUN_STANDALONE=true
+
+# log location.  this may be a syslog facility.priority
+JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
+
+# OS LIMITS SETUP
+#   comment this out to observe /etc/security/limits.conf
+#   this is on by default because http://github.com/jenkinsci/jenkins/commit/2fb288474e980d0e7ff9c4a3b768874835a3e92e
+#   reported that Ubuntu's PAM configuration doesn't include pam_limits.so, and as a result the # of file
+#   descriptors are forced to 1024 regardless of /etc/security/limits.conf
+MAXOPENFILES=8192
+
+MASTER_URL="<%= @masterurl_flag -%> <%= @labels_flag -%>"
+
+EXECUTORS=<%= @executors -%>
+
+CLIENT_NAME=<%= @fqdn -%>
+
+
+JENKINS_SLAVE_ARGS="<%= @ui_user_flag -%> <%= @ui_pass_flag -%> -name $CLIENT_NAME -executors $EXECUTORS $MASTER_URL"

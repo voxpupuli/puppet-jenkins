@@ -138,13 +138,37 @@ class jenkins::slave (
     $labels_flag = ''
   }
 
-  file { '/etc/init.d/jenkins-slave':
-      ensure  => 'file',
-      mode    => '0700',
-      owner   => 'root',
-      group   => 'root',
-      content => template("${module_name}/jenkins-slave.erb"),
-      notify  => Service['jenkins-slave']
+  # choose the correct init functions
+  case $::osfamily {
+    Debian:  {
+      file { '/etc/init.d/jenkins-slave':
+        ensure  => 'file',
+        mode    => '0700',
+        owner   => 'root',
+        group   => 'root',
+        source  => "puppet:///modules/${module_name}/jenkins-slave",
+        notify  => Service['jenkins-slave'],
+        require => File['/etc/default/jenkins-slave'],
+      }
+
+      file { '/etc/default/jenkins-slave':
+        ensure  => 'file',
+        mode    => '0600',
+        owner   => 'root',
+        group   => 'root',
+        content => template("${module_name}/jenkins-slave-defaults.${::osfamily}"),
+      }
+    }
+    default: {
+      file { '/etc/init.d/jenkins-slave':
+        ensure  => 'file',
+        mode    => '0700',
+        owner   => 'root',
+        group   => 'root',
+        content => template("${module_name}/jenkins-slave.erb"),
+        notify  => Service['jenkins-slave'],
+      }
+    }
   }
 
   service { 'jenkins-slave':
