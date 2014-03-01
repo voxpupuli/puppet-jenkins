@@ -7,6 +7,7 @@ describe 'jenkins' do
     let(:facts) do
       { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
     end
+
     describe 'default' do
       it { should contain_class 'jenkins' }
       it { should contain_class 'java' }
@@ -32,69 +33,37 @@ describe 'jenkins' do
       it { should_not contain_class 'jenkins::repo' }
     end
 
-    describe 'with proxy host' do
+    describe 'with only proxy host' do
       let(:params) { { :proxy_host => '1.2.3.4' } }
+      it { should_not contain_class('jenkins::proxy') }
+    end
+
+    describe 'with only proxy_port' do
+      let(:params) { { :proxy_port => 1234 } }
+      it { should_not contain_class('jenkins::proxy') }
+    end
+
+    describe 'with proxy_host and proxy_port' do
+      let(:params) { { :proxy_host => '1.2.3.4', :proxy_port => 1234 } }
       it { should contain_class 'jenkins::proxy'}
     end
 
-    describe 'with firewall manage' do
+    describe 'with firewall, configure_firewall => true' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       let(:params) { { :configure_firewall => true } }
       it { should contain_class 'jenkins::firewall' }
     end
 
-    describe 'with firewall dont manage' do
+    describe 'with firewall, configure_firewall => false' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end
 
-    describe 'with firewall configure unset' do
+    describe 'with firewall, configure_firewall unset' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       it { expect { should raise_error(Puppet::Error) } }
     end
 
-  end
-
-  describe "on Suse" do
-    let(:facts) do
-      { :osfamily => 'Suse'}
-    end
-    describe 'default' do
-      it { should contain_class 'jenkins::repo' }
-      it { should contain_class 'jenkins::repo::suse' }
-      it { should_not contain_class 'jenkins::repo::debian' }
-      it { should_not contain_class 'jenkins::repo::el' }
-    end
-  end
-
-  describe "on Debian" do
-    let(:facts) do
-      { :osfamily => 'Debian', :lsbdistcodename => 'precise' }
-    end
-    let :pre_condition do
-      " define apt::source (
-          $location          = '',
-          $release           = $lsbdistcodename,
-          $repos             = 'main',
-          $include_src       = true,
-          $required_packages = false,
-          $key               = false,
-          $key_server        = 'keyserver.ubuntu.com',
-          $key_content       = false,
-          $key_source        = false,
-          $pin               = false
-        ) {
-          notify { 'mock apt::source $title':; }
-        }
-      "
-    end
-
-    describe 'default' do
-      it { should contain_class 'jenkins::repo' }
-      it { should contain_class 'jenkins::repo::debian' }
-      it { should_not contain_class 'jenkins::repo::el' }
-      it { should_not contain_class 'jenkins::repo::suse' }
-    end
   end
 end

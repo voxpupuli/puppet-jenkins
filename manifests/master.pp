@@ -6,5 +6,6 @@ class jenkins::master (
 ) inherits jenkins::params {
 
   jenkins::plugin {'swarm':
-    version => $version }
+    version => $version ,
+  }
 }

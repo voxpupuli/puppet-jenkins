@@ -74,8 +74,8 @@ class jenkins(
   $repo               = $jenkins::params::repo,
   $service_enable     = $jenkins::params::service_enable,
   $service_ensure     = $jenkins::params::service_ensure,
-  $config_hash        = undef,
-  $plugin_hash        = undef,
+  $config_hash        = {},
+  $plugin_hash        = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -84,6 +84,7 @@ class jenkins(
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
+  validate_hash($config_hash, $plugin_hash)
 
   if $configure_firewall {
     validate_bool($configure_firewall)
@@ -102,22 +103,14 @@ class jenkins(
     class {'jenkins::repo':}
   }
 
-  class {'jenkins::package' :
-    version => $version;
-  }
+  class {'jenkins::package': }
 
-  class { 'jenkins::config':
-    config_hash => $config_hash,
-  }
+  class { 'jenkins::config': }
 
-  class { 'jenkins::plugins':
-    plugin_hash => $plugin_hash,
-  }
+  class { 'jenkins::plugins': }
 
-  if $proxy_host {
+  if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
-      host    => $proxy_host,
-      port    => $proxy_port,
       require => Package['jenkins'],
       notify  => Service['jenkins']
     }

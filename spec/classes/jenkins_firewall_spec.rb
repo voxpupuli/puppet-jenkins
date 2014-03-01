@@ -1,10 +1,11 @@
 require 'spec_helper'
 
-describe 'jenkins::firewall' do
+describe 'jenkins' do
+  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:pre_condition) { "define firewall($action, $state, $dport, $proto) {}" }
+  let(:params) { { :configure_firewall => true } }
 
-  describe 'with firewall' do
-    let(:pre_condition) { "define firewall($action, $state, $dport, $proto) {}" }
-#    pending "not sure how to implement this"
+  context 'firewall' do
     it { should contain_firewall('500 allow Jenkins inbound traffic') }
   end
 
