@@ -10,13 +10,15 @@
 #   }
 # }
 #
-class jenkins::config(
-  $config_hash = {},
-) {
+class jenkins::config {
+
+  if $caller_module_name != $module_name {
+    fail("Use of private class ${name} by ${caller_module_name}")
+  }
 
   include jenkins::package
 
   Class['Jenkins::Package']->Class['Jenkins::Config']
-  create_resources( 'jenkins::sysconfig', $config_hash )
+  create_resources( 'jenkins::sysconfig', $::jenkins::config_hash )
 }
 

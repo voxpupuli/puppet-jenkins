@@ -1,6 +1,7 @@
 # Class: jenkins::sysconfig
 #
 define jenkins::sysconfig ( $value ) {
+
   $path = $::osfamily ? {
     RedHat  => '/etc/sysconfig',
     Suse  => '/etc/sysconfig',
@@ -14,5 +15,6 @@ define jenkins::sysconfig ( $value ) {
     match   => "^${name}=",
     notify  => Service['jenkins'],
   }
+
 }
 

@@ -1,39 +1,51 @@
 require 'spec_helper'
 
-describe 'jenkins::repo' do
+describe 'jenkins' do
 
-  describe 'default' do
-    let(:pre_condition) { ['class jenkins { $repo = true }', 'include jenkins'] }
-    describe 'RedHat' do
-      let(:facts) { { :osfamily => 'RedHat' } }
-      it { should contain_class('jenkins::repo::el') }
+  describe 'repo' do
+    describe 'default' do
+      describe 'RedHat' do
+        let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOs' } }
+        it { should contain_class('jenkins::repo::el') }
+        it { should_not contain_class('jenkins::repo::suse') }
+        it { should_not contain_class('jenkins::repo::debian') }
+      end
+
+      describe 'Linux' do
+        let(:facts) { { :osfamily => 'Linux' } }
+        let(:params) { { :install_java => false } }
+        it { should contain_class('jenkins::repo::el') }
+        it { should_not contain_class('jenkins::repo::suse') }
+        it { should_not contain_class('jenkins::repo::debian') }
+      end
+
+      describe 'Suse' do
+        let(:facts) { { :osfamily => 'Suse', :operatingsystem => 'OpenSuSE' } }
+        it { should contain_class('jenkins::repo::suse') }
+        it { should_not contain_class('jenkins::repo::el') }
+        it { should_not contain_class('jenkins::repo::debian') }
+      end
+
+      describe 'Debian' do
+        let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian', :lsbdistcodename => 'natty', :operatingsystem => 'Debian' } }
+        it { should contain_class('jenkins::repo::debian') }
+        it { should_not contain_class('jenkins::repo::suse') }
+        it { should_not contain_class('jenkins::repo::el') }
+      end
+
+      describe 'Unknown' do
+        let(:facts) { { :osfamily => 'SomethingElse', :operatingsystem => 'RedHat' } }
+        it { expect { should raise_error(Puppet::Error) } }
+      end
     end
 
-    describe 'Linux' do
-      let(:facts) { { :osfamily => 'Linux' } }
-      it { should contain_class('jenkins::repo::el') }
+    describe 'repo => false' do
+      let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOs' } }
+      let(:params) { { :repo => false } }
+      it { should_not contain_class('jenkins::repo') }
+      it { should_not contain_class('jenkins::repo::el') }
+      it { should_not contain_class('jenkins::repo::suse') }
+      it { should_not contain_class('jenkins::repo::debian') }
     end
-
-    describe 'Suse' do
-      let(:facts) { { :osfamily => 'Suse' } }
-      it { should contain_class('jenkins::repo::suse') }
-    end
-
-    describe 'Debian' do
-      let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian' } }
-      it { should contain_class('jenkins::repo::debian') }
-    end
-
-    describe 'Unknown' do
-      let(:facts) { { :osfamily => 'SomethingElse' } }
-      it { expect { should raise_error(Puppet::Error) } }
-    end
-  end
-
-  describe 'repo = 0' do
-    let(:pre_condition) { ['class jenkins { $repo = false }', 'include jenkins'] }
-    it { should_not contain_class('jenkins::repo::el') }
-    it { should_not contain_class('jenkins::repo::suse') }
-    it { should_not contain_class('jenkins::repo::debian') }
   end
 end

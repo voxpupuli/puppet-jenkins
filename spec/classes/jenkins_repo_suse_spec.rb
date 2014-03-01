@@ -1,16 +1,18 @@
 require 'spec_helper'
 
-describe 'jenkins::repo::suse' do
+describe 'jenkins' do
   # Switching OS Family to prevent duplicate declaration
-  let(:facts) { { :osfamily => 'Suse' } }
+  let(:facts) { { :osfamily => 'Suse', :operatingsystem => 'OpenSuSE' } }
 
-  describe 'default' do
-    it { should contain_zypprepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/opensuse/') }
-  end
+  context 'repo::suse' do
+    describe 'default' do
+      it { should contain_zypprepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/opensuse/') }
+    end
 
-  describe 'lts = true' do
-    let(:pre_condition) { ['class jenkins { $lts = true }', 'include jenkins'] }
-    it { should contain_zypprepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/opensuse-stable/') }
+    describe 'lts = true' do
+      let(:params) { { :lts => true } }
+      it { should contain_zypprepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/opensuse-stable/') }
+    end
   end
 
 end

@@ -1,7 +1,10 @@
 #
 #
 #
-define jenkins::plugin($version=0) {
+define jenkins::plugin(
+  $version=0
+) {
+
   $plugin            = "${name}.hpi"
   $plugin_dir        = '/var/lib/jenkins/plugins'
   $plugin_parent_dir = inline_template('<%= @plugin_dir.split(\'/\')[0..-2].join(\'/\') %>')
@@ -16,37 +19,33 @@ define jenkins::plugin($version=0) {
   }
 
   if (!defined(File[$plugin_dir])) {
-    file {
-      [$plugin_parent_dir, $plugin_dir]:
-        ensure  => directory,
-        owner   => 'jenkins',
-        group   => 'jenkins',
-        mode    => '0755',
-        require => [Group['jenkins'], User['jenkins']];
+    file { [$plugin_parent_dir, $plugin_dir]:
+      ensure  => directory,
+      owner   => 'jenkins',
+      group   => 'jenkins',
+      mode    => '0755',
+      require => [Group['jenkins'], User['jenkins']],
     }
   }
 
   if (!defined(Group['jenkins'])) {
-    group {
-      'jenkins' :
-        ensure  => present,
-        require => Package['jenkins'];
+    group { 'jenkins' :
+      ensure  => present,
+      require => Package['jenkins'],
     }
   }
 
   if (!defined(User['jenkins'])) {
-    user {
-      'jenkins' :
-        ensure  => present,
-        home    => $plugin_parent_dir,
-        require => Package['jenkins'];
+    user { 'jenkins' :
+      ensure  => present,
+      home    => $plugin_parent_dir,
+      require => Package['jenkins'],
     }
   }
 
   if (!defined(Package['wget'])) {
-    package {
-      'wget' :
-        ensure => present;
+    package { 'wget' :
+      ensure => present,
     }
   }
 
@@ -61,20 +60,18 @@ define jenkins::plugin($version=0) {
       }
     }
 
-    exec {
-      "download-${name}" :
-        command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
-        cwd        => $plugin_dir,
-        require    => [File[$plugin_dir], Package['wget']],
-        path       => ['/usr/bin', '/usr/sbin', '/bin'];
+    exec { "download-${name}" :
+      command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
+      cwd        => $plugin_dir,
+      require    => [File[$plugin_dir], Package['wget']],
+      path       => ['/usr/bin', '/usr/sbin', '/bin'],
     }
 
-    file {
-      "${plugin_dir}/${plugin}" :
-        require => Exec["download-${name}"],
-        owner   => 'jenkins',
-        mode    => '0644',
-        notify  => Service['jenkins'];
+    file { "${plugin_dir}/${plugin}" :
+      require => Exec["download-${name}"],
+      owner   => 'jenkins',
+      mode    => '0644',
+      notify  => Service['jenkins'],
     }
   }
 

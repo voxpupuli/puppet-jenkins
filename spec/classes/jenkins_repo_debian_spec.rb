@@ -1,22 +1,26 @@
 require 'spec_helper'
 
-describe 'jenkins::repo::debian' do
+describe 'jenkins' do
 
   # Switching OS Family to prevent duplicate declaration
   let(:facts) do
     {
-      :osfamily => 'Ubuntu',
+      :osfamily => 'Debian',
       :lsbdistcodename => 'precise',
-      :lsbdistid => 'ubuntu'
+      :lsbdistid => 'ubuntu',
+      :operatingsystem => 'Debian'
     }
   end
 
-  describe 'default' do
-    it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian') }
+  context 'repo::debian' do
+    describe 'default' do
+      it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian') }
+    end
+
+    describe 'lts = true' do
+      let(:params) { { :lts => true } }
+      it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
+    end
   end
 
-  describe 'lts = true' do
-    let(:pre_condition) { ['class jenkins { $lts = true }', 'include jenkins'] }
-    it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
-  end
 end

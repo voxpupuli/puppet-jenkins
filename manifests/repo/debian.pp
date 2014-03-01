@@ -2,6 +2,11 @@
 #
 class jenkins::repo::debian
 {
+
+  if $caller_module_name != $module_name {
+    fail("Use of private class ${name} by ${caller_module_name}")
+  }
+
   if $::jenkins::lts  {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian-stable',
@@ -10,8 +15,8 @@ class jenkins::repo::debian
       key         => 'D50582E6',
       key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
       include_src => false,
-      }
     }
+  }
   else {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian',

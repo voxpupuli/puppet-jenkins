@@ -79,7 +79,7 @@ class jenkins::slave (
 
   if $install_java {
     class {'java':
-      distribution => 'jdk'
+      distribution => 'jdk',
     }
   }
 
@@ -92,7 +92,7 @@ class jenkins::slave (
       comment    => 'Jenkins Slave user',
       home       => $slave_home,
       managehome => true,
-      uid        => $slave_uid
+      uid        => $slave_uid,
     }
   }
 
@@ -111,7 +111,7 @@ class jenkins::slave (
     path         => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     user         => $slave_user,
     #refreshonly => true,
-    creates      => "${slave_home}/${client_jar}"
+    creates      => "${slave_home}/${client_jar}",
     ## needs to be fixed if you create another version..
   }
 
