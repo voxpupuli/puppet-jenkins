@@ -2,6 +2,8 @@
 #
 class jenkins::repo::debian
 {
+  include stdlib
+
   if $::jenkins::lts  {
     apt::source { 'jenkins':
       location    => 'http://pkg.jenkins-ci.org/debian-stable',
@@ -22,6 +24,10 @@ class jenkins::repo::debian
       include_src => false,
     }
   }
+
+  anchor { 'jenkins::repo::debian::begin': } ->
+    Apt::Source['jenkins'] ->
+    anchor { 'jenkins::repo::debian::end': }
 }
 
 
