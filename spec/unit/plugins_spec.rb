@@ -155,12 +155,6 @@ describe 'jenkins_plugins fact', :type => :fact do
     Jenkins::Facts.add_facts
   end
 
-  after :each do
-    # Make sure we're clearing out Facter every time
-    Facter.clear
-    Facter.clear_messages
-  end
-
   context 'on Linux' do
     let(:kernel) { 'Linux' }
 
