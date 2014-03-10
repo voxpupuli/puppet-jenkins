@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'jenkins' do
+  let(:pre_condition) { [] }
 
   describe 'repo' do
     describe 'default' do

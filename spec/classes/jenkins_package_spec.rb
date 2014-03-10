@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'jenkins' do
   let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:pre_condition) { [] }
 
   describe 'package' do
     context 'default' do

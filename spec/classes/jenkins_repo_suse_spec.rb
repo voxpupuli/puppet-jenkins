@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'jenkins' do
   # Switching OS Family to prevent duplicate declaration
   let(:facts) { { :osfamily => 'Suse', :operatingsystem => 'OpenSuSE' } }
+  let(:pre_condition) { [] }
 
   context 'repo::suse' do
     describe 'default' do
