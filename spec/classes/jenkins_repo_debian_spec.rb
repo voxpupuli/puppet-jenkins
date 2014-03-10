@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'jenkins' do
+  let(:pre_condition) { [] }
 
   # Switching OS Family to prevent duplicate declaration
   let(:facts) do
@@ -22,5 +23,4 @@ describe 'jenkins' do
       it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
     end
   end
-
 end

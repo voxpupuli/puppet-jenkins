@@ -26,6 +26,22 @@ describe 'jenkins::plugin' do
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
+  describe 'with version and in middle of jenkins_plugins fact' do
+    let(:params) { { :version => '1.2.3' } }
+    let(:facts) { { :jenkins_plugins => 'myplug 1.2.3, fooplug 1.4.5' } }
+
+    it { should_not contain_exec('download-myplug') }
+    it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+  end
+
+  describe 'with version and at end of jenkins_plugins fact' do
+    let(:params) { { :version => '1.2.3' } }
+    let(:facts) { { :jenkins_plugins => 'fooplug 1.4.5, myplug 1.2.3' } }
+
+    it { should_not contain_exec('download-myplug') }
+    it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+  end
+
   describe 'with proxy' do
     let(:pre_condition) { [
       'class jenkins {

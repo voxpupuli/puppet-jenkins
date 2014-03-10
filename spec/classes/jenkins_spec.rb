@@ -3,6 +3,7 @@ require 'spec_helper'
 # Note, rspec-puppet determines the class name from the top level describe
 # string.
 describe 'jenkins' do
+  let(:pre_condition) { [] }
   describe "on RedHat" do
     let(:facts) do
       { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
@@ -49,13 +50,13 @@ describe 'jenkins' do
     end
 
     describe 'with firewall, configure_firewall => true' do
-      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+      let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { :configure_firewall => true } }
       it { should contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall, configure_firewall => false' do
-      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+      let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end
@@ -64,6 +65,5 @@ describe 'jenkins' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       it { expect { should raise_error(Puppet::Error) } }
     end
-
   end
 end

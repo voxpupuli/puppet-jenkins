@@ -2,10 +2,11 @@
 #
 class jenkins::repo::debian
 {
-
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
+
+  include stdlib
 
   if $::jenkins::lts  {
     apt::source { 'jenkins':
@@ -27,6 +28,10 @@ class jenkins::repo::debian
       include_src => false,
     }
   }
+
+  anchor { 'jenkins::repo::debian::begin': } ->
+    Apt::Source['jenkins'] ->
+    anchor { 'jenkins::repo::debian::end': }
 }
 
 

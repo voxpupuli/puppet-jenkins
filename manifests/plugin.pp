@@ -11,7 +11,7 @@ define jenkins::plugin(
 
   if ($version != 0) {
     $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
-    $search   = "${name} ${version},"
+    $search   = "${name} ${version}(,|$)"
   }
   else {
     $base_url = 'http://updates.jenkins-ci.org/latest/'
