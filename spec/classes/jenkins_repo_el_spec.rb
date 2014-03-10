@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-describe 'jenkins' do
+describe 'jenkins', :type => :module do
   # Switching OS Family to prevent duplicate declaration
   let(:facts) { { :osfamily => 'Redhat', :operatingsystem => 'CentOS' } }
-  let(:pre_condition) { [] }
 
   context 'repo::el' do
     describe 'default' do

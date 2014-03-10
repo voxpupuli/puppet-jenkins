@@ -1,8 +1,7 @@
 require 'spec_helper'
 
-describe 'jenkins' do
+describe 'jenkins', :type => :module do
   let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
-  let(:pre_condition) { [] }
 
   context 'proxy' do
     context 'default' do

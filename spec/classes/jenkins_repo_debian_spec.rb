@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-describe 'jenkins' do
-  let(:pre_condition) { [] }
-
+describe 'jenkins', :type => :module do
   # Switching OS Family to prevent duplicate declaration
   let(:facts) do
     {
