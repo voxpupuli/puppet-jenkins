@@ -12,6 +12,7 @@ describe 'jenkins::repo::debian' do
   end
 
   describe 'default' do
+    let(:pre_condition) { [] }
     it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian') }
   end
 

@@ -3,6 +3,7 @@ require 'spec_helper'
 # Note, rspec-puppet determines the class name from the top level describe
 # string.
 describe 'jenkins' do
+  let(:pre_condition) { [] }
   describe "on RedHat" do
     let(:facts) do
       { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
@@ -38,13 +39,13 @@ describe 'jenkins' do
     end
 
     describe 'with firewall manage' do
-      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+      let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { :configure_firewall => true } }
       it { should contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall dont manage' do
-      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+      let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { :configure_firewall => false } }
       it { should_not contain_class 'jenkins::firewall' }
     end
@@ -73,7 +74,7 @@ describe 'jenkins' do
       { :osfamily => 'Debian', :lsbdistcodename => 'precise' }
     end
     let :pre_condition do
-      " define apt::source (
+      [" define apt::source (
           $location          = '',
           $release           = $lsbdistcodename,
           $repos             = 'main',
@@ -87,7 +88,7 @@ describe 'jenkins' do
         ) {
           notify { 'mock apt::source $title':; }
         }
-      "
+      "]
     end
 
     describe 'default' do
