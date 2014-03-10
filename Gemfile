@@ -13,4 +13,6 @@ group :development do
   gem 'rcov'
   gem 'parallel_tests'
   gem 'ci_reporter'
+  gem 'debugger', :platform => :mri
+  gem 'debugger-pry', :platform => :mri
 end
