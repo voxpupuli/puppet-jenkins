@@ -1,3 +1,4 @@
+require 'json'
 require 'puppet/jenkins'
 
 module Puppet
@@ -73,6 +74,28 @@ module Puppet
         return false if home.nil?
         return false unless File.directory? Puppet::Jenkins.plugins_dir
         return true
+      end
+
+
+      # Parse the update-center.json file which Jenkins uses to maintain it's
+      # internal dependency graph for plugins
+      #
+      # This document is technically JSONP formatted so we must munge the file
+      # a bit to load the JSON bits properly
+      #
+      # @return [Hash] Parsed version of the update center JSON
+      def self.plugins_from_updatecenter(filename)
+        File.open(filename, 'rb') do |fd|
+          buffer = fd.read
+          return {} if (buffer.nil? || buffer.empty?)
+          buffer = buffer.split("\n")
+          # Trim off the first and last lines, which are the JSONP gunk
+          buffer = buffer[1 ... -1]
+
+          data = JSON.parse(buffer.join("\n"))
+          return data['plugins'] || {}
+        end
+        return {}
       end
     end
   end
