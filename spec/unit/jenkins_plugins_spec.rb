@@ -33,15 +33,16 @@ describe Puppet::Jenkins::Plugins do
     end
   end
 
-  describe '.plugins' do
-    subject(:plugins) { described_class.plugins }
+  describe '.available' do
+    subject(:available) { described_class.available }
 
     context 'when plugins do not exist' do
       before :each do
         described_class.should_receive(:exists?).and_return(false)
       end
 
-      it { should eql('') }
+      it { should be_empty }
+      it { should be_instance_of Hash }
     end
 
     context 'when plugins exist' do

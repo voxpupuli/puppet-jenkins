@@ -36,14 +36,11 @@ module Puppet
         return data
       end
 
-      # Return a list of plugins and their versions, e.g.:
-      #   pam-auth 1.1, pmd 3.36, rake 1.7.8
-      #
-      # @return [String] Comma-separated version of "<plugin> <version>", empty
-      #   string if there are no plugins
-      def self.plugins
-        return '' unless exists?
-        plugins = []
+      # @return [Hash] a +Hash+ containing a mapping of a plugin name to its
+      #   manifest data
+      def self.available
+        return {} unless exists?
+        plugins = {}
         Dir.entries(directory).each do |plugin|
           # Skip useless directories
           next if (plugin == '..')
@@ -57,16 +54,14 @@ module Puppet
           begin
             manifest = manifest_data(File.read(manifest))
             if manifest
-              version = manifest[:plugin_version]
-              plugins << "#{plugin} #{version}"
+              plugins[plugin] = manifest
             end
           rescue StandardError => ex
             # Nothing really to do about it, failing means no version which will
             # result in a new plugin if needed
           end
         end
-
-        return plugins.join(', ')
+        return plugins
       end
 
       # Determine whether or not the jenkins plugin directory exists
