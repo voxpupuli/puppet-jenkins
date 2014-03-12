@@ -1,3 +1,4 @@
+require 'puppet/jenkins'
 
 module Puppet
   module Jenkins
