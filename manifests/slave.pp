@@ -138,12 +138,17 @@ class jenkins::slave (
     $labels_flag = ''
   }
 
+  $init_template = $::osfamily ? {
+    'Debian' => 'jenkins-slave.debian.erb',
+    default  => 'jenkins-slave.erb',
+  }
+
   file { '/etc/init.d/jenkins-slave':
       ensure  => 'file',
       mode    => '0700',
       owner   => 'root',
       group   => 'root',
-      content => template("${module_name}/jenkins-slave.erb"),
+      content => template("${module_name}/${init_template}"),
       notify  => Service['jenkins-slave']
   }
 
