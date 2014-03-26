@@ -36,11 +36,20 @@
 # [*slave_mode*]
 #   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
 #
+# [*slave_logging*]
+#   Defaults to false.  Can be turned on in order to append stdout and stderr from jenkins-slave to a file
+#
+# [*slave_log_path*]
+#   Defaults to $slave_home/jenkins-slave.log.  Is only written to if slave_logging is turned on.
+#
 # [*labels*]
 #   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
 #
 # [*jave_version*]
 #   Specified which version of java will be used.
+#
+# [*jvm_args*]
+#   Arguments passed through to the JVM (i.e. "-Xmx256m -XX:MaxPermSize=128m" to set the max heap to 256MB and Max Perm Size to 128MB)
 #
 
 # === Examples
@@ -69,8 +78,11 @@ class jenkins::slave (
   $slave_uid         = undef,
   $slave_home        = '/home/jenkins-slave',
   $slave_mode        = 'normal',
+  $slave_logging     = false,
+  $slave_log_path    = "${slave_home}/jenkins-slave.log",
   $labels            = undef,
   $install_java      = $jenkins::params::install_java,
+  $jvm_args          = undef,
   $enable            = true
 ) inherits jenkins::params {
 
@@ -133,9 +145,15 @@ class jenkins::slave (
   }
 
   if $labels {
-    $labels_flag = "-labels \"${labels}\""
+    $labels_flag = "-labels '${labels}'"
   } else {
     $labels_flag = ''
+  }
+
+  if $jvm_args {
+    $jvm_args_flag = "$jvm_args"
+  } else {
+    $jvm_args_flag = ""
   }
 
   file { '/etc/init.d/jenkins-slave':

@@ -10,13 +10,15 @@ RETVAL=0
 
 . /etc/init.d/functions
 
+JAR_FILE=<%= @slave_home -%>/<%= @client_jar %>
 PID_FILE=/var/run/jenkins-slave.pid
 LOCK_FILE=/var/lock/jenkins-slave
 
 slave_start() {
   echo Starting Jenkins Slave...
-  runuser - <%= @slave_user -%> -c 'java -jar <%= @slave_home -%>/<%= @client_jar -%> <%= @ui_user_flag -%> <%= @ui_pass_flag -%> -mode <%= @slave_mode -%> -name <%= @fqdn -%> -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%> &'
-  pgrep -f -u <%= @slave_user -%> <%= @client_jar -%> > $PID_FILE
+   daemon --user "<%= @slave_user -%>" --check "swarm-client" --pidfile "${PID_FILE}" "java <%= @jvm_args_flag -%> -jar ${JAR_FILE} <%= @ui_user_flag -%> <%= @ui_pass_flag -%> -mode <%= @slave_mode -%> -name <%= @fqdn -%> -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%> &" <% if @slave_logging == true -%>&>><%= @slave_log_path -%><% end %>
+  local pid=$(pgrep -f $JAR_FILE)
+  [ -n ${pid} ] && echo ${pid} > "${PID_FILE}"
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCK_FILE
 }
