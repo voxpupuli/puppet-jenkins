@@ -42,6 +42,9 @@
 # [*slave_log_path*]
 #   Defaults to $slave_home/jenkins-slave.log.  Is only written to if slave_logging is turned on.
 #
+# [*fsroot*]
+#   Defaults to $slave_home/workspace
+#
 # [*labels*]
 #   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
 #
@@ -80,6 +83,7 @@ class jenkins::slave (
   $slave_mode        = 'normal',
   $slave_logging     = false,
   $slave_log_path    = "${slave_home}/jenkins-slave.log",
+  $fsroot            = undef,
   $labels            = undef,
   $install_java      = $jenkins::params::install_java,
   $jvm_args          = undef,
@@ -148,6 +152,12 @@ class jenkins::slave (
     $labels_flag = "-labels '${labels}'"
   } else {
     $labels_flag = ''
+  }
+
+  if $fsroot {
+    $fsroot_flag = "-fsroot ${fsroot}"
+  } else {
+    $fsroot_flag = ""
   }
 
   if $jvm_args {
