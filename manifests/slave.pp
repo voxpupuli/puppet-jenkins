@@ -140,11 +140,10 @@ class jenkins::slave (
   }
 
   if $disable_ssl_verification {
-    $disable_ssl_verification_flag = "-disableSslVerification""
+    $disable_ssl_verification_flag = "-disableSslVerification"
   } else {
     $disable_ssl_verification_flag = ''
   }
-
 
   file { '/etc/init.d/jenkins-slave':
       ensure  => 'file',
