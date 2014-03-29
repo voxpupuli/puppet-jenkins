@@ -11,6 +11,9 @@
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
+# [*disable_ssl_verification*]
+#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#
 # [*ui_user*] & [*ui_pass*]
 #   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
 #
@@ -59,19 +62,20 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
-  $masterurl         = undef,
-  $ui_user           = undef,
-  $ui_pass           = undef,
-  $version           = $jenkins::params::swarm_version,
-  $executors         = 2,
-  $manage_slave_user = true,
-  $slave_user        = 'jenkins-slave',
-  $slave_uid         = undef,
-  $slave_home        = '/home/jenkins-slave',
-  $slave_mode        = 'normal',
-  $labels            = undef,
-  $install_java      = $jenkins::params::install_java,
-  $enable            = true
+  $masterurl                = undef,
+  $ui_user                  = undef,
+  $ui_pass                  = undef,
+  $version                  = $jenkins::params::swarm_version,
+  $executors                = 2,
+  $manage_slave_user        = true,
+  $slave_user               = 'jenkins-slave',
+  $slave_uid                = undef,
+  $slave_home               = '/home/jenkins-slave',
+  $slave_mode               = 'normal',
+  $labels                   = undef,
+  $disable_ssl_verification = false,
+  $install_java             = $jenkins::params::install_java,
+  $enable                   = true
 ) inherits jenkins::params {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -136,6 +140,14 @@ class jenkins::slave (
     $labels_flag = "-labels \"${labels}\""
   } else {
     $labels_flag = ''
+  }
+
+  #If disable_ssl_verification is set to true...
+  if $disable_ssl_verification {
+    #...add the flag to disable SSL verification to the start command line of the init script:
+    $disable_ssl_verification_flag = "-disableSslVerification"
+  } else { #...else, don't insert the flag:
+    $disable_ssl_verification_flag = ''
   }
 
   file { '/etc/init.d/jenkins-slave':
