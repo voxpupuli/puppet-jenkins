@@ -11,6 +11,9 @@
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
+# [*disable_ssl_verification*]
+#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#
 # [*ui_user*] & [*ui_pass*]
 #   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
 #
@@ -139,9 +142,11 @@ class jenkins::slave (
     $labels_flag = ''
   }
 
+  #If disable_ssl_verification is set to true...
   if $disable_ssl_verification {
+    #...add the flag to disable SSL verification to the start command line of the init script:
     $disable_ssl_verification_flag = "-disableSslVerification"
-  } else {
+  } else { #...else, don't insert the flag:
     $disable_ssl_verification_flag = ''
   }
 
