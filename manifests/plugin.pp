@@ -7,7 +7,7 @@
 #   create this content from a template or any other mean.
 #
 define jenkins::plugin(
-  $version=0
+  $version=0,
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,

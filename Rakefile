@@ -9,6 +9,7 @@ exclude_paths = [
   "pkg/**/*",
   "vendor/**/*",
   "spec/**/*",
+  "contrib/**/*"
 ]
 
 PuppetLint.configuration.log_format = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
