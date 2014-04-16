@@ -157,6 +157,11 @@ class jenkins::slave (
         owner   => 'root',
         group   => 'root',
         content => template("${module_name}/jenkins-slave-defaults.${::osfamily}"),
+        require => Package['daemon'],
+      }
+
+      package { 'daemon':
+        ensure => present,
       }
     }
     default: {
