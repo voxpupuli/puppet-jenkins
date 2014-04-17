@@ -36,10 +36,13 @@
 # [*slave_mode*]
 #   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
 #
+# [*disable_ssl_verification*]
+#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#
 # [*labels*]
 #   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
 #
-# [*jave_version*]
+# [*java_version*]
 #   Specified which version of java will be used.
 #
 
@@ -59,19 +62,20 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
-  $masterurl         = undef,
-  $ui_user           = undef,
-  $ui_pass           = undef,
-  $version           = $jenkins::params::swarm_version,
-  $executors         = 2,
-  $manage_slave_user = true,
-  $slave_user        = 'jenkins-slave',
-  $slave_uid         = undef,
-  $slave_home        = '/home/jenkins-slave',
-  $slave_mode        = 'normal',
-  $labels            = undef,
-  $install_java      = $jenkins::params::install_java,
-  $enable            = true
+  $masterurl                = undef,
+  $ui_user                  = undef,
+  $ui_pass                  = undef,
+  $version                  = $jenkins::params::swarm_version,
+  $executors                = 2,
+  $manage_slave_user        = true,
+  $slave_user               = 'jenkins-slave',
+  $slave_uid                = undef,
+  $slave_home               = '/home/jenkins-slave',
+  $slave_mode               = 'normal',
+  $disable_ssl_verification = false,
+  $labels                   = undef,
+  $install_java             = $jenkins::params::install_java,
+  $enable                   = true
 ) inherits jenkins::params {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -83,8 +87,15 @@ class jenkins::slave (
     }
   }
 
-  #add jenkins slave user if necessary.
+  #If disable_ssl_verification is set to true
+  if $disable_ssl_verification {
+     # disable SSL verification to the init script
+      $disable_ssl_verification_flag = '-disableSslVerification'
+  } else {
+      $disable_ssl_verification_flag = ''
+  }
 
+  #add jenkins slave user if necessary.
   if $manage_slave_user and $slave_uid {
     user { 'jenkins-slave_user':
       ensure     => present,
@@ -160,7 +171,7 @@ class jenkins::slave (
         require => Package['daemon'],
       }
 
-      package { 'daemon':
+      package {'daemon':
         ensure => present,
       }
     }
