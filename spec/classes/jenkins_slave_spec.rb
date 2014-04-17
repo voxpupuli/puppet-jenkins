@@ -12,6 +12,11 @@ describe 'jenkins::slave' do
       it { should contain_user('jenkins-slave_user').with_uid(nil) }
     end
 
+    describe 'with ssl verification disabled' do
+      let(:params) { { :disable_ssl_verification => true } }
+      it { should contain_file('/etc/init.d/jenkins-slave').with_content(/-disableSslVerification/) }
+    end
+
     describe 'slave_uid' do
       let(:params) { { :slave_uid => '123' } }
       it { should contain_user('jenkins-slave_user').with_uid(123) }
