@@ -8,8 +8,6 @@ gem 'puppet-syntax'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.2.0'
 
 group :development do
-  gem 'blimpy'
-  gem 'psych'
   gem 'rcov'
   gem 'parallel_tests'
   gem 'ci_reporter'
