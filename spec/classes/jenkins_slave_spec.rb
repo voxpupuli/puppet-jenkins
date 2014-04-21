@@ -10,6 +10,7 @@ describe 'jenkins::slave' do
       it { should contain_file('/etc/init.d/jenkins-slave') }
       it { should contain_service('jenkins-slave') }
       it { should contain_user('jenkins-slave_user').with_uid(nil) }
+      it { should contain_file('/etc/init.d/jenkins-slave').with_content(/-fsroot \/home\/jenkins-slave/) }
     end
 
     describe 'with ssl verification disabled' do
@@ -30,6 +31,7 @@ describe 'jenkins::slave' do
       it { should contain_file('/etc/init.d/jenkins-slave') }
       it { should contain_service('jenkins-slave') }
       it { should contain_user('jenkins-slave_user').with_uid(nil) }
+      it { should contain_file('/etc/default/jenkins-slave').with_content(/-fsroot \/home\/jenkins-slave/) }
     end
     describe 'with ssl verification disabled' do
       let(:params) { { :disable_ssl_verification => true } }
