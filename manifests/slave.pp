@@ -89,7 +89,7 @@ class jenkins::slave (
 
   #If disable_ssl_verification is set to true
   if $disable_ssl_verification {
-     # disable SSL verification to the init script
+      #disable SSL verification to the init script
       $disable_ssl_verification_flag = '-disableSslVerification'
   } else {
       $disable_ssl_verification_flag = ''
@@ -148,6 +148,12 @@ class jenkins::slave (
   } else {
     $labels_flag = ''
   }
+
+  if $slave_home {
+    $fsroot_flag = "-fsroot ${slave_home}"
+  }
+  else {$fsroot_flag = ''}
+
 
   # choose the correct init functions
   case $::osfamily {
