@@ -89,7 +89,7 @@ class jenkins::slave (
 
   #If disable_ssl_verification is set to true
   if $disable_ssl_verification {
-     # disable SSL verification to the init script
+      #disable SSL verification to the init script
       $disable_ssl_verification_flag = '-disableSslVerification'
   } else {
       $disable_ssl_verification_flag = ''
