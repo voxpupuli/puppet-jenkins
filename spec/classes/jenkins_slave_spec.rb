@@ -35,6 +35,11 @@ describe 'jenkins::slave' do
       let(:params) { { :disable_ssl_verification => true } }
       it { should contain_file('/etc/default/jenkins-slave').with_content(/-disableSslVerification/) }
     end
+
+    describe 'with fsroot as slave home' do
+      let(:params) { { :fsroot_is_slave_home => true } }
+      it { should contain_file('/etc/default/jenkins-slave').with_content(/-fsroot/) }
+    end
   end
 
   describe 'Unknown' do

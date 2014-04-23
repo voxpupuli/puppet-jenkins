@@ -33,6 +33,9 @@
 # [*slave_home*]
 #   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
 #
+# [*fsroot_is_slave_home*]
+#   Necessary on Debian to make the workspace show up here when the slave is launched instead of defaulting to whatever user's home it's launched as. Annoying when initscripts are launched as root.
+#
 # [*slave_mode*]
 #   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
 #
@@ -71,6 +74,7 @@ class jenkins::slave (
   $slave_user               = 'jenkins-slave',
   $slave_uid                = undef,
   $slave_home               = '/home/jenkins-slave',
+  $fsroot_is_slave_home     = false,
   $slave_mode               = 'normal',
   $disable_ssl_verification = false,
   $labels                   = undef,
@@ -89,7 +93,7 @@ class jenkins::slave (
 
   #If disable_ssl_verification is set to true
   if $disable_ssl_verification {
-     # disable SSL verification to the init script
+      #disable SSL verification to the init script
       $disable_ssl_verification_flag = '-disableSslVerification'
   } else {
       $disable_ssl_verification_flag = ''
@@ -147,6 +151,12 @@ class jenkins::slave (
     $labels_flag = "-labels \"${labels}\""
   } else {
     $labels_flag = ''
+  }
+
+  if $fsroot_is_slave_home {
+    $fsroot_flag = "-fsroot \"${slave_home}\""
+  } else {
+    $fsroot_flag = ''
   }
 
   # choose the correct init functions
