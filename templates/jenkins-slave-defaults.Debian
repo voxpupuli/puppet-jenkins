@@ -43,4 +43,4 @@ EXECUTORS=<%= @executors -%>
 CLIENT_NAME=<%= @fqdn -%>
 
 
-JENKINS_SLAVE_ARGS="<%= @ui_user_flag -%> <%= @ui_pass_flag -%> -name $CLIENT_NAME <%= disable_ssl_verification_flag -%> <%= @fsroot_flag %> -executors $EXECUTORS $MASTER_URL"
+JENKINS_SLAVE_ARGS="<%= @ui_user_flag -%> <%= @ui_pass_flag -%> -name $CLIENT_NAME <%= disable_ssl_verification_flag -%> <%= @fsroot_flag -%> -executors $EXECUTORS $MASTER_URL"
