@@ -152,8 +152,6 @@ class jenkins::slave (
   if $slave_home {
     $fsroot_flag = "-fsroot ${slave_home}"
   }
-  else {$fsroot_flag = ''}
-
 
   # choose the correct init functions
   case $::osfamily {
