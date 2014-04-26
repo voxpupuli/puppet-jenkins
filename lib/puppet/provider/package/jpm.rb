@@ -3,7 +3,6 @@ require 'puppet/provider/package'
 ################################################################################
 # This comes from: <http://alcy.github.io/2012/11/21/handling-gem-dependencies-in-custom-puppet-providers/>
 ################################################################################
-require 'rubygems' if Puppet.features.rubygems?
 require 'jpm' if Puppet.features.jpm?
 ################################################################################
 
