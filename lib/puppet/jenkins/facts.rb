@@ -15,7 +15,7 @@ module Puppet
         Facter.add(:jenkins_plugins) do
           confine :kernel => "Linux"
           setcode do
-            self.plugins_str
+            Puppet::Jenkins::Facts.plugins_str
           end
         end
         return nil

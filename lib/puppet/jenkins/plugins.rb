@@ -43,7 +43,7 @@ module Puppet
       def self.available
         return {} unless exists?
         plugins = {}
-        Dir.entries(directory).each do |plugin|
+        Dir.entries(Puppet::Jenkins.plugins_dir).each do |plugin|
           # Skip useless directories
           next if (plugin == '..')
           next if (plugin == '.')

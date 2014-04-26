@@ -9,3 +9,4 @@ README.pdf
 .ruby-*
 *.swp
 spec/fixtures
+*.swo
