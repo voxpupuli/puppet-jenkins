@@ -117,12 +117,19 @@ class jenkins::slave (
     }
   }
 
+  if (!defined(Package['wget'])) {
+    package { 'wget' :
+      ensure => present,
+    }
+  }
+
   exec { 'get_swarm_client':
     command      => "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}",
     path         => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     user         => $slave_user,
     #refreshonly => true,
     creates      => "${slave_home}/${client_jar}",
+    require      => Package['wget'],
     ## needs to be fixed if you create another version..
   }
 
