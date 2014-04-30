@@ -19,7 +19,7 @@ fi
 
 slave_start() {
   echo Starting Jenkins Slave...
-  $RUNUSER - <%= @slave_user -%> -c 'java -jar <%= @slave_home -%>/<%= @client_jar -%> <%= @ui_user_flag -%> <%= @ui_pass_flag -%> -mode <%= @slave_mode -%> -name <%= @fqdn || @hostname -%> -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%> <%= @disable_ssl_verification_flag -%>  <%= @fsroot_flag -%>  &'
+  $RUNUSER - <%= @slave_user -%> -c 'java -jar <%= @slave_home -%>/<%= @client_jar -%> <%= @ui_user_flag -%> <%= @ui_pass_flag -%> <%= @slave_mode_flag -%> -name <%= @fqdn || @hostname -%> -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%> <%= @disable_ssl_verification_flag -%> &'
   pgrep -f -u <%= @slave_user -%> <%= @client_jar -%> > $PID_FILE
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCK_FILE
