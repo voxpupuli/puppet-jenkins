@@ -69,6 +69,17 @@ define jenkins::plugin(
       }
     }
 
+    # create a pinned file if the plugin has a .jpi extension
+    #   to override the builtin module versions
+    exec { "create-pinnedfile-${name}" :
+      command => "touch ${plugin_dir}/${name}.jpi.pinned",
+      cwd     => $plugin_dir,
+      require => File[$plugin_dir],
+      path    => ['/usr/bin', '/usr/sbin', '/bin'],
+      onlyif  => "test -f ${plugin_dir}/${name}.jpi -a ! -f ${plugin_dir}/${name}.jpi.pinned",
+      before  => Exec["download-${name}"],
+    }
+
     exec { "download-${name}" :
       command    => "rm -rf ${name} ${name}.* && wget --no-check-certificate ${base_url}${plugin}",
       cwd        => $plugin_dir,
