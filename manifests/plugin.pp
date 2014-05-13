@@ -11,6 +11,7 @@ define jenkins::plugin(
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
+  $update_url = "http://updates.jenkins-ci.org/download/plugins",
 ) {
 
   $plugin            = "${name}.hpi"
@@ -19,7 +20,7 @@ define jenkins::plugin(
   validate_bool ($manage_config)
 
   if ($version != 0) {
-    $base_url = "http://updates.jenkins-ci.org/download/plugins/${name}/${version}/"
+    $base_url = "${update_url}/${name}/${version}/"
     $search   = "${name} ${version}(,|$)"
   }
   else {
