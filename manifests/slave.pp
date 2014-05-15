@@ -63,9 +63,9 @@ class jenkins::slave (
     }
   }
 
-  package { $java_package:
-    ensure => installed;
-  }
+  #package { $java_package:
+  #  ensure => installed;
+  #}
 
   exec { 'get_swarm_client':
     command      => "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}",
