@@ -13,6 +13,7 @@ class jenkins::repo::el
       baseurl  => 'http://pkg.jenkins-ci.org/redhat-stable/',
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
+      enabled  => 1,
     }
   }
 
@@ -22,6 +23,7 @@ class jenkins::repo::el
       baseurl  => 'http://pkg.jenkins-ci.org/redhat/',
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
+      enabled  => 1,
     }
   }
 }
