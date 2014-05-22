@@ -1,0 +1,1 @@
+Legacy support for Mercurial for drush make.
