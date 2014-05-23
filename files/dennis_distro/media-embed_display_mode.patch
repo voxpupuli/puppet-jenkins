@@ -1,0 +1,18 @@
+diff --git a/includes/media.filter.inc b/includes/media.filter.inc
+index 8ffc686..40229c9 100644
+--- a/includes/media.filter.inc
++++ b/includes/media.filter.inc
+@@ -379,7 +379,12 @@ function media_get_file_without_label($file, $view_mode, $settings = array()) {
+     $file->override += $settings['attributes'];
+   }
+ 
+-  $element = file_view_file($file, $view_mode);
++  if (!empty($settings['wysiwyg'])) {
++    $element = file_view_file($file, $view_mode);
++  } else {
++    // Allow media fields to be embedded along with the media
++    $element = file_view($file, $view_mode);
++  }
+ 
+   // The formatter invoked by file_view_file() can use $file->override to
+   // customize the returned render array to match the requested settings. To
