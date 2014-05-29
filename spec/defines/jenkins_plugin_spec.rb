@@ -54,4 +54,19 @@ describe 'jenkins::plugin' do
     it { should contain_exec('download-myplug').with(:environment => ["http_proxy=proxy.company.com:8080", "https_proxy=proxy.company.com:8080"]) }
   end
 
+  describe 'disabled and present' do
+    let(:params) { { :enabled => false } }
+    let(:facts) { { :jenkins_plugins => 'myplug 1.2.3' } }
+
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled') }
+  end
+
+  describe 'disabled and absent' do
+    let(:params) { { :enabled => false } }
+    let(:facts) { { :jenkins_plugins => '' } }
+
+    it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled') }
+  end
+
+
 end

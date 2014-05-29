@@ -7,10 +7,11 @@
 #   create this content from a template or any other mean.
 #
 define jenkins::plugin(
-  $version=0,
+  $version         = 0,
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
+  $enabled         = true,
 ) {
 
   $plugin            = "${name}.hpi"
@@ -81,6 +82,16 @@ define jenkins::plugin(
       owner   => 'jenkins',
       mode    => '0644',
       notify  => Service['jenkins'],
+    }
+
+  }
+
+  if (!$enabled and !empty(grep([ $::jenkins_plugins ], $search))) {
+    file { "${plugin_dir}/${plugin}.disabled":
+      ensure  => 'file',
+      owner   => 'jenkins',
+      mode    => '0444',
+      content => '',
     }
   }
 
