@@ -2,6 +2,7 @@
 
 # version = 'installed' (Default)
 #   Will NOT update jenkins to the most recent version.
+#
 # version = 'latest'
 #    Will automatically update the version of jenkins to the current version available via your package manager.
 #
@@ -19,8 +20,14 @@
 #   this module.
 #   This is for folks that use a custom repo, or the like.
 #
+# service_enable = true (default)
+#   Enable (or not) the jenkins service
+#
+# service_ensure = 'running' (default)
+#   Status of the jenkins service.  running, stopped
+#
 # config_hash = undef (Default)
-# Hash with config options to set in sysconfig/jenkins defaults/jenkins
+#   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
 # Example use
 #
@@ -74,6 +81,11 @@
 #   - the cli is automatically installed when needed by components that use it,
 #     such as the user and credentials types, and the security class
 #   - CLI installation (both implicit and explicit) requires the unzip command
+#
+#
+# proxy_host = undef (default)
+# proxy_port = undef (default)
+#   If your environment requires a proxy host to download plugins it can be configured here
 #
 class jenkins(
   $version            = $jenkins::params::version,
