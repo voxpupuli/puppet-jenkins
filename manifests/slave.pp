@@ -144,7 +144,7 @@ class jenkins::slave (
   }
 
   if $labels {
-    $labels_flag = "-labels \"${labels}\""
+    $labels_flag = "-labels \'${labels}\'"
   } else {
     $labels_flag = ''
   }
