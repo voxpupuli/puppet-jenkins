@@ -10,3 +10,5 @@ README.pdf
 *.swp
 spec/fixtures
 *.swo
+Gemfile.lock
+
