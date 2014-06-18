@@ -68,19 +68,35 @@
 #   - use puppetlabs-java module to install the correct version of a JDK.
 #   - Jenkins requires a JRE
 #
+#
+# plugin_repository_maven_style 
+#   True if the repository provides artifacts in the form
+#
+#     <base_url>/<plugin_name>/<plugin_version>/<plugin_name>-<plugin_version>.hpi
+#
+#   When false we assume the repository provides a link to the latest version of a plugin.
+#
+#
+# default_plugin_group_id
+#   Group id to use when a plugin does not define it explicitly.
+#   This is only relevant when $plugin_repository_maven_style is set.
+#
 class jenkins(
-  $version            = $jenkins::params::version,
-  $lts                = $jenkins::params::lts,
-  $repo               = $jenkins::params::repo,
-  $service_enable     = $jenkins::params::service_enable,
-  $service_ensure     = $jenkins::params::service_ensure,
-  $config_hash        = {},
-  $plugin_hash        = {},
-  $configure_firewall = undef,
-  $install_java       = $jenkins::params::install_java,
-  $proxy_host         = undef,
-  $proxy_port         = undef,
-  $cli                = undef,
+  $version                       = $jenkins::params::version,
+  $lts                           = $jenkins::params::lts,
+  $repo                          = $jenkins::params::repo,
+  $service_enable                = $jenkins::params::service_enable,
+  $service_ensure                = $jenkins::params::service_ensure,
+  $config_hash                   = {},
+  $plugin_hash                   = {},
+  $plugin_repository_base_url    = $jenkins::params::plugin_repository_base_url,
+  $plugin_repository_maven_style = $jenkins::params::plugin_repository_maven_style,
+  $default_plugin_group_id       = $jenkins::params::default_plugin_group_id,
+  $configure_firewall            = undef,
+  $install_java                  = $jenkins::params::install_java,
+  $proxy_host                    = undef,
+  $proxy_port                    = undef,
+  $cli                           = undef,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
