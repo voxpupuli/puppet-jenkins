@@ -28,7 +28,7 @@ define jenkins::plugin(
   }
 
   if (!defined(File[$plugin_dir])) {
-    file { [$plugin_parent_dir, $plugin_dir]:
+    file { $plugin_dir:
       ensure  => directory,
       owner   => 'jenkins',
       group   => 'jenkins',
