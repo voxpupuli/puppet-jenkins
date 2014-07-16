@@ -5,7 +5,7 @@ describe 'jenkins::slave' do
   shared_context 'a jenkins::slave catalog' do
     it { should contain_exec('get_swarm_client') }
     it { should contain_file('/etc/init.d/jenkins-slave') }
-    it { should contain_service('jenkins-slave') }
+    it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }
     it { should contain_user('jenkins-slave_user').with_uid(nil) }
     # Let the different platform blocks define  `slave_runtime_file` separately below
     it { should contain_file(slave_runtime_file).with_content(/-fsroot \/home\/jenkins-slave/) }
@@ -24,6 +24,11 @@ describe 'jenkins::slave' do
       let(:home) { '/home/rspec-runner' }
       let(:params) { {:slave_home => home } }
       it { should contain_file(slave_runtime_file).with_content(/-fsroot #{home}/) }
+    end
+
+    describe 'with service disabled' do
+      let(:params) { {:enable => false, :ensure => 'stopped' } }
+      it { should contain_service('jenkins-slave').with(:enable => false, :ensure => 'stopped') }
     end
   end
 
