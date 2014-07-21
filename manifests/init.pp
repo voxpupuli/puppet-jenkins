@@ -68,6 +68,13 @@
 #   - use puppetlabs-java module to install the correct version of a JDK.
 #   - Jenkins requires a JRE
 #
+#
+# cli = false (default)
+#   - force installation of the jenkins CLI jar to $libdir/cli/jenkins-cli.jar
+#   - the cli is automatically installed when needed by components that use it,
+#     such as the user and credentials types, and the security class
+#   - CLI installation (both implicit and explicit) requires the unzip command
+#
 class jenkins(
   $version            = $jenkins::params::version,
   $lts                = $jenkins::params::lts,
@@ -81,6 +88,7 @@ class jenkins(
   $proxy_host         = undef,
   $proxy_port         = undef,
   $cli                = undef,
+  $libdir             = $jenkins::params::libdir,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -100,14 +108,12 @@ class jenkins(
   }
 
   if $repo {
-    class {'jenkins::repo':}
+    include jenkins::repo
   }
 
-  class {'jenkins::package': }
-
-  class { 'jenkins::config': }
-
-  class { 'jenkins::plugins': }
+  include jenkins::package
+  include jenkins::config
+  include jenkins::plugins
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
@@ -116,17 +122,17 @@ class jenkins(
     }
   }
 
-  class {'jenkins::service':}
+  include jenkins::service
 
   if defined('::firewall') {
     if $configure_firewall == undef {
       fail('The firewall module is included in your manifests, please configure $configure_firewall in the jenkins module')
     } elsif $configure_firewall {
-      class {'jenkins::firewall':}
+      include jenkins::firewall
     }
   }
   if $cli {
-    class {'jenkins::cli':}
+    include jenkins::cli
   }
 
   Anchor['jenkins::begin'] ->

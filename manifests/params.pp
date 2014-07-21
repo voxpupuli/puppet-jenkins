@@ -9,6 +9,15 @@ class jenkins::params {
   $service_ensure     = 'running'
   $install_java       = true
   $swarm_version      = '1.16'
+
+  case $::osfamily {
+    'Debian': {
+      $libdir = '/usr/share/jenkins'
+    }
+    default: {
+      $libdir = '/usr/lib/jenkins'
+    }
+  }
 }
 
 
