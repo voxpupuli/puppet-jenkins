@@ -11,6 +11,10 @@ RETVAL=0
 PID_FILE=/var/run/jenkins-slave.pid
 LOCK_FILE=/var/lock/jenkins-slave
 
+if [ -f /etc/rc.d/init.d/functions ]; then
+  . /etc/rc.d/init.d/functions
+fi
+
 if [ -x /sbin/runuser ] ; then
     RUNUSER=runuser
 else
