@@ -9,6 +9,7 @@ class jenkins::params {
   $service_ensure     = 'running'
   $install_java       = true
   $swarm_version      = '1.9'
+  $libdir             = '/usr/lib/jenkins'
 }
 
 
