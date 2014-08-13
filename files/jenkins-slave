@@ -82,7 +82,6 @@ do_start()
     
     # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
     # so we let su do so for us now
-echo " $SU -l $JENKINS_SLAVE_USER --shell=/bin/bash -c $DAEMON $DAEMON_ARGS -- $JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS"
     $SU -l $JENKINS_SLAVE_USER --shell=/bin/bash -c "$DAEMON $DAEMON_ARGS -- $JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS" || return 2
 }
 
