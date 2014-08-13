@@ -86,7 +86,7 @@ Url: http://wiki.jenkins-ci.org/display/JENKINS/Ant+Plugin
 Plugin-Version: 1.2
 Hudson-Version: 1.456
 Jenkins-Version: 1.456
-Plugin-Developers: 
+Plugin-Developers:
 
 '
       end
@@ -140,7 +140,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
     it { should be_instance_of Hash }
     # Our fixture file currently has 870 plugins in it
-    its(:size) { should eql 870 }
+    let(:size) { should eql 870 }
   end
 
   let(:git_plugin) do
