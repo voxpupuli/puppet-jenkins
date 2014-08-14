@@ -103,7 +103,103 @@ the following `require` statement:
 2. Config Hash - jennkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
+5. Jenkins Users
+6. Credentials
+7. Simple security model configuration
 
+### API-based Resources and Settings (Users, Credentials, security)
+
+This module includes a groovy-based helper script that uses the
+[Jenkins CLI](https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+CLI) to
+interact with the Jenkins API. Users, Credentials, and security model
+configuration are all driven through this script.
+
+When an API-based resource is defined, the Jenkins CLI is installed and run
+against the local system (127.0.0.1). Jenkins is assumed to be listening on
+port 8080, but the module is smart enough to notice if you've configured an
+alternate port using jenkins::config_hash['HTTP_PORT'].
+
+Users and credentials are Puppet-managed, meaning that changes made to them
+from outside Puppet will be reset at the next puppet run. In this way, you can
+ensure that certain accounts are present and have the appropriate login
+credentials.
+
+### CLI Helper
+
+The CLI helper assumes unauthenticated access unless configured otherwise.
+You can configure jenkins::cli_helper to use an SSH key on the managed system:
+
+    class {'jenkins::cli_helper':
+      ssh_keyfile => '/path/to/id_rsa',
+    }
+
+There's an open bug in Jenkins (JENKINS-22346) that causes authentication to
+fail when a key is used but authentication is disabled. Until the bug is fixed,
+you may need to bootstrap jenkins out-of-band to ensure that resources and
+security policy are configured in the correct order. For example:
+
+    # In puppet:
+      anchor {'jenkins-bootstrap-start': } ->
+        Class['jenkins::cli_helper'] ->
+          Exec[$bootstrap_script] ->
+            anchor {'jenkins-bootstrap-complete': }
+
+    # Code for $bootstrap_script
+    #!/bin/bash -e
+    # Generate an SSH key for the admin user
+    ADMIN_USER='<%= admin_user_name %>'
+    ADMIN_EMAIL='<%= admin_user_email %>'
+    ADMIN_PASSWORD='<%= admin_user_password %>'
+    ADMIN_FULLNAME='<%= admin_user_full_name %>'
+    ADMIN_SSH_KEY='<%= admin_ssh_keyfile %>'
+    JENKINS_CLI='<%= jenkins_libdir %>/jenkins-cli.jar'
+    PUPPET_HELPER='<%= jenkins_libdir %>/puppet_helper.groovy'
+    HELPER="java -jar $JENKINS_CLI -s http://127.0.0.1:8080 groovy $PUPPET_HELPER"
+    DONEFILE='<%= jenkins_libdir %>/jenkins-bootstrap.done'
+    
+    ADMIN_PUBKEY="$(cat ${ADMIN_SSH_KEY}.pub)"
+    
+    # Create the admin user, passing no credentials
+    $HELPER create_or_update_user "$ADMIN_USER" "$ADMIN_EMAIL" "$ADMIN_PASSWORD" "$ADMIN_FULLNAME" "$ADMIN_PUBKEY"
+    # Enable security. After this, credentials will be required.
+    $HELPER set_security full_control
+    
+    touch $DONEFILE
+
+#### Users
+
+Email and password are required.
+
+Create a `johndoe` user account whose full name is "Managed by Puppet": 
+
+    jenkins::user {'johndoe':
+      email    => 'jdoe@example.com',
+      password => 'changeme',
+    }
+
+### Credentials
+
+Password is required. For ssh credentials, `password` is the key passphrase (or
+'' if there is none). `private_key_or_path` is the text of key itself or an
+absolute path to a key file on the managed system.
+
+Create ssh credentials named 'github-deploy-key', providing an unencrypted
+private key:
+
+    jenkins::credentials {'github-deploy-key':
+      password            => '',
+      private_key_or_path => hiera('::github_deploy_key'),
+    }
+
+### Configuring Security
+
+The Jenkins security model can be set to one of two modes:
+
+* `full_control` - Users have full control after login. Authentication uses
+  Jenkins' built-in user database.
+* `unsecured` - Authentication is not required.
+
+Jenkins security is not managed by puppet unless jenkins::security is defined.
 
 ## Using from Github / source
 
