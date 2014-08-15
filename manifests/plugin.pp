@@ -74,6 +74,7 @@ define jenkins::plugin(
       cwd        => $plugin_dir,
       require    => [File[$plugin_dir], Package['wget']],
       path       => ['/usr/bin', '/usr/sbin', '/bin'],
+      unless     => "test -f ${plugin}",
     }
 
     file { "${plugin_dir}/${plugin}" :
