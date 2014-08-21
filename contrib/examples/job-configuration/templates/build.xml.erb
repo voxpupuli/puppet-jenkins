@@ -1,14 +1,4 @@
-node default {
-    include jenkins
-
-    jenkins::plugin {
-        'ansicolor' :
-            version => '0.3.1';
-    }
-
-    jenkins::job {
-        'build' :
-            config => '<?xml version=\'1.0\' encoding=\'UTF-8\'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
   <description></description>
@@ -24,6 +14,4 @@ node default {
   <builders/>
   <publishers/>
   <buildWrappers/>
-</project>';
-    }
-}
+</project>
