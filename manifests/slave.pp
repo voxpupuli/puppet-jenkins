@@ -87,14 +87,6 @@ class jenkins::slave (
     }
   }
 
-  #If disable_ssl_verification is set to true
-  if $disable_ssl_verification {
-      #disable SSL verification to the init script
-      $disable_ssl_verification_flag = '-disableSslVerification'
-  } else {
-      $disable_ssl_verification_flag = ''
-  }
-
   #add jenkins slave user if necessary.
   if $manage_slave_user and $slave_uid {
     user { 'jenkins-slave_user':
@@ -126,70 +118,37 @@ class jenkins::slave (
     ## needs to be fixed if you create another version..
   }
 
-  if $ui_user {
-    $ui_user_flag = "-username ${ui_user}"
-  }
-  else {$ui_user_flag = ''}
-
-  if $ui_pass {
-    $ui_pass_flag = "-password ${ui_pass}"
-  } else {
-    $ui_pass_flag = ''
-  }
-
-  if $masterurl {
-    $masterurl_flag = "-master ${masterurl}"
-  } else {
-    $masterurl_flag = ''
-  }
-
-  if $labels {
-    $labels_flag = "-labels \'${labels}\'"
-  } else {
-    $labels_flag = ''
-  }
-
-  if $slave_home {
-    $fsroot_flag = "-fsroot ${slave_home}"
-  }
-
-  # choose the correct init functions
+  # customizations based on the OS family
   case $::osfamily {
     Debian:  {
-      file { '/etc/init.d/jenkins-slave':
-        ensure  => 'file',
-        mode    => '0700',
-        owner   => 'root',
-        group   => 'root',
-        source  => "puppet:///modules/${module_name}/jenkins-slave",
-        notify  => Service['jenkins-slave'],
-        require => File['/etc/default/jenkins-slave'],
-      }
-
-      file { '/etc/default/jenkins-slave':
-        ensure  => 'file',
-        mode    => '0600',
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/jenkins-slave-defaults.${::osfamily}"),
-        notify  => Service['jenkins-slave'],
-        require => Package['daemon'],
-      }
+      $defaults_location = '/etc/default'
 
       package {'daemon':
         ensure => present,
+        before => Service['jenkins-slave'],
       }
     }
     default: {
-      file { '/etc/init.d/jenkins-slave':
-        ensure  => 'file',
-        mode    => '0700',
-        owner   => 'root',
-        group   => 'root',
-        content => template("${module_name}/jenkins-slave.erb"),
-        notify  => Service['jenkins-slave'],
-      }
+      $defaults_location = '/etc/sysconfig'
     }
+  }
+
+  file { '/etc/init.d/jenkins-slave':
+    ensure  => 'file',
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    source  => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
+    notify  => Service['jenkins-slave'],
+  }
+
+  file { "${defaults_location}/jenkins-slave":
+    ensure  => 'file',
+    mode    => '0600',
+    owner   => 'root',
+    group   => 'root',
+    content => template("${module_name}/jenkins-slave-defaults.erb"),
+    notify  => Service['jenkins-slave'],
   }
 
   service { 'jenkins-slave':

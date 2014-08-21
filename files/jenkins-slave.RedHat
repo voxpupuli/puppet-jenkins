@@ -8,8 +8,15 @@
 #
 RETVAL=0
 
-PID_FILE=/var/run/jenkins-slave.pid
-LOCK_FILE=/var/lock/jenkins-slave
+NAME=jenkins-slave
+JENKINS_CONFIG=/etc/sysconfig/$NAME
+LOCK_FILE=/var/lock/$NAME
+
+# Source function library.
+. /etc/init.d/functions
+
+# Read config
+[ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
 
 if [ -x /sbin/runuser ] ; then
     RUNUSER=runuser
@@ -19,16 +26,27 @@ fi
 
 slave_start() {
   echo Starting Jenkins Slave...
-  $RUNUSER - <%= @slave_user -%> -c 'java -jar <%= @slave_home -%>/<%= @client_jar -%> <%= @ui_user_flag -%> <%= @ui_pass_flag -%> -mode <%= @slave_mode -%> -name <%= @fqdn || @hostname -%> -executors <%= @executors -%> <%= @masterurl_flag -%> <%= @labels_flag -%> <%= @disable_ssl_verification_flag -%>  <%= @fsroot_flag -%>  &'
-  pgrep -f -u <%= @slave_user -%> <%= @client_jar -%> > $PID_FILE
+
+  # the default location is /var/run/jenkins/jenkins.pid but the parent directory needs to be created
+  mkdir `dirname $PIDFILE` > /dev/null 2>&1 || true
+  chown $JENKINS_SLAVE_USER `dirname $PIDFILE`
+
+  # create log directory
+  mkdir -p `dirname $JENKINS_SLAVE_LOG` > /dev/null 2>&1 || true
+  chown $JENKINS_SLAVE_USER -R `dirname $JENKINS_SLAVE_LOG`
+
+  # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
+  # so we let su do so for us now
+  $RUNUSER - $JENKINS_SLAVE_USER -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS &>> $JENKINS_SLAVE_LOG &"
+  pgrep -f -u $JENKINS_SLAVE_USER $JENKINS_SLAVE_JAR > $PIDFILE
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCK_FILE
 }
 slave_stop() {
   echo Stopping Jenkins Slave...
-  pid=`cat $PID_FILE`
+  pid=`cat $PIDFILE`
 
-  killproc -p $PID_FILE
+  killproc -p $PIDFILE
 
   # Wait until the monitor exits
   while (checkpid $pid)
@@ -50,7 +68,7 @@ slave_restart() {
 }
 slave_status() {
   echo Jenkins Slave status:
-  status -p $PID_FILE
+  status -p $PIDFILE
   RETVAL=$?
 }
 case "$1" in

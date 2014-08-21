@@ -8,7 +8,7 @@ describe 'jenkins::slave' do
     it { should contain_service('jenkins-slave') }
     it { should contain_user('jenkins-slave_user').with_uid(nil) }
     # Let the different platform blocks define  `slave_runtime_file` separately below
-    it { should contain_file(slave_runtime_file).with_content(/-fsroot \/home\/jenkins-slave/) }
+    it { should contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
 
     describe 'with ssl verification disabled' do
       let(:params) { { :disable_ssl_verification => true } }
@@ -23,13 +23,13 @@ describe 'jenkins::slave' do
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
       let(:params) { {:slave_home => home } }
-      it { should contain_file(slave_runtime_file).with_content(/-fsroot #{home}/) }
+      it { should contain_file(slave_runtime_file).with_content(/^FSROOT="#{home}"$/) }
     end
   end
 
   describe 'RedHat' do
     let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS' } }
-    let(:slave_runtime_file) { '/etc/init.d/jenkins-slave' }
+    let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
 
     it_behaves_like 'a jenkins::slave catalog'
   end
