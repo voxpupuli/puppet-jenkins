@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rake', '>= 10.1.1'
 gem 'rspec', '~> 2.99.0'
-gem 'puppet-lint', '>= 0.3.2'
+gem 'puppet-lint', '>= 0.3.2', '< 1.0.0'
 gem 'rspec-puppet', '>= 1.0.1'
 gem 'puppetlabs_spec_helper', '>= 0.4.1'
 gem 'puppet-syntax', '>= 1.1.0'
