@@ -10,7 +10,7 @@ gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5.1'
 
 group :development do
-  gem 'rcov'
+  gem 'simplecov'
   gem 'parallel_tests'
   gem 'ci_reporter'
   gem 'debugger', :platform => :mri
