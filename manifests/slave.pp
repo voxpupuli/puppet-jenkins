@@ -95,6 +95,14 @@ class jenkins::slave (
       $disable_ssl_verification_flag = ''
   }
 
+  #If slave_mode is set to normal
+  if $slave_mode == 'normal' {
+      #use this slave as much as possible
+      $slave_mode_flag = '-mode normal'
+  } else {
+      $slave_mode_flag = '-mode exclusive'
+  }
+
   #add jenkins slave user if necessary.
   if $manage_slave_user and $slave_uid {
     user { 'jenkins-slave_user':
