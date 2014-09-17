@@ -63,7 +63,7 @@ will download and install the plugin "[by
 hand](https://wiki.jenkins-ci.org/display/JENKINS/Plugins#Plugins-Byhand)"
 
 The names of the plugins can be found on the [update
-site](http://updates.jenkins-ci.org/download/plugins)
+site](https://updates.jenkins-ci.org/download/plugins)
 
 #### Latest
 
