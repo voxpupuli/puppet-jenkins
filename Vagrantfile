@@ -13,23 +13,30 @@ Vagrant.configure("2") do |config|
     name = File.basename(dname)
     spec_config = YAML.load_file(File.join(dname + '/config.yml'))
 
+    config.vm.synced_folder ".", "/vagrant/jenkins", type: "rsync"
+
     config.vm.define(name) do |node|
-        # This is a Vagrant-local hack to make sure we have properly udpated apt
-        # caches since AWS machines are definitely going to have stale ones
-        node.vm.provision 'shell',
-          :inline => 'if [ ! -f "/apt-cached" ]; then apt-get update && touch /apt-cached; fi'
+      # This is a Vagrant-local hack to make sure we have properly udpated apt
+      # caches since AWS machines are definitely going to have stale ones
+      node.vm.provision 'shell',
+        :inline => 'if [ ! -f "/apt-cached" ]; then apt-get update && touch /apt-cached; fi'
+      node.vm.provision 'shell',
+        :inline => 'ln -sf /tmp/vagrant-puppet-2/modules-0 /tmp/vagrant-puppet-2/modules-0/jenkins'
 
-        config.vm.provision 'puppet' do |pp|
-          pp.module_path = ['.', 'spec/fixtures/modules']
-          pp.manifests_path = "spec/serverspec/#{name}/manifests"
-        end
+      node.vm.provision 'puppet' do |pp|
+        pp.module_path = [
+          '.',
+          'spec/fixtures/modules',
+        ]
+        pp.manifests_path = "spec/serverspec/#{name}/manifests"
+      end
 
 
-        node.vm.provision :serverspec do |spec|
-          spec.pattern = "spec/serverspec/#{name}/*_spec.rb"
-        end
+      node.vm.provision :serverspec do |spec|
+        spec.pattern = "spec/serverspec/#{name}/*_spec.rb"
+      end
 
-        node.vm.provider :aws do |aws, override|
+      node.vm.provider :aws do |aws, override|
         aws.access_key_id = access_key_id
         aws.secret_access_key = secret_access_key
         aws.keypair_name = keypair
