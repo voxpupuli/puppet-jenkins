@@ -11,6 +11,7 @@ RSpec.configure do |c|
   # Override puppetlabs_spec_helper's stupid setting of mock_with to :mocha,
   # which is a totally piece of garbage mocking library
   c.mock_with :rspec
+  c.deprecation_stream = '/dev/null'
 
   c.include(Jenkins::RSpecHelpers)
 end

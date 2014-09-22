@@ -7,8 +7,7 @@ README.pdf
 /test_reports
 .rvmrc
 .ruby-*
-*.swp
+*.sw*
 spec/fixtures
-*.swo
 Gemfile.lock
-
+.vagrant*
