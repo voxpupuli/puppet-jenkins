@@ -29,6 +29,10 @@ RUN_STANDALONE=true
 # log location.  this may be a syslog facility.priority
 JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
 
+# slave mode, can be either 'normal' (utilize this slave as much as possible)
+# or 'exclusive' (leave this machine for tied jobs only).
+JENKINS_SLAVE_MODE=<%= @slave_mode -%>
+
 # OS LIMITS SETUP
 #   comment this out to observe /etc/security/limits.conf
 #   this is on by default because http://github.com/jenkinsci/jenkins/commit/2fb288474e980d0e7ff9c4a3b768874835a3e92e
@@ -36,12 +40,39 @@ JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
 #   descriptors are forced to 1024 regardless of /etc/security/limits.conf
 MAXOPENFILES=8192
 
-MASTER_URL="<%= @masterurl_flag -%> <%= @labels_flag -%>"
+MASTER_URL="<%= @masterurl -%>"
+LABELS="<%= @labels -%>"
 
 EXECUTORS=<%= @executors -%>
 
-CLIENT_NAME=<%= @fqdn -%>
+CLIENT_NAME="<%= @fqdn -%>"
 
-MODE=<%= @slave_mode -%>
+FSROOT="<%= @slave_home -%>"
 
-JENKINS_SLAVE_ARGS="<%= @ui_user_flag -%> <%= @ui_pass_flag -%> -name $CLIENT_NAME <%= @disable_ssl_verification_flag -%> -executors $EXECUTORS -mode $MODE $MASTER_URL <%= @fsroot_flag -%>"
+# credentials
+JENKINS_USERNAME="<%= @ui_user -%>"
+JENKINS_PASSWORD="<%= @ui_pass -%>"
+
+OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
+
+if [ -n "$JENKINS_USERNAME" ]; then
+  CREDENTIALS_ARG="-username $JENKINS_USERNAME -password $JENKINS_PASSWORD"
+fi
+
+if [ -n "$CLIENT_NAME" ]; then
+  NAME_ARG="-name $CLIENT_NAME"
+fi
+
+if [ -n "$MASTER_URL" ]; then
+  MASTER_URL_ARG="-master $MASTER_URL"
+fi
+
+if [ -n "$LABELS" ]; then
+  LABELS_ARG="-labels '$LABELS'"
+fi
+
+if [ -n "$FSROOT" ]; then
+  FSROOT_ARG="-fsroot '$FSROOT'"
+fi
+
+JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $CREDENTIALS_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $OTHER_ARGS"
