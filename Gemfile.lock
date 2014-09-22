@@ -1,4 +1,14 @@
 GIT
+  remote: git://github.com/jenkins-infra/puppetlabs_spec_helper.git
+  revision: 772ce0ed04edb5b58f99de6ebebe8ccc233b46be
+  specs:
+    puppetlabs_spec_helper (0.4.1.40)
+      mocha (>= 0.10.5)
+      rake
+      rspec (>= 2.9.0)
+      rspec-puppet (>= 0.1.1)
+
+GIT
   remote: git://github.com/jvoorhis/vagrant-serverspec.git
   revision: 253ec6e787e8fc6698f1fccc7426aad7cd1da6eb
   specs:
@@ -95,7 +105,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.2)
     mini_portile (0.5.3)
-    mocha (1.0.0)
+    mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.9.2)
     net-scp (1.1.2)
@@ -120,11 +130,6 @@ GEM
     puppet-syntax (1.1.0)
       puppet (>= 2.7.0)
       rake
-    puppetlabs_spec_helper (0.4.1)
-      mocha (>= 0.10.5)
-      rake
-      rspec (>= 2.9.0)
-      rspec-puppet (>= 0.1.1)
     rake (10.1.1)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.4)
@@ -169,7 +174,7 @@ DEPENDENCIES
   puppet (~> 3.5.1)
   puppet-lint (>= 0.3.2)
   puppet-syntax (>= 1.1.0)
-  puppetlabs_spec_helper (>= 0.4.1)
+  puppetlabs_spec_helper!
   rake (>= 10.1.1)
   rspec (~> 2.99.0)
   rspec-puppet (>= 1.0.1)

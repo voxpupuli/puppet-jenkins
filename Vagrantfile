@@ -14,10 +14,16 @@ Vagrant.configure("2") do |config|
     spec_config = YAML.load_file(File.join(dname + '/config.yml'))
 
     config.vm.define(name) do |node|
+        # This is a Vagrant-local hack to make sure we have properly udpated apt
+        # caches since AWS machines are definitely going to have stale ones
+        node.vm.provision 'shell',
+          :inline => 'if [ ! -f "/apt-cached" ]; then apt-get update && touch /apt-cached; fi'
+
         config.vm.provision 'puppet' do |pp|
           pp.module_path = ['.', 'spec/fixtures/modules']
           pp.manifests_path = "spec/serverspec/#{name}/manifests"
         end
+
 
         node.vm.provision :serverspec do |spec|
           spec.pattern = "spec/serverspec/#{name}/*_spec.rb"
