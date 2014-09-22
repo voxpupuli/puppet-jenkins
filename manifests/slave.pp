@@ -75,6 +75,7 @@ class jenkins::slave (
   $disable_ssl_verification = false,
   $labels                   = undef,
   $install_java             = $jenkins::params::install_java,
+  $ensure                   = 'running',
   $enable                   = true
 ) inherits jenkins::params {
 
@@ -193,7 +194,7 @@ class jenkins::slave (
   }
 
   service { 'jenkins-slave':
-    ensure     => running,
+    ensure     => $ensure,
     enable     => $enable,
     hasstatus  => true,
     hasrestart => true,
