@@ -141,6 +141,15 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
     it { should be_instance_of Hash }
     # Our fixture file currently has 870 plugins in it
     its(:size) { should eql 870 }
+
+    context 'when json is not available' do
+      before :each do
+        expect(::Kernel).to receive(:require).with('json').and_raise(LoadError)
+        expect(::Kernel).to receive(:require).with('puppet/jenkins/okjson').and_call_original
+      end
+
+      it { should be_instance_of Hash }
+    end
   end
 
   let(:git_plugin) do

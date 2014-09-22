@@ -1,4 +1,3 @@
-require 'json'
 require 'puppet/jenkins'
 
 module Puppet
@@ -85,14 +84,28 @@ module Puppet
       #
       # @return [Hash] Parsed version of the update center JSON
       def self.plugins_from_updatecenter(filename)
-        File.open(filename, 'rb') do |fd|
+        parser = nil
+        begin
+          # Using Kernel#require to make it easier to test this from RSpec
+          ::Kernel.require 'json'
+          parser = Proc.new { |s| JSON.parse(s) }
+        rescue LoadError
+          # swallow the exception and embed okjson, see:
+          # <https://github.com/jenkinsci/puppet-jenkins/issues/166>
+          # <https://github.com/jenkinsci/puppet-jenkins/issues/176>
+          ::Kernel.require 'puppet/jenkins/okjson'
+          parser = Proc.new { |s| OkJson.decode(s) }
+        end
+
+
+        File.open(filename, 'r') do |fd|
           buffer = fd.read
           return {} if (buffer.nil? || buffer.empty?)
           buffer = buffer.split("\n")
           # Trim off the first and last lines, which are the JSONP gunk
           buffer = buffer[1 ... -1]
 
-          data = JSON.parse(buffer.join("\n"))
+          data = parser.call(buffer.join("\n"))
           return data['plugins'] || {}
         end
         return {}
