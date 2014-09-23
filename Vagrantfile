@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = 'dummy'
 
   Dir['spec/serverspec/*'].each do |dname|
+    next unless File.directory?(dname)
     # Convert spec/serverspec/ubuntu-precise into 'ubuntu-precise'
     name = File.basename(dname)
     spec_config = YAML.load_file(File.join(dname + '/config.yml'))
