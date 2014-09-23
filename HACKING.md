@@ -69,3 +69,7 @@ Resources may be validated in the catalog using:
  * `contain_package('puppet')`
  * And so forth for other Puppet resources.
 
+## Acceptance testings
+
+ * `bundle exec rake spec_prep`
+ * `bundle exec vagrant up`
