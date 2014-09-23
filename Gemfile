@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rake', '>= 10.1.1'
 gem 'rspec', '~> 2.99.0'
+gem 'rspec-its'
 gem 'puppet-lint', '>= 0.3.2'
 gem 'rspec-puppet', '>= 1.0.1'
 gem 'puppetlabs_spec_helper', :github => 'jenkins-infra/puppetlabs_spec_helper'
@@ -18,7 +19,7 @@ group :development do
 
   gem 'serverspec'
   gem 'vagrant', :github => 'mitchellh/vagrant',
-                 :ref => 'v1.5.3',
+                 :ref => 'v1.6.5',
                  :platform => :mri
 end
 
