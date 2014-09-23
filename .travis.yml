@@ -1,4 +1,5 @@
 language: ruby
+before_install: gem install bundler -v '~> 1.6.0' --no-ri --no-rdoc
 bundler_args: "--without development plugins"
 script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
 rvm:
