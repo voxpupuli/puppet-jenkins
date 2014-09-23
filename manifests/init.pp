@@ -118,13 +118,12 @@ class jenkins(
 
   class {'jenkins::service':}
 
-  if defined('::firewall') {
-    if $configure_firewall == undef {
-      fail('The firewall module is included in your manifests, please configure $configure_firewall in the jenkins module')
-    } elsif $configure_firewall {
-      class {'jenkins::firewall':}
+  if $configure_firewall != undef {
+    if defined('::firewall') {
+      class {'jenkins::firewall':} 
     }
   }
+
   if $cli {
     class {'jenkins::cli':}
   }
