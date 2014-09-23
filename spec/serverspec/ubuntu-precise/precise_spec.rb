@@ -17,6 +17,10 @@ describe 'Ubuntu 12.04 (Precise)', :type => :serverspec do
           should be_listening }
     end
 
+    describe file('/usr/share/jenkins/jenkins-cli.jar') do
+      it { should be_file }
+    end
+
     describe service('jenkins') do
       it { should be_running }
       it { should be_enabled }
