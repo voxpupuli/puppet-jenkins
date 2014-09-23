@@ -135,12 +135,12 @@ class jenkins::slave (
   }
 
   file { '/etc/init.d/jenkins-slave':
-    ensure  => 'file',
-    mode    => '0755',
-    owner   => 'root',
-    group   => 'root',
-    source  => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
-    notify  => Service['jenkins-slave'],
+    ensure => 'file',
+    mode   => '0755',
+    owner  => 'root',
+    group  => 'root',
+    source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
+    notify => Service['jenkins-slave'],
   }
 
   file { "${defaults_location}/jenkins-slave":
