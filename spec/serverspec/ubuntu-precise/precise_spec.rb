@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 
 describe 'Ubuntu 12.04 (Precise)', :type => :serverspec do
   describe 'non-Jenkins properties' do
