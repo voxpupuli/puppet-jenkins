@@ -18,7 +18,7 @@ group :development do
 
   gem 'serverspec'
   gem 'vagrant', :github => 'mitchellh/vagrant',
-                 :ref => 'v1.5.3',
+                 :ref => 'v1.6.5',
                  :platform => :mri
 end
 
