@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'jenkins::plugin' do
   let(:title) { 'myplug' }
 
-  it { should contain_file('/var/lib/jenkins') }
   it { should contain_file('/var/lib/jenkins/plugins') }
   it { should contain_group('jenkins') }
   it { should contain_user('jenkins').with('home' => '/var/lib/jenkins') }
