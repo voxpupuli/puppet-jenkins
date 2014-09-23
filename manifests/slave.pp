@@ -8,6 +8,9 @@
 #
 # === Parameters
 #
+# [*slave_name*]
+#   Specify the name of the slave.  Not required, by default it will use the fqdn.
+#
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
@@ -62,6 +65,7 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
+  $slave_name               = undef,
   $masterurl                = undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,

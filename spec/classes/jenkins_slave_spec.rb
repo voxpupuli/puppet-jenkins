@@ -9,6 +9,7 @@ describe 'jenkins::slave' do
     it { should contain_user('jenkins-slave_user').with_uid(nil) }
     # Let the different platform blocks define  `slave_runtime_file` separately below
     it { should contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
+    it { should contain_file(slave_runtime_file).without_content(/ -name /) }
 
     describe 'with ssl verification disabled' do
       let(:params) { { :disable_ssl_verification => true } }
@@ -32,11 +33,20 @@ describe 'jenkins::slave' do
     end
   end
 
+  shared_examples 'using slave_name' do
+    it { should contain_file(slave_runtime_file).with_content(/^CLIENT_NAME="jenkins-slave"$/) }
+  end
+
   describe 'RedHat' do
     let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS' } }
     let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
 
     it_behaves_like 'a jenkins::slave catalog'
+
+    describe 'with slave_name' do
+      let(:params) { { :slave_name => 'jenkins-slave' } }
+      it_behaves_like 'using slave_name'
+    end
   end
 
   describe 'Debian' do
@@ -44,6 +54,11 @@ describe 'jenkins::slave' do
     let(:slave_runtime_file) { '/etc/default/jenkins-slave' }
 
     it_behaves_like 'a jenkins::slave catalog'
+
+    describe 'with slave_name' do
+      let(:params) { { :slave_name => 'jenkins-slave' } }
+      it_behaves_like 'using slave_name'
+    end
   end
 
   describe 'Unknown' do
