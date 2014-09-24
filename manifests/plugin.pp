@@ -28,13 +28,25 @@ define jenkins::plugin(
   }
 
   if (!defined(File[$plugin_dir])) {
-    file { [$plugin_parent_dir, $plugin_dir]:
+
+    if (!defined(File[$plugin_parent_dir])) {
+      file { $plugin_parent_dir:
+        ensure  => directory,
+        owner   => 'jenkins',
+        group   => 'jenkins',
+        mode    => '0755',
+        require => [Group['jenkins'], User['jenkins']],
+      }
+    }
+
+    file { $plugin_dir:
       ensure  => directory,
       owner   => 'jenkins',
       group   => 'jenkins',
       mode    => '0755',
       require => [Group['jenkins'], User['jenkins']],
     }
+
   }
 
   if (!defined(Group['jenkins'])) {
