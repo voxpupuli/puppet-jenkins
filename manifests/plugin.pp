@@ -28,7 +28,6 @@ define jenkins::plugin(
   }
 
   if (!defined(File[$plugin_dir])) {
-
     if (!defined(File[$plugin_parent_dir])) {
       file { $plugin_parent_dir:
         ensure  => directory,
