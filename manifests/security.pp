@@ -28,7 +28,7 @@ class jenkins::security (
       $::jenkins::cli_helper::helper_cmd,
       'set_security',
       $security_model,
-    ], " "),
+    ], ' '),
     require => Class['::jenkins::cli_helper'],
   }
 }

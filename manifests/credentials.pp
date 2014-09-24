@@ -36,10 +36,10 @@ define jenkins::credentials (
           $::jenkins::cli_helper::helper_cmd,
           'create_or_update_credentials',
           $title,
-          "'$password'",
-          "'$description'",
-          "'$private_key_or_path'",
-        ], " "),
+          "'${password}'",
+          "'${description}'",
+          "'${private_key_or_path}'",
+        ], ' '),
         require => Class['::jenkins::cli_helper'],
       }
     }
@@ -49,12 +49,12 @@ define jenkins::credentials (
           $::jenkins::cli_helper::helper_cmd,
           'delete_credentials',
           $title,
-        ], " "),
+        ], ' '),
         require => Class['::jenkins::cli_helper'],
       }
     }
     default: {
-      fail "ensure must be 'present' or 'absent' but '$ensure' was given"
+      fail "ensure must be 'present' or 'absent' but '${ensure}' was given"
     }
   }
 }

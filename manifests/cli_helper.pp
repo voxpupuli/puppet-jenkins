@@ -29,13 +29,13 @@ class jenkins::cli_helper (
   if $ssh_keyfile {
     $auth_arg = "-i ${ssh_keyfile}"
   } else {
-    $auth_arg = ""
+    $auth_arg = ''
   }
   $helper_cmd = join([
     '/usr/bin/java',
     "-jar ${::jenkins::cli::jar}",
     "-s http://127.0.0.1:${http_port}",
     $auth_arg,
-    "groovy $helper_groovy",
-  ], " ")
+    "groovy ${helper_groovy}",
+  ], ' ')
 }

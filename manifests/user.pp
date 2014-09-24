@@ -29,7 +29,7 @@ define jenkins::user (
 
   case $ensure {
     'present': {
-      validate_re($email, '^[^@]+@[^@]+$', "An email address is required, not '$email'")
+      validate_re($email, '^[^@]+@[^@]+$', "An email address is required, not '${email}'")
       validate_string($password)
       validate_string($full_name)
       validate_string($public_key)
@@ -39,25 +39,25 @@ define jenkins::user (
           'create_or_update_user',
           $title,
           $email,
-          "'$password'",
-          "'$full_name'",
-          "'$public_key'",
-        ], " "),
+          "'${password}'",
+          "'${full_name}'",
+          "'${public_key}'",
+        ], ' '),
         require => Class['::jenkins::cli_helper'],
       }
     }
     'absent': {
-      exec { 'delete-jenkins-user-${title}':
+      exec { "delete-jenkins-user-${title}":
         command => join([
           $::jenkins::cli_helper::helper_cmd,
           'delete_user',
           $title,
-        ], " "),
+        ], ' '),
         require => Class['::jenkins::cli_helper'],
       }
     }
     default: {
-      fail "ensure must be 'present' or 'absent' but '$ensure' was given"
+      fail "ensure must be 'present' or 'absent' but '${ensure}' was given"
     }
   }
 }
