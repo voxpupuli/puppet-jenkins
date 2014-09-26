@@ -25,7 +25,7 @@ describe 'jenkins::plugin' do
 
   describe 'without version' do
     it { should contain_exec('download-myplug').with(
-      :command      => 'rm -rf myplug myplug.* && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi',
+      :command      => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi',
       :environment  => nil
     )}
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
