@@ -69,4 +69,60 @@ describe 'jenkins::plugin' do
     it { should contain_exec('download-myplug').with(:environment => ["http_proxy=proxy.company.com:8080", "https_proxy=proxy.company.com:8080"]) }
   end
 
+
+  describe 'with a custom update center' do
+    shared_examples 'execute the right fetch command' do
+      it 'should wget the plugin' do
+        expect(subject).to contain_exec('download-git').with({
+          :command => "rm -rf git git.hpi git.jpi && wget --no-check-certificate #{expected_url}",
+        })
+      end
+    end
+
+    let(:title) { 'git' }
+
+    context 'by default' do
+      context 'with a version' do
+        let(:version) { '1.3.3.7' }
+        let(:params) { {:version => version} }
+        let(:expected_url) do
+          "http://updates.jenkins-ci.org/download/plugins/#{title}/#{version}/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+
+      context 'without a version' do
+        let(:expected_url) do
+          "http://updates.jenkins-ci.org/latest/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+    end
+
+    context 'with a custom update_url' do
+      let(:update_url) { 'http://rspec' }
+
+      context 'without a version' do
+        let(:params) { {:update_url => update_url} }
+        let(:expected_url) do
+          "#{update_url}/latest/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+
+      context 'with a version' do
+        let(:version) { '1.2.3' }
+        let(:params) { {:update_url => update_url, :version => version} }
+        let(:expected_url) do
+          "#{update_url}/download/plugins/#{title}/#{version}/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+    end
+  end
+
 end
