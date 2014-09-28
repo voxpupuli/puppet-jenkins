@@ -20,10 +20,6 @@ matrix:
   exclude:
     - rvm: 1.9.3
       env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.0.0
-      env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.0.0
-      env: PUPPET_VERSION="~> 3.1.0"
     - rvm: 2.1.0
       env: PUPPET_VERSION="~> 2.7.0"
     - rvm: 2.1.0
