@@ -3,9 +3,7 @@ before_install: gem install bundler -v '~> 1.6.0' --no-ri --no-rdoc
 bundler_args: "--without development plugins"
 script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
 rvm:
-  - 1.8.7
   - 1.9.3
-  - 2.0.0
   - 2.1.0
 script:
   - "bundle exec rake lint"
