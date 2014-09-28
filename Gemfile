@@ -20,11 +20,13 @@ group :development do
   gem 'serverspec'
   gem 'vagrant', :github => 'mitchellh/vagrant',
                  :ref => 'v1.6.5',
-                 :platform => :mri
+                 :platform => [:mri_19, :mri_21]
 end
 
 # Vagrant plugins
 group :plugins do
-  gem 'vagrant-aws', :github => 'mitchellh/vagrant-aws'
-  gem 'vagrant-serverspec', :github => 'jvoorhis/vagrant-serverspec'
+  gem 'vagrant-aws', :github => 'mitchellh/vagrant-aws',
+                 :platform => [:mri_19, :mri_21]
+  gem 'vagrant-serverspec', :github => 'jvoorhis/vagrant-serverspec',
+                 :platform => [:mri_19, :mri_21]
 end
