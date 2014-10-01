@@ -8,7 +8,7 @@ class jenkins::params {
   $service_enable             = true
   $service_ensure             = 'running'
   $install_java               = true
-  $swarm_version              = '1.16'
+  $swarm_version              = '1.17'
   $default_plugins_host       = 'http://updates.jenkins-ci.org'
 
   case $::osfamily {
