@@ -9,9 +9,14 @@ describe 'jenkins', :type => :module do
     end
 
     context '$cli => true' do
-      let(:params) { { :cli => true } }
+      let(:params) {{ :cli => true,
+                      :config_hash => { 'JENKINS_PORT' => { 'value' => '9000' } }
+      }}
       it { should create_class('jenkins::cli') }
       it { should contain_exec('jenkins-cli') }
+      it { should contain_exec('reload-jenkins').with_command(/http:\/\/localhost:9000/) }
+      it { should contain_exec('safe-restart-jenkins') }
+      it { should contain_jenkins__sysconfig('JENKINS_PORT').with_value('9000') }
     end
   end
 

@@ -95,6 +95,7 @@ class jenkins(
   $service_ensure     = $jenkins::params::service_ensure,
   $config_hash        = {},
   $plugin_hash        = {},
+  $job_hash           = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -143,6 +144,7 @@ class jenkins(
       include jenkins::firewall
     }
   }
+
   if $cli {
     include jenkins::cli
   }
@@ -150,9 +152,18 @@ class jenkins(
   Anchor['jenkins::begin'] ->
     Class['jenkins::package'] ->
       Class['jenkins::config'] ->
-        Class['jenkins::plugins']~>
+        Class['jenkins::plugins'] ~>
           Class['jenkins::service'] ->
+            Class['jenkins::jobs'] ->
               Anchor['jenkins::end']
+
+  if $cli {
+    Anchor['jenkins::begin'] ->
+      Class['jenkins::service'] ->
+        Class['jenkins::cli'] ->
+          Class['jenkins::jobs'] ->
+            Anchor['jenkins::end']
+  }
 
   if $install_java {
     Anchor['jenkins::begin'] ->

@@ -18,6 +18,41 @@ class jenkins::cli {
     path    => ['/bin', '/usr/bin'],
     cwd     => '/tmp',
     creates => $jar,
-    require => Package['jenkins'],
+    require => Service['jenkins'],
+  }
+
+  file { $jar:
+    ensure  => file,
+    require => Exec['jenkins-cli'],
+  }
+
+  # Get the value of JENKINS_PORT from config_hash or default
+  $hash = $::jenkins::config_hash
+  if is_hash($hash) and has_key($hash, 'JENKINS_PORT') and
+      has_key($hash['JENKINS_PORT'], 'value') {
+    $port = $hash['JENKINS_PORT']['value']
+  } else {
+    $port = '8080'
+  }
+
+  # The jenkins cli command with required parameter(s)
+  $cmd = "java -jar ${jar} -s http://localhost:${port}"
+
+  # Reload all Jenkins config from disk (only when notified)
+  exec { 'reload-jenkins':
+    command     => "${cmd} reload-configuration",
+    tries       => 10,
+    try_sleep   => 2,
+    refreshonly => true,
+    require     => File[$jar],
+  }
+
+  # Do a safe restart of Jenkins (only when notified)
+  exec { 'safe-restart-jenkins':
+    command     => "${cmd} safe-restart && /bin/sleep 10",
+    tries       => 10,
+    try_sleep   => 2,
+    refreshonly => true,
+    require     => File[$jar],
   }
 }

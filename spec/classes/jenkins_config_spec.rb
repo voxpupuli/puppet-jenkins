@@ -10,7 +10,7 @@ describe 'jenkins', :type => :module do
 
     context 'create config' do
       let(:params) { { :config_hash => { 'AJP_PORT' => { 'value' => '1234' } } }}
-      it { should contain_jenkins__sysconfig('AJP_PORT') }
+      it { should contain_jenkins__sysconfig('AJP_PORT').with_value('1234') }
     end
   end
 

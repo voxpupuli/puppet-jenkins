@@ -20,6 +20,33 @@ puppet module install rtyler/jenkins
 ```
 Then the service should be running at [http://hostname.example.com:8080/](http://hostname.example.com:8080/).
 
+### Managing Jenkins jobs
+
+
+Build jobs can be managed using the `jenkins::job` define
+
+#### Creating or updating a build job
+```puppet
+  jenkins::job { 'test-build-job':
+    config => template("${templates}/test-build-job.xml.erb"),
+  }
+```
+
+#### Disabling a build job
+```puppet
+  jenkins::job { 'test-build-job':
+    enabled => 0,
+    config  => template("${templates}/test-build-job.xml.erb"),
+  }
+```
+
+#### Removing an existing build job
+```puppet
+  jenkins::job { 'test-build-job':
+    ensure => 'absent',
+  }
+```
+
 ### Installing Jenkins plugins
 
 
