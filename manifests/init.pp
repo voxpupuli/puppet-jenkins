@@ -127,6 +127,7 @@ class jenkins(
   include jenkins::package
   include jenkins::config
   include jenkins::plugins
+  include jenkins::jobs
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
