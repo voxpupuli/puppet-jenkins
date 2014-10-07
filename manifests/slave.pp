@@ -14,6 +14,9 @@
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
+# [*autodiscoveryaddress*]
+#   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
+#
 # [*ui_user*] & [*ui_pass*]
 #   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
 #
@@ -67,6 +70,7 @@
 class jenkins::slave (
   $slave_name               = undef,
   $masterurl                = undef,
+  $autodiscoveryaddress		= undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,
   $version                  = $jenkins::params::swarm_version,
