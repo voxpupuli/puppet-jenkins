@@ -100,6 +100,7 @@ class jenkins(
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
   $proxy_port         = undef,
+  $no_proxy_list      = undef,
   $cli                = undef,
   $libdir             = $jenkins::params::libdir,
 ) inherits jenkins::params {
@@ -109,6 +110,10 @@ class jenkins(
 
   if $configure_firewall {
     validate_bool($configure_firewall)
+  }
+
+  if $no_proxy_list {
+    validate_array($no_proxy_list)
   }
 
   anchor {'jenkins::begin':}

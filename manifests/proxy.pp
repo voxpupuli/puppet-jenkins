@@ -5,6 +5,8 @@ class jenkins::proxy {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  $no_proxy_list = $::jenkins::no_proxy_list
+
   file { '/var/lib/jenkins/proxy.xml':
     content => template('jenkins/proxy.xml.erb'),
     owner   => 'jenkins',
