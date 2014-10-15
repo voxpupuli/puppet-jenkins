@@ -87,6 +87,13 @@
 # proxy_port = undef (default)
 #   If your environment requires a proxy host to download plugins it can be configured here
 #
+#
+# no_proxy_list = undef (default)
+#   List of hostname patterns to skip using the proxy.
+#   - Accepts input as array only.
+#   - Only effective if "proxy_host" and "proxy_port" are set.
+#
+#
 class jenkins(
   $version            = $jenkins::params::version,
   $lts                = $jenkins::params::lts,
@@ -100,6 +107,7 @@ class jenkins(
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
   $proxy_port         = undef,
+  $no_proxy_list      = undef,
   $cli                = undef,
   $libdir             = $jenkins::params::libdir,
 ) inherits jenkins::params {
@@ -109,6 +117,10 @@ class jenkins(
 
   if $configure_firewall {
     validate_bool($configure_firewall)
+  }
+
+  if $no_proxy_list {
+    validate_array($no_proxy_list)
   }
 
   anchor {'jenkins::begin':}
