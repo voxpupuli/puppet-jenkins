@@ -12,6 +12,9 @@
 # lts = true
 #   Use LTS verison of jenkins
 #
+# port = 8080 (default)
+#   Sets firewall port to 8080 if puppetlabs-firewall module is installed
+#
 # repo = true (Default)
 #   install the jenkins repo.
 #
@@ -109,6 +112,7 @@ class jenkins(
   $proxy_port         = undef,
   $no_proxy_list      = undef,
   $cli                = undef,
+  $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
 ) inherits jenkins::params {
 
