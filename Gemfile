@@ -8,7 +8,7 @@ gem 'rspec-puppet', '>= 1.0.1'
 gem 'puppetlabs_spec_helper', :github => 'jenkins-infra/puppetlabs_spec_helper'
 gem 'puppet-syntax', '>= 1.1.0'
 gem 'json'
-gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5.1'
+gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
 
 group :development do
   gem 'simplecov'
