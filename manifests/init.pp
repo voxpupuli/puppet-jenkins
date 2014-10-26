@@ -34,11 +34,11 @@
 #
 # Example use
 #
-# class{ 'jenkins::config':
+# class{ 'jenkins':
 #   config_hash => {
 #     'HTTP_PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
 #   }
-# }
+# V
 #
 # plugin_hash = undef (Default)
 # Hash with config plugins to install
