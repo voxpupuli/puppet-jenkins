@@ -8,5 +8,4 @@ describe 'jenkins', :type => :module  do
   context 'firewall' do
     it { should contain_firewall('500 allow Jenkins inbound traffic') }
   end
-
 end
