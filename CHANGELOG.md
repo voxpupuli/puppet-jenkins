@@ -22,7 +22,7 @@ This is a manually kept file, and may not entirely reflect reality
 * [#207](https://github.com/jenkinsci/puppet-jenkins/pull/207) - Introduce the jenkins_port function
 
 
-## v1.2.0 - Nestro
+## v1.2.0 - Nestor
 
 * [#117](https://github.com/jenkinsci/puppet-jenkins/pull/117) - Add feature to disable SSL verification on Swarm clients
 * [#131](https://github.com/jenkinsci/puppet-jenkins/pull/131) - Support updates for core jenkins modules
