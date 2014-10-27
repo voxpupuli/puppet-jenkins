@@ -10,10 +10,16 @@ describe 'jenkins::slave' do
     # Let the different platform blocks define  `slave_runtime_file` separately below
     it { should contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
     it { should contain_file(slave_runtime_file).without_content(/ -name /) }
+    it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS=""$/) }
 
     describe 'with ssl verification disabled' do
       let(:params) { { :disable_ssl_verification => true } }
       it { should contain_file(slave_runtime_file).with_content(/-disableSslVerification/) }
+    end
+
+    describe 'with auto discovery address' do
+       let(:params) { { :autodiscoveryaddress => '255.255.255.0' } }
+       it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
     end
 
     describe 'slave_uid' do
