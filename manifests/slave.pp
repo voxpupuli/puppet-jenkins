@@ -14,6 +14,9 @@
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
+# [*autodiscoveryaddress*]
+#   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
+#
 # [*ui_user*] & [*ui_pass*]
 #   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
 #
@@ -67,6 +70,7 @@
 class jenkins::slave (
   $slave_name               = undef,
   $masterurl                = undef,
+  $autodiscoveryaddress      = undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,
   $version                  = $jenkins::params::swarm_version,
@@ -87,12 +91,12 @@ class jenkins::slave (
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
   if $install_java {
-    class {'java':
+    class { 'java':
       distribution => 'jdk',
     }
   }
 
-  #add jenkins slave user if necessary.
+#add jenkins slave user if necessary.
   if $manage_slave_user and $slave_uid {
     user { 'jenkins-slave_user':
       ensure     => present,
@@ -118,17 +122,17 @@ class jenkins::slave (
     command => "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}",
     path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
     user    => $slave_user,
-    #refreshonly => true,
+  #refreshonly => true,
     creates => "${slave_home}/${client_jar}",
-    ## needs to be fixed if you create another version..
+  ## needs to be fixed if you create another version..
   }
 
-  # customizations based on the OS family
+# customizations based on the OS family
   case $::osfamily {
-    Debian:  {
+    Debian: {
       $defaults_location = '/etc/default'
 
-      package {'daemon':
+      package { 'daemon':
         ensure => present,
         before => Service['jenkins-slave'],
       }
@@ -167,7 +171,7 @@ class jenkins::slave (
   -> Service['jenkins-slave']
 
   if $install_java {
-      Class['java'] ->
-        Service['jenkins-slave']
+    Class['java'] ->
+    Service['jenkins-slave']
   }
 }
