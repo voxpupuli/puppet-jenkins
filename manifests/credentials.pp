@@ -41,6 +41,7 @@ define jenkins::credentials (
           "'${private_key_or_path}'",
         ], ' '),
         require => Class['::jenkins::cli_helper'],
+        unless  => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
       }
     }
     'absent': {
