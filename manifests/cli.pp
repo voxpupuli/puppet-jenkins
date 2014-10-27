@@ -26,14 +26,7 @@ class jenkins::cli {
     require => Exec['jenkins-cli'],
   }
 
-  # Get the value of JENKINS_PORT from config_hash or default
-  $hash = $::jenkins::config_hash
-  if is_hash($hash) and has_key($hash, 'JENKINS_PORT') and
-      has_key($hash['JENKINS_PORT'], 'value') {
-    $port = $hash['JENKINS_PORT']['value']
-  } else {
-    $port = '8080'
-  }
+  $port = jenkins_port()
 
   # The jenkins cli command with required parameter(s)
   $cmd = "java -jar ${jar} -s http://localhost:${port}"

@@ -48,7 +48,7 @@ define jenkins::job::present(
                 'version="1.0" encoding="UTF-8"')
   # Change empty tags into self-closing tags
   $b = regsubst($a, '<([a-z]+)><\/\1>', '<\1/>', 'IG')
-  # Change &quot; to " since Jenkins is wierd like that
+  # Change &quot; to " since Jenkins is weird like that
   $c = regsubst($b, '&quot;', '"', 'MG')
 
   # Temp file to use as stdin for Jenkins CLI executable

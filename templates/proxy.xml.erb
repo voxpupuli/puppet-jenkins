@@ -1,4 +1,7 @@
 <proxy>
-  <name><%= scope.lookupvar('::jenkins::proxy_host') %></name>
-  <port><%= scope.lookupvar('::jenkins::proxy_port') %></port>
+  <name><%= @proxy_host %></name>
+  <port><%= @proxy_port %></port>
+<% if @no_proxy_list -%>
+  <noProxyHost><%= @no_proxy_list.join("\n") %></noProxyHost>
+<% end -%>
 </proxy>

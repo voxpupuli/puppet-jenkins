@@ -11,7 +11,7 @@ class jenkins::firewall {
   firewall { '500 allow Jenkins inbound traffic':
     action => 'accept',
     state  => 'NEW',
-    dport  => [$::jenkins::port],
+    dport  => [jenkins_port()],
     proto  => 'tcp',
   }
 }
