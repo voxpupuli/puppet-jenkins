@@ -14,6 +14,7 @@ define jenkins::plugin(
   $config_filename = undef,
   $config_content  = undef,
   $update_url      = undef,
+  $enabled         = true,
 ) {
   include ::jenkins::params
 
@@ -21,6 +22,7 @@ define jenkins::plugin(
   $plugin_dir        = '/var/lib/jenkins/plugins'
   $plugin_parent_dir = inline_template('<%= @plugin_dir.split(\'/\')[0..-2].join(\'/\') %>')
   validate_bool($manage_config)
+  validate_bool($enabled)
   # TODO: validate_str($update_url)
 
   if ($version != 0) {
@@ -80,6 +82,29 @@ define jenkins::plugin(
     package { 'wget' :
       ensure => present,
     }
+  }
+
+  $enabled_ensure = $enabled ? {
+    false   => present,
+    default => absent,
+  }
+
+  # Allow plugins that are already installed to be enabled/disabled.
+  file { "${plugin_dir}/${plugin}.disabled":
+    ensure  => $enabled_ensure,
+    owner   => 'jenkins',
+    mode    => '0644',
+    require => File[$plugin_dir],
+    notify  => Service['jenkins'],
+  }
+
+  # Create disabled file for jpi extensions too.
+  file { "${plugin_dir}/${name}.jpi.disabled":
+    ensure  => $enabled_ensure,
+    owner   => 'jenkins',
+    mode    => '0644',
+    require => File[$plugin_dir],
+    notify  => Service['jenkins'],
   }
 
   if (empty(grep([ $::jenkins_plugins ], $search))) {

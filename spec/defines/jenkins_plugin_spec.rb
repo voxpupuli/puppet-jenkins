@@ -57,6 +57,36 @@ describe 'jenkins::plugin' do
     it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
+  describe 'with enabled is false' do
+    let(:params) { { :enabled => false } }
+
+    it { should contain_exec('download-myplug') }
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled').with({
+      :ensure => 'present',
+      :owner  => 'jenkins',
+    })}
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.jpi.disabled').with({
+      :ensure => 'present',
+      :owner  => 'jenkins',
+    })}
+  end
+
+  describe 'with enabled is true' do
+    let(:params) { { :enabled => true } }
+
+    it { should contain_exec('download-myplug') }
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled').with({
+      :ensure => 'absent',
+      :owner  => 'jenkins',
+    })}
+    it { should contain_file('/var/lib/jenkins/plugins/myplug.jpi.disabled').with({
+      :ensure => 'absent',
+      :owner  => 'jenkins',
+    })}
+  end
+
   describe 'with proxy' do
     let(:pre_condition) { [
       'class jenkins {
