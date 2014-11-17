@@ -14,12 +14,14 @@ define jenkins::plugin(
   $config_filename = undef,
   $config_content  = undef,
   $update_url      = undef,
+  $plugin_dir      = '/var/lib/jenkins/plugins',
+  $username        = 'jenkins',
+  $group           = 'jenkins',
   $enabled         = true,
 ) {
   include ::jenkins::params
 
   $plugin            = "${name}.hpi"
-  $plugin_dir        = '/var/lib/jenkins/plugins'
   $plugin_parent_dir = inline_template('<%= @plugin_dir.split(\'/\')[0..-2].join(\'/\') %>')
   validate_bool($manage_config)
   validate_bool($enabled)
@@ -46,32 +48,32 @@ define jenkins::plugin(
     if (!defined(File[$plugin_parent_dir])) {
       file { $plugin_parent_dir:
         ensure  => directory,
-        owner   => 'jenkins',
-        group   => 'jenkins',
+        owner   => $username,
+        group   => $group,
         mode    => '0755',
-        require => [Group['jenkins'], User['jenkins']],
+        require => [Group[$group], User[$username]],
       }
     }
 
     file { $plugin_dir:
       ensure  => directory,
-      owner   => 'jenkins',
-      group   => 'jenkins',
+      owner   => $username,
+      group   => $group,
       mode    => '0755',
-      require => [Group['jenkins'], User['jenkins']],
+      require => [Group[$group], User[$username]],
     }
 
   }
 
-  if (!defined(Group['jenkins'])) {
-    group { 'jenkins' :
+  if (!defined(Group[$group])) {
+    group { $group :
       ensure  => present,
       require => Package['jenkins'],
     }
   }
 
-  if (!defined(User['jenkins'])) {
-    user { 'jenkins' :
+  if (!defined(User[$username])) {
+    user { $username :
       ensure  => present,
       home    => $plugin_parent_dir,
       require => Package['jenkins'],
@@ -92,7 +94,7 @@ define jenkins::plugin(
   # Allow plugins that are already installed to be enabled/disabled.
   file { "${plugin_dir}/${plugin}.disabled":
     ensure  => $enabled_ensure,
-    owner   => 'jenkins',
+    owner   => $username,
     mode    => '0644',
     require => File[$plugin_dir],
     notify  => Service['jenkins'],
@@ -101,7 +103,7 @@ define jenkins::plugin(
   # Create disabled file for jpi extensions too.
   file { "${plugin_dir}/${name}.jpi.disabled":
     ensure  => $enabled_ensure,
-    owner   => 'jenkins',
+    owner   => $username,
     mode    => '0644',
     require => File[$plugin_dir],
     notify  => Service['jenkins'],
@@ -138,7 +140,7 @@ define jenkins::plugin(
 
     file { "${plugin_dir}/${plugin}" :
       require => Exec["download-${name}"],
-      owner   => 'jenkins',
+      owner   => $username,
       mode    => '0644',
       notify  => Service['jenkins'],
     }
@@ -152,8 +154,8 @@ define jenkins::plugin(
     file {"${plugin_parent_dir}/${config_filename}":
       ensure  => present,
       content => $config_content,
-      owner   => 'jenkins',
-      group   => 'jenkins',
+      owner   => $username,
+      group   => $group,
       mode    => '0644',
       notify  => Service['jenkins']
     }
