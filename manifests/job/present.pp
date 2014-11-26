@@ -61,6 +61,7 @@ define jenkins::job::present(
   $cat_config = "cat ${tmp_config_path}"
   $create_job = "${jenkins_cli} create-job ${jobname}"
   exec { "jenkins create-job ${jobname}":
+    path    => ['/usr/bin', '/usr/sbin', '/bin'],
     command => "${cat_config} | ${create_job}",
     creates => [$config_path, "${job_dir}/builds"],
     require => File[$tmp_config_path],
@@ -69,6 +70,7 @@ define jenkins::job::present(
   # Use Jenkins CLI to update the job if it already exists
   $update_job = "${jenkins_cli} update-job ${jobname}"
   exec { "jenkins update-job ${jobname}":
+    path    => ['/usr/bin', '/usr/sbin', '/bin'],
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
     unless  => "diff -b -q ${config_path} ${tmp_config_path}",
@@ -79,6 +81,7 @@ define jenkins::job::present(
   # Enable or disable the job (if necessary)
   if ($enabled == 1) {
     exec { "jenkins enable-job ${jobname}":
+      path    => ['/usr/bin', '/usr/sbin', '/bin'],
       command => "${jenkins_cli} enable-job ${jobname}",
       onlyif  => "cat ${config_path} | grep '<disabled>true'",
       require => [
@@ -89,6 +92,7 @@ define jenkins::job::present(
   } else {
     exec { "jenkins disable-job ${jobname}":
       command => "${jenkins_cli} disable-job ${jobname}",
+      path    => ['/usr/bin', '/usr/sbin', '/bin'],
       onlyif  => "cat ${config_path} | grep '<disabled>false'",
       require => [
         Exec["jenkins create-job ${jobname}"],
