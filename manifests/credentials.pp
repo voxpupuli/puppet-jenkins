@@ -32,7 +32,7 @@ define jenkins::credentials (
       validate_string($description)
       validate_string($private_key_or_path)
       exec { "create-jenkins-credentials-${title}":
-        command => join([
+        command   => join([
           $::jenkins::cli_helper::helper_cmd,
           'create_or_update_credentials',
           $title,
@@ -40,18 +40,22 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ], ' '),
-        require => Class['::jenkins::cli_helper'],
-        unless  => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
+        require   => Class['::jenkins::cli_helper'],
+        unless    => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
+        tries     => 3,
+        try_sleep => 5,
       }
     }
     'absent': {
       exec { "delete-jenkins-credentials-${title}":
-        command => join([
+        command   => join([
           $::jenkins::cli_helper::helper_cmd,
           'delete_credentials',
           $title,
         ], ' '),
-        require => Class['::jenkins::cli_helper'],
+        require   => Class['::jenkins::cli_helper'],
+        tries     => 3,
+        try_sleep => 5,
       }
     }
     default: {
