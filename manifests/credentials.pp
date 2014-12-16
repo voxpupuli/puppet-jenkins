@@ -21,6 +21,7 @@ define jenkins::credentials (
   $description = 'Managed by Puppet',
   $private_key_or_path = '',
   $ensure = 'present',
+  $uuid = '',
 ){
   validate_string($ensure)
 
@@ -35,11 +36,13 @@ define jenkins::credentials (
       validate_string($password)
       validate_string($description)
       validate_string($private_key_or_path)
+      validate_string($uuid)
       jenkins::cli::exec { "create-jenkins-credentials-${title}":
         command => [
           'create_or_update_credentials',
           $title,
           "'${password}'",
+          "'${uuid}'",
           "'${description}'",
           "'${private_key_or_path}'",
         ],
