@@ -136,6 +136,7 @@ define jenkins::plugin(
       cwd     => $plugin_dir,
       require => [File[$plugin_dir], Package['wget']],
       path    => ['/usr/bin', '/usr/sbin', '/bin'],
+      returns => [4, 0]
     }
 
     file { "${plugin_dir}/${plugin}" :
