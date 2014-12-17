@@ -29,7 +29,7 @@ class jenkins::cli {
   $port = jenkins_port()
 
   # The jenkins cli command with required parameter(s)
-  $cmd = "java -jar ${jar} -s http://localhost:${port}"
+  $cmd = "/usr/bin/java -jar ${jar} -s http://localhost:${port}"
 
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
