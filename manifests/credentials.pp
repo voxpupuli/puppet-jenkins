@@ -33,26 +33,26 @@ define jenkins::credentials (
       validate_string($private_key_or_path)
       exec { "create-jenkins-credentials-${title}":
         command   => join([
-          $::jenkins::cli_helper::helper_cmd,
-          'create_or_update_credentials',
-          $title,
-          "'${password}'",
-          "'${description}'",
-          "'${private_key_or_path}'",
-        ], ' '),
-        require   => Class['::jenkins::cli_helper'],
-        unless    => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
-        tries     => 3,
-        try_sleep => 5,
+                           $::jenkins::cli_helper::helper_cmd,
+                           '--action=create_or_update_credentials',
+                           "--username=${title}",
+                           "--password='${password}'",
+                           "--description='${description}'",
+                           "--private_key='${private_key_or_path}'",
+                           ], ' '),
+                         require   => Class['::jenkins::cli_helper'],
+                         unless    => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
+                         tries     => 3,
+                         try_sleep => 5,
       }
     }
     'absent': {
       exec { "delete-jenkins-credentials-${title}":
         command   => join([
-          $::jenkins::cli_helper::helper_cmd,
-          'delete_credentials',
-          $title,
-        ], ' '),
+                           $::jenkins::cli_helper::helper_cmd,
+                           '--action=delete_credentials',
+                           "--username=${title}",
+                           ], ' '),
         require   => Class['::jenkins::cli_helper'],
         tries     => 3,
         try_sleep => 5,

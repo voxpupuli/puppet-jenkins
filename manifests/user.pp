@@ -36,12 +36,12 @@ define jenkins::user (
       exec { "create-jenkins-user-${title}":
         command => join([
           $::jenkins::cli_helper::helper_cmd,
-          'create_or_update_user',
-          $title,
-          $email,
-          "'${password}'",
-          "'${full_name}'",
-          "'${public_key}'",
+          '--action=create_or_update_user',
+          "--username=${title}",
+          "--email=${email}",
+          "--password='${password}'",
+          "--full_name='${full_name}'",
+          "--public_key='${public_key}'",
         ], ' '),
         require => Class['::jenkins::cli_helper'],
       }
@@ -50,8 +50,8 @@ define jenkins::user (
       exec { "delete-jenkins-user-${title}":
         command => join([
           $::jenkins::cli_helper::helper_cmd,
-          'delete_user',
-          $title,
+          '--action=delete_user',
+          "--username=${title}",
         ], ' '),
         require => Class['::jenkins::cli_helper'],
       }

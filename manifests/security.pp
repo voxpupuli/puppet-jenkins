@@ -17,18 +17,33 @@
 # Jenkins security configuration
 #
 class jenkins::security (
-  $security_model = undef,
-){
+  $security_model  = undef,
+  $user_realm      = 'internal',
+  $ldapconfig     = {},
+  ){
+
   validate_string($security_model)
+  validate_string($user_realm)
 
   include ::jenkins::cli_helper
 
-  exec { "jenkins-security-${security_model}":
-    command => join([
-      $::jenkins::cli_helper::helper_cmd,
-      'set_security',
-      $security_model,
-    ], ' '),
+  file { "/tmp/ldap_args.json":
+    ensure  => present,
+    owner   => 0,
+    group   => 0,
+    mode    => '0644',
+    content => template("${module_name}/ldap_args.json.erb",
     require => Class['::jenkins::cli_helper'],
+  }
+  
+  exec { "jenkins-security-${security_model}-${user_realm}":
+    command => join([
+                     $::jenkins::cli_helper::helper_cmd,
+                     "--action=set_security",
+                     "--security_model=${security_model}",
+                     "--user_realm=${user_realm}",
+                     "--ldap_config_file=/tmp/ldap_args.json",
+                     ], ' '),
+    require => File['/tmp/ldap_args.json'],
   }
 }
