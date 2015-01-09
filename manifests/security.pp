@@ -18,17 +18,46 @@
 #
 class jenkins::security (
   $security_model = undef,
-){
+  $user_realm     = 'internal',
+  $ldapconfig     = {},
+  $permisssions   = [],
+  ){
+
   validate_string($security_model)
+  validate_string($user_realm)
 
   include ::jenkins::cli_helper
 
-  exec { "jenkins-security-${security_model}":
+  file { "/tmp/ldap_args.json":
+    ensure  => present,
+    owner   => 0,
+    group   => 0,
+    mode    => '0644',
+    content => template("${module_name}/ldap_args.json.erb",
+  }
+  
+
+  file { "/tmp/perm_args.json":
+    ensure  => present,
+    owner   => 0,
+    group   => 0,
+    mode    => '0644',
+    content => template("${module_name}/perm_args.json.erb",
+  }
+
+  exec { "jenkins-security-${security_model}-${user_realm}":
     command => join([
-      $::jenkins::cli_helper::helper_cmd,
-      'set_security',
-      $security_model,
-    ], ' '),
-    require => Class['::jenkins::cli_helper'],
+                     $::jenkins::cli_helper::helper_cmd,
+                     "--action=set_security",
+                     "--security_model=${security_model}",
+                     "--user_realm=${user_realm}",
+                     "--ldap_config_file=/tmp/ldap_args.json",
+                     "--matrix_auth_config_file=/tmp/perm_args.json",
+                     ], ' '),
+    require => [
+                File['/tmp/ldap_args.json'],
+                Class['::jenkins::cli_helper'],
+                File['/tmp/perm_args.json'],
+                ],
   }
 }
