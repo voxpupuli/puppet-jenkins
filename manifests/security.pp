@@ -17,9 +17,10 @@
 # Jenkins security configuration
 #
 class jenkins::security (
-  $security_model  = undef,
-  $user_realm      = 'internal',
+  $security_model = undef,
+  $user_realm     = 'internal',
   $ldapconfig     = {},
+  $permisssions   = [],
   ){
 
   validate_string($security_model)
@@ -33,9 +34,17 @@ class jenkins::security (
     group   => 0,
     mode    => '0644',
     content => template("${module_name}/ldap_args.json.erb",
-    require => Class['::jenkins::cli_helper'],
   }
   
+
+  file { "/tmp/perm_args.json":
+    ensure  => present,
+    owner   => 0,
+    group   => 0,
+    mode    => '0644',
+    content => template("${module_name}/perm_args.json.erb",
+  }
+
   exec { "jenkins-security-${security_model}-${user_realm}":
     command => join([
                      $::jenkins::cli_helper::helper_cmd,
@@ -43,7 +52,12 @@ class jenkins::security (
                      "--security_model=${security_model}",
                      "--user_realm=${user_realm}",
                      "--ldap_config_file=/tmp/ldap_args.json",
+                     "--matrix_auth_config_file=/tmp/perm_args.json",
                      ], ' '),
-    require => File['/tmp/ldap_args.json'],
+    require => [
+                File['/tmp/ldap_args.json'],
+                Class['::jenkins::cli_helper'],
+                File['/tmp/perm_args.json'],
+                ],
   }
 }

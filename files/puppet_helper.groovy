@@ -34,6 +34,7 @@ import hudson.security.FullControlOnceLoggedInAuthorizationStrategy
 import hudson.security.GlobalMatrixAuthorizationStrategy
 import hudson.security.HudsonPrivateSecurityRealm
 import hudson.security.LDAPSecurityRealm
+import hudson.security.Permission
 import hudson.util.Secret;
 import jenkins.model.*
 import jenkins.security.ApiTokenProperty;
@@ -98,7 +99,10 @@ class Actions {
 
     cli._(longOpt:'user_realm', args:1, "Used in set_security")
 
-    cli._(longOpt:'ldap_config_file', args:1, "JSON file containing LDAP configuration")
+    cli._(longOpt:'ldap_config_file', args:1, "JSON file containing LDAP configuration. Required for ldap user_realm.")
+
+    cli._(longOpt:'matrix_auth_config_file', args:1, "JSON file containing array of permission strings. Required for global_matrix security model.")
+
     def opts = cli.parse(cliArgs)
 
     def optMap = [:]
@@ -306,6 +310,16 @@ class Actions {
       throw new InvalidAuthenticationStrategy("LDAP user realm specified but no LDAP config provided")
     }
 
+    List matrixAuthMap = []
+
+    if (args.matrix_auth_config_file != null) {
+      matrixAuthMap = loadJsonMap(args.matrix_auth_config_file)
+    }
+
+    if (matrixAuthMap.isEmpty() && args.security_model == "global_matrix") {
+      throw new InvalidAuthenticationStrategy("Global matrix security model specified but no permissions config provided")
+    }
+
     def strategy
     def realm
     switch (args.security_model) {
@@ -317,6 +331,18 @@ class Actions {
         break
       case 'global_matrix':
         strategy = new GlobalMatrixAuthorizationStrategy()
+        matrixAuthMap.each { String permString ->
+          if (!permString.contains(":")) {
+            throw new InvalidAuthenticationStrategy("Invalid permission string ${permString}")
+          } else {
+            def permAndUser = permString.split(":")
+            Permission p = Permission.fromId(permAndUser[0])
+            if (p == null) {
+              throw new InvalidAuthenticationStrategy("Invalid permission value ${permAndUser[0]}")
+            }
+            strategy.add(p, permAndUser[1])
+          }
+        }
         break
       default:
         throw new InvalidAuthenticationStrategy()
