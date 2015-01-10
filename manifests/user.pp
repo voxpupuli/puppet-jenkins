@@ -3,9 +3,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ define jenkins::user (
       validate_string($full_name)
       validate_string($public_key)
       exec { "create-jenkins-user-${title}":
-        command => join([
+        command   => join([
           $::jenkins::cli_helper::helper_cmd,
           'create_or_update_user',
           $title,
@@ -43,17 +43,21 @@ define jenkins::user (
           "'${full_name}'",
           "'${public_key}'",
         ], ' '),
-        require => Class['::jenkins::cli_helper'],
+        require   => Class['::jenkins::cli_helper'],
+        tries     => $::jenkins::cli_tries,
+        try_sleep => $::jenkins::cli_try_sleep,
       }
     }
     'absent': {
       exec { "delete-jenkins-user-${title}":
-        command => join([
+        command   => join([
           $::jenkins::cli_helper::helper_cmd,
           'delete_user',
           $title,
         ], ' '),
-        require => Class['::jenkins::cli_helper'],
+        require   => Class['::jenkins::cli_helper'],
+        tries     => $::jenkins::cli_tries,
+        try_sleep => $::jenkins::cli_try_sleep,
       }
     }
     default: {

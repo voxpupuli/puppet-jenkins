@@ -86,6 +86,14 @@
 #   - CLI installation (both implicit and explicit) requires the unzip command
 #
 #
+# cli_tries = 10 (default)
+#   Retries until giving up talking to jenkins API
+#
+#
+# cli_try_sleep = 10 (default)
+#   Seconds between tries to contact jenkins API
+#
+#
 # proxy_host = undef (default)
 # proxy_port = undef (default)
 #   If your environment requires a proxy host to download plugins it can be configured here
@@ -112,6 +120,8 @@ class jenkins(
   $proxy_port         = undef,
   $no_proxy_list      = undef,
   $cli                = undef,
+  $cli_tries          = $jenkins::params::cli_tries,
+  $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
 ) inherits jenkins::params {
