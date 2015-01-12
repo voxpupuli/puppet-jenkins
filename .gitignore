@@ -11,3 +11,4 @@ README.pdf
 spec/fixtures
 Gemfile.lock
 .vagrant*
+.idea*
