@@ -114,6 +114,7 @@ class jenkins(
   $config_hash        = {},
   $plugin_hash        = {},
   $job_hash           = {},
+  $user_hash          = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -154,6 +155,7 @@ class jenkins(
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs
+  include jenkins::users
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
