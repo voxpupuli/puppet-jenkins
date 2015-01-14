@@ -7,7 +7,7 @@
 #   create this content from a template or any other mean.
 #
 # update_url = undef
-#   
+#
 define jenkins::plugin(
   $version         = 0,
   $manage_config   = false,
@@ -18,6 +18,7 @@ define jenkins::plugin(
   $username        = 'jenkins',
   $group           = 'jenkins',
   $enabled         = true,
+  $create_user     = true,
 ) {
   include ::jenkins::params
 
@@ -65,18 +66,19 @@ define jenkins::plugin(
 
   }
 
-  if (!defined(Group[$group])) {
-    group { $group :
-      ensure  => present,
-      require => Package['jenkins'],
+  if $create_user {
+    if (!defined(Group[$group])) {
+      group { $group :
+        ensure  => present,
+        require => Package['jenkins'],
+      }
     }
-  }
-
-  if (!defined(User[$username])) {
-    user { $username :
-      ensure  => present,
-      home    => $plugin_parent_dir,
-      require => Package['jenkins'],
+    if (!defined(User[$username])) {
+      user { $username :
+        ensure  => present,
+        home    => $plugin_parent_dir,
+        require => Package['jenkins'],
+      }
     }
   }
 
