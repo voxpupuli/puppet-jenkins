@@ -12,10 +12,8 @@ puppet module install rtyler/jenkins
 ```
 
 ```puppet
-
     node 'hostname.example.com' {
         include jenkins
-
     }
 ```
 Then the service should be running at [http://hostname.example.com:8080/](http://hostname.example.com:8080/).
@@ -60,10 +58,9 @@ site](http://updates.jenkins-ci.org/download/plugins)
 #### Latest
 
 By default, the resource will install the latest plugin, i.e.:
-
-    jenkins::plugin {
-      "git" : ;
-    }
+```puppet
+  jenkins::plugin { 'git': }
+```
 
 If you specify `version => 'latest'` in current releases of the module, the
 plugin will be downloaded and installed with *every* run of Puppet. This is a
@@ -72,11 +69,11 @@ that you pin plugin versions when using the `jenkins::plugin` type.
 
 #### By version
 If you need to peg a specific version, simply specify that as a string, i.e.:
-
-    jenkins::plugin {
-      "git" :
-        version => "1.1.11";
-    }
+```puppet
+  jenkins::plugin { 'git':
+    version => '1.1.11',
+  }
+```
 
 #### Plugin dependencies
 Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
@@ -117,12 +114,12 @@ The dependencies for this module currently are:
 
 If you have any resource in Puppet that *depends* on Jenkins being present, add
 the following `require` statement:
-
-    exec {
-        "some-exec" :
-            require => Class["jenkins::package"],
-            # ... etc
-    }
+```puppet
+  exec { 'some-exec':
+    require => Class['jenkins::package'],
+    # ... etc
+  }
+```
 
 
 ### Advanced features
@@ -155,10 +152,11 @@ credentials.
 
 The CLI helper assumes unauthenticated access unless configured otherwise.
 You can configure jenkins::cli_helper to use an SSH key on the managed system:
-
-    class {'jenkins::cli_helper':
-      ssh_keyfile => '/path/to/id_rsa',
-    }
+```puppet
+  class {'jenkins::cli_helper':
+    ssh_keyfile => '/path/to/id_rsa',
+  }
+```
 
 There's an open bug in Jenkins (JENKINS-22346) that causes authentication to
 fail when a key is used but authentication is disabled. Until the bug is fixed,
@@ -198,11 +196,12 @@ security policy are configured in the correct order. For example:
 Email and password are required.
 
 Create a `johndoe` user account whose full name is "Managed by Puppet": 
-
-    jenkins::user {'johndoe':
-      email    => 'jdoe@example.com',
-      password => 'changeme',
-    }
+```puppet
+  jenkins::user { 'johndoe':
+    email    => 'jdoe@example.com',
+    password => 'changeme',
+  }
+```
 
 ### Credentials
 
@@ -212,11 +211,12 @@ absolute path to a key file on the managed system.
 
 Create ssh credentials named 'github-deploy-key', providing an unencrypted
 private key:
-
-    jenkins::credentials {'github-deploy-key':
+```puppet
+    jenkins::credentials { 'github-deploy-key':
       password            => '',
       private_key_or_path => hiera('::github_deploy_key'),
     }
+```
 
 ### Configuring Security
 
