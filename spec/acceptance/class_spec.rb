@@ -17,10 +17,9 @@ describe 'jenkins class' do
 
     describe port(8080) do
       it {
-        pending "Jenkins probably isn't running"
+        sleep(10) # Jenkins takes a while to start up
         should be_listening
       }
-      end
     end
 
     describe file('/usr/share/jenkins/jenkins-cli.jar') do
@@ -32,4 +31,5 @@ describe 'jenkins class' do
       it { should be_enabled }
     end
 
+  end
 end
