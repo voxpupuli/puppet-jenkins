@@ -1,0 +1,16 @@
+HOSTS:
+  ubuntu-12.04-amd64-fog-aws:
+    roles:
+      - master
+    platform: ubuntu-12.04-amd64
+    image_id: ami-20bd1f57 # Ubuntu 12.04
+    flavor_id: t1.micro
+    cloud_provider: AWS
+    # Amazon AMI uses ubuntu user
+    amazon_user: ubuntu
+    aws_region: 'eu-west-1'
+    aws_access_key_id: ENV['AWS_ACCESS_KEY_ID']
+    aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    hypervisor : fog
+CONFIG:
+  type: git

@@ -17,17 +17,10 @@ group :development do
   gem 'debugger', :platform => :mri_19
   gem 'debugger-pry', :platform => :mri_19
   gem 'byebug', :platform => [:mri_20, :mri_21]
-
-  gem 'serverspec'
-  gem 'vagrant', :github => 'mitchellh/vagrant',
-                 :ref => 'v1.6.5',
-                 :platform => [:mri_19, :mri_21]
 end
 
-# Vagrant plugins
-group :plugins do
-  gem 'vagrant-aws', :github => 'mitchellh/vagrant-aws',
-                 :platform => [:mri_19, :mri_21]
-  gem 'vagrant-serverspec', :github => 'jvoorhis/vagrant-serverspec',
-                 :platform => [:mri_19, :mri_21]
+group :system_tests do
+  gem 'beaker-rspec',  :require => false
+  gem 'serverspec',    :require => false
+  gem 'vagrant-wrapper',:require => false
 end
