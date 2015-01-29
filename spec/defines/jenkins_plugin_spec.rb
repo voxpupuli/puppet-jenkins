@@ -99,7 +99,6 @@ describe 'jenkins::plugin' do
     it { should contain_exec('download-myplug').with(:environment => ["http_proxy=proxy.company.com:8080", "https_proxy=proxy.company.com:8080"]) }
   end
 
-
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'should wget the plugin' do
@@ -152,6 +151,15 @@ describe 'jenkins::plugin' do
 
         include_examples 'execute the right fetch command'
       end
+    end
+  end
+  context 'when not installing users' do
+    let :params do
+      {'create_user' => false}
+    end
+    it 'should not create user or group' do
+      should_not contain_group('jenkins')
+      should_not contain_user('jenkins')
     end
   end
 
