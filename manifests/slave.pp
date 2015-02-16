@@ -48,6 +48,9 @@
 # [*labels*]
 #   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
 #
+# [*tool_locations*]
+#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
+#
 # [*java_version*]
 #   Specified which version of java will be used.
 #
@@ -82,6 +85,7 @@ class jenkins::slave (
   $slave_mode               = 'normal',
   $disable_ssl_verification = false,
   $labels                   = undef,
+  $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
   $ensure                   = 'running',
   $enable                   = true
