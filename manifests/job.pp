@@ -29,15 +29,18 @@ define jenkins::job(
       jobname => $jobname,
     }
   } else {
-    jenkins::job::present { $title:
-      if ($sourced) {
+    if ($sourced) {
+      jenkins::job::present { $title:
         config => file($config),
-      } else {
-        config  => $config,
+        jobname => $jobname,
+        enabled => $enabled,
       }
-      jobname => $jobname,
-      enabled => $enabled,
+    } else {
+      jenkins::job::present { $title:
+        config  => $config,
+        jobname => $jobname,
+        enabled => $enabled,
+      }
     }
   }
-
 }
