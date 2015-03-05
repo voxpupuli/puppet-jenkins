@@ -20,6 +20,7 @@ define jenkins::job(
   $config,
   $jobname  = $title,
   $enabled  = 1,
+  $sourced  = 0,
   $ensure   = 'present',
 ){
 
@@ -29,7 +30,11 @@ define jenkins::job(
     }
   } else {
     jenkins::job::present { $title:
-      config  => $config,
+      if ($sourced) {
+        config => file($config),
+      } else {
+        config  => $config,
+      }
       jobname => $jobname,
       enabled => $enabled,
     }
