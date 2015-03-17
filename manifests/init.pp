@@ -23,6 +23,18 @@
 #   this module.
 #   This is for folks that use a custom repo, or the like.
 #
+# package_name = 'jenkins'
+#   Optionally override the package name
+#
+# direct_download = 'http://...'
+#   Ignore repostory based package installation and download and install 
+#   package directly.  Leave as `false` (the default) to download using your
+#   OS package manager
+#
+# package_cache_dir  = '/var/cache/jenkins_pkgs'
+#   Optionally specify an alternate location to download packages to when using
+#   direct_download
+#
 # service_enable = true (default)
 #   Enable (or not) the jenkins service
 #
@@ -109,6 +121,10 @@ class jenkins(
   $version            = $jenkins::params::version,
   $lts                = $jenkins::params::lts,
   $repo               = $jenkins::params::repo,
+  $package_name       = $jenkins::params::package_name,
+  $direct_download    = false,
+  $package_cache_dir  = $jenkins::params::package_cache_dir,
+  $package_provider   = $jenkins::params::package_provider,
   $service_enable     = $jenkins::params::service_enable,
   $service_ensure     = $jenkins::params::service_ensure,
   $config_hash        = {},
@@ -146,11 +162,24 @@ class jenkins(
     }
   }
 
-  if $repo {
+  if ! $direct_download and $repo {
     include jenkins::repo
+    $repo_ = true
+  } elsif direct_download {
+    $repo_ = false
+    file { $package_cache_dir:
+      ensure => directory,
+      owner  => "root",
+      group  => "root",
+      mode   => "0644",
+    }
+    include jenkins::direct_download
+    $jenkins_package_class = 'jenkins::direct_download'
+  } else {
+    include jenkins::package
+    $jenkins_package_class = 'jenkins::package'
   }
 
-  include jenkins::package
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs
@@ -177,7 +206,7 @@ class jenkins(
   }
 
   Anchor['jenkins::begin'] ->
-    Class['jenkins::package'] ->
+    Class[$jenkins_package_class] ->
       Class['jenkins::config'] ->
         Class['jenkins::plugins'] ~>
           Class['jenkins::service'] ->
@@ -195,11 +224,11 @@ class jenkins(
   if $install_java {
     Anchor['jenkins::begin'] ->
       Class['java'] ->
-        Class['jenkins::package'] ->
+        Class[$jenkins_package_class] ->
           Anchor['jenkins::end']
   }
 
-  if $repo {
+  if $repo_ {
     Anchor['jenkins::begin'] ->
       Class['jenkins::repo'] ->
         Class['jenkins::package'] ->
