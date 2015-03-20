@@ -27,6 +27,7 @@ class jenkins::params {
     }
     default: {
       $libdir = '/usr/lib/jenkins'
+      $package_provider = false
     }
   }
 }

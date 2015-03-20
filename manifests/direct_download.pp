@@ -6,22 +6,25 @@ class jenkins::direct_download {
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
-
   validate_string($::jenkins::package_provider)
   validate_string($::jenkins::direct_download)
   validate_absolute_path($::jenkins::package_cache_dir)
-  if $::jenkins::version {
-    validate_string($::jenkins::version)  
+
+  # directory for temp files
+  file { $::jenkins::package_cache_dir:
+    ensure => directory,
+    owner  => "root",
+    group  => "root",
+    mode   => "0644",
   }
 
-  # stdlib 4.6 has 'basename'
-  #$package_file = basename($::jenkins::download_url)
+  # equivalent to basename() - get the filename
   $package_file = regsubst($::jenkins::direct_download, '(.*?)([^/]+)$', '\2')
   $local_file = "${::jenkins::package_cache_dir}/${package_file}"
   
   validate_absolute_path($local_file)
 
-  if $::jenkins::version {
+  if $::jenkins::version != 'absent' {
     # make download optional if we are removing...
     staging::file { $package_file:
       source  => $jenkins::direct_download,

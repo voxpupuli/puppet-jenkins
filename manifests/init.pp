@@ -162,24 +162,20 @@ class jenkins(
     }
   }
 
-  if ! $direct_download and $repo {
-    include jenkins::repo
-    $repo_ = true
-  } elsif direct_download {
+  if $direct_download {
     $repo_ = false
-    file { $package_cache_dir:
-      ensure => directory,
-      owner  => "root",
-      group  => "root",
-      mode   => "0644",
-    }
-    include jenkins::direct_download
     $jenkins_package_class = 'jenkins::direct_download'
   } else {
-    include jenkins::package
-    $jenkins_package_class = 'jenkins::package'
+    $jenkins_package_class = 'jenkins::package'  
+    if $repo {
+      $repo_ = true
+      include jenkins::repo
+    } else {
+      $repo_ = false
+    }
   }
-
+  include $jenkins_package_class
+  
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs
