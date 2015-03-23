@@ -262,6 +262,12 @@ To quickly try this module with the puppet module tool:
     notice: Finished catalog run in 27.46 seconds
 
 ### Overriding the jenkins package name
+It's possible to specify a different package name to the default `jenkins` if you wish:
+```
+class { 'jenkins':
+  package_name => 'jenkins_custom',
+}
+```
 
 ### Installing from a hosted RPM
 Sometimes you don't have an RPM repository available and are not allowed to 
