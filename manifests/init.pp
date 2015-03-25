@@ -44,6 +44,9 @@
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# executors = undef (Default)
+#   Integer number of executors on the Jenkin's master.
+#
 # Example use
 #
 # class{ 'jenkins':
@@ -140,6 +143,7 @@ class jenkins(
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
+  $executors          = undef,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -151,6 +155,10 @@ class jenkins(
 
   if $no_proxy_list {
     validate_array($no_proxy_list)
+  }
+
+  if $executors {
+    validate_integer($executors)
   }
 
   anchor {'jenkins::begin':}
@@ -200,6 +208,17 @@ class jenkins(
   if $cli {
     include jenkins::cli
     include jenkins::cli::reload
+  }
+
+  if $executors {
+    jenkins::cli::exec { 'set_num_executors':
+      command => ['set_num_executors', $executors],
+      unless  => "[ \$(\$HELPER_CMD get_num_executors) -eq ${executors} ]"
+    }
+
+    Class['jenkins::cli'] ->
+      Jenkins::Cli::Exec['set_num_executors'] ->
+        Class['jenkins::jobs']
   }
 
   Anchor['jenkins::begin'] ->

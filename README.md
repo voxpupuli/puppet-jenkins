@@ -18,6 +18,16 @@ puppet module install rtyler/jenkins
 ```
 Then the service should be running at [http://hostname.example.com:8080/](http://hostname.example.com:8080/).
 
+### Jenkin's options
+
+#### Master Executor Threads
+
+```puppet
+class { 'jenkins':
+  executors => 0,
+}
+```
+
 ### Managing Jenkins jobs
 
 
