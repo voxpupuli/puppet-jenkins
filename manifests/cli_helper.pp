@@ -24,13 +24,16 @@ class jenkins::cli_helper (
   if $ssh_keyfile {
     $auth_arg = "-i ${ssh_keyfile}"
   } else {
-    $auth_arg = ''
+    $auth_arg = undef
   }
-  $helper_cmd = join([
-    '/usr/bin/java',
-    "-jar ${::jenkins::cli::jar}",
-    "-s http://127.0.0.1:${port}",
-    $auth_arg,
-    "groovy ${helper_groovy}",
-  ], ' ')
+  $helper_cmd = join(
+    delete_undef_values([
+      '/usr/bin/java',
+      "-jar ${::jenkins::cli::jar}",
+      "-s http://127.0.0.1:${port}",
+      $auth_arg,
+      "groovy ${helper_groovy}",
+    ]),
+    ' '
+  )
 }
