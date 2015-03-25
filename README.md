@@ -127,9 +127,11 @@ the following `require` statement:
 2. Config Hash - jennkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
-5. Jenkins Users
-6. Credentials
-7. Simple security model configuration
+5. [CLI Helper](#cli-helper)
+    * [`exec_cli_helper`](#exec_cli_helper)
+6. Jenkins Users
+7. Credentials
+8. Simple security model configuration
 
 ### API-based Resources and Settings (Users, Credentials, security)
 
@@ -190,6 +192,46 @@ security policy are configured in the correct order. For example:
     $HELPER set_security full_control
     
     touch $DONEFILE
+
+#### `jenkins::cli::exec`
+
+The defined type `jenkins::cli::exec` may be used to execute arbitrary CLI helper
+commands.
+
+Arguments to the CLI helper script may be specified as the resource's title.
+
+```puppet
+  jenkins::cli::exec { 'set_num_executors 0': }
+```
+
+Or passed as an array to the `command` parameter.  This example is
+semantically equivalent to the first.
+
+```puppet
+  jenkins::cli::exec { 'set_num_executors 0':
+    command => ['set_num_executors', '0'],
+  }
+```
+
+which is also equivalent to:
+
+```puppet
+  jenkins::cli::exec { 'set_num_executors 0':
+    command => 'set_num_executors 0',
+  }
+```
+
+If the `unless` parameter is specified, an environment variable named
+`$HELPER_CMD` is declared which contains the complete string needed to execute
+the CLI helper script (minus arguments).  This may be useful in constructing
+idempotent `exec` statements.
+
+```puppet
+  $num_executors = 0
+  jenkins::cli::exec { "set_num_executors ${num_executors}":
+    unless => "[ \$(\$HELPER_CMD get_num_executors) -eq ${num_executors} ]"
+  }
+```
 
 #### Users
 
