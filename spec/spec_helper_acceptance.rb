@@ -1,4 +1,5 @@
-require 'beaker-rspec'
+require 'beaker-rspec/spec_helper'
+require 'beaker-rspec/helpers/serverspec'
 
 # Install Puppet
 unless ENV['RS_PROVISION'] == 'no'
