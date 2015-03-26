@@ -29,11 +29,11 @@ RSpec.configure do |c|
       copy_module_to(host, :source => proj_root, :module_name => 'jenkins')
       shell("/bin/touch #{default['puppetpath']}/hiera.yaml")
 
-      on host, puppet('module install puppetlabs-stdlib --version >= 2.0.0'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-java --version >= 1.0.1'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-apt --version >= 0.0.3'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-apt'), { :acceptable_exit_codes => [0] }
 
-      on host, puppet('module install darin-zypprepo --version >= 1.0.1'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install darin-zypprepo'), { :acceptable_exit_codes => [0] }
     end
   end
 end
