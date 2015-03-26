@@ -48,6 +48,7 @@ describe Puppet::Jenkins::Plugins do
     context 'when plugins exist' do
       it 'should generate a list of plugins' do
         pending 'This is too hard to unit test, feh.'
+        fail
       end
     end
   end
