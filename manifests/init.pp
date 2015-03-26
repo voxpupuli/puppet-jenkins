@@ -166,7 +166,7 @@ class jenkins(
     $repo_ = false
     $jenkins_package_class = 'jenkins::direct_download'
   } else {
-    $jenkins_package_class = 'jenkins::package'  
+    $jenkins_package_class = 'jenkins::package'
     if $repo {
       $repo_ = true
       include jenkins::repo

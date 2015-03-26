@@ -19,7 +19,7 @@ class jenkins::params {
   case $::osfamily {
     'Debian': {
       $libdir           = '/usr/share/jenkins'
-      $package_provider = 'dpkg' 
+      $package_provider = 'dpkg'
     }
     'RedHat': {
       $libdir           = '/usr/lib/jenkins'
