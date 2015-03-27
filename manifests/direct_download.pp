@@ -2,7 +2,7 @@
 # Support for directly downloading a package file - for when no repository
 # is available
 #
-class jenkins::direct_download {  
+class jenkins::direct_download {
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
