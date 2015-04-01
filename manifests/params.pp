@@ -15,7 +15,7 @@ class jenkins::params {
   $cli_try_sleep         = 10
 
   case $::osfamily {
-    'Debian': {
+    'Debian', 'Ubuntu': {
       $libdir = '/usr/share/jenkins'
     }
     default: {
