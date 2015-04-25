@@ -31,9 +31,9 @@ define jenkins::job::absent(
   # Delete the job
   exec { "jenkins delete-job ${jobname}":
     path      => ['/usr/bin', '/usr/sbin', '/bin'],
-    command   => "${jenkins::cli::cmd} delete-job ${jobname}",
+    command   => "${jenkins::cli::cmd} delete-job \"${jobname}\"",
     logoutput => false,
-    onlyif    => "test -f ${config_path}",
+    onlyif    => "test -f \"${config_path}\"",
     require   => Exec['jenkins-cli'],
   }
 
