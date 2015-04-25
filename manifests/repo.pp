@@ -20,7 +20,7 @@ class jenkins::repo {
           Anchor['jenkins::repo::end']
       }
 
-      'Debian': {
+      'Debian', 'Ubuntu': {
         class { 'jenkins::repo::debian': }
         Anchor['jenkins::repo::begin'] ->
           Class['jenkins::repo::debian'] ->
