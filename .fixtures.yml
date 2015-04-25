@@ -1,6 +1,8 @@
 fixtures:
   repositories:
-    apt: "git://github.com/puppetlabs/puppetlabs-apt"
+    apt:
+      repo: "git://github.com/puppetlabs/puppetlabs-apt"
+      ref: "1.8.0"
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
     java: "git://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "git://github.com/deadpoint/puppet-zypprepo.git"
