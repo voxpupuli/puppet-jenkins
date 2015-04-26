@@ -78,6 +78,23 @@
 #    'token-macro': {}
 #
 #
+# user_hash = undef (Default)
+# Hash with users to create in jenkins
+#
+# Example use
+#
+# class{ 'jenkins':
+#   user_hash => {
+#     'test_user' => { 'password' => 'testpass',
+#                      'email'    => 'test@testmail.com'}
+#
+# Or in Hiera
+#
+# jenkins::user_hash:
+#     'test_user':
+#       password: 'testpass'
+#       email: 'test@testmail.com'
+#
 # configure_firewall = undef (default)
 #   For folks that want to manage the puppetlabs firewall module.
 #    - If it's not present in the catalog, nothing happens.
@@ -130,6 +147,7 @@ class jenkins(
   $config_hash        = {},
   $plugin_hash        = {},
   $job_hash           = {},
+  $user_hash          = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -179,6 +197,7 @@ class jenkins(
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs
+  include jenkins::users
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
