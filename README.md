@@ -108,7 +108,7 @@ The dependencies for this module currently are:
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
-
+* [staging module](https://forge.puppetlabs.com/nanliu/staging)
 
 ### Depending on Jenkins
 
@@ -261,3 +261,22 @@ To quickly try this module with the puppet module tool:
     notice: /Stage[main]/Jenkins::Service/Service[jenkins]/ensure: ensure changed 'stopped' to 'running'
     notice: Finished catalog run in 27.46 seconds
 
+### Overriding the jenkins package name
+It's possible to specify a different package name to the default `jenkins` if you wish:
+```
+class { 'jenkins':
+  package_name => 'jenkins_custom',
+}
+```
+
+### Installing from a hosted RPM
+Sometimes you don't have an RPM repository available and are not allowed to 
+directly install from repositories on the Internet.  In this case, you can 
+still install Jenkins with this module by hosting the jenkins RPM file 
+somewhere accessible (http server, S3 bucket, etc.) and tell
+
+```
+class { 'jenkins':
+  direct_download => 'http://myserver/rpms/jenkins-x.xxx-1-1.rpm',
+}
+``` 
