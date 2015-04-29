@@ -51,7 +51,7 @@ define jenkins::job::present(
   # Change &quot; to " since Jenkins is weird like that
   $c = regsubst($b, '&quot;', '"', 'MG')
   # Change &apos; to ' since Jenkins is weird like that
-  $d = regsubst($c, '&apos;', ''', 'MG')
+  $d = regsubst($c, '&apos;', '\'', 'MG')
 
   # Temp file to use as stdin for Jenkins CLI executable
   file { $tmp_config_path:
