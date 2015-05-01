@@ -9,6 +9,7 @@ gem 'puppetlabs_spec_helper', :github => 'jenkins-infra/puppetlabs_spec_helper'
 gem 'puppet-syntax', '>= 1.1.0'
 gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
+gem 'metadata-json-lint'
 
 group :development do
   gem 'simplecov'
