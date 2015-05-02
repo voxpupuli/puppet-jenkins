@@ -12,3 +12,4 @@ README.pdf
 spec/fixtures
 Gemfile.lock
 .vagrant*
+.bundle
