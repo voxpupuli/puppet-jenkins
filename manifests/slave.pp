@@ -133,7 +133,7 @@ class jenkins::slave (
 
 # customizations based on the OS family
   case $::osfamily {
-    Debian: {
+    'Debian': {
       $defaults_location = '/etc/default'
 
       package { 'daemon':
