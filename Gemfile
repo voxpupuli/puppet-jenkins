@@ -5,7 +5,7 @@ gem 'rspec', '~> 2.99.0'
 gem 'rspec-its'
 gem 'puppet-lint', '>= 0.3.2'
 gem 'rspec-puppet', '>= 1.0.1'
-gem 'puppetlabs_spec_helper', :github => 'jenkins-infra/puppetlabs_spec_helper'
+gem 'puppetlabs_spec_helper',   :require => false
 gem 'puppet-syntax', '>= 1.1.0'
 gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
