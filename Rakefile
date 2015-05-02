@@ -24,4 +24,4 @@ end
 
 PuppetSyntax.exclude_paths = exclude_paths
 
-task :default => [:lint, :spec, :syntax]
+task :default => [:lint, :validate, :spec]
