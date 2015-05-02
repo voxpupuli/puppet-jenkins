@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rspec'
+require 'rspec/its'
 require 'puppetlabs_spec_helper/module_spec_helper'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
