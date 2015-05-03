@@ -33,31 +33,25 @@ define jenkins::user (
       validate_string($password)
       validate_string($full_name)
       validate_string($public_key)
-      exec { "create-jenkins-user-${title}":
-        command   => join([
-          $::jenkins::cli_helper::helper_cmd,
+      # XXX not idempotent
+      jenkins::cli::exec { "create-jenkins-user-${title}":
+        command => [
           'create_or_update_user',
           $title,
           $email,
           "'${password}'",
           "'${full_name}'",
           "'${public_key}'",
-        ], ' '),
-        require   => Class['::jenkins::cli_helper'],
-        tries     => $::jenkins::cli_tries,
-        try_sleep => $::jenkins::cli_try_sleep,
+        ],
       }
     }
     'absent': {
-      exec { "delete-jenkins-user-${title}":
-        command   => join([
-          $::jenkins::cli_helper::helper_cmd,
+      # XXX not idempotent
+      jenkins::cli::exec { "delete-jenkins-user-${title}":
+        command => [
           'delete_user',
           $title,
-        ], ' '),
-        require   => Class['::jenkins::cli_helper'],
-        tries     => $::jenkins::cli_tries,
-        try_sleep => $::jenkins::cli_try_sleep,
+        ],
       }
     }
     default: {
