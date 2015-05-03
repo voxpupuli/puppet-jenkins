@@ -18,4 +18,3 @@ class jenkins::config {
 
   create_resources( 'jenkins::sysconfig', $::jenkins::config_hash )
 }
-

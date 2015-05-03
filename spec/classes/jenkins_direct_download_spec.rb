@@ -33,7 +33,7 @@ describe 'jenkins', :type => :module do
 
     context 'unsupported provider fails' do
       let (:params) { { :package_provider => false, :direct_download => 'http://local.space/jenkins.rpm' } }
-      it do 
+      it do
         expect { should compile }.to raise_error
       end
     end

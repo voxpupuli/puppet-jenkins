@@ -37,4 +37,3 @@ matrix:
       env: PUPPET_VERSION="~> 3.4.0"
 notifications:
   email: false
-

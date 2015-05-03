@@ -76,4 +76,3 @@ Acceptance tests are setup using [Beaker](https://github.com/puppetlabs/beaker),
 To run the tests:
 
  * `bundle exec rspec spec/acceptance/`
-
