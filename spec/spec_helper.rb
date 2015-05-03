@@ -16,3 +16,11 @@ RSpec.configure do |c|
 
   c.include(Jenkins::RSpecHelpers)
 end
+
+# a simple class to inject :undef
+# https://groups.google.com/d/msg/puppet-users/6nL2eROH8is/UDqRNu34lB0J
+class Undef
+  def inspect
+    'undef'
+  end
+end

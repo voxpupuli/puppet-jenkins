@@ -256,6 +256,30 @@ class Actions {
     instance.setAuthorizationStrategy(strategy)
     instance.setSecurityRealm(realm)
   }
+
+  ////////////////////////
+  // get_num_executors
+  ////////////////////////
+  /*
+   * Print the number of executors for the master
+  */
+  void get_num_executors() {
+     def j = Jenkins.getInstance()
+     def n = j.getNumExecutors()
+     out.println(n)
+  }
+
+  ////////////////////////
+  // set_num_executors
+  ////////////////////////
+  /*
+   * Set the number of executors for the master
+  */
+  void set_num_executors(String n) {
+     def j = Jenkins.getInstance()
+     j.setNumExecutors(n.toInteger())
+     j.save()
+  }
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////

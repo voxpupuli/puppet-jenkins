@@ -64,5 +64,34 @@ describe 'jenkins', :type => :module do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       it { expect { should raise_error(Puppet::Error) } }
     end
+
+    describe 'executors =>' do
+      context 'undef' do
+        it { should_not contain_class('jenkins::cli_helper') }
+        it { should_not contain_jenkins__cli__exec('set_num_executors') }
+      end
+
+      context '42' do
+        let(:params) {{ :executors => 42 }}
+
+        it { should contain_class('jenkins::cli_helper') }
+        it do
+          should contain_jenkins__cli__exec('set_num_executors').with(
+            :command => ['set_num_executors', 42],
+            :unless  => '[ $($HELPER_CMD get_num_executors) -eq 42 ]',
+          )
+        end
+        it { should contain_jenkins__cli__exec('set_num_executors').that_requires('Class[jenkins::cli]') }
+        it { should contain_jenkins__cli__exec('set_num_executors').that_comes_before('Class[jenkins::jobs]') }
+      end
+
+      context '{}' do
+        let(:params) {{ :executors => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /to be an Integer/)
+        end
+      end
+    end # executors =>
   end
 end
