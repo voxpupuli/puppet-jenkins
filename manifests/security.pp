@@ -23,14 +23,11 @@ class jenkins::security (
 
   include ::jenkins::cli_helper
 
+  # XXX not idempotent
   exec { "jenkins-security-${security_model}":
-    command   => join([
-      $::jenkins::cli_helper::helper_cmd,
+    command => [
       'set_security',
       $security_model,
-    ], ' '),
-    require   => Class['::jenkins::cli_helper'],
-    tries     => $::jenkins::cli_tries,
-    try_sleep => $::jenkins::cli_try_sleep,
+    ],
   }
 }

@@ -31,31 +31,24 @@ define jenkins::credentials (
       validate_string($password)
       validate_string($description)
       validate_string($private_key_or_path)
-      exec { "create-jenkins-credentials-${title}":
-        command   => join([
-          $::jenkins::cli_helper::helper_cmd,
+      jenkins::cli::exec { "create-jenkins-credentials-${title}":
+        command => [
           'create_or_update_credentials',
           $title,
           "'${password}'",
           "'${description}'",
           "'${private_key_or_path}'",
-        ], ' '),
-        require   => Class['::jenkins::cli_helper'],
-        unless    => "${::jenkins::cli_helper::helper_cmd} credential_info ${title} | grep ${title}",
-        tries     => $::jenkins::cli_tries,
-        try_sleep => $::jenkins::cli_try_sleep,
+        ],
+        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
       }
     }
     'absent': {
-      exec { "delete-jenkins-credentials-${title}":
-        command   => join([
-          $::jenkins::cli_helper::helper_cmd,
+      # XXX not idempotent
+      jenkins::cli::exec { "delete-jenkins-credentials-${title}":
+        command => [
           'delete_credentials',
           $title,
-        ], ' '),
-        require   => Class['::jenkins::cli_helper'],
-        tries     => $::jenkins::cli_tries,
-        try_sleep => $::jenkins::cli_try_sleep,
+        ],
       }
     }
     default: {
