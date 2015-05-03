@@ -2,13 +2,13 @@
 // Copyright 2011 Fletcher Nichol
 // Copyright 2013-2014 Chef Software, Inc.
 // Copyright 2014 RetailMeNot, Inc.
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,7 +46,7 @@ class Actions {
         hudson.security.ACL.SYSTEM,
         new SchemeRequirement("ssh")
       )
-    
+
     return CredentialsMatchers.firstOrNull(
       available_credentials,
       username_matcher
@@ -59,21 +59,21 @@ class Actions {
   void create_or_update_user(String user_name, String email, String password="", String full_name="", String public_keys="") {
     def user = hudson.model.User.get(user_name)
     user.setFullName(full_name)
-    
+
     def email_param = new hudson.tasks.Mailer.UserProperty(email)
     user.addProperty(email_param)
-    
+
     def pw_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(password)
     user.addProperty(pw_param)
-    
+
     if ( public_keys != "" ) {
       def keys_param = new org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl(public_keys)
       user.addProperty(keys_param)
     }
-    
+
     user.save()
   }
-  
+
   /////////////////////////
   // delete user
   /////////////////////////
@@ -83,26 +83,26 @@ class Actions {
       user.delete()
     }
   }
-  
+
   /////////////////////////
   // current user
   /////////////////////////
   void user_info(String user_name) {
     def user = hudson.model.User.get(user_name, false)
-  
+
     if(user == null) {
         return null
     }
 
     def user_id = user.getId()
     def name = user.getFullName()
-    
+
     def email_address = null
     def emailProperty = user.getProperty(hudson.tasks.Mailer.UserProperty)
     if(emailProperty != null) {
       email_address = emailProperty.getAddress()
     }
-    
+
     def keys = null
     def keysProperty = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
     if(keysProperty != null) {
@@ -114,7 +114,7 @@ class Actions {
     if (tokenProperty != null) {
         token = tokenProperty.getApiToken()
     }
-    
+
     def builder = new groovy.json.JsonBuilder()
     builder {
       id user_id
@@ -123,10 +123,10 @@ class Actions {
       api_token token
       public_keys keys
     }
-  
+
     out.println(builder)
   }
-  
+
   /////////////////////////
   // create credentials
   /////////////////////////
@@ -136,7 +136,7 @@ class Actions {
       Jenkins.instance.getExtensionList(
         'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
       )[0].getStore()
-    
+
     def credentials
     if (private_key == "" ) {
       credentials = new UsernamePasswordCredentialsImpl(
@@ -162,10 +162,10 @@ class Actions {
         description
       )
     }
-    
+
     // Create or update the credentials in the Jenkins instance
     def existing_credentials = credentials_for_username(username)
-    
+
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
         global_domain,
@@ -176,13 +176,13 @@ class Actions {
       credentials_store.addCredentials(global_domain, credentials)
     }
   }
-  
+
   //////////////////////////
   // delete credentials
   //////////////////////////
   void delete_credentials(String username) {
     def existing_credentials = credentials_for_username(username)
-    
+
     if(existing_credentials != null) {
       def global_domain = com.cloudbees.plugins.credentials.domains.Domain.global()
       def credentials_store =
@@ -195,34 +195,34 @@ class Actions {
       )
     }
   }
-  
+
   ////////////////////////
   // current credentials
   ////////////////////////
   void credential_info(String username) {
     def credentials = credentials_for_username(username)
-    
+
     if(credentials == null) {
       return null
     }
-    
+
     def current_credentials = [
       id:credentials.id,
       description:credentials.description,
       username:credentials.username
     ]
-  
+
     if ( credentials.hasProperty('password') ) {
     current_credentials['password'] = credentials.password.plainText
     } else {
       current_credentials['private_key'] = credentials.privateKey
       current_credentials['passphrase'] = credentials.passphrase.plainText
     }
-  
+
     def builder = new groovy.json.JsonBuilder(current_credentials)
     out.println(builder)
   }
-  
+
   ////////////////////////
   // set_security
   ////////////////////////

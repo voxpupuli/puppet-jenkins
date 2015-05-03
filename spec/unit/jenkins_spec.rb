@@ -20,7 +20,7 @@ describe Puppet::Jenkins do
         File.should_receive(:expand_path).and_return(home)
       end
 
-      it { should eql home }  
+      it { should eql home }
     end
   end
 end

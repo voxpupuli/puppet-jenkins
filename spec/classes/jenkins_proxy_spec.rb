@@ -28,4 +28,3 @@ describe 'jenkins', :type => :module do
   end
 
 end
-

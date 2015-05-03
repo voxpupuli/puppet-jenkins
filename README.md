@@ -181,21 +181,21 @@ security policy are configured in the correct order. For example:
     PUPPET_HELPER='<%= jenkins_libdir %>/puppet_helper.groovy'
     HELPER="java -jar $JENKINS_CLI -s http://127.0.0.1:8080 groovy $PUPPET_HELPER"
     DONEFILE='<%= jenkins_libdir %>/jenkins-bootstrap.done'
-    
+
     ADMIN_PUBKEY="$(cat ${ADMIN_SSH_KEY}.pub)"
-    
+
     # Create the admin user, passing no credentials
     $HELPER create_or_update_user "$ADMIN_USER" "$ADMIN_EMAIL" "$ADMIN_PASSWORD" "$ADMIN_FULLNAME" "$ADMIN_PUBKEY"
     # Enable security. After this, credentials will be required.
     $HELPER set_security full_control
-    
+
     touch $DONEFILE
 
 #### Users
 
 Email and password are required.
 
-Create a `johndoe` user account whose full name is "Managed by Puppet": 
+Create a `johndoe` user account whose full name is "Managed by Puppet":
 ```puppet
   jenkins::user { 'johndoe':
     email    => 'jdoe@example.com',
@@ -270,13 +270,13 @@ class { 'jenkins':
 ```
 
 ### Installing from a hosted RPM
-Sometimes you don't have an RPM repository available and are not allowed to 
-directly install from repositories on the Internet.  In this case, you can 
-still install Jenkins with this module by hosting the jenkins RPM file 
+Sometimes you don't have an RPM repository available and are not allowed to
+directly install from repositories on the Internet.  In this case, you can
+still install Jenkins with this module by hosting the jenkins RPM file
 somewhere accessible (http server, S3 bucket, etc.) and tell
 
 ```
 class { 'jenkins':
   direct_download => 'http://myserver/rpms/jenkins-x.xxx-1-1.rpm',
 }
-``` 
+```

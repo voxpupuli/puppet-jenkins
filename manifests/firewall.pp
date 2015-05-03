@@ -15,4 +15,3 @@ class jenkins::firewall {
     proto  => 'tcp',
   }
 }
-

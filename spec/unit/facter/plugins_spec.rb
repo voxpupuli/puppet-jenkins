@@ -72,4 +72,3 @@ describe Puppet::Jenkins::Facts do
     end
   end
 end
-

@@ -87,7 +87,7 @@ Url: http://wiki.jenkins-ci.org/display/JENKINS/Ant+Plugin
 Plugin-Version: 1.2
 Hudson-Version: 1.456
 Jenkins-Version: 1.456
-Plugin-Developers: 
+Plugin-Developers:
 
 '
       end
@@ -186,4 +186,3 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
     "wiki"=>"https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin"}
   end
 end
-

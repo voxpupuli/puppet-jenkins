@@ -34,6 +34,3 @@ class jenkins::repo::debian
     Apt::Source['jenkins'] ->
     anchor { 'jenkins::repo::debian::end': }
 }
-
-
-

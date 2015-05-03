@@ -1,4 +1,4 @@
-# 
+#
 # Support for directly downloading a package file - for when no repository
 # is available
 #
@@ -21,7 +21,7 @@ class jenkins::direct_download {
   # equivalent to basename() - get the filename
   $package_file = regsubst($::jenkins::direct_download, '(.*?)([^/]+)$', '\2')
   $local_file = "${::jenkins::package_cache_dir}/${package_file}"
-  
+
   validate_absolute_path($local_file)
 
   if $::jenkins::version != 'absent' {
@@ -32,7 +32,7 @@ class jenkins::direct_download {
       before => Package[$::jenkins::package_name],
     }
   }
-  
+
   package { $::jenkins::package_name:
     ensure   => $::jenkins::version,
     provider => $::jenkins::package_provider,

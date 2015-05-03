@@ -14,4 +14,3 @@ class jenkins::service {
   }
 
 }
-

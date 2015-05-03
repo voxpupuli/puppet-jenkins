@@ -27,7 +27,7 @@
 #   Optionally override the package name
 #
 # direct_download = 'http://...'
-#   Ignore repostory based package installation and download and install 
+#   Ignore repostory based package installation and download and install
 #   package directly.  Leave as `false` (the default) to download using your
 #   OS package manager
 #
@@ -175,7 +175,7 @@ class jenkins(
     }
   }
   include $jenkins_package_class
-  
+
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs

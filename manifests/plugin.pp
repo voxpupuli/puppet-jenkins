@@ -163,4 +163,3 @@ define jenkins::plugin(
     }
   }
 }
-

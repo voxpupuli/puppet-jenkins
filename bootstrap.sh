@@ -56,4 +56,3 @@ ln -s $PWD /etc/puppet/modules/jenkins
 
 echo ">> Provision for ${platform}"
 puppet apply --verbose --modulepath=/etc/puppet/modules tests/${platform}.pp
-
