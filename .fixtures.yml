@@ -3,7 +3,9 @@ fixtures:
     apt:
       repo: "git://github.com/puppetlabs/puppetlabs-apt"
       ref: "1.8.0"
-    stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib"
+    stdlib:
+      repo: "git://github.com/puppetlabs/puppetlabs-stdlib"
+      ref: "4.6.0"
     java: "git://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "git://github.com/deadpoint/puppet-zypprepo.git"
     staging: "https://github.com/nanliu/puppet-staging"
