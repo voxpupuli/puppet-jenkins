@@ -2,6 +2,40 @@
 
 This is a manually kept file, and may not entirely reflect reality
 
+## v1.4.0 - Smithers
+
+* [#222](https://github.com/jenkinsci/puppet-jenkins/pull/222) - Add retry to credentials execs
+* [#229](https://github.com/jenkinsci/puppet-jenkins/pull/229) - Jenkins slave defaults bugfix
+* [#233](https://github.com/jenkinsci/puppet-jenkins/pull/233) - fixes timeouts on restart
+* [#235](https://github.com/jenkinsci/puppet-jenkins/pull/235) - Make creation of user optional
+* [#236](https://github.com/jenkinsci/puppet-jenkins/pull/236) - Cleanup metadata.json for better mechanical score
+* [#237](https://github.com/jenkinsci/puppet-jenkins/pull/237) - Update the README with a few puppet-lint things and puppet highlighting.
+* [#238](https://github.com/jenkinsci/puppet-jenkins/pull/238) - Fix Bracket issue
+* [#239](https://github.com/jenkinsci/puppet-jenkins/pull/239) - Refactor acceptance tests to use beaker-rspec
+* [#244](https://github.com/jenkinsci/puppet-jenkins/pull/244) - Add instructions for acceptance tests
+* [#245](https://github.com/jenkinsci/puppet-jenkins/pull/245) - Added support for the 'toolLocations' parameter.
+* [#256](https://github.com/jenkinsci/puppet-jenkins/pull/256) - Direct package
+* [#260](https://github.com/jenkinsci/puppet-jenkins/pull/260) - Feature/puppet helper num executors
+* [#261](https://github.com/jenkinsci/puppet-jenkins/pull/261) - Escape job names for shell commands
+* [#262](https://github.com/jenkinsci/puppet-jenkins/pull/262) - Change apt key to full fingerprint
+* [#264](https://github.com/jenkinsci/puppet-jenkins/issues/264) - Broken link on puppetlabs.com page
+* [#266](https://github.com/jenkinsci/puppet-jenkins/pull/266) - pin puppetlabs-apt fixtures version to 1.8.0
+* [#268](https://github.com/jenkinsci/puppet-jenkins/pull/268) - Improvements on job import via cli
+* [#270](https://github.com/jenkinsci/puppet-jenkins/pull/270) - remove rspec gem ~> 2.99.0 constraint
+* [#271](https://github.com/jenkinsci/puppet-jenkins/pull/271) - fix rspec > 3 compatiblity
+* [#272](https://github.com/jenkinsci/puppet-jenkins/pull/272) - use mainline puppetlabs_spec_helper gem
+* [#273](https://github.com/jenkinsci/puppet-jenkins/pull/273) - update spec_helper_acceptance boiler plate
+* [#274](https://github.com/jenkinsci/puppet-jenkins/pull/274) - remove puppet module versions constraints from beaker setup
+* [#275](https://github.com/jenkinsci/puppet-jenkins/pull/275) - add .bundle to .gitignore
+* [#276](https://github.com/jenkinsci/puppet-jenkins/pull/276) - add log/ to .gitignore
+* [#277](https://github.com/jenkinsci/puppet-jenkins/pull/277) - add puppet 3.7.0 to travis matrix
+* [#278](https://github.com/jenkinsci/puppet-jenkins/pull/278) - remove unnecessary whitespace from $::jenkins::cli_helper::helper_cmd
+* [#279](https://github.com/jenkinsci/puppet-jenkins/pull/279) - add metadata-json-lint to Gemfile & enable rake validate target
+* [#280](https://github.com/jenkinsci/puppet-jenkins/pull/280) - change puppetlabs/stdlib version dep to >= 4.6.0
+* [#282](https://github.com/jenkinsci/puppet-jenkins/pull/282) - Feature/puppet 4
+* [#285](https://github.com/jenkinsci/puppet-jenkins/pull/285) - convert raw execs of puppet_helper.groovy to jenkins::cli::exec define
+
+
 ## v1.3.0 - Barnard
 
 * [#134](https://github.com/jenkinsci/puppet-jenkins/pull/134) - Added in ability for user to redefine update center plugin URL
