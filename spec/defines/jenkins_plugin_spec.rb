@@ -163,4 +163,52 @@ describe 'jenkins::plugin' do
     end
   end
 
+  describe 'source' do
+    shared_examples 'should download from $source url' do
+      it 'should download from $source url' do
+         should contain_exec('download-myplug').with(
+          :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://e.org/myplug.hpi',
+          :cwd         => '/var/lib/jenkins/plugins',
+          :environment => nil,
+          :path        => ['/usr/bin', '/usr/sbin', '/bin'],
+        )
+        .that_requires('File[/var/lib/jenkins/plugins]')
+        .that_requires('Package[wget]')
+      end
+    end
+
+    let(:params) {{ :source => 'http://e.org/myplug.hpi' }}
+
+    context 'other params at defaults' do
+      include_examples 'should download from $source url'
+    end
+
+    context '$update_url is set' do
+      before { params[:update_url] = 'http://dne.org/' }
+
+      include_examples 'should download from $source url'
+
+      context 'and $version is set' do
+        before { params[:version] = 42 }
+
+        include_examples 'should download from $source url'
+      end
+    end
+
+    context 'validate_string' do
+      context 'string' do
+        let(:params) {{ :source => 'foo' }}
+
+        it { should_not raise_error }
+      end
+
+      context 'array' do
+        let(:params) {{ :source => [] }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /is not a string/)
+        end
+      end
+    end # validate_string
+  end # source
 end
