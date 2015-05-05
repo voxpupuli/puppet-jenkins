@@ -8,6 +8,13 @@
 #
 # update_url = undef
 #
+# source = undef
+#   Direct URL from which to download plugin without modification.  This is
+#   particularly useful for development and testing of plugins which may not be
+#   hosted in the typical Jenkins' plugin directory structure.  E.g.,
+#
+#   https://example.org/myplugin.hpi
+#
 define jenkins::plugin(
   $version         = 0,
   $manage_config   = false,
@@ -19,6 +26,7 @@ define jenkins::plugin(
   $group           = 'jenkins',
   $enabled         = true,
   $create_user     = true,
+  $source          = undef,
 ) {
   include ::jenkins::params
 
@@ -27,6 +35,7 @@ define jenkins::plugin(
   validate_bool($manage_config)
   validate_bool($enabled)
   # TODO: validate_str($update_url)
+  validate_string($source)
 
   if ($version != 0) {
     $plugins_host = $update_url ? {
@@ -132,9 +141,14 @@ define jenkins::plugin(
       before  => Exec["download-${name}"],
     }
 
+    # if $source is specified, it overrides any other URL construction
+    $download_url = $source ? {
+      undef   => "${base_url}${plugin}",
+      default => $source,
+    }
 
     exec { "download-${name}" :
-      command => "rm -rf ${name} ${name}.hpi ${name}.jpi && wget --no-check-certificate ${base_url}${plugin}",
+      command => "rm -rf ${name} ${name}.hpi ${name}.jpi && wget --no-check-certificate ${download_url}",
       cwd     => $plugin_dir,
       require => [File[$plugin_dir], Package['wget']],
       path    => ['/usr/bin', '/usr/sbin', '/bin'],

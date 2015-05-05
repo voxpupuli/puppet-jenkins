@@ -85,6 +85,21 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
   }
 ```
 
+#### Direct URL
+
+Direct URL from which to download plugin without modification.  This is
+particularly useful for development and testing of plugins which may not be
+hosted in the typical Jenkins' plugin directory structure.
+
+```puppet
+  jenkins::plugin { 'myplugin':
+    source => 'https://example.org/myplugin.hpi',
+  }
+```
+
+Note that that when `source` is specified, the `version` and `plugin_url`
+parameters will have no effect on the plugin retrieval URL.
+
 #### Plugin dependencies
 Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
 
