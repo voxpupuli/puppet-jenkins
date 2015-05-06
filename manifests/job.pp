@@ -22,7 +22,7 @@
 #
 define jenkins::job(
   $config,
-  $source = '',
+  $source   = undef,
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
@@ -33,18 +33,13 @@ define jenkins::job(
       jobname => $jobname,
     }
   } else {
-    if $source == '' {
-      jenkins::job::present { $title:
-        config  => $config,
-        jobname => $jobname,
-        enabled => $enabled,
-      }
-    } else {
-      jenkins::job::present { $title:
-        config  => file($source),
-        jobname => $jobname,
-        enabled => $enabled,
-      }
+    if $source { $realconfig = file($source) }
+    else { $realconfig = $config }
+
+    jenkins::job::present { $title:
+      config  => $realconfig,
+      jobname => $jobname,
+      enabled => $enabled,
     }
   }
 
