@@ -30,6 +30,18 @@ import jenkins.model.*;
 class InvalidAuthenticationStrategy extends Exception{}
 
 ///////////////////////////////////////////////////////////////////////////////
+// Util
+///////////////////////////////////////////////////////////////////////////////
+
+// Private methods don't appear to be "prviate" under groovy.  This utility
+// class is for methods that should not be exposed as CLI options via the
+// Action class.
+class Util {
+  Util(out) { this.out = out }
+  def out
+} // class Util
+
+///////////////////////////////////////////////////////////////////////////////
 // Actions
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -37,9 +49,11 @@ class Actions {
   Actions(out, bindings) {
     this.out = out
     this.bindings = bindings
+    this.util = new Util(out)
   }
   def out
   def bindings
+  def util
 
   private credentials_for_username(String username) {
     def username_matcher = CredentialsMatchers.withUsername(username)
