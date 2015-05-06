@@ -26,6 +26,8 @@ import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
+import jenkins.security.*;
+import hudson.util.*;
 import hudson.model.*;
 
 class InvalidAuthenticationStrategy extends Exception{}
@@ -134,6 +136,76 @@ class Actions {
   }
 
   /////////////////////////
+  // create or update user from JSON
+  /////////////////////////
+  void user_update() { // or create
+    // parse JSON doc from stdin
+    def slurper = new groovy.json.JsonSlurper()
+    def text = bindings.stdin.text
+    def conf = slurper.parseText(text)
+
+    // a user id is required
+    def id = conf['id']
+    assert id != null
+    assert id instanceof String
+    def user = hudson.model.User.get(id)
+
+    def full_name = conf['full_name']
+    if (full_name) {
+      assert full_name instanceof String
+      user.setFullName(full_name)
+    }
+
+    def email_address = conf['email_address']
+    if (email_address) {
+      assert email_address instanceof String
+      def email_param = new hudson.tasks.Mailer.UserProperty(email_address)
+      user.addProperty(email_param)
+    }
+
+    // it is not possible to directly set the API token because the user
+    // visible value is actualy a digest of the "plain text" token after it
+    // is unecnrypted.
+    def api_token_plain = conf['api_token_plain']
+    if (api_token_plain) {
+      assert api_token_plain instanceof String
+      def token_param = new ApiTokenProperty()
+      token_param.@apiToken = new Secret(api_token_plain)
+      user.addProperty(token_param)
+    }
+
+    if (conf['api_token_public'] != null) {
+      bindings.stderr.println('ignoring api_token_public - it is not possible to set the API token directly')
+    }
+
+    def public_keys = conf['public_keys']
+    if (public_keys) {
+      assert public_keys instanceof List
+      // convert list of keys into a single string
+      def keys = public_keys.join("\n")
+      def keys_param = new org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl(keys)
+      user.addProperty(keys_param)
+    }
+
+    def password = conf['password']
+    if (password) {
+      // per https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/security/HudsonPrivateSecurityRealm.java#L673-L692
+      // if it has the JBCRYPT_HEADER, we assume it's a hashed password,
+      // otherwise treat it as plain text
+      def password_param
+      if (password =~ /^#jbcrypt:/) {
+        password_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromHashedPassword(password)
+      } else {
+        password_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(password)
+      }
+
+      user.addProperty(password_param)
+    }
+
+    user.save()
+  }
+
+  /////////////////////////
   // delete user
   /////////////////////////
   void delete_user(String user_name) {
@@ -155,6 +227,23 @@ class Actions {
 
     def info = util.userToMap(user)
     def builder = new groovy.json.JsonBuilder(info)
+
+    out.println(builder.toPrettyString())
+  }
+
+  /////////////////////////
+  // list all current users as JSON
+  /////////////////////////
+  void user_info_all() {
+    def allUsers = hudson.model.User.getAll()
+
+    def allInfo = []
+    allUsers.each { user ->
+      def info = util.userToMap(user)
+      allInfo.add(info)
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
 
     out.println(builder.toPrettyString())
   }
