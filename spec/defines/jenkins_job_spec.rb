@@ -93,4 +93,25 @@ eos
       .with_content('<config>the dog said "woof"</config>') }
   end
 
+  describe 'with sourced config and blank regular config' do
+    let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :source => thesource, :config => '' }}
+    it { should contain_file('/tmp/myjob-config.xml')\
+      .with_content(/sourcedconfig/) }
+  end
+
+  describe 'with sourced config and regular config' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :source => thesource, :config => quotes }}
+    it { should contain_file('/tmp/myjob-config.xml')\
+      .with_content(/sourcedconfig/) }
+  end
+
+  describe 'with sourced config and no regular config' do
+    let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :source => thesource }}
+    it { should raise_error(Puppet::Error, /Must pass config/) }
+  end
+
 end
