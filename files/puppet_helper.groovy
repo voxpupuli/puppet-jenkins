@@ -26,6 +26,7 @@ import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
+import hudson.model.*;
 
 class InvalidAuthenticationStrategy extends Exception{}
 
@@ -54,6 +55,45 @@ class Util {
       available_credentials,
       username_matcher
     )
+  }
+
+  def userToMap(User user) {
+    def conf = [:]
+
+    conf['id'] = user.getId()
+
+    // it isn't clear if fullName can be null or if it will always default to
+    // id
+    def full_name = user.getFullName()
+    if (full_name != null) {
+      conf['full_name'] = user.getFullName()
+    }
+
+    def emailProperty = user.getProperty(hudson.tasks.Mailer.UserProperty)
+    if (emailProperty != null) {
+      def email_address = emailProperty.getAddress()
+      if (email_address != null) {
+        conf['email_address'] = emailProperty.getAddress()
+      }
+    }
+
+    def keysProperty = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
+    if(keysProperty != null) {
+      conf['public_keys'] = keysProperty.authorizedKeys.split('\\n')
+    }
+
+    def tokenProperty = user.getProperty(jenkins.security.ApiTokenProperty)
+    if (tokenProperty != null) {
+      conf['api_token_public'] = tokenProperty.getApiToken()
+      conf['api_token_plain'] = tokenProperty.@apiToken.getPlainText()
+    }
+
+    def passwordProperty = user.getProperty(hudson.security.HudsonPrivateSecurityRealm.Details)
+    if (passwordProperty != null) {
+      conf['password'] = passwordProperty.getPassword()
+    }
+
+    conf
   }
 } // class Util
 
@@ -109,41 +149,14 @@ class Actions {
   void user_info(String user_name) {
     def user = hudson.model.User.get(user_name, false)
 
-    if(user == null) {
+    if (user == null) {
         return null
     }
 
-    def user_id = user.getId()
-    def name = user.getFullName()
+    def info = util.userToMap(user)
+    def builder = new groovy.json.JsonBuilder(info)
 
-    def email_address = null
-    def emailProperty = user.getProperty(hudson.tasks.Mailer.UserProperty)
-    if(emailProperty != null) {
-      email_address = emailProperty.getAddress()
-    }
-
-    def keys = null
-    def keysProperty = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
-    if(keysProperty != null) {
-      keys = keysProperty.authorizedKeys.split('\\s+')
-    }
-
-    def token = null
-    def tokenProperty = user.getProperty(jenkins.security.ApiTokenProperty.class)
-    if (tokenProperty != null) {
-        token = tokenProperty.getApiToken()
-    }
-
-    def builder = new groovy.json.JsonBuilder()
-    builder {
-      id user_id
-      full_name name
-      email email_address
-      api_token token
-      public_keys keys
-    }
-
-    out.println(builder)
+    out.println(builder.toPrettyString())
   }
 
   /////////////////////////
