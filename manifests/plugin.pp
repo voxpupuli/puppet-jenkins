@@ -139,6 +139,7 @@ define jenkins::plugin(
       path    => ['/usr/bin', '/usr/sbin', '/bin'],
       onlyif  => "test -f ${plugin_dir}/${name}.jpi -a ! -f ${plugin_dir}/${name}.jpi.pinned",
       before  => Exec["download-${name}"],
+      user    => $username,
     }
 
     # if $source is specified, it overrides any other URL construction
@@ -152,6 +153,7 @@ define jenkins::plugin(
       cwd     => $plugin_dir,
       require => [File[$plugin_dir], Package['wget']],
       path    => ['/usr/bin', '/usr/sbin', '/bin'],
+      user    => $username,
     }
 
     file { "${plugin_dir}/${plugin}" :

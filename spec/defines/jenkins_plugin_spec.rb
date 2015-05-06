@@ -24,20 +24,26 @@ describe 'jenkins::plugin' do
 
 
   describe 'without version' do
-    it { should contain_exec('download-myplug').with(
-      :command      => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi',
-      :environment  => nil
-    )}
+    it do
+      should contain_exec('download-myplug').with(
+        :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi',
+        :user        => 'jenkins',
+        :environment => nil
+      )
+    end
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
   describe 'with version' do
     let(:params) { { :version => '1.2.3' } }
 
-    it { should contain_exec('download-myplug').with(
-      :command      => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
-      :environment  => nil
-    ) }
+    it do
+      should contain_exec('download-myplug').with(
+        :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
+        :user        => 'jenkins',
+        :environment => nil
+      )
+    end
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
@@ -96,7 +102,14 @@ describe 'jenkins::plugin' do
       'include jenkins'
     ]}
 
-    it { should contain_exec('download-myplug').with(:environment => ["http_proxy=proxy.company.com:8080", "https_proxy=proxy.company.com:8080"]) }
+    it do
+      should contain_exec('download-myplug').with(
+        :environment => [
+          "http_proxy=proxy.company.com:8080",
+          "https_proxy=proxy.company.com:8080",
+        ]
+      )
+    end
   end
 
   describe 'with a custom update center' do
@@ -168,6 +181,7 @@ describe 'jenkins::plugin' do
       it 'should download from $source url' do
          should contain_exec('download-myplug').with(
           :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://e.org/myplug.hpi',
+          :user        => 'jenkins',
           :cwd         => '/var/lib/jenkins/plugins',
           :environment => nil,
           :path        => ['/usr/bin', '/usr/sbin', '/bin'],
