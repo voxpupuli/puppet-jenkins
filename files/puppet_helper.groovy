@@ -34,8 +34,12 @@ class InvalidAuthenticationStrategy extends Exception{}
 ///////////////////////////////////////////////////////////////////////////////
 
 class Actions {
-  Actions(out) { this.out = out }
+  Actions(out, bindings) {
+    this.out = out
+    this.bindings = bindings
+  }
   def out
+  def bindings
 
   private credentials_for_username(String username) {
     def username_matcher = CredentialsMatchers.withUsername(username)
@@ -286,7 +290,8 @@ class Actions {
 // CLI Argument Processing
 ///////////////////////////////////////////////////////////////////////////////
 
-actions = new Actions(out)
+def bindings = getBinding()
+actions = new Actions(out, bindings)
 action = args[0]
 if (args.length < 2) {
   actions."$action"()
