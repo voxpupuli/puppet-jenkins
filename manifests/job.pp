@@ -33,8 +33,13 @@ define jenkins::job(
       jobname => $jobname,
     }
   } else {
-    if $source { $realconfig = file($source) }
-    else { $realconfig = $config }
+    if $source {
+      validate_string($source)
+      $realconfig = file($source)
+    }
+    else {
+      $realconfig = $config
+    }
 
     jenkins::job::present { $title:
       config  => $realconfig,
