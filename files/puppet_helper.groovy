@@ -39,6 +39,22 @@ class InvalidAuthenticationStrategy extends Exception{}
 class Util {
   Util(out) { this.out = out }
   def out
+
+  def credentials_for_username(String username) {
+    def username_matcher = CredentialsMatchers.withUsername(username)
+    def available_credentials =
+      CredentialsProvider.lookupCredentials(
+        StandardUsernameCredentials.class,
+        Jenkins.getInstance(),
+        hudson.security.ACL.SYSTEM,
+        new SchemeRequirement("ssh")
+      )
+
+    return CredentialsMatchers.firstOrNull(
+      available_credentials,
+      username_matcher
+    )
+  }
 } // class Util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,21 +71,6 @@ class Actions {
   def bindings
   def util
 
-  private credentials_for_username(String username) {
-    def username_matcher = CredentialsMatchers.withUsername(username)
-    def available_credentials =
-      CredentialsProvider.lookupCredentials(
-        StandardUsernameCredentials.class,
-        Jenkins.getInstance(),
-        hudson.security.ACL.SYSTEM,
-        new SchemeRequirement("ssh")
-      )
-
-    return CredentialsMatchers.firstOrNull(
-      available_credentials,
-      username_matcher
-    )
-  }
 
   /////////////////////////
   // create or update user
@@ -182,7 +183,7 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-    def existing_credentials = credentials_for_username(username)
+    def existing_credentials = util.credentials_for_username(username)
 
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
@@ -199,7 +200,7 @@ class Actions {
   // delete credentials
   //////////////////////////
   void delete_credentials(String username) {
-    def existing_credentials = credentials_for_username(username)
+    def existing_credentials = util.credentials_for_username(username)
 
     if(existing_credentials != null) {
       def global_domain = com.cloudbees.plugins.credentials.domains.Domain.global()
@@ -218,7 +219,7 @@ class Actions {
   // current credentials
   ////////////////////////
   void credential_info(String username) {
-    def credentials = credentials_for_username(username)
+    def credentials = util.credentials_for_username(username)
 
     if(credentials == null) {
       return null
