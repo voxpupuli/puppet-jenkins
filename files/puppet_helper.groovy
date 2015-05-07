@@ -26,18 +26,22 @@ import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
+import hudson.model.*;
 
 class InvalidAuthenticationStrategy extends Exception{}
 
 ///////////////////////////////////////////////////////////////////////////////
-// Actions
+// Util
 ///////////////////////////////////////////////////////////////////////////////
 
-class Actions {
-  Actions(out) { this.out = out }
+// Private methods don't appear to be "prviate" under groovy.  This utility
+// class is for methods that should not be exposed as CLI options via the
+// Action class.
+class Util {
+  Util(out) { this.out = out }
   def out
 
-  private credentials_for_username(String username) {
+  def credentials_for_username(String username) {
     def username_matcher = CredentialsMatchers.withUsername(username)
     def available_credentials =
       CredentialsProvider.lookupCredentials(
@@ -52,6 +56,61 @@ class Actions {
       username_matcher
     )
   }
+
+  def userToMap(User user) {
+    def conf = [:]
+
+    conf['id'] = user.getId()
+
+    // it isn't clear if fullName can be null or if it will always default to
+    // id
+    def full_name = user.getFullName()
+    if (full_name != null) {
+      conf['full_name'] = user.getFullName()
+    }
+
+    def emailProperty = user.getProperty(hudson.tasks.Mailer.UserProperty)
+    if (emailProperty != null) {
+      def email_address = emailProperty.getAddress()
+      if (email_address != null) {
+        conf['email_address'] = emailProperty.getAddress()
+      }
+    }
+
+    def keysProperty = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
+    if(keysProperty != null) {
+      conf['public_keys'] = keysProperty.authorizedKeys.split('\\n')
+    }
+
+    def tokenProperty = user.getProperty(jenkins.security.ApiTokenProperty)
+    if (tokenProperty != null) {
+      conf['api_token_public'] = tokenProperty.getApiToken()
+      conf['api_token_plain'] = tokenProperty.@apiToken.getPlainText()
+    }
+
+    def passwordProperty = user.getProperty(hudson.security.HudsonPrivateSecurityRealm.Details)
+    if (passwordProperty != null) {
+      conf['password'] = passwordProperty.getPassword()
+    }
+
+    conf
+  }
+} // class Util
+
+///////////////////////////////////////////////////////////////////////////////
+// Actions
+///////////////////////////////////////////////////////////////////////////////
+
+class Actions {
+  Actions(out, bindings) {
+    this.out = out
+    this.bindings = bindings
+    this.util = new Util(out)
+  }
+  def out
+  def bindings
+  def util
+
 
   /////////////////////////
   // create or update user
@@ -90,41 +149,14 @@ class Actions {
   void user_info(String user_name) {
     def user = hudson.model.User.get(user_name, false)
 
-    if(user == null) {
+    if (user == null) {
         return null
     }
 
-    def user_id = user.getId()
-    def name = user.getFullName()
+    def info = util.userToMap(user)
+    def builder = new groovy.json.JsonBuilder(info)
 
-    def email_address = null
-    def emailProperty = user.getProperty(hudson.tasks.Mailer.UserProperty)
-    if(emailProperty != null) {
-      email_address = emailProperty.getAddress()
-    }
-
-    def keys = null
-    def keysProperty = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
-    if(keysProperty != null) {
-      keys = keysProperty.authorizedKeys.split('\\s+')
-    }
-
-    def token = null
-    def tokenProperty = user.getProperty(jenkins.security.ApiTokenProperty.class)
-    if (tokenProperty != null) {
-        token = tokenProperty.getApiToken()
-    }
-
-    def builder = new groovy.json.JsonBuilder()
-    builder {
-      id user_id
-      full_name name
-      email email_address
-      api_token token
-      public_keys keys
-    }
-
-    out.println(builder)
+    out.println(builder.toPrettyString())
   }
 
   /////////////////////////
@@ -164,7 +196,7 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-    def existing_credentials = credentials_for_username(username)
+    def existing_credentials = util.credentials_for_username(username)
 
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
@@ -181,7 +213,7 @@ class Actions {
   // delete credentials
   //////////////////////////
   void delete_credentials(String username) {
-    def existing_credentials = credentials_for_username(username)
+    def existing_credentials = util.credentials_for_username(username)
 
     if(existing_credentials != null) {
       def global_domain = com.cloudbees.plugins.credentials.domains.Domain.global()
@@ -200,7 +232,7 @@ class Actions {
   // current credentials
   ////////////////////////
   void credential_info(String username) {
-    def credentials = credentials_for_username(username)
+    def credentials = util.credentials_for_username(username)
 
     if(credentials == null) {
       return null
@@ -286,7 +318,8 @@ class Actions {
 // CLI Argument Processing
 ///////////////////////////////////////////////////////////////////////////////
 
-actions = new Actions(out)
+def bindings = getBinding()
+actions = new Actions(out, bindings)
 action = args[0]
 if (args.length < 2) {
   actions."$action"()
