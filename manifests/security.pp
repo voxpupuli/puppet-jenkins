@@ -24,7 +24,7 @@ class jenkins::security (
   include ::jenkins::cli_helper
 
   # XXX not idempotent
-  exec { "jenkins-security-${security_model}":
+  jenkins::cli::exec { "jenkins-security-${security_model}":
     command => [
       'set_security',
       $security_model,
