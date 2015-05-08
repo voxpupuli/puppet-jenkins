@@ -53,7 +53,7 @@
 #   config_hash => {
 #     'HTTP_PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
 #   }
-# V
+# }
 #
 # plugin_hash = undef (Default)
 # Hash with config plugins to install
@@ -80,6 +80,23 @@
 #    'git-client': {}
 #    'token-macro': {}
 #
+#
+# user_hash = {} (Default)
+# Hash with users to create in jenkins
+#
+# Example use
+#
+# class{ 'jenkins':
+#   user_hash => {
+#     'user1' => { 'password' => 'pass1',
+#                     'email' => 'user1@example.com'}
+#
+# Or in Hiera
+#
+# jenkins::user_hash:
+#     'user1':
+#       password: 'pass1'
+#       email: 'user1@example.com'
 #
 # configure_firewall = undef (default)
 #   For folks that want to manage the puppetlabs firewall module.
@@ -133,6 +150,7 @@ class jenkins(
   $config_hash        = {},
   $plugin_hash        = {},
   $job_hash           = {},
+  $user_hash          = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -187,6 +205,7 @@ class jenkins(
   include jenkins::config
   include jenkins::plugins
   include jenkins::jobs
+  include jenkins::users
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
