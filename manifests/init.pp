@@ -226,7 +226,6 @@ class jenkins(
 
   if $cli {
     include jenkins::cli
-    include jenkins::cli::reload
   }
 
   if $executors {
@@ -247,15 +246,6 @@ class jenkins(
           Class['jenkins::service'] ->
             Class['jenkins::jobs'] ->
               Anchor['jenkins::end']
-
-  if $cli {
-    Anchor['jenkins::begin'] ->
-      Class['jenkins::service'] ->
-        Class['jenkins::cli'] ->
-          Class['jenkins::cli::reload'] ->
-            Class['jenkins::jobs'] ->
-              Anchor['jenkins::end']
-  }
 
   if $install_java {
     Anchor['jenkins::begin'] ->
