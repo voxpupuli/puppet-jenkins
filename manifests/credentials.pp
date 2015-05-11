@@ -26,6 +26,10 @@ define jenkins::credentials (
 
   include ::jenkins::cli_helper
 
+  Class['jenkins::cli_helper'] ->
+    Jenkins::Credentials[$title] ->
+      Anchor['jenkins::end']
+
   case $ensure {
     'present': {
       validate_string($password)

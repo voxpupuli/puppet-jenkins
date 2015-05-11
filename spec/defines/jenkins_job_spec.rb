@@ -2,6 +2,19 @@ require 'spec_helper'
 
 describe 'jenkins::job' do
   let(:title) { 'myjob' }
+  let(:facts) {{ :osfamily => 'RedHat', :operatingsystem => 'RedHat' }}
+
+  describe 'relationships' do
+    let(:params) {{ :config => '' }}
+    it do
+      should contain_jenkins__job('myjob').
+        that_requires('Class[jenkins::cli]')
+    end
+    it do
+      should contain_jenkins__job('myjob').
+        that_comes_before('Anchor[jenkins::end]')
+    end
+  end
 
   describe 'with defaults' do
     let(:params) {{ :config => '' }}
