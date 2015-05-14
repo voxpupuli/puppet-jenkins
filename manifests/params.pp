@@ -15,7 +15,7 @@ class jenkins::params {
   $cli_try_sleep         = 10
   $package_cache_dir     = '/var/cache/jenkins_pkgs'
   $package_name          = 'jenkins'
-
+  $apt_version           = '1'
   case $::osfamily {
     'Debian': {
       $libdir           = '/usr/share/jenkins'
