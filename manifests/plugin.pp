@@ -79,14 +79,14 @@ define jenkins::plugin(
     if (!defined(Group[$group])) {
       group { $group :
         ensure  => present,
-        require => Package['jenkins'],
+        require => Package[$::jenkins::package_name],
       }
     }
     if (!defined(User[$username])) {
       user { $username :
         ensure  => present,
         home    => $plugin_parent_dir,
-        require => Package['jenkins'],
+        require => Package[$::jenkins::package_name],
       }
     }
   }
