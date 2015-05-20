@@ -57,6 +57,8 @@
 # [*description*]
 #   Not required.  Description which will appear on the jenkins master UI.
 #
+# [*manage_client_jar*]
+#   Should the class download the client jar file from the web? Defaults to true.
 
 # === Examples
 #
@@ -91,6 +93,7 @@ class jenkins::slave (
   $labels                   = undef,
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
+  $manage_client_jar        = true,
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
@@ -214,14 +217,16 @@ class jenkins::slave (
     notify  => Service['jenkins-slave'],
   }
 
-  exec { 'get_swarm_client':
-    command => $fetch_command,
-    path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    user    => $slave_user,
-    creates => "${slave_home}/${client_jar}",
-    cwd     => $slave_home,
-    #refreshonly  => true,
-  ## needs to be fixed if you create another version..
+  if ($manage_client_jar) {
+    exec { 'get_swarm_client':
+      command => $fetch_command,
+      path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+      user    => $slave_user,
+      creates => "${slave_home}/${client_jar}",
+      cwd     => $slave_home,
+      #refreshonly  => true,
+    ## needs to be fixed if you create another version..
+    }
   }
 
   service { 'jenkins-slave':
@@ -232,8 +237,10 @@ class jenkins::slave (
     hasrestart => true,
   }
 
-  Exec['get_swarm_client']
-  -> Service['jenkins-slave']
+  if ($manage_client_jar) {
+    Exec['get_swarm_client'] ->
+    Service['jenkins-slave']
+  }
 
   if $install_java and ($::osfamily != 'Darwin') {
     Class['java'] ->
