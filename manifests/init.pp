@@ -98,6 +98,23 @@
 #       password: 'pass1'
 #       email: 'user1@example.com'
 #
+# credential_hash = {} (Default)
+# Hash with credentials to create in jenkins
+#
+# Example use
+#
+# class{ 'jenkins':
+#   credential_hash => {
+#     'github-deploy-key' => { 'password' => '',
+#                     'private_key_or_path' => 'KEYGOESHERE'}
+#
+# Or in Hiera
+#
+# jenkins::credential_hash:
+#   github-deploy-key:
+#     password: ''
+#     private_key_or_path: 'KEYGOESHERE'
+#
 # configure_firewall = undef (default)
 #   For folks that want to manage the puppetlabs firewall module.
 #    - If it's not present in the catalog, nothing happens.
@@ -151,6 +168,7 @@ class jenkins(
   $plugin_hash        = {},
   $job_hash           = {},
   $user_hash          = {},
+  $credential_hash   = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
@@ -206,6 +224,7 @@ class jenkins(
   include jenkins::plugins
   include jenkins::jobs
   include jenkins::users
+  include jenkins::credentials
 
   if $proxy_host and $proxy_port {
     class { 'jenkins::proxy':
