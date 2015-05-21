@@ -103,10 +103,45 @@ describe 'jenkins::plugin' do
     ]}
 
     it do
+      should contain_exec('create-pinnedfile-myplug').with(
+        :environment => [
+          "http_proxy=proxy.company.com:8080",
+          "https_proxy=proxy.company.com:8080",
+          "no_proxy="
+        ]
+      )
       should contain_exec('download-myplug').with(
         :environment => [
           "http_proxy=proxy.company.com:8080",
           "https_proxy=proxy.company.com:8080",
+          "no_proxy="
+        ]
+      )
+    end
+  end
+  
+  describe 'with proxy and no proxy' do
+    let(:pre_condition) { [
+      'class jenkins {
+        $proxy_host = "proxy.company.com"
+        $proxy_port = 8080
+        $no_proxy_list = ["noproxy.company.com", "also-noproxy.com"]
+      }',
+      'include jenkins'
+    ]}
+    it do
+      should contain_exec('create-pinnedfile-myplug').with(
+        :environment => [
+          "http_proxy=proxy.company.com:8080",
+          "https_proxy=proxy.company.com:8080",
+          "no_proxy=noproxy.company.com,also-noproxy.com"
+        ]
+      )
+      should contain_exec('download-myplug').with(
+        :environment => [
+          "http_proxy=proxy.company.com:8080",
+          "https_proxy=proxy.company.com:8080",
+          "no_proxy=noproxy.company.com,also-noproxy.com"
         ]
       )
     end
