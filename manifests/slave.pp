@@ -204,6 +204,7 @@ class jenkins::slave (
       comment    => 'Jenkins Slave user',
       home       => $slave_home,
       managehome => $manage_user_home,
+      system     => true,
       uid        => $slave_uid,
     }
   }
