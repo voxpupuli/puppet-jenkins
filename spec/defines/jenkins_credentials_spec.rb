@@ -25,12 +25,10 @@ describe 'jenkins::credentials', :type => :define do
       :ensure   => 'present',
       :password => 'mypass',
     }}
-    it { should contain_exec('create-jenkins-credentials-mycreds').with({
-      :command    => "#{helper_cmd} create_or_update_credentials #{title} 'mypass' '' 'Managed by Puppet' ''",
-      :unless     => "#{helper_cmd} credential_info #{title} | grep #{title}",
-      :tries      => '3',
-      :try_sleep  => '5',
-      :require    => 'Class[Jenkins::Cli_helper]',
+    it { should contain_jenkins__cli__exec('create-jenkins-credentials-mycreds').with({
+      :command    => [ "create_or_update_credentials" , "#{title}", "'mypass'",
+                       "''", "'Managed by Puppet'", "''" ],
+      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
     })}
   end
 
@@ -39,11 +37,8 @@ describe 'jenkins::credentials', :type => :define do
       :ensure   => 'absent',
       :password => 'mypass',
     }}
-    it { should contain_exec('delete-jenkins-credentials-mycreds').with({
-      :command    => "#{helper_cmd} delete_credentials #{title}",
-      :tries      => '3',
-      :try_sleep  => '5',
-      :require    => 'Class[Jenkins::Cli_helper]',
+    it { should contain_jenkins__cli__exec('delete-jenkins-credentials-mycreds').with({
+      :command    => [ "delete_credentials", "#{title}" ],
     })}
   end
 
@@ -53,12 +48,10 @@ describe 'jenkins::credentials', :type => :define do
       :password => 'mypass',
       :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
     }}
-    it { should contain_exec('create-jenkins-credentials-mycreds').with({
-      :command    => "#{helper_cmd} create_or_update_credentials #{title} 'mypass' 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f' 'Managed by Puppet' ''",
-      :unless     => "#{helper_cmd} credential_info #{title} | grep #{title}",
-      :tries      => '3',
-      :try_sleep  => '5',
-      :require    => 'Class[Jenkins::Cli_helper]',
+    it { should contain_jenkins__cli__exec('create-jenkins-credentials-mycreds').with({
+      :command    => [ "create_or_update_credentials" , "#{title}", "'mypass'",
+                       "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
+      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
     })}
   end
 
