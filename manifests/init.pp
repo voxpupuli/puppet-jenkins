@@ -168,7 +168,7 @@ class jenkins(
   $plugin_hash        = {},
   $job_hash           = {},
   $user_hash          = {},
-  $credential_hash   = {},
+  $credential_hash    = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
   $proxy_host         = undef,
