@@ -53,15 +53,6 @@ class jenkins::repo::debian(
         include_src => false,
       }
     }
-
-
-
-
-
-
-
-
-
   }
 
   anchor { 'jenkins::repo::debian::begin': } ->
