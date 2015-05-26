@@ -290,7 +290,7 @@ Alternatively, using hiera:
 jenkins::credential_hash:
   github-deploy-key:
     password: ''
-    private_key_or_path => |
+    private_key_or_path: |
       AVERYLONGPRIVATEKEYHERE
       SPANNINGMULTIPLELINES
 ```
