@@ -8,9 +8,18 @@ class jenkins::cli::reload {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  $cmd = join(
+    delete_undef_values([
+      $::jenkins::cli::cmd,
+      $::jenkins::cli_helper::auth_arg,
+      'reload-configuration',
+    ]),
+    ' '
+  )
+
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
-    command     => "${::jenkins::cli::cmd} reload-configuration",
+    command     => $cmd,
     path        => ['/bin', '/usr/bin'],
     tries       => 10,
     try_sleep   => 2,
