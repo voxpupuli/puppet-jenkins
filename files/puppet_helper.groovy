@@ -34,7 +34,7 @@ class InvalidAuthenticationStrategy extends Exception{}
 // Util
 ///////////////////////////////////////////////////////////////////////////////
 
-// Private methods don't appear to be "prviate" under groovy.  This utility
+// Private methods don't appear to be "private" under groovy.  This utility
 // class is for methods that should not be exposed as CLI options via the
 // Action class.
 class Util {
