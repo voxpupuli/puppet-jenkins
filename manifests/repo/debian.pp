@@ -47,7 +47,7 @@ class jenkins::repo::debian
   }
 
   $result_hash = merge($source_base,$source_keys)
-  $resource_hash = { 'jenkins': $result_hash }
+  $resource_hash = { 'jenkins' => $result_hash }
 
   create_resources('apt::source',$resource_hash)
 
