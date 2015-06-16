@@ -18,16 +18,19 @@ class jenkins::params {
 
   case $::osfamily {
     'Debian': {
-      $libdir           = '/usr/share/jenkins'
-      $package_provider = 'dpkg'
+      $libdir              = '/usr/share/jenkins'
+      $package_provider    = 'dpkg'
+      $repo_module_version = 1
     }
     'RedHat': {
-      $libdir           = '/usr/lib/jenkins'
-      $package_provider = 'rpm'
+      $libdir              = '/usr/lib/jenkins'
+      $package_provider    = 'rpm'
+      $repo_module_version = undef
     }
     default: {
-      $libdir = '/usr/lib/jenkins'
-      $package_provider = false
+      $libdir              = '/usr/lib/jenkins'
+      $package_provider    = false
+      $repo_module_version = undef
     }
   }
 }
