@@ -1,0 +1,29 @@
+# It's not recommended to modify this file in-place, because it will be
+# overwritten during package upgrades.  If you want to customize, the best
+# way is to create a file "/etc/systemd/system/httpd.service",
+# containing
+#   .include /lib/systemd/system/httpd.service
+#   ...make your changes here...
+# For more info about custom unit files, see
+# http://fedoraproject.org/wiki/Systemd#How_do_I_customize_a_unit_file.2F_add_a_custom_unit_file.3F
+
+# For example, to pass additional options (for instance, -D definitions) to the
+# httpd binary at startup, you need to create a file named
+# "/etc/systemd/system/httpd.service" containing:
+#	.include /lib/systemd/system/httpd.service
+#	[Service]
+#	Environment=OPTIONS=-DMY_DEFINE
+
+[Unit]
+Description=Jenkins slave
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/etc/init.d/jenkins-slave start
+ExecStop=/etc/init.d/jenkins-slave stop
+ExecReload=/etc/init.d/jenkins-slave restart
+
+[Install]
+WantedBy=multi-user.target

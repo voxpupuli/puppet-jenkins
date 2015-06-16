@@ -141,6 +141,14 @@ class jenkins::slave (
         before => Service['jenkins-slave'],
       }
     }
+    'RedHat': {
+      file { '/etc/systemd/system/jenkins-slave.service':
+        owner => 'root',
+        group => 'root',
+        before => Service['jenkins-slave'],
+        source => "puppet:///modules/${module_name}/jenkins-slave.systemd",
+      }
+    }
     default: {
       $defaults_location = '/etc/sysconfig'
     }
