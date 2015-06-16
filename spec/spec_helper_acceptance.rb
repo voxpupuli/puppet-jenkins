@@ -32,7 +32,7 @@ RSpec.configure do |c|
 
       on host, puppet('module install puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-apt'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-apt --version 2.0.2'), { :acceptable_exit_codes => [0] }
 
       on host, puppet('module install darin-zypprepo'), { :acceptable_exit_codes => [0] }
     end
