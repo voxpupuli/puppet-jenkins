@@ -1,10 +1,6 @@
 require 'spec_helper'
 
-# Skip this example block under puppet-4 as it will fail with rspec-puppet
-# 2.1.0.
-#
-# https://github.com/rodjek/rspec-puppet/issues/282
-describe 'jenkins_port', :if => Puppet.version.to_f < 4.0 do
+describe 'jenkins_port' do
 
   let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
   let(:pre_condition) { 'include ::jenkins' }
