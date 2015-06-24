@@ -125,6 +125,8 @@
 # cli_try_sleep = 10 (default)
 #   Seconds between tries to contact jenkins API
 #
+# yum_proxy = undef (default)
+#   If you environment requires a proxy to download yum packages
 #
 # proxy_host = undef (default)
 # proxy_port = undef (default)
@@ -153,6 +155,7 @@ class jenkins(
   $user_hash          = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
+  $yum_proxy          = undef,
   $proxy_host         = undef,
   $proxy_port         = undef,
   $no_proxy_list      = undef,
