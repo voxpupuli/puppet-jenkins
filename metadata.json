@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
   "source": "https://github.com/jenkinsci/puppet-jenkins",
-  "project_page": "https://forge.puppetlabs.com/rtyler/puppet-jenkins",
+  "project_page": "https://github.com/jenkinsci/puppet-jenkins",
   "issues_url": "https://github.com/jenkinsci/puppet-jenkins/issues",
   "tags": ["jenkins", "jenkinsci"],
   "operatingsystem_support": [
