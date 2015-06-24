@@ -9,26 +9,22 @@ class jenkins::repo::debian
   include stdlib
   include apt
 
-  if $::jenkins::lts  {
-    apt::source { 'jenkins':
-      location    => 'http://pkg.jenkins-ci.org/debian-stable',
-      release     => 'binary/',
-      repos       => '',
-      key         => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-      key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
-      include_src => false,
-    }
+  $location = $::jenkins::lts ? {
+    true    => 'http://pkg.jenkins-ci.org/debian-stable',
+    default => 'http://pkg.jenkins-ci.org/debian',
   }
-  else {
-    apt::source { 'jenkins':
-      location    => 'http://pkg.jenkins-ci.org/debian',
-      release     => 'binary/',
-      repos       => '',
-      key         => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-      key_source  => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
-      include_src => false,
-    }
+
+  apt::source { 'jenkins':
+    location    => $location,
+    release     => 'binary/',
+    repos       => '',
+    key         => {
+      id     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+      source => 'http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key',
+    },
+    include     => { src => false },
   }
+
 
   anchor { 'jenkins::repo::debian::begin': } ->
     Apt::Source['jenkins'] ->
