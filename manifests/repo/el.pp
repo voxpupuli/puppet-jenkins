@@ -7,7 +7,7 @@ class jenkins::repo::el
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  $yum_proxy = $::jenkins::yum_proxy
+  $repo_proxy = $::jenkins::repo_proxy
 
   if $::jenkins::lts  {
     yumrepo {'jenkins':
