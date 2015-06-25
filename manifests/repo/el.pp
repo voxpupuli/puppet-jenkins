@@ -16,6 +16,7 @@ class jenkins::repo::el
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
       enabled  => 1,
+      proxy    => $repo_proxy
     }
   }
 
@@ -26,13 +27,7 @@ class jenkins::repo::el
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
       enabled  => 1,
+      proxy    => $repo_proxy
     }
   }
-
-  if $yum_proxy {
-    Yumrepo['jenkins'] {
-      proxy => $yum_proxy,
-    }
-  }
-
 }
