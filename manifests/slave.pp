@@ -54,6 +54,9 @@
 # [*java_version*]
 #   Specified which version of java will be used.
 #
+# [*description*]
+#   Not required.  Description which will appear on the jenkins master UI.
+#
 
 # === Examples
 #
@@ -72,6 +75,7 @@
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
   $slave_name               = undef,
+  $description              = undef,
   $masterurl                = undef,
   $autodiscoveryaddress      = undef,
   $ui_user                  = undef,
