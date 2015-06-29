@@ -125,6 +125,8 @@
 # cli_try_sleep = 10 (default)
 #   Seconds between tries to contact jenkins API
 #
+# repo_proxy = undef (default)
+#   If you environment requires a proxy to download packages
 #
 # proxy_host = undef (default)
 # proxy_port = undef (default)
@@ -144,30 +146,31 @@
 #
 #
 class jenkins(
-  $version             = $jenkins::params::version,
-  $lts                 = $jenkins::params::lts,
-  $repo                = $jenkins::params::repo,
-  $package_name        = $jenkins::params::package_name,
-  $direct_download     = false,
-  $package_cache_dir   = $jenkins::params::package_cache_dir,
-  $package_provider    = $jenkins::params::package_provider,
-  $service_enable      = $jenkins::params::service_enable,
-  $service_ensure      = $jenkins::params::service_ensure,
-  $config_hash         = {},
-  $plugin_hash         = {},
-  $job_hash            = {},
-  $user_hash           = {},
-  $configure_firewall  = undef,
-  $install_java        = $jenkins::params::install_java,
-  $proxy_host          = undef,
-  $proxy_port          = undef,
-  $no_proxy_list       = undef,
-  $cli                 = undef,
-  $cli_tries           = $jenkins::params::cli_tries,
-  $cli_try_sleep       = $jenkins::params::cli_try_sleep,
-  $port                = $jenkins::params::port,
-  $libdir              = $jenkins::params::libdir,
-  $executors           = undef,
+  $version            = $jenkins::params::version,
+  $lts                = $jenkins::params::lts,
+  $repo               = $jenkins::params::repo,
+  $package_name       = $jenkins::params::package_name,
+  $direct_download    = false,
+  $package_cache_dir  = $jenkins::params::package_cache_dir,
+  $package_provider   = $jenkins::params::package_provider,
+  $service_enable     = $jenkins::params::service_enable,
+  $service_ensure     = $jenkins::params::service_ensure,
+  $config_hash        = {},
+  $plugin_hash        = {},
+  $job_hash           = {},
+  $user_hash          = {},
+  $configure_firewall = undef,
+  $install_java       = $jenkins::params::install_java,
+  $repo_proxy         = undef,
+  $proxy_host         = undef,
+  $proxy_port         = undef,
+  $no_proxy_list      = undef,
+  $cli                = undef,
+  $cli_tries          = $jenkins::params::cli_tries,
+  $cli_try_sleep      = $jenkins::params::cli_try_sleep,
+  $port               = $jenkins::params::port,
+  $libdir             = $jenkins::params::libdir,
+  $executors          = undef,
   $repo_module_version = $jenkins::params::repo_module_version
 ) inherits jenkins::params {
 

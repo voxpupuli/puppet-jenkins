@@ -7,6 +7,8 @@ class jenkins::repo::el
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  $repo_proxy = $::jenkins::repo_proxy
+
   if $::jenkins::lts  {
     yumrepo {'jenkins':
       descr    => 'Jenkins',
@@ -14,6 +16,7 @@ class jenkins::repo::el
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
       enabled  => 1,
+      proxy    => $repo_proxy
     }
   }
 
@@ -24,6 +27,7 @@ class jenkins::repo::el
       gpgcheck => 1,
       gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
       enabled  => 1,
+      proxy    => $repo_proxy
     }
   }
 }

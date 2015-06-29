@@ -1,13 +1,13 @@
 fixtures:
   repositories:
     apt:
-      repo: "git://github.com/puppetlabs/puppetlabs-apt"
-      ref: "1.8.0"
+      repo: "https://github.com/puppetlabs/puppetlabs-apt"
+      ref: "2.1.0"
     stdlib:
-      repo: "git://github.com/puppetlabs/puppetlabs-stdlib"
+      repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
       ref: "4.6.0"
-    java: "git://github.com/puppetlabs/puppetlabs-java"
-    zypprepo: "git://github.com/deadpoint/puppet-zypprepo.git"
+    java: "https://github.com/puppetlabs/puppetlabs-java"
+    zypprepo: "https://github.com/deadpoint/puppet-zypprepo.git"
     staging: "https://github.com/nanliu/puppet-staging"
   symlinks:
     "jenkins": "#{source_dir}"
