@@ -20,7 +20,7 @@ class jenkins::params {
     'Debian': {
       $libdir              = '/usr/share/jenkins'
       $package_provider    = 'dpkg'
-      $repo_module_version = 1
+      $repo_module_version = 2
     }
     'RedHat': {
       $libdir              = '/usr/lib/jenkins'
