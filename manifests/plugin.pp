@@ -122,10 +122,14 @@ define jenkins::plugin(
 
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     if ($jenkins::proxy_host) {
+      unless empty($jenkins::no_proxy_list) {
+	      $no_proxy = join($jenkins::no_proxy_list, ',')
+      }
       Exec {
         environment => [
           "http_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}",
-          "https_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}"
+          "https_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}",
+          "no_proxy=${no_proxy}"
         ]
       }
     }
