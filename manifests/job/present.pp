@@ -29,11 +29,15 @@ define jenkins::job::present(
   $job_dir            = "/var/lib/jenkins/jobs/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
+  # Bring variables from Class['::jenkins'] into local scope.
+  $cli_tries          = $::jenkins::cli_tries
+  $cli_try_sleep   = $::jenkins::cli_try_sleep
+
   Exec {
     logoutput   => false,
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
-    tries       => 5,
-    try_sleep   => 5,
+    tries       => $cli_tries,
+    try_sleep   => $cli_try_sleep,
   }
 
   #
