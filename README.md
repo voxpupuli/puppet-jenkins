@@ -85,6 +85,21 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
   }
 ```
 
+#### Verifying
+
+This module will download the jenkins modules over HTTP, without SSL.
+In order to add some verification regarding the downloaded file, you
+can specify a checksum. You can also define a checksum type with
+'digest_type' (default to sha1 if unspecified) ie.:
+
+```puppet
+  jenkins::plugin { 'git':
+    version       => '2.2.12',
+    digest_string => '48141822e0eea1faa1a1a99b35372494e7352c2746ca3aa3a19a07f34b021848d2cd0bffc8959c1b809c5be231c1b49e9ffec0430dd68938197ac0f34588ee25',
+    digest_type   => 'sha512',
+  }
+```
+
 #### Direct URL
 
 Direct URL from which to download plugin without modification.  This is
@@ -134,6 +149,7 @@ The dependencies for this module currently are:
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
 * [staging module](https://forge.puppetlabs.com/nanliu/staging)
+* [archive module](https://forge.puppetlabs.com/camptocamp/archive)
 
 ### Depending on Jenkins
 
