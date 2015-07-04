@@ -95,34 +95,34 @@ define jenkins::plugin(
     }
   }
 
-  $enabled_ensure = $enabled ? {
-    false   => present,
-    default => absent,
-  }
-
-  # Allow plugins that are already installed to be enabled/disabled.
-  file { "${plugin_dir}/${plugin}.disabled":
-    ensure  => $enabled_ensure,
-    owner   => $username,
-    mode    => '0644',
-    require => File["${plugin_dir}/${plugin}"],
-    notify  => Service['jenkins'],
-  }
-
-  # Create disabled file for jpi extensions too.
-  file { "${plugin_dir}/${name}.jpi.disabled":
-    ensure  => $enabled_ensure,
-    owner   => $username,
-    mode    => '0644',
-    require => File["${plugin_dir}/${plugin}"],
-    notify  => Service['jenkins'],
-  }
-
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     if ($jenkins::proxy_host) {
       $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
     } else {
       $proxy_server = undef
+    }
+
+    $enabled_ensure = $enabled ? {
+      false   => present,
+      default => absent,
+    }
+
+    # Allow plugins that are already installed to be enabled/disabled.
+    file { "${plugin_dir}/${plugin}.disabled":
+      ensure  => $enabled_ensure,
+      owner   => $username,
+      mode    => '0644',
+      require => File["${plugin_dir}/${plugin}"],
+      notify  => Service['jenkins'],
+    }
+
+    # Create disabled file for jpi extensions too.
+    file { "${plugin_dir}/${name}.jpi.disabled":
+      ensure  => $enabled_ensure,
+      owner   => $username,
+      mode    => '0644',
+      require => File["${plugin_dir}/${plugin}"],
+      notify  => Service['jenkins'],
     }
 
     # create a pinned file if the plugin has a .jpi extension
