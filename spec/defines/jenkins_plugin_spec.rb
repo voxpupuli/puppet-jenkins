@@ -25,10 +25,9 @@ describe 'jenkins::plugin' do
 
   describe 'without version' do
     it do
-      should contain_exec('download-myplug').with(
-        :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/latest/myplug.hpi',
-        :user        => 'jenkins',
-        :environment => nil
+      should contain_archive__download('myplug').with(
+        :url  =>  'https://updates.jenkins-ci.org/latest/myplug.hpi',
+        :user => 'jenkins',
       )
     end
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
@@ -38,10 +37,9 @@ describe 'jenkins::plugin' do
     let(:params) { { :version => '1.2.3' } }
 
     it do
-      should contain_exec('download-myplug').with(
-        :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
-        :user        => 'jenkins',
-        :environment => nil
+      should contain_archive__download('myplug').with(
+        :url  =>  'https://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
+        :user => 'jenkins',
       )
     end
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
@@ -51,7 +49,7 @@ describe 'jenkins::plugin' do
     let(:params) { { :version => '1.2.3' } }
     let(:facts) { { :jenkins_plugins => 'myplug 1.2.3, fooplug 1.4.5' } }
 
-    it { should_not contain_exec('download-myplug') }
+    it { should_not contain_archive__download('myplug') }
     it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
@@ -59,14 +57,14 @@ describe 'jenkins::plugin' do
     let(:params) { { :version => '1.2.3' } }
     let(:facts) { { :jenkins_plugins => 'fooplug 1.4.5, myplug 1.2.3' } }
 
-    it { should_not contain_exec('download-myplug') }
+    it { should_not contain_archive__download('myplug') }
     it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
   describe 'with enabled is false' do
     let(:params) { { :enabled => false } }
 
-    it { should contain_exec('download-myplug') }
+    it { should contain_archive__download('myplug') }
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled').with({
       :ensure => 'present',
@@ -81,7 +79,7 @@ describe 'jenkins::plugin' do
   describe 'with enabled is true' do
     let(:params) { { :enabled => true } }
 
-    it { should contain_exec('download-myplug') }
+    it { should contain_archive__download('myplug') }
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled').with({
       :ensure => 'absent',
@@ -103,20 +101,17 @@ describe 'jenkins::plugin' do
     ]}
 
     it do
-      should contain_exec('download-myplug').with(
-        :environment => [
-          "http_proxy=proxy.company.com:8080",
-          "https_proxy=proxy.company.com:8080",
-        ]
+      should contain_archive__download('myplug').with(
+        :proxy_server => "proxy.company.com:8080",
       )
     end
   end
 
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
-      it 'should wget the plugin' do
-        expect(subject).to contain_exec('download-git').with({
-          :command => "rm -rf git git.hpi git.jpi && wget --no-check-certificate #{expected_url}",
+      it 'should retrieve the plugin' do
+        expect(subject).to contain_archive__download('git').with({
+          :url => "#{expected_url}",
         })
       end
     end
@@ -128,7 +123,7 @@ describe 'jenkins::plugin' do
         let(:version) { '1.3.3.7' }
         let(:params) { {:version => version} }
         let(:expected_url) do
-          "http://updates.jenkins-ci.org/download/plugins/#{title}/#{version}/#{title}.hpi"
+          "https://updates.jenkins-ci.org/download/plugins/#{title}/#{version}/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
@@ -136,7 +131,7 @@ describe 'jenkins::plugin' do
 
       context 'without a version' do
         let(:expected_url) do
-          "http://updates.jenkins-ci.org/latest/#{title}.hpi"
+          "https://updates.jenkins-ci.org/latest/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
@@ -179,15 +174,11 @@ describe 'jenkins::plugin' do
   describe 'source' do
     shared_examples 'should download from $source url' do
       it 'should download from $source url' do
-         should contain_exec('download-myplug').with(
-          :command     => 'rm -rf myplug myplug.hpi myplug.jpi && wget --no-check-certificate http://e.org/myplug.hpi',
-          :user        => 'jenkins',
-          :cwd         => '/var/lib/jenkins/plugins',
-          :environment => nil,
-          :path        => ['/usr/bin', '/usr/sbin', '/bin'],
+         should contain_archive__download('myplug').with(
+          :url  => 'http://e.org/myplug.hpi',
+          :user => 'jenkins',
         )
         .that_requires('File[/var/lib/jenkins/plugins]')
-        .that_requires('Package[wget]')
       end
     end
 
