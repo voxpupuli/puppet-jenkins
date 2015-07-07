@@ -159,6 +159,7 @@ define jenkins::plugin(
       digest_type      => $digest_type,
       user             => $username,
       proxy_server     => $proxy_server,
+      notify           => Service['jenkins'],
       require          => File[$plugin_dir],
     }
 
@@ -166,7 +167,6 @@ define jenkins::plugin(
       require => Archive::Download[$plugin],
       owner   => $username,
       mode    => '0644',
-      notify  => Service['jenkins'],
     }
   }
 
