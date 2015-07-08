@@ -149,8 +149,8 @@ define jenkins::plugin(
       $checksum = true
     }
 
-    archive::download { "${plugin}":
-      url              => "${download_url}",
+    archive::download { $plugin:
+      url              => $download_url,
       src_target       => $plugin_dir,
       allow_insecure   => true,
       follow_redirects => true,
