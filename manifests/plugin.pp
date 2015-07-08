@@ -56,21 +56,26 @@ define jenkins::plugin(
 
   if (!defined(File[$plugin_dir])) {
     if (!defined(File[$plugin_parent_dir])) {
-      file { $plugin_parent_dir:
-        ensure  => directory,
-        owner   => $username,
-        group   => $group,
-        mode    => '0755',
-        require => [Group[$group], User[$username]],
+      # ensure ownership only when it's home directory for the new user
+      if $create_user {
+        file { $plugin_parent_dir:
+          ensure => directory,
+          owner  => $username,
+          group  => $group,
+          mode   => '0755',
+        }
+      } else {
+        file { $plugin_parent_dir:
+          ensure => directory,
+        }
       }
     }
 
     file { $plugin_dir:
-      ensure  => directory,
-      owner   => $username,
-      group   => $group,
-      mode    => '0755',
-      require => [Group[$group], User[$username]],
+      ensure => directory,
+      owner  => $username,
+      group  => $group,
+      mode   => '0755',
     }
 
   }
@@ -89,6 +94,8 @@ define jenkins::plugin(
         require => Package[$::jenkins::package_name],
       }
     }
+    User[$username] -> File[$plugin_dir]
+    Group[$group] -> File[$plugin_dir]
   }
 
   if (!defined(Package['wget'])) {
