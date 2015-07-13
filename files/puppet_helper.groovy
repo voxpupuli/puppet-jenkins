@@ -245,7 +245,7 @@ class Actions {
     ]
 
     if ( credentials.hasProperty('password') ) {
-    current_credentials['password'] = credentials.password.plainText
+      current_credentials['password'] = credentials.password.plainText
     } else {
       current_credentials['private_key'] = credentials.privateKey
       current_credentials['passphrase'] = credentials.passphrase.plainText
@@ -255,38 +255,144 @@ class Actions {
     out.println(builder)
   }
 
-  ////////////////////////
-  // set_security
-  ////////////////////////
-  /*
-   * Set up security for the Jenkins instance. This currently supports
-   * only a small number of configurations. If authentication is enabled, it
-   * uses the internal user database.
-  */
-  void set_security(String security_model) {
-    def instance = Jenkins.getInstance()
-
-    if (security_model == 'disabled') {
-      instance.disableSecurity()
-      return null
+  //////////////////////////////
+  // enable slave to master acl
+  //////////////////////////////
+  void enable_slave_to_master_acl(String act) {
+    def s2m = new AdminWhitelistRule()
+    if(act == "true") {
+      // for 'enabled' state we need to pass 'false'
+      s2m.setMasterKillSwitch(false)
     }
+    if(act == "false") {
+      s2m.setMasterKillSwitch(true)
+    }
+    // requires Jenkins restart
+    Hudson.instance.safeRestart()
+  }
 
+  //////////////////////////////
+  // set security ldap
+  //////////////////////////////
+  void set_security_ldap(
+    String overwrite_permissions=null,
+    String item_perms=null,
+    String server=null,
+    String rootDN=null,
+    String userSearch=null,
+    String inhibitInferRootDN=null,
+    String userSearchBase=null,
+    String groupSearchBase=null,
+    String managerDN=null,
+    String managerPassword=null,
+    String ldapuser,
+    String email=null,
+    String password,
+    String name=null,
+    String pub_keys=null,
+    String s2m_acl=null
+  ) {
+
+    if (inhibitInferRootDN==null) {
+      inhibitInferRootDN = false
+    }
+    def instance = Jenkins.getInstance()
     def strategy
     def realm
-    switch (security_model) {
-      case 'full_control':
-        strategy = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
-        break
-      case 'unsecured':
-        strategy = new hudson.security.AuthorizationStrategy.Unsecured()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
-        break
-      default:
-        throw new InvalidAuthenticationStrategy()
+    List users = item_perms.split(' ')
+
+    if (!(instance.getAuthorizationStrategy() instanceof hudson.security.GlobalMatrixAuthorizationStrategy)) {
+      overwrite_permissions = 'true'
     }
+    create_or_update_user(ldapuser, email, password, name, pub_keys)
+    strategy = new hudson.security.GlobalMatrixAuthorizationStrategy()
+    for (String user : users) {
+      for (Permission p : Item.PERMISSIONS.getPermissions()) {
+        strategy.add(p,user)
+      }
+      for (Permission p : Computer.PERMISSIONS.getPermissions()) {
+        strategy.add(p,user)
+      }
+      for (Permission p : Hudson.PERMISSIONS.getPermissions()) {
+        strategy.add(p,user)
+      }
+      for (Permission p : Run.PERMISSIONS.getPermissions()) {
+        strategy.add(p,user)
+      }
+      for (Permission p : View.PERMISSIONS.getPermissions()) {
+        strategy.add(p,user)
+      }
+    }
+    realm = new hudson.security.LDAPSecurityRealm(
+      server, rootDN, userSearchBase, userSearch, groupSearchBase, managerDN, managerPassword, inhibitInferRootDN.toBoolean()
+    )
+    // apply new strategy&realm
+    if (overwrite_permissions == 'true') {
+      instance.setAuthorizationStrategy(strategy)
+    }
+    instance.setSecurityRealm(realm)
+    // commit new settings permanently (in config.xml)
+    instance.save()
+    // now setup s2m if requested
+    if(s2m_acl == 'true') {
+      enable_slave_to_master_acl(s2m_acl)
+    }
+  }
+
+  //////////////////////////////
+  // set security unsecured
+  //////////////////////////////
+  void set_security_unsecured() {
+    def instance = Jenkins.getInstance()
+    def strategy
+    def realm
+    strategy = new hudson.security.AuthorizationStrategy.Unsecured()
+    realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
     instance.setAuthorizationStrategy(strategy)
     instance.setSecurityRealm(realm)
+    instance.save()
+  }
+
+  //////////////////////////////
+  // set security password
+  //////////////////////////////
+  void set_security_password(String user, String email, String password, String name=null, String pub_keys=null, String s2m_acl=null) {
+    def instance = Jenkins.getInstance()
+    def overwrite_permissions
+    def strategy
+    def realm
+    strategy = new hudson.security.GlobalMatrixAuthorizationStrategy()
+    if (!(instance.getAuthorizationStrategy() instanceof hudson.security.GlobalMatrixAuthorizationStrategy)) {
+      overwrite_permissions = 'true'
+    }
+    create_or_update_user(user, email, password, name, pub_keys)
+    for (Permission p : Item.PERMISSIONS.getPermissions()) {
+      strategy.add(p,user)
+    }
+    for (Permission p : Computer.PERMISSIONS.getPermissions()) {
+      strategy.add(p,user)
+    }
+    for (Permission p : Hudson.PERMISSIONS.getPermissions()) {
+      strategy.add(p,user)
+    }
+    for (Permission p : Run.PERMISSIONS.getPermissions()) {
+      strategy.add(p,user)
+    }
+    for (Permission p : View.PERMISSIONS.getPermissions()) {
+      strategy.add(p,user)
+    }
+    realm = new hudson.security.HudsonPrivateSecurityRealm(false)
+    // apply new strategy&realm
+    if (overwrite_permissions == 'true') {
+      instance.setAuthorizationStrategy(strategy)
+      instance.setSecurityRealm(realm)
+    }
+    // commit new settings permanently (in config.xml)
+    instance.save()
+    // now setup s2m if requested
+    if(s2m_acl == 'true') {
+      enable_slave_to_master_acl(s2m_acl)
+    }
   }
 
   ////////////////////////
