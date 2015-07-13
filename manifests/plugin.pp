@@ -27,6 +27,8 @@ define jenkins::plugin(
   $enabled         = true,
   $create_user     = true,
   $source          = undef,
+  $digest_string   = '',
+  $digest_type     = 'sha1',
 ) {
   include ::jenkins::params
 
@@ -36,6 +38,8 @@ define jenkins::plugin(
   validate_bool($enabled)
   # TODO: validate_str($update_url)
   validate_string($source)
+  validate_string($digest_string)
+  validate_string($digest_type)
 
   if ($version != 0) {
     $plugins_host = $update_url ? {
@@ -91,43 +95,34 @@ define jenkins::plugin(
     }
   }
 
-  if (!defined(Package['wget'])) {
-    package { 'wget' :
-      ensure => present,
-    }
-  }
-
-  $enabled_ensure = $enabled ? {
-    false   => present,
-    default => absent,
-  }
-
-  # Allow plugins that are already installed to be enabled/disabled.
-  file { "${plugin_dir}/${plugin}.disabled":
-    ensure  => $enabled_ensure,
-    owner   => $username,
-    mode    => '0644',
-    require => File[$plugin_dir],
-    notify  => Service['jenkins'],
-  }
-
-  # Create disabled file for jpi extensions too.
-  file { "${plugin_dir}/${name}.jpi.disabled":
-    ensure  => $enabled_ensure,
-    owner   => $username,
-    mode    => '0644',
-    require => File[$plugin_dir],
-    notify  => Service['jenkins'],
-  }
-
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     if ($jenkins::proxy_host) {
-      Exec {
-        environment => [
-          "http_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}",
-          "https_proxy=${jenkins::proxy_host}:${jenkins::proxy_port}"
-        ]
-      }
+      $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
+    } else {
+      $proxy_server = undef
+    }
+
+    $enabled_ensure = $enabled ? {
+      false   => present,
+      default => absent,
+    }
+
+    # Allow plugins that are already installed to be enabled/disabled.
+    file { "${plugin_dir}/${plugin}.disabled":
+      ensure  => $enabled_ensure,
+      owner   => $username,
+      mode    => '0644',
+      require => File["${plugin_dir}/${plugin}"],
+      notify  => Service['jenkins'],
+    }
+
+    # Create disabled file for jpi extensions too.
+    file { "${plugin_dir}/${name}.jpi.disabled":
+      ensure  => $enabled_ensure,
+      owner   => $username,
+      mode    => '0644',
+      require => File["${plugin_dir}/${plugin}"],
+      notify  => Service['jenkins'],
     }
 
     # create a pinned file if the plugin has a .jpi extension
@@ -138,7 +133,7 @@ define jenkins::plugin(
       require => File[$plugin_dir],
       path    => ['/usr/bin', '/usr/sbin', '/bin'],
       onlyif  => "test -f ${plugin_dir}/${name}.jpi -a ! -f ${plugin_dir}/${name}.jpi.pinned",
-      before  => Exec["download-${name}"],
+      before  => Archive::Download[$plugin],
       user    => $username,
     }
 
@@ -148,19 +143,30 @@ define jenkins::plugin(
       default => $source,
     }
 
-    exec { "download-${name}" :
-      command => "rm -rf ${name} ${name}.hpi ${name}.jpi && wget --no-check-certificate ${download_url}",
-      cwd     => $plugin_dir,
-      require => [File[$plugin_dir], Package['wget']],
-      path    => ['/usr/bin', '/usr/sbin', '/bin'],
-      user    => $username,
+    if $digest_string == '' {
+      $checksum = false
+    } else {
+      $checksum = true
+    }
+
+    archive::download { $plugin:
+      url              => $download_url,
+      src_target       => $plugin_dir,
+      allow_insecure   => true,
+      follow_redirects => true,
+      checksum         => $checksum,
+      digest_string    => $digest_string,
+      digest_type      => $digest_type,
+      user             => $username,
+      proxy_server     => $proxy_server,
+      notify           => Service['jenkins'],
+      require          => File[$plugin_dir],
     }
 
     file { "${plugin_dir}/${plugin}" :
-      require => Exec["download-${name}"],
+      require => Archive::Download[$plugin],
       owner   => $username,
       mode    => '0644',
-      notify  => Service['jenkins'],
     }
   }
 
