@@ -295,10 +295,20 @@ absolute path to a key file on the managed system.
 Create ssh credentials named 'github-deploy-key', providing an unencrypted
 private key:
 ```puppet
-    jenkins::credentials { 'github-deploy-key':
+    jenkins::credential { 'github-deploy-key':
       password            => '',
       private_key_or_path => hiera('::github_deploy_key'),
     }
+```
+
+Alternatively, using hiera:
+```yaml
+jenkins::credential_hash:
+  github-deploy-key:
+    password: ''
+    private_key_or_path: |
+      AVERYLONGPRIVATEKEYHERE
+      SPANNINGMULTIPLELINES
 ```
 
 ### Configuring Security
