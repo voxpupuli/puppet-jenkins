@@ -25,11 +25,24 @@ class jenkins::direct_download {
   validate_absolute_path($local_file)
 
   if $::jenkins::version != 'absent' {
+    $enable_checksum = $::jenkins::direct_download_checksum ? {
+      undef   => false,
+      default => true,
+    }
+
     # make download optional if we are removing...
-    staging::file { $package_file:
-      source => $jenkins::direct_download,
-      target => $local_file,
-      before => Package[$::jenkins::package_name],
+    archive::download { $package_file:
+      url              => $::jenkins::direct_download,
+      src_target       => $::jenkins::package_cache_dir,
+      allow_insecure   => true,
+      follow_redirects => true,
+      checksum         => $enable_checksum,
+      digest_string    => $::jenkins::direct_download_checksum,
+      digest_type      => $::jenkins::direct_download_checksum_type,
+      proxy_server     => $::jenkins::http_proxy,
+      verbose          => false,
+      require          => File[$::jenkins::package_cache_dir],
+      before           => Package[$::jenkins::package_name],
     }
   }
 

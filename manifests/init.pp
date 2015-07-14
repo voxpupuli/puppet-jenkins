@@ -140,31 +140,33 @@
 #
 #
 class jenkins(
-  $version            = $jenkins::params::version,
-  $lts                = $jenkins::params::lts,
-  $repo               = $jenkins::params::repo,
-  $package_name       = $jenkins::params::package_name,
-  $direct_download    = false,
-  $package_cache_dir  = $jenkins::params::package_cache_dir,
-  $package_provider   = $jenkins::params::package_provider,
-  $service_enable     = $jenkins::params::service_enable,
-  $service_ensure     = $jenkins::params::service_ensure,
-  $config_hash        = {},
-  $plugin_hash        = {},
-  $job_hash           = {},
-  $user_hash          = {},
-  $configure_firewall = undef,
-  $install_java       = $jenkins::params::install_java,
-  $repo_proxy         = undef,
-  $proxy_host         = undef,
-  $proxy_port         = undef,
-  $no_proxy_list      = undef,
-  $cli                = undef,
-  $cli_tries          = $jenkins::params::cli_tries,
-  $cli_try_sleep      = $jenkins::params::cli_try_sleep,
-  $port               = $jenkins::params::port,
-  $libdir             = $jenkins::params::libdir,
-  $executors          = undef,
+  $version                       = $jenkins::params::version,
+  $lts                           = $jenkins::params::lts,
+  $repo                          = $jenkins::params::repo,
+  $package_name                  = $jenkins::params::package_name,
+  $direct_download               = false,
+  $direct_download_checksum      = undef,
+  $direct_download_checksum_type = 'sha1',
+  $package_cache_dir             = $jenkins::params::package_cache_dir,
+  $package_provider              = $jenkins::params::package_provider,
+  $service_enable                = $jenkins::params::service_enable,
+  $service_ensure                = $jenkins::params::service_ensure,
+  $config_hash                   = {},
+  $plugin_hash                   = {},
+  $job_hash                      = {},
+  $user_hash                     = {},
+  $configure_firewall            = undef,
+  $install_java                  = $jenkins::params::install_java,
+  $repo_proxy                    = undef,
+  $proxy_host                    = undef,
+  $proxy_port                    = undef,
+  $no_proxy_list                 = undef,
+  $cli                           = undef,
+  $cli_tries                     = $jenkins::params::cli_tries,
+  $cli_try_sleep                 = $jenkins::params::cli_try_sleep,
+  $port                          = $jenkins::params::port,
+  $libdir                        = $jenkins::params::libdir,
+  $executors                     = undef,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -180,6 +182,12 @@ class jenkins(
 
   if $executors {
     validate_integer($executors)
+  }
+
+  if ($jenkins::proxy_host) {
+    $http_proxy = "http://${jenkins::proxy_host}:${jenkins::proxy_port}/"
+  } else {
+    $http_proxy = undef
   }
 
   anchor {'jenkins::begin':}
@@ -204,6 +212,9 @@ class jenkins(
     }
   }
   include $jenkins_package_class
+
+  validate_string($direct_download_checksum)
+  validate_string($direct_download_checksum_type)
 
   include jenkins::config
   include jenkins::plugins
