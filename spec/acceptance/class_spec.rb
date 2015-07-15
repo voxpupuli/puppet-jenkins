@@ -22,7 +22,14 @@ describe 'jenkins class' do
       }
     end
 
-    describe file('/usr/share/jenkins/jenkins-cli.jar') do
+    case fact('osfamily')
+    when 'Debian'
+      jenkins_libdir = '/usr/share/jenkins'
+    else
+      jenkins_libdir = '/usr/lib/jenkins'
+    end
+
+    describe file("#{jenkins_libdir}/jenkins-cli.jar") do
       it { should be_file }
     end
 
