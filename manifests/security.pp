@@ -17,66 +17,33 @@
 # Jenkins security configuration
 #
 class jenkins::security (
-  $jenkins_management_email         = '',
-  $jenkins_management_login         = '',
-  $jenkins_management_name          = '',
-  $jenkins_management_password      = '',
-  $jenkins_s2m_acl                  = false,
-  $jenkins_ssh_private_key_contents = '',
-  $jenkins_ssh_public_key_contents  = '',
-  $ldap_access_group                = '',
-  $ldap_group_search_base           = '',
-  $ldap_inhibit_root_dn             = 'no',
-  $ldap_manager                     = '',
-  $ldap_manager_passwd              = '',
-  $ldap_overwrite_permissions       = '',
-  $ldap_root_dn                     = 'dc=company,dc=net',
-  $ldap_uri                         = 'ldap://ldap',
-  $ldap_user_search                 = 'uid={0}',
-  $ldap_user_search_base            = '',
-  $security_model                   = undef,
+  $jenkins_management = {},
+  $jenkins_s2m_acl = false,
+  $security_model  = undef,
 ){
   validate_string($security_model)
 
   include ::jenkins::cli_helper
-
-  $libdir = $::jenkins::libdir
-
-  file { "${libdir}/.ssh/id_rsa" :
-    owner   => 'jenkins',
-    group   => 'jenkins',
-    mode    => '0600',
-    content => $jenkins_ssh_private_key_contents,
-    replace => true,
-    require => File["${libdir}/.ssh/"],
-  }
-
-  file { "${libdir}/.ssh/id_rsa.pub" :
-    owner   => 'jenkins',
-    group   => 'jenkins',
-    mode    => '0644',
-    content => "${jenkins_ssh_public_key_contents} jenkins@${::fqdn}",
-    replace => true,
-    require => File["${libdir}/.ssh"],
-  }
 
   if ($security_model == 'unsecured') {
     $security_opt_params = 'set_security_unsecured'
   }
 
   if ($security_model == 'ldap') {
+    include ::jenkins::ldap::config
+    $jenkins_ssh_public_key_contents = file('${libdir}/.ssh/id_rsa.pub')
     $security_opt_params = join([
       'set_security_ldap',
-      "'${ldap_overwrite_permissions}'",
-      "'${ldap_access_group}'",
-      "'${ldap_uri}'",
-      "'${ldap_root_dn}'",
-      "'${ldap_user_search}'",
-      "'${ldap_inhibit_root_dn}'",
-      "'${ldap_user_search_base}'",
-      "'${ldap_group_search_base}'",
-      "'${ldap_manager}'",
-      "'${ldap_manager_passwd}'",
+      "'${ldap_config}[ldap_overwrite_permissions]'",
+      "'${ldap_config}[ldap_access_group]'",
+      "'${ldap_config}[ldap_uri]'",
+      "'${ldap_config}[ldap_root_dn]'",
+      "'${ldap_config}[ldap_user_search]'",
+      "'${ldap_config}[ldap_inhibit_root_dn]'",
+      "'${ldap_config}[ldap_user_search_base]'",
+      "'${ldap_config}[ldap_group_search_base]'",
+      "'${ldap_config}[ldap_manager]'",
+      "'${ldap_config}[ldap_manager_passwd]'",
       "'${jenkins_management_login}'",
       "'${jenkins_management_email}'",
       "'${jenkins_management_password}'",
@@ -87,6 +54,7 @@ class jenkins::security (
   }
 
   if ($security_model == 'password') {
+    $jenkins_ssh_public_key_contents = file('${libdir}/.ssh/id_rsa.pub')
     $security_opt_params = join([
       'set_security_password',
       "'${jenkins_management_login}'",
@@ -97,11 +65,12 @@ class jenkins::security (
       "'${jenkins_s2m_acl}'",
     ], ' ')
   }
-  
+
   # XXX not idempotent
   jenkins::cli::exec { "jenkins-security-${security_model}":
     command => [
       $security_opt_params
     ],
+    user    => 'jenkins',
   }
 }

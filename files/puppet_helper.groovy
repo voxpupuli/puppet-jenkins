@@ -26,7 +26,9 @@ import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
+import jenkins.security.*;
 import hudson.model.*;
+import hudson.security.*;
 
 class InvalidAuthenticationStrategy extends Exception{}
 

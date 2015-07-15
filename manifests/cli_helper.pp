@@ -3,14 +3,46 @@
 # A helper script for creating resources via the Jenkins cli
 #
 class jenkins::cli_helper (
+  $jenkins_ssh_private_key_contents = '',
+  $jenkins_ssh_public_key_contents = '',
   $ssh_keyfile = undef,
 ){
   include ::jenkins
   include ::jenkins::cli
-
+  
   $libdir = $::jenkins::libdir
   $cli_jar = $::jenkins::cli::jar
   $port = jenkins_port()
+
+  file { "${libdir}/.ssh/" :
+    ensure  => directory,
+    owner   => 'jenkins',
+    group   => 'jenkins',
+    mode    => '0700',
+    require => User['jenkins'],
+  }
+
+  if ($jenkins_ssh_private_key_contents) {
+    file { "${libdir}/.ssh/id_rsa" :
+      owner   => 'jenkins',
+      group   => 'jenkins',
+      mode    => '0600',
+      content => $jenkins_ssh_private_key_contents,
+      replace => true,
+      require => File["${libdir}/.ssh/"],
+    }
+  }
+  
+  if ($jenkins_ssh_public_key_contents) { 
+    file { "${libdir}/.ssh/id_rsa.pub" :
+      owner   => 'jenkins',
+      group   => 'jenkins',
+      mode    => '0644',
+      content => "${jenkins_ssh_public_key_contents} jenkins@master",
+      replace => true,
+      require => File["${libdir}/.ssh"],
+    }
+  }
 
   $helper_groovy = "${libdir}/puppet_helper.groovy"
   file {$helper_groovy:
