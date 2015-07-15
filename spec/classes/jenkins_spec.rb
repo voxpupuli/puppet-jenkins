@@ -33,6 +33,11 @@ describe 'jenkins', :type => :module do
       it { should_not contain_class 'jenkins::repo' }
     end
 
+    describe 'with java_package_name' do
+      let(:params) { { :java_package_name => 'java-1.7.0-openjdk.x86_64' } }
+      it { should contain_class('java').with({'name' => 'java-1.7.0-openjdk.x86_64'}) }
+    end
+
     describe 'with only proxy host' do
       let(:params) { { :proxy_host => '1.2.3.4' } }
       it { should_not contain_class('jenkins::proxy') }

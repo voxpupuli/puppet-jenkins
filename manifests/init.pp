@@ -110,6 +110,9 @@
 #   - use puppetlabs-java module to install the correct version of a JDK.
 #   - Jenkins requires a JRE
 #
+# java_package_name = undef (default)
+#   - choose the name of the package to install with puppetlabs-java if the if install_java parameter is true
+#   - defaults to undef, which will use the default taken from the puppetlabs-java module from the params
 #
 # cli = false (default)
 #   - force installation of the jenkins CLI jar to $libdir/cli/jenkins-cli.jar
@@ -155,6 +158,7 @@ class jenkins(
   $user_hash          = {},
   $configure_firewall = undef,
   $install_java       = $jenkins::params::install_java,
+  $java_package_name  = undef,
   $repo_proxy         = undef,
   $proxy_host         = undef,
   $proxy_port         = undef,
@@ -187,7 +191,8 @@ class jenkins(
 
   if $install_java {
     class {'java':
-      distribution => 'jdk'
+      distribution  => 'jdk',
+      name          => $java_package_name,
     }
   }
 
