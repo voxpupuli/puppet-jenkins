@@ -25,6 +25,7 @@ import com.cloudbees.plugins.credentials.domains.*;
 import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
+import jenkins.security.*;
 import jenkins.model.*;
 import jenkins.security.*;
 import hudson.model.*;
