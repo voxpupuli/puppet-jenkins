@@ -8,6 +8,10 @@ class jenkins::cli_helper (
   include ::jenkins
   include ::jenkins::cli
 
+  Class['jenkins::cli'] ->
+    Class['jenkins::cli_helper'] ->
+      Anchor['jenkins::end']
+
   $libdir = $::jenkins::libdir
   $cli_jar = $::jenkins::cli::jar
   $port = jenkins_port()

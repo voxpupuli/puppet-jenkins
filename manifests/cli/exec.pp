@@ -16,6 +16,10 @@ define jenkins::cli::exec(
   include ::jenkins::cli_helper
   include ::jenkins::cli::reload
 
+  Class['jenkins::cli_helper'] ->
+    Jenkins::Cli::Exec[$title] ->
+      Anchor['jenkins::end']
+
   # $command may be either a string or an array due to the use of flatten()
   $run = join(
     delete_undef_values(

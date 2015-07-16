@@ -12,6 +12,17 @@ describe 'jenkins::cli::exec', :type => :define do
 
   let(:helper_cmd) { '/usr/bin/java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://127.0.0.1:8080 groovy /usr/lib/jenkins/puppet_helper.groovy' }
 
+  describe 'relationships' do
+    it do
+      should contain_jenkins__cli__exec('foo').
+        that_requires('Class[jenkins::cli_helper]')
+    end
+    it do
+      should contain_jenkins__cli__exec('foo').
+        that_comes_before('Anchor[jenkins::end]')
+    end
+  end
+
   describe 'title =>' do
     context 'foo' do
       # default title...

@@ -23,6 +23,10 @@ class jenkins::security (
 
   include ::jenkins::cli_helper
 
+  Class['jenkins::cli_helper'] ->
+    Class['jenkins::security'] ->
+      Anchor['jenkins::end']
+
   # XXX not idempotent
   jenkins::cli::exec { "jenkins-security-${security_model}":
     command => [
