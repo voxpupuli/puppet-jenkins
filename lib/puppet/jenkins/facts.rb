@@ -1,6 +1,6 @@
 require 'facter'
-require 'puppet/jenkins'
-require 'puppet/jenkins/plugins'
+require File.join(File.dirname(__FILE__), '..', 'jenkins.rb')
+require File.join(File.dirname(__FILE__), '..', 'jenkins/plugins.rb')
 
 module Puppet
   module Jenkins

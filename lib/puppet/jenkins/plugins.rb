@@ -1,4 +1,4 @@
-require 'puppet/jenkins'
+require File.join(File.dirname(__FILE__), '..', 'jenkins.rb')
 
 module Puppet
   module Jenkins
