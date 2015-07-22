@@ -35,6 +35,7 @@ define jenkins::job::present(
 
   Exec {
     logoutput   => false,
+    user        => 'jenkins',
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
     tries       => $cli_tries,
     try_sleep   => $cli_try_sleep,
