@@ -19,6 +19,7 @@ define jenkins::job::present(
   $enabled  = 1,
 ){
   include jenkins::cli
+  include jenkins::cli::reload
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
