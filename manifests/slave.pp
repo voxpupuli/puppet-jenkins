@@ -87,6 +87,7 @@ class jenkins::slave (
   $slave_uid                = undef,
   $slave_home               = '/home/jenkins-slave',
   $slave_mode               = 'normal',
+  $slave_groups             = [],
   $disable_ssl_verification = false,
   $labels                   = undef,
   $tool_locations           = undef,
@@ -113,6 +114,7 @@ class jenkins::slave (
       home       => $slave_home,
       managehome => true,
       uid        => $slave_uid,
+      groups     => $slave_groups,
     }
   }
 
@@ -123,6 +125,7 @@ class jenkins::slave (
       comment    => 'Jenkins Slave user',
       home       => $slave_home,
       managehome => true,
+      groups     => $slave_groups,
     }
   }
 
