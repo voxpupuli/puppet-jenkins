@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'jenkins::plugin' do
+  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
   let(:title) { 'myplug' }
 
   shared_examples 'manages plugins dirs' do
