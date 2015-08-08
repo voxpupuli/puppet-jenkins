@@ -252,7 +252,8 @@ class jenkins(
         Class['jenkins::jobs']
   }
 
-  if $slaveagentport {
+  if ($slaveagentport != undef) {
+    validate_integer($slaveagentport)
     jenkins::cli::exec { 'set_slaveagent_port':
       command => ['set_slaveagent_port', $slaveagentport],
       unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]"

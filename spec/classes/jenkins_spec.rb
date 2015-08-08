@@ -101,13 +101,14 @@ describe 'jenkins', :type => :module do
       end
 
       context '7777' do
-        let(:params) {{ :slaveagentport => 7777 }}
+        let(:port) { 7777 }
+        let(:params) {{ :slaveagentport => port }}
 
         it { should contain_class('jenkins::cli_helper') }
         it do
           should contain_jenkins__cli__exec('set_slaveagent_port').with(
-            :command => ['set_slaveagent_port', 42],
-            :unless  => '[ $($HELPER_CMD get_slaveagent_port) -eq 7777 ]',
+            :command => ['set_slaveagent_port', port],
+            :unless  => "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]",
           )
         end
         it { should contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
