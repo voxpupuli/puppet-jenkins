@@ -27,8 +27,8 @@ define jenkins::plugin(
   $enabled         = true,
   $create_user     = true,
   $source          = undef,
-  $digest_string   = '',
-  $digest_type     = 'sha1',
+  $checksum        = undef,
+  $checksum_type   = 'sha1',
 ) {
   include ::jenkins::params
 
@@ -38,8 +38,8 @@ define jenkins::plugin(
   validate_bool($enabled)
   # TODO: validate_str($update_url)
   validate_string($source)
-  validate_string($digest_string)
-  validate_string($digest_type)
+  validate_string($checksum)
+  validate_string($checksum_type)
 
   if ($version != 0) {
     $plugins_host = $update_url ? {
@@ -103,12 +103,6 @@ define jenkins::plugin(
   }
 
   if (empty(grep([ $::jenkins_plugins ], $search))) {
-    if ($jenkins::proxy_host) {
-      $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
-    } else {
-      $proxy_server = undef
-    }
-
     $enabled_ensure = $enabled ? {
       false   => present,
       default => absent,
@@ -150,10 +144,9 @@ define jenkins::plugin(
       default => $source,
     }
 
-    if $digest_string == '' {
-      $checksum = false
-    } else {
-      $checksum = true
+    $enable_checksum = $checksum ? {
+      undef   => false,
+      default => true,
     }
 
     archive::download { $plugin:
@@ -161,11 +154,12 @@ define jenkins::plugin(
       src_target       => $plugin_dir,
       allow_insecure   => true,
       follow_redirects => true,
-      checksum         => $checksum,
-      digest_string    => $digest_string,
-      digest_type      => $digest_type,
+      checksum         => $enable_checksum,
+      digest_string    => $checksum,
+      digest_type      => $checksum_type,
       user             => $username,
-      proxy_server     => $proxy_server,
+      proxy_server     => $::jenkins::http_proxy,
+      verbose          => false,
       notify           => Service['jenkins'],
       require          => File[$plugin_dir],
     }

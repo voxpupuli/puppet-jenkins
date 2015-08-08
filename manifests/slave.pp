@@ -77,7 +77,7 @@ class jenkins::slave (
   $slave_name               = undef,
   $description              = undef,
   $masterurl                = undef,
-  $autodiscoveryaddress      = undef,
+  $autodiscoveryaddress     = undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,
   $version                  = $jenkins::params::swarm_version,
@@ -92,8 +92,12 @@ class jenkins::slave (
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
   $ensure                   = 'running',
-  $enable                   = true
+  $enable                   = true,
+  $checksum                 = undef,
+  $checksum_type            = 'sha1',
 ) inherits jenkins::params {
+  validate_string($checksum)
+  validate_string($checksum_type)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
@@ -126,16 +130,26 @@ class jenkins::slave (
     }
   }
 
-  exec { 'get_swarm_client':
-    command => "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}",
-    path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    user    => $slave_user,
-  #refreshonly => true,
-    creates => "${slave_home}/${client_jar}",
-  ## needs to be fixed if you create another version..
+  $enable_checksum = $checksum ? {
+    undef   => false,
+    default => true,
   }
 
-# customizations based on the OS family
+  archive::download { $client_jar:
+    url              => "${client_url}/${client_jar}",
+    src_target       => $slave_home,
+    allow_insecure   => true,
+    follow_redirects => true,
+    checksum         => $enable_checksum,
+    digest_string    => $checksum,
+    digest_type      => $checksum_type,
+    user             => $slave_user,
+    proxy_server     => $::jenkins::http_proxy,
+    verbose          => false,
+    notify           => Service['jenkins-slave'],
+  }
+
+  # customizations based on the OS family
   case $::osfamily {
     'Debian': {
       $defaults_location = '/etc/default'
@@ -174,9 +188,6 @@ class jenkins::slave (
     hasstatus  => true,
     hasrestart => true,
   }
-
-  Exec['get_swarm_client']
-  -> Service['jenkins-slave']
 
   if $install_java {
     Class['java'] ->
