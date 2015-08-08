@@ -47,6 +47,9 @@
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
 #
+# slaveagentport = undef (Default)
+#   Integer number of portnumber for the slave agent.
+#
 # Example use
 #
 # class{ 'jenkins':
@@ -171,6 +174,7 @@ class jenkins(
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
   $executors          = undef,
+  $slaveagentport     = undef,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -246,6 +250,17 @@ class jenkins(
 
     Class['jenkins::cli'] ->
       Jenkins::Cli::Exec['set_num_executors'] ->
+        Class['jenkins::jobs']
+  }
+
+  if $slaveagentport {
+    jenkins::cli::exec { 'set_slaveagent_port':
+      command => ['set_slaveagent_port', $slaveagentport],
+      unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]"
+    }
+
+    Class['jenkins::cli'] ->
+      Jenkins::Cli::Exec['set_slaveagent_port'] ->
         Class['jenkins::jobs']
   }
 

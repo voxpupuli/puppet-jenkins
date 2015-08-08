@@ -93,5 +93,34 @@ describe 'jenkins', :type => :module do
         end
       end
     end # executors =>
+
+    describe 'slaveagentport =>' do
+      context 'undef' do
+        it { should_not contain_class('jenkins::cli_helper') }
+        it { should_not contain_jenkins__cli__exec('set_slaveagent_port') }
+      end
+
+      context '7777' do
+        let(:params) {{ :slaveagentport => 7777 }}
+
+        it { should contain_class('jenkins::cli_helper') }
+        it do
+          should contain_jenkins__cli__exec('set_slaveagent_port').with(
+            :command => ['set_slaveagent_port', 42],
+            :unless  => '[ $($HELPER_CMD get_slaveagent_port) -eq 7777 ]',
+          )
+        end
+        it { should contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
+        it { should contain_jenkins__cli__exec('set_slaveagent_port').that_comes_before('Class[jenkins::jobs]') }
+      end
+
+      context '{}' do
+        let(:params) {{ :slaveagentport => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /to be an Integer/)
+        end
+      end
+    end # slaveagentport =>
   end
 end

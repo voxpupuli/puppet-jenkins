@@ -312,6 +312,30 @@ class Actions {
      j.setNumExecutors(n.toInteger())
      j.save()
   }
+
+  ////////////////////////
+  // get_slaveagent_port
+  ////////////////////////
+  /*
+   * Print the portnumber of the slave agent
+  */
+  void get_slaveagent_port() {
+     def j = Jenkins.getInstance()
+     def n = j.getSlaveAgentPort()
+     out.println(n)
+  }
+
+  ////////////////////////
+  // set_slaveagent_port
+  ////////////////////////
+  /*
+   * Set the portnumber of the slave agent
+  */
+  void set_slaveagent_port(String n) {
+     def j = Jenkins.getInstance()
+     j.setSlaveAgentPort(n.toInteger())
+     j.save()
+  }
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
