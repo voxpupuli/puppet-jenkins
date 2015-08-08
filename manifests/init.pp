@@ -118,6 +118,11 @@
 #   - CLI installation (both implicit and explicit) requires the unzip command
 #
 #
+# cli_ssh_keyfile = undef (default)
+#   Provides the location of an ssh private key file to make authenticated
+#   connections to the Jenkins CLI.
+#
+#
 # cli_tries = 10 (default)
 #   Retries until giving up talking to jenkins API
 #
@@ -160,6 +165,7 @@ class jenkins(
   $proxy_port         = undef,
   $no_proxy_list      = undef,
   $cli                = undef,
+  $cli_ssh_keyfile    = undef,
   $cli_tries          = $jenkins::params::cli_tries,
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
