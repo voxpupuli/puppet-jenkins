@@ -301,6 +301,24 @@ private key:
     }
 ```
 
+*_Setting a UUID:_*
+
+You can also specify a UUID to use with the credentials, which will be used to
+identify the credentials from within the job config. This is necessary when setting
+credentials for use with the [git plugin](http://docs.openstack.org/infra/jenkins-job-builder/scm.html#scm.git), for example.
+
+You can either manually generate a UUID from a site like https://www.uuidgenerator.net,
+or use the UUID from an existing user, which is accessible within the URL of the
+Jenkins console when managing an existing user's credentials.
+
+```puppet
+    jenkins::credentials { 'deploy-user':
+      password            => '',
+      private_key_or_path => hiera('::deploy_key'),
+      uuid                => hiera('::deploy_credentials_uuid'),
+    }
+```
+
 ### Configuring Security
 
 The Jenkins security model can be set to one of two modes:
