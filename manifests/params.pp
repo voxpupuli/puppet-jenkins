@@ -11,6 +11,7 @@ class jenkins::params {
   $swarm_version         = '1.22'
   $default_plugins_host  = 'https://updates.jenkins-ci.org'
   $port                  = '8080'
+  $prefix                = ''
   $cli_tries             = 10
   $cli_try_sleep         = 10
   $package_cache_dir     = '/var/cache/jenkins_pkgs'

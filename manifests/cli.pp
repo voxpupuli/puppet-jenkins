@@ -41,6 +41,7 @@ class jenkins::cli {
   }
 
   $port = jenkins_port()
+  $prefix = jenkins_prefix()
 
   # Provide the -i flag if specified by the user.
   if $::jenkins::cli_ssh_keyfile {
@@ -54,7 +55,7 @@ class jenkins::cli {
     delete_undef_values([
       'java',
       "-jar ${::jenkins::cli::jar}",
-      "-s http://localhost:${port}",
+      "-s http://localhost:${port}${prefix}",
       $auth_arg,
     ]),
     ' '

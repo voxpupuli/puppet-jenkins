@@ -15,6 +15,7 @@ class jenkins::cli_helper (
   $libdir = $::jenkins::libdir
   $cli_jar = $::jenkins::cli::jar
   $port = jenkins_port()
+  $prefix = jenkins_prefix()
 
   $helper_groovy = "${libdir}/puppet_helper.groovy"
   file {$helper_groovy:
@@ -34,7 +35,7 @@ class jenkins::cli_helper (
     delete_undef_values([
       '/usr/bin/java',
       "-jar ${::jenkins::cli::jar}",
-      "-s http://127.0.0.1:${port}",
+      "-s http://127.0.0.1:${port}${prefix}",
       $auth_arg,
       "groovy ${helper_groovy}",
     ]),
