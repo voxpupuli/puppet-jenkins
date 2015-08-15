@@ -98,13 +98,15 @@ class jenkins::slave (
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
-  if $install_java {
+  if $install_java and ($::osfamily != 'Darwin') {
+    # Currently the puppetlabs/java module doesn't support installing Java on
+    # Darwin
     class { 'java':
       distribution => 'jdk',
     }
   }
 
-# customizations based on the OS family
+  # customizations based on the OS family
   case $::osfamily {
     'Debian': {
       $defaults_location = '/etc/default'
@@ -184,7 +186,7 @@ class jenkins::slave (
     default: { }
   }
 
-#add jenkins slave user if necessary.
+  #a Add jenkins slave user if necessary.
   if $manage_slave_user {
     user { 'jenkins-slave_user':
       ensure     => present,
@@ -226,7 +228,7 @@ class jenkins::slave (
   Exec['get_swarm_client']
   -> Service['jenkins-slave']
 
-  if $install_java {
+  if $install_java and ($::osfamily != 'Darwin') {
     Class['java'] ->
     Service['jenkins-slave']
   }

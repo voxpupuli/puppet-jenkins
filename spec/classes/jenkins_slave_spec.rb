@@ -68,18 +68,25 @@ describe 'jenkins::slave' do
     end
   end
 
-#  describe 'Darwin' do
-#    let(:facts) { { :osfamily => 'Darwin', :operatingsystem => 'Darwin', :kernel => 'Darwin' } }
-#    let(:slave_runtime_file) { '/home/jenkins-slave/jenkins-slave' }
-#    let(:slave_service_file) { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist' }
-#
-#    it_behaves_like 'a jenkins::slave catalog'
-#
-#    describe 'with slave_name' do
-#      let(:params) { { :slave_name => 'jenkins-slave' } }
-#      it_behaves_like 'using slave_name'
-#    end
-#  end
+  describe 'Darwin' do
+    let(:facts) {
+      {:osfamily => 'Darwin',
+       :operatingsystem => 'Darwin',
+       :kernel => 'Darwin'
+      }
+    }
+    let(:home) { '/home/jenkins-slave' }
+    let(:slave_runtime_file) { "#{home}/jenkins-slave" }
+    let(:slave_service_file) { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist' }
+
+    it_behaves_like 'a jenkins::slave catalog'
+
+    # NOTE: pending because jenkins-slave doesn't get installed on Darwin
+    describe 'with slave_name' do
+      let(:params) { { :slave_name => 'jenkins-slave' } }
+      it_behaves_like 'using slave_name'
+    end
+  end
 
   describe 'Unknown' do
     let(:facts) { { :ostype => 'Unknown' } }
