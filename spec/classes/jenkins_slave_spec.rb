@@ -4,7 +4,7 @@ describe 'jenkins::slave' do
 
   shared_context 'a jenkins::slave catalog' do
     it { should contain_exec('get_swarm_client') }
-    it { should contain_file('/etc/init.d/jenkins-slave') }
+    it { should contain_file(slave_service_file) }
     it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }
     it { should contain_user('jenkins-slave_user').with_uid(nil) }
     # Let the different platform blocks define  `slave_runtime_file` separately below
@@ -44,9 +44,9 @@ describe 'jenkins::slave' do
   end
 
   describe 'RedHat' do
-    let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS' } }
+    let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS', :kernel => 'Linux' } }
     let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
-
+    let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
     it_behaves_like 'a jenkins::slave catalog'
 
     describe 'with slave_name' do
@@ -56,8 +56,9 @@ describe 'jenkins::slave' do
   end
 
   describe 'Debian' do
-    let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian', :lsbdistcodename => 'natty', :operatingsystem => 'Debian' } }
+    let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian', :lsbdistcodename => 'natty', :operatingsystem => 'Debian', :kernel => 'Linux' } }
     let(:slave_runtime_file) { '/etc/default/jenkins-slave' }
+    let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
 
     it_behaves_like 'a jenkins::slave catalog'
 
@@ -66,6 +67,19 @@ describe 'jenkins::slave' do
       it_behaves_like 'using slave_name'
     end
   end
+
+#  describe 'Darwin' do
+#    let(:facts) { { :osfamily => 'Darwin', :operatingsystem => 'Darwin', :kernel => 'Darwin' } }
+#    let(:slave_runtime_file) { '/home/jenkins-slave/jenkins-slave' }
+#    let(:slave_service_file) { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist' }
+#
+#    it_behaves_like 'a jenkins::slave catalog'
+#
+#    describe 'with slave_name' do
+#      let(:params) { { :slave_name => 'jenkins-slave' } }
+#      it_behaves_like 'using slave_name'
+#    end
+#  end
 
   describe 'Unknown' do
     let(:facts) { { :ostype => 'Unknown' } }
