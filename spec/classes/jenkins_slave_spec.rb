@@ -37,6 +37,13 @@ describe 'jenkins::slave' do
       let(:params) { {:enable => false, :ensure => 'stopped' } }
       it { should contain_service('jenkins-slave').with(:enable => false, :ensure => 'stopped') }
     end
+
+    describe 'with tool_locations' do
+      let(:params) { { :tool_locations => 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
+      it { should contain_file(slave_runtime_file).
+        with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
+        with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/) }
+    end
   end
 
   shared_examples 'using slave_name' do
