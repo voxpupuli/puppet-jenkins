@@ -92,7 +92,8 @@ class jenkins::slave (
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
   $ensure                   = 'running',
-  $enable                   = true
+  $enable                   = true,
+  $manage_packages          = true,
 ) inherits jenkins::params {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
@@ -110,10 +111,11 @@ class jenkins::slave (
   case $::osfamily {
     'Debian': {
       $defaults_location = '/etc/default'
-
-      package { 'daemon':
-        ensure => present,
-        before => Service['jenkins-slave'],
+      if $manage_packages {
+        package { 'daemon':
+          ensure => present,
+          before => Service['jenkins-slave'],
+        }
       }
     }
     'Darwin': {
