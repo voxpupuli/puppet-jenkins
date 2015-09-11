@@ -54,9 +54,9 @@ TOOL_LOCATIONS="<%= @tool_locations -%>"
 
 DESCRIPTION="<%= @description -%>"
 
-# credentials
-JENKINS_USERNAME="<%= @ui_user -%>"
-JENKINS_PASSWORD="<%= @ui_pass -%>"
+# credentials should be single quoted
+JENKINS_USERNAME="'<%= @ui_user.gsub!(/^\'|\'?$/, '') -%>'"
+JENKINS_PASSWORD="'<%= @ui_pass.gsub!(/^\'|\'?$/, '') -%>'"
 
 OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
 
