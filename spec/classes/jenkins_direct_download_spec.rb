@@ -34,7 +34,7 @@ describe 'jenkins', :type => :module do
     context 'unsupported provider fails' do
       let (:params) { { :package_provider => false, :direct_download => 'http://local.space/jenkins.rpm' } }
       it do
-        expect { should compile }.to raise_error
+        expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
       end
     end
   end

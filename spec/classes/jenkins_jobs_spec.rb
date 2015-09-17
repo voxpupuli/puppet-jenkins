@@ -17,7 +17,9 @@ describe 'jenkins', :type => :module  do
       let(:params) { { :service_ensure => 'stopped',
                        :cli => false,
                        :job_hash => { 'build' => { 'config' => '<xml/>' } } } }
-      it { expect { should compile }.to raise_error }
+      it do
+        expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
+      end
     end
 
   end
