@@ -1,6 +1,7 @@
 require 'facter'
 
 require 'puppet_x/jenkins'
+require 'puppet/util/warnings'
 
 # This class is used to lookup common configuration values by first looking for
 # the desired key as parameter to the config class in the catalog, then
@@ -30,9 +31,15 @@ class PuppetX::Jenkins::Config
     value = catalog_lookup(key) || fact_lookup(key) || default_lookup(key)
     return if value.nil?
 
+    Puppet::Util::Warnings.debug_once "config: #{key} = #{value}"
+
     # handle puppet 3.x passing in all values as strings and convert back to
     # Integer/Fixnum
-    default_type_integer?(key) ? value.to_i : value
+    if Puppet.version =~ /^3/
+      default_type_integer?(key) ? value.to_i : value
+    else
+      value
+    end
   end
 
   def catalog_lookup(key)
