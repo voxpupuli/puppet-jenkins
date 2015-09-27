@@ -11,6 +11,10 @@
 #     path to a puppet file() resource containing the Jenkins XML job description
 #     will override 'config' if set
 #
+#   template
+#     path to a puppet template() resource containing the Jenkins XML job description
+#     will override 'config' if set
+#
 #   jobname = $title
 #     the name of the jenkins job
 #
@@ -23,6 +27,7 @@
 define jenkins::job(
   $config,
   $source   = undef,
+  $template = undef,
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
@@ -41,6 +46,10 @@ define jenkins::job(
     if $source {
       validate_string($source)
       $realconfig = file($source)
+    }
+    elsif $template {
+      validate_string($template)
+      $realconfig = template($template)
     }
     else {
       $realconfig = $config

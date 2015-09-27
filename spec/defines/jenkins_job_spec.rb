@@ -127,4 +127,25 @@ eos
     it { should raise_error(Puppet::Error, /Must pass config/) }
   end
 
+  describe 'with templated config and blank regular config' do
+    let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :template => thetemplate, :config => '' }}
+    it { should contain_file('/tmp/myjob-config.xml')\
+      .with_content(/sourcedconfig/) }
+  end
+
+  describe 'with templated config and regular config' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :template => thetemplate, :config => quotes }}
+    it { should contain_file('/tmp/myjob-config.xml')\
+      .with_content(/sourcedconfig/) }
+  end
+
+  describe 'with templated config and no regular config' do
+    let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+    let(:params) {{ :ensure => 'present', :template => thetemplate }}
+    it { should raise_error(Puppet::Error, /Must pass config/) }
+  end
+
 end
