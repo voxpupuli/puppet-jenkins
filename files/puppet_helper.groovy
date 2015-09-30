@@ -470,6 +470,7 @@ class Actions {
           break
         case com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey:
           info['description'] = cred.description
+          info['username'] = cred.username
           info['private_key'] = cred.privateKey
           info['passphrase'] = cred.passphrase.plainText
           break
