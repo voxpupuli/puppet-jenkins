@@ -861,6 +861,17 @@ class Actions {
      j.setSlaveAgentPort(n.toInteger())
      j.save()
   }
+
+  /////////////////////////
+  // job_enabled
+  /////////////////////////
+  /*
+   * Print the job's state as either "true" or "false"
+  */
+  void job_enabled(String name) {
+    def disabled = Jenkins.getInstance().getJob(name).isDisabled()
+    out.println(!disabled)
+  }
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
