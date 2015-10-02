@@ -30,8 +30,14 @@ import org.jenkinsci.plugins.*;
 import jenkins.security.*;
 import hudson.util.*;
 import hudson.model.*;
+import groovy.transform.InheritConstructors
+import org.apache.commons.io.IOUtils
 
 class InvalidAuthenticationStrategy extends Exception{}
+@InheritConstructors
+class UnsupportedCredentialsClass extends Exception {}
+@InheritConstructors
+class InvalidCredentialsId extends Exception {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util
@@ -58,6 +64,16 @@ class Util {
       available_credentials,
       username_matcher
     )
+  }
+
+  def findCredentialsById(String id, Domain domain=Domain.global()) {
+    def idMatcher = CredentialsMatchers.withId(id)
+    def credStore = Jenkins.getInstance().getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+    def allCreds = credStore.getCredentials(domain)
+
+    return CredentialsMatchers.firstOrNull(allCreds, idMatcher)
   }
 
   def userToMap(User user) {
@@ -410,6 +426,171 @@ class Actions {
 
     def builder = new groovy.json.JsonBuilder(current_credentials)
     out.println(builder)
+  }
+
+  ////////////////////////
+  // credentials_list_json
+  ////////////////////////
+  /*
+   * list all credentials in the `global` domain as a JSON document to the
+   * stdout
+  */
+  void credentials_list_json() {
+    def j = Jenkins.getInstance()
+
+    def credentialsStore = j.getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+
+    // XXX intentionally ignoring all domains except for global/null
+    def domain = Domain.global()
+
+    // UnmodifiableRandomAccessList with all credentials in the domain.
+    // BaseCredentials objects do not appear to know what domain they are part
+    // of so we need to keep track of which domain a credentials was retrieved
+    // from.
+    def allCreds = credentialsStore.getCredentials(domain)
+
+    def allInfo = []
+
+    // note that id is theoretically unique for a credential across all domains
+    allCreds.each { cred ->
+      def info = [
+        id:     cred.id,
+        domain: domain.getName(),
+        scope:  cred.scope,
+        impl:  cred.class.getSimpleName(),
+      ]
+
+      switch (cred) {
+        case com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl:
+          info['description'] = cred.description
+          info['username'] = cred.username
+          info['password'] = cred.password.plainText
+          break
+        case com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey:
+          info['description'] = cred.description
+          info['private_key'] = cred.privateKey
+          info['passphrase'] = cred.passphrase.plainText
+          break
+        case org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl:
+          info['description'] = cred.description
+          info['secret'] = cred.secret.plainText
+          break
+        case org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl:
+          info['description'] = cred.description
+          info['file_name'] = cred.getFileName()
+          info['content'] = IOUtils.toString(cred.getContent(), "UTF-8")
+          break
+        case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl:
+          def keyStoreSource = cred.getKeyStoreSource()
+
+          info['description'] = cred.description
+          info['password'] = cred.password.plainText
+          info['password_empty'] = cred.passwordEmpty
+          info['key_store_impl'] = keyStoreSource.class.getSimpleName()
+
+          switch (keyStoreSource) {
+            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$UploadedKeyStoreSource:
+              info['content'] = IOUtils.toString(keyStoreSource.getKeyStoreBytes(), "UTF-8")
+              break
+            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$FileOnMasterKeyStoreSource:
+              info['source'] = keyStoreSource.getKeyStoreFile()
+              break
+            default:
+              throw new UnsupportedCredentialsClass("unsupported " + keyStoreSource)
+          }
+          break
+        default:
+          throw new UnsupportedCredentialsClass("unsupported " + cred)
+      }
+
+      allInfo.add(info)
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
+    out.println(builder.toPrettyString())
+  }
+
+  ////////////////////////
+  // credentials_update_json
+  ////////////////////////
+  /*
+   * modify an existing credentials specified by a JSON document passed via
+   * the stdin
+  */
+  void credentials_update_json() {
+    def j = Jenkins.getInstance()
+
+    // parse JSON doc from stdin
+    def slurper = new groovy.json.JsonSlurper()
+    def text = bindings.stdin.text
+    def conf = slurper.parseText(text)
+
+    def cred = null
+    switch (conf['impl']) {
+      case 'UsernamePasswordCredentialsImpl':
+        cred = new UsernamePasswordCredentialsImpl(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          conf['username'],
+          conf['password']
+        )
+        break
+      case 'BasicSSHUserPrivateKey':
+        def key = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(
+          conf['private_key']
+        )
+        cred = new BasicSSHUserPrivateKey(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['username'],
+          key,
+          conf['passphrase'],
+          conf['description']
+        )
+        break
+      default:
+        throw new UnsupportedCredentialsClass("unsupported " + conf['impl'])
+    }
+
+    def domain = Domain.global()
+    def existingCred = util.findCredentialsById(conf['id'], domain)
+    def credStore = j.getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+
+    if (existingCred != null) {
+      credStore.updateCredentials(domain, existingCred, cred)
+    } else {
+      credStore.addCredentials(domain, cred)
+    }
+  }
+
+  //////////////////////////
+  // delete credentials by id
+  //////////////////////////
+  /*
+   * remove a credentials by `id`
+  */
+  void credentials_delete_id(String id) {
+    def j = Jenkins.getInstance()
+
+    def domain = Domain.global()
+    def existingCred = util.findCredentialsById(id, domain)
+
+    if (existingCred != null) {
+      def credStore = j.getExtensionList(
+        'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+      )[0].getStore()
+
+      credStore.removeCredentials(domain, existingCred)
+    } else {
+      throw new InvalidCredentialsId("invalid credentials id: $id")
+    }
   }
 
   ////////////////////////
