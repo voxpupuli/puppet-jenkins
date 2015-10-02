@@ -71,7 +71,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
 
   def self.job_enabled(job, catalog = nil)
     raw = clihelper(['job_enabled', job], :catalog => catalog)
-    raw == 'true'
+    !!(raw =~ /true/)
   end
   private_class_method :job_enabled
 
