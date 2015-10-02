@@ -29,6 +29,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_user) do
   end
 
   newproperty(:api_token_public) do
+    # XXX validate
     desc 'Literal public API token.  read-only property.'
   end
 
