@@ -47,6 +47,7 @@ define jenkins::user (
           "'${full_name}'",
           "'${public_key}'",
         ],
+        unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -ne 0 ]"
       }
     }
     'absent': {
@@ -56,6 +57,7 @@ define jenkins::user (
           'delete_user',
           $title,
         ],
+        unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -eq 0 ]"
       }
     }
     default: {
