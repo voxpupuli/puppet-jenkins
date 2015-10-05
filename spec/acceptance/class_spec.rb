@@ -22,7 +22,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file('/usr/share/jenkins/jenkins-cli.jar') do
+    describe file('/usr/lib/jenkins/jenkins-cli.jar') do
       it { should be_file }
     end
 
