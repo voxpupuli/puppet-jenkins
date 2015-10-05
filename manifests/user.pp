@@ -47,6 +47,7 @@ define jenkins::user (
           "'${full_name}'",
           "'${public_key}'",
         ],
+        # FIXME: changes made to resource will not be picked up.
         unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -ne 0 ]"
       }
     }
@@ -57,6 +58,7 @@ define jenkins::user (
           'delete_user',
           $title,
         ],
+        # FIXME: changes made to resource will not be picked up.
         unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -eq 0 ]"
       }
     }
