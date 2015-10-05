@@ -48,7 +48,7 @@ define jenkins::user (
           "'${public_key}'",
         ],
         # FIXME: changes made to resource will not be picked up.
-        unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -ne 0 ]"
+        unless => "\$HELPER_CMD user_info ${name} | egrep '\"id.*${name}\"'"
       }
     }
     'absent': {
@@ -59,7 +59,7 @@ define jenkins::user (
           $title,
         ],
         # FIXME: changes made to resource will not be picked up.
-        unless => "[ \$(\$HELPER_CMD user_info ${name} | wc -l) -eq 0 ]"
+        onlyif => "\$HELPER_CMD user_info ${name} | egrep '\"id.*${name}\"'"
       }
     }
     default: {
