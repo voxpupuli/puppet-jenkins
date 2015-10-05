@@ -9,6 +9,7 @@ gem 'puppet-syntax', '>= 1.1.0'
 gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
 gem 'metadata-json-lint'
+gem 'retries', '~> 0.0.5'
 
 group :development do
   gem 'simplecov'
@@ -17,6 +18,8 @@ group :development do
   gem 'debugger', :platform => :mri_19
   gem 'debugger-pry', :platform => :mri_19
   gem 'byebug', :platform => [:mri_20, :mri_21]
+  gem 'pry'
+  gem 'pry-byebug'
 end
 
 group :system_tests do

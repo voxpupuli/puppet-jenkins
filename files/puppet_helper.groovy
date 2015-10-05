@@ -26,9 +26,18 @@ import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
+import org.jenkinsci.plugins.*;
+import jenkins.security.*;
+import hudson.util.*;
 import hudson.model.*;
+import groovy.transform.InheritConstructors
+import org.apache.commons.io.IOUtils
 
 class InvalidAuthenticationStrategy extends Exception{}
+@InheritConstructors
+class UnsupportedCredentialsClass extends Exception {}
+@InheritConstructors
+class InvalidCredentialsId extends Exception {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util
@@ -55,6 +64,16 @@ class Util {
       available_credentials,
       username_matcher
     )
+  }
+
+  def findCredentialsById(String id, Domain domain=Domain.global()) {
+    def idMatcher = CredentialsMatchers.withId(id)
+    def credStore = Jenkins.getInstance().getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+    def allCreds = credStore.getCredentials(domain)
+
+    return CredentialsMatchers.firstOrNull(allCreds, idMatcher)
   }
 
   def userToMap(User user) {
@@ -95,6 +114,70 @@ class Util {
 
     conf
   }
+
+  def findAndInvokeConstructor(Class c, List args) {
+    // groovy.json parses JSON Booleans as java.lang.Boolean objects. It also
+    // appears to be impossible in Groovy convert or cast to a primitive
+    // boolean.  Groovy correctly auto-unboxes Booleans for Java methods
+    // with boolean parameters but the exact type name is required to find the
+    // constructor signature.
+
+    def ctor
+
+    // if we have a null arg, we don't know how to map that back to a class
+    // (hurray for java) and Class::getDeclaredConstructor() will fail. We are
+    // being lazy here and trying to match only by the number of arguments.
+    //
+    // A better impliementation would try to compare parameter types with null
+    // matching any class that is an instance of Object
+    if (args.any { it == null }) {
+      def ctors = c.getDeclaredConstructors()
+
+      def nArgs = args.size()
+      ctor = ctors.find {
+        nArgs == it.getParameterTypes().size()
+      }
+
+      if (ctor == null) {
+        throw new NoSuchMethodException(
+          "no constructor found for class: " + c + " with args: " + args
+        )
+      }
+    } else {
+      // XXX explicit type declaration is required here
+      def Class[] signature = args.collect {
+        it instanceof Boolean ? boolean.class : it.class
+      }
+
+      ctor = c.getDeclaredConstructor(signature)
+    }
+
+    // special case the null realm/strategy singletons with private
+    // constructors
+    switch (c) {
+      case hudson.security.SecurityRealm$None:
+      case hudson.security.AuthorizationStrategy$Unsecured:
+        ctor.setAccessible(true);
+        break
+    }
+
+    ctor.newInstance(*args)
+  }
+
+  def findSuperClasses(Class c) {
+    def classList = []
+    def superclass = c
+    while (superclass != Object) {
+      classList.add(superclass)
+      try {
+        superclass = superclass.getSuperclass()
+      } catch (MissingPropertyException e) {
+        break
+      }
+    }
+
+    classList
+  }
 } // class Util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,6 +217,76 @@ class Actions {
   }
 
   /////////////////////////
+  // create or update user from JSON
+  /////////////////////////
+  void user_update() { // or create
+    // parse JSON doc from stdin
+    def slurper = new groovy.json.JsonSlurper()
+    def text = bindings.stdin.text
+    def conf = slurper.parseText(text)
+
+    // a user id is required
+    def id = conf['id']
+    assert id != null
+    assert id instanceof String
+    def user = hudson.model.User.get(id)
+
+    def full_name = conf['full_name']
+    if (full_name) {
+      assert full_name instanceof String
+      user.setFullName(full_name)
+    }
+
+    def email_address = conf['email_address']
+    if (email_address) {
+      assert email_address instanceof String
+      def email_param = new hudson.tasks.Mailer.UserProperty(email_address)
+      user.addProperty(email_param)
+    }
+
+    // it is not possible to directly set the API token because the user
+    // visible value is actualy a digest of the "plain text" token after it
+    // is unecnrypted.
+    def api_token_plain = conf['api_token_plain']
+    if (api_token_plain) {
+      assert api_token_plain instanceof String
+      def token_param = new ApiTokenProperty()
+      token_param.@apiToken = new Secret(api_token_plain)
+      user.addProperty(token_param)
+    }
+
+    if (conf['api_token_public'] != null) {
+      bindings.stderr.println('ignoring api_token_public - it is not possible to set the API token directly')
+    }
+
+    def public_keys = conf['public_keys']
+    if (public_keys) {
+      assert public_keys instanceof List
+      // convert list of keys into a single string
+      def keys = public_keys.join("\n")
+      def keys_param = new org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl(keys)
+      user.addProperty(keys_param)
+    }
+
+    def password = conf['password']
+    if (password) {
+      // per https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/security/HudsonPrivateSecurityRealm.java#L673-L692
+      // if it has the JBCRYPT_HEADER, we assume it's a hashed password,
+      // otherwise treat it as plain text
+      def password_param
+      if (password =~ /^#jbcrypt:/) {
+        password_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromHashedPassword(password)
+      } else {
+        password_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(password)
+      }
+
+      user.addProperty(password_param)
+    }
+
+    user.save()
+  }
+
+  /////////////////////////
   // delete user
   /////////////////////////
   void delete_user(String user_name) {
@@ -155,6 +308,23 @@ class Actions {
 
     def info = util.userToMap(user)
     def builder = new groovy.json.JsonBuilder(info)
+
+    out.println(builder.toPrettyString())
+  }
+
+  /////////////////////////
+  // list all current users as JSON
+  /////////////////////////
+  void user_info_all() {
+    def allUsers = hudson.model.User.getAll()
+
+    def allInfo = []
+    allUsers.each { user ->
+      def info = util.userToMap(user)
+      allInfo.add(info)
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
 
     out.println(builder.toPrettyString())
   }
@@ -259,6 +429,172 @@ class Actions {
   }
 
   ////////////////////////
+  // credentials_list_json
+  ////////////////////////
+  /*
+   * list all credentials in the `global` domain as a JSON document to the
+   * stdout
+  */
+  void credentials_list_json() {
+    def j = Jenkins.getInstance()
+
+    def credentialsStore = j.getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+
+    // XXX intentionally ignoring all domains except for global/null
+    def domain = Domain.global()
+
+    // UnmodifiableRandomAccessList with all credentials in the domain.
+    // BaseCredentials objects do not appear to know what domain they are part
+    // of so we need to keep track of which domain a credentials was retrieved
+    // from.
+    def allCreds = credentialsStore.getCredentials(domain)
+
+    def allInfo = []
+
+    // note that id is theoretically unique for a credential across all domains
+    allCreds.each { cred ->
+      def info = [
+        id:     cred.id,
+        domain: domain.getName(),
+        scope:  cred.scope,
+        impl:  cred.class.getSimpleName(),
+      ]
+
+      switch (cred) {
+        case com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl:
+          info['description'] = cred.description
+          info['username'] = cred.username
+          info['password'] = cred.password.plainText
+          break
+        case com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey:
+          info['description'] = cred.description
+          info['username'] = cred.username
+          info['private_key'] = cred.privateKey
+          info['passphrase'] = cred.passphrase.plainText
+          break
+        case org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl:
+          info['description'] = cred.description
+          info['secret'] = cred.secret.plainText
+          break
+        case org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl:
+          info['description'] = cred.description
+          info['file_name'] = cred.getFileName()
+          info['content'] = IOUtils.toString(cred.getContent(), "UTF-8")
+          break
+        case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl:
+          def keyStoreSource = cred.getKeyStoreSource()
+
+          info['description'] = cred.description
+          info['password'] = cred.password.plainText
+          info['password_empty'] = cred.passwordEmpty
+          info['key_store_impl'] = keyStoreSource.class.getSimpleName()
+
+          switch (keyStoreSource) {
+            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$UploadedKeyStoreSource:
+              info['content'] = IOUtils.toString(keyStoreSource.getKeyStoreBytes(), "UTF-8")
+              break
+            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$FileOnMasterKeyStoreSource:
+              info['source'] = keyStoreSource.getKeyStoreFile()
+              break
+            default:
+              throw new UnsupportedCredentialsClass("unsupported " + keyStoreSource)
+          }
+          break
+        default:
+          throw new UnsupportedCredentialsClass("unsupported " + cred)
+      }
+
+      allInfo.add(info)
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
+    out.println(builder.toPrettyString())
+  }
+
+  ////////////////////////
+  // credentials_update_json
+  ////////////////////////
+  /*
+   * modify an existing credentials specified by a JSON document passed via
+   * the stdin
+  */
+  void credentials_update_json() {
+    def j = Jenkins.getInstance()
+
+    // parse JSON doc from stdin
+    def slurper = new groovy.json.JsonSlurper()
+    def text = bindings.stdin.text
+    def conf = slurper.parseText(text)
+
+    def cred = null
+    switch (conf['impl']) {
+      case 'UsernamePasswordCredentialsImpl':
+        cred = new UsernamePasswordCredentialsImpl(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          conf['username'],
+          conf['password']
+        )
+        break
+      case 'BasicSSHUserPrivateKey':
+        def key = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(
+          conf['private_key']
+        )
+        cred = new BasicSSHUserPrivateKey(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['username'],
+          key,
+          conf['passphrase'],
+          conf['description']
+        )
+        break
+      default:
+        throw new UnsupportedCredentialsClass("unsupported " + conf['impl'])
+    }
+
+    def domain = Domain.global()
+    def existingCred = util.findCredentialsById(conf['id'], domain)
+    def credStore = j.getExtensionList(
+      'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+    )[0].getStore()
+
+    if (existingCred != null) {
+      credStore.updateCredentials(domain, existingCred, cred)
+    } else {
+      credStore.addCredentials(domain, cred)
+    }
+  }
+
+  //////////////////////////
+  // delete credentials by id
+  //////////////////////////
+  /*
+   * remove a credentials by `id`
+  */
+  void credentials_delete_id(String id) {
+    def j = Jenkins.getInstance()
+
+    def domain = Domain.global()
+    def existingCred = util.findCredentialsById(id, domain)
+
+    if (existingCred != null) {
+      def credStore = j.getExtensionList(
+        'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+      )[0].getStore()
+
+      credStore.removeCredentials(domain, existingCred)
+    } else {
+      throw new InvalidCredentialsId("invalid credentials id: $id")
+    }
+  }
+
+  ////////////////////////
   // set_security
   ////////////////////////
   /*
@@ -267,10 +603,10 @@ class Actions {
    * uses the internal user database.
   */
   void set_security(String security_model) {
-    def instance = Jenkins.getInstance()
+    def j = Jenkins.getInstance()
 
     if (security_model == 'disabled') {
-      instance.disableSecurity()
+      j.disableSecurity()
       return null
     }
 
@@ -288,8 +624,194 @@ class Actions {
       default:
         throw new InvalidAuthenticationStrategy()
     }
-    instance.setAuthorizationStrategy(strategy)
-    instance.setSecurityRealm(realm)
+    j.setAuthorizationStrategy(strategy)
+    j.setSecurityRealm(realm)
+  }
+
+  void get_security_realm() {
+    def j = Jenkins.getInstance()
+    def realm = j.getSecurityRealm()
+
+    def config
+    switch (realm) {
+      // "Jenkins’ own user database"
+      case hudson.security.HudsonPrivateSecurityRealm:
+        config = [
+          setSecurityRealm: [
+            (realm.getClass().getName()): [
+              realm.allowsSignup(),
+              realm.isEnableCaptcha(),
+              null,
+            ],
+          ],
+        ]
+        break
+
+      // "Unix user/group database"
+      case hudson.security.PAMSecurityRealm:
+        config = [
+          setSecurityRealm: [
+            (realm.getClass().getName()): [
+              // there is no accessor for the serviceName field
+              realm.@serviceName
+            ],
+          ],
+        ]
+        break
+
+      // XXX not implemented "LDAP"
+      //case hudson.security.LDAPSecurityRealm:
+      // public LDAPSecurityRealm(String server, String rootDN, String userSearchBase, String userSearch, String groupSearchBase, String groupSearchFilter, LDAPGroupMembershipStrategy groupMembershipStrategy, String managerDN, Secret managerPasswordSecret, boolean inhibitInferRootDN, boolean disableMailAddressResolver, CacheConfiguration cache, EnvironmentProperty[] environmentProperties, String displayNameAttributeName, String mailAddressAttributeName, IdStrategy userIdStrategy, IdStrategy groupIdStrategy)
+
+      // github-oauth
+      case org.jenkinsci.plugins.GithubSecurityRealm:
+        config = [
+          setSecurityRealm: [
+            (realm.getClass().getName()): [
+              realm.getGithubWebUri(),
+              realm.getGithubApiUri(),
+              realm.getClientID(),
+              realm.getClientSecret(),
+              realm.getOauthScopes(),
+            ],
+          ],
+        ]
+        break
+
+      // constructor with no arguments
+      // "Delegate to servlet container"
+      case hudson.security.LegacySecurityRealm:
+      default:
+        config = [
+          setSecurityRealm: [
+            (realm.getClass().getName()): [],
+         ],
+       ]
+    }
+
+    def builder = new groovy.json.JsonBuilder(config)
+
+    out.println(builder.toPrettyString())
+  }
+
+  ////////////////////////
+  // get_authorization_strategy
+  ////////////////////////
+  void get_authorization_strategy() {
+    def j = Jenkins.getInstance()
+    def strategy = j.getAuthorizationStrategy()
+
+    def config
+    switch (strategy) {
+      // github-oauth
+      case org.jenkinsci.plugins.GithubAuthorizationStrategy:
+        config = [
+          setAuthorizationStrategy: [
+            (strategy.getClass().getName()): [
+              strategy.adminUserNames,
+              strategy.authenticatedUserReadPermission,
+              strategy.useRepositoryPermissions,
+              strategy.authenticatedUserCreateJobPermission,
+              strategy.organizationNames,
+              strategy.allowGithubWebHookPermission,
+              strategy.allowCcTrayPermission,
+              strategy.allowAnonymousReadPermission,
+            ],
+          ],
+        ]
+        break
+
+      // constructor with no arguments
+      // "Anyone can do anything"
+      case hudson.security.AuthorizationStrategy$Unsecured:
+      // "Legacy mode"
+      case hudson.security.LegacyAuthorizationStrategy:
+      // "Logged-in users can do anything"
+      case hudson.security.FullControlOnceLoggedInAuthorizationStrategy:
+      // "Matrix-based security"
+      case hudson.security.GlobalMatrixAuthorizationStrategy:
+        // technically, you can select this class but it will "brick" the
+        // authorization strategy without additional method calls to configure
+        // the matrix which are not presently supported
+      // "Project-based Matrix Authorization Strategy"
+      case hudson.security.ProjectMatrixAuthorizationStrategy:
+        // same issue as hudson.security.GlobalMatrixAuthorizationStrategy
+      default:
+        config = [
+          setAuthorizationStrategy: [
+            (strategy.getClass().getName()): [],
+          ],
+        ]
+    }
+
+    def builder = new groovy.json.JsonBuilder(config)
+
+    out.println(builder.toPrettyString())
+  }
+
+  ////////////////////////
+  // set_jenkins_instance
+  ////////////////////////
+  void set_jenkins_instance() {
+    def j = Jenkins.getInstance()
+
+    def setup = { info ->
+      def className
+      def args
+
+      info.each { entry ->
+        className = entry.key
+        args      = entry.value
+      }
+      // #forName does not appear to work under groovy. Eg.,
+      // Class c = Class.forName(className)
+      def c = this.class.classLoader.loadClass(className)
+
+      util.findAndInvokeConstructor(c, args)
+    }
+
+    // parse JSON doc from stdin
+    def slurper = new groovy.json.JsonSlurper()
+    def text = bindings.stdin.text
+    def conf = slurper.parseText(text)
+
+    // each key in the hash is a method on the Jenkins singleton.  The key's
+    // value is an object to instatiate and pass to the method.  (currently,
+    // only one parameter is supported)
+    conf.each { entry ->
+      def methodName = entry.key
+      def args = setup(entry.value)
+
+      // reflection (at least under groovy) does not appear to match
+      // subclasses for parameter types.  Eg.,
+      // org.jenkinsci.plugins.GithubSecurityRealm does not match
+      // hudson.security.SecurityRealm
+
+      // try class + superclass(es) of the parameter's type
+      def classList = util.findSuperClasses(args.class)
+      def status = classList.any { c ->
+        try {
+          def m = j.class.getMethod(methodName, c)
+          m.invoke(j, args)
+          true
+        } catch (NoSuchMethodException e) {
+          false
+        }
+      }
+
+      if (!status) {
+        def m = j.class.getMethods().find { it.name == methodName }
+        if (m == null) {
+          // see if we can find any method matching that name
+          throw new NoSuchMethodException(
+            "no Jenkins instance method found for: " + methodName + " with args: " + args.class
+          )
+        }
+        m.invoke(j, args)
+      }
+    }
+
+    j.save()
   }
 
   ////////////////////////
@@ -338,6 +860,17 @@ class Actions {
      def j = Jenkins.getInstance()
      j.setSlaveAgentPort(n.toInteger())
      j.save()
+  }
+
+  /////////////////////////
+  // job_enabled
+  /////////////////////////
+  /*
+   * Print the job's state as either "true" or "false"
+  */
+  void job_enabled(String name) {
+    def disabled = Jenkins.getInstance().getJob(name).isDisabled()
+    out.println(!disabled)
   }
 } // class Actions
 
