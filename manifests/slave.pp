@@ -95,6 +95,8 @@ class jenkins::slave (
   $enable                   = true
 ) inherits jenkins::params {
 
+  validate_string($tool_locations)
+
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
 
