@@ -626,6 +626,7 @@ class Actions {
     }
     j.setAuthorizationStrategy(strategy)
     j.setSecurityRealm(realm)
+    j.save()
   }
 
   void get_security_realm() {
