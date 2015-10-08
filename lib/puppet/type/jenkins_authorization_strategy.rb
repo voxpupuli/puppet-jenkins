@@ -1,4 +1,11 @@
-require 'puppet_x/jenkins/type/cli'
+begin
+  require 'puppet_x/jenkins/type/cli'
+rescue LoadError
+  require 'pathname' # WORK_AROUND #14073 and #7788
+  jenkins = Puppet::Module.find('jenkins', Puppet[:environment].to_s)
+  raise(LoadError, "Unable to find jenkins module in modulepath #{Puppet[:basemodulepath] || Puppet[:modulepath]}") unless jenkins
+  require File.join jenkins.path, 'lib/puppet_x/jenkins/type/cli'
+end
 
 PuppetX::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   @doc = "Manage Jenkins' authorization strategy"
