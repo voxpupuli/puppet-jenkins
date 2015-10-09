@@ -12,8 +12,8 @@ class jenkins::proxy {
 
   file { '/var/lib/jenkins/proxy.xml':
     content => template('jenkins/proxy.xml.erb'),
-    owner   => 'jenkins',
-    group   => 'jenkins',
+    owner   => $::jenkins::params::jenkins_user,
+    group   => $::jenkins::params::jenkins_group,
     mode    => '0644'
   }
 

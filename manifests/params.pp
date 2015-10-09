@@ -19,14 +19,20 @@ class jenkins::params {
 
   case $::osfamily {
     'Debian': {
+      $jenkins_user       = 'jenkins'
+      $jenkins_group      = 'jenkins'
       $libdir           = '/usr/share/jenkins'
       $package_provider = 'dpkg'
     }
     'RedHat': {
+      $jenkins_user       = 'jenkins'
+      $jenkins_group      = 'jenkins'
       $libdir           = '/usr/lib/jenkins'
       $package_provider = 'rpm'
     }
     default: {
+      $jenkins_user       = 'jenkins'
+      $jenkins_group      = 'jenkins'
       $libdir = '/usr/lib/jenkins'
       $package_provider = false
     }
