@@ -12,6 +12,13 @@ describe 'jenkins::plugin' do
   it { should contain_group('jenkins') }
   it { should contain_user('jenkins').with('home' => '/var/lib/jenkins') }
 
+  context 'the pinned file resource' do
+    it do
+      should contain_exec("create-pinnedfile-#{title}")
+          .that_requires("Archive::Download[#{title}.hpi]")
+    end
+  end
+
   context 'with my plugin parent directory already defined' do
     let(:pre_condition) do
       [
@@ -22,7 +29,6 @@ describe 'jenkins::plugin' do
     include_examples 'manages plugins dirs'
   end
 
-
   describe 'without version' do
     it do
       should contain_archive__download('myplug.hpi').with(
@@ -31,6 +37,7 @@ describe 'jenkins::plugin' do
       )
     end
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+
   end
 
   describe 'with version' do

@@ -137,10 +137,12 @@ define jenkins::plugin(
     exec { "create-pinnedfile-${name}" :
       command => "touch ${plugin_dir}/${name}.jpi.pinned",
       cwd     => $plugin_dir,
-      require => File[$plugin_dir],
+      require => [
+                File[$plugin_dir],
+                Archive::Download[$plugin],
+                ],
       path    => ['/usr/bin', '/usr/sbin', '/bin'],
       onlyif  => "test -f ${plugin_dir}/${name}.jpi -a ! -f ${plugin_dir}/${name}.jpi.pinned",
-      before  => Archive::Download[$plugin],
       user    => $username,
     }
 
