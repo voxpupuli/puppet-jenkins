@@ -70,10 +70,6 @@ describe 'jenkins::plugin' do
       :ensure => 'present',
       :owner  => 'jenkins',
     })}
-    it { should contain_file('/var/lib/jenkins/plugins/myplug.jpi.disabled').with({
-      :ensure => 'present',
-      :owner  => 'jenkins',
-    })}
   end
 
   describe 'with enabled is true' do
@@ -82,10 +78,6 @@ describe 'jenkins::plugin' do
     it { should contain_archive__download('myplug.hpi') }
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi.disabled').with({
-      :ensure => 'absent',
-      :owner  => 'jenkins',
-    })}
-    it { should contain_file('/var/lib/jenkins/plugins/myplug.jpi.disabled').with({
       :ensure => 'absent',
       :owner  => 'jenkins',
     })}
@@ -216,4 +208,26 @@ describe 'jenkins::plugin' do
       end
     end # validate_string
   end # source
+
+  context 'pinned file' do
+    let(:title) { 'foo' }
+
+    context 'default params' do
+      it do
+        should contain_file('/var/lib/jenkins/plugins/foo.hpi.pinned').with(
+          :owner => 'jenkins',
+        ).that_requires('Archive::Download[foo.hpi]')
+      end
+    end
+
+    context 'with source param' do
+      let(:params) {{ :source => 'foo.jpi' }}
+
+      it do
+        should contain_file('/var/lib/jenkins/plugins/foo.jpi.pinned').with(
+          :owner => 'jenkins',
+        ).that_requires('Archive::Download[foo.jpi]')
+      end
+    end
+  end # pinned file extension name
 end
