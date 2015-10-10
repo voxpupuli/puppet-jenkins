@@ -32,7 +32,6 @@ define jenkins::plugin(
 ) {
   include ::jenkins::params
 
-  $plugin            = "${name}.hpi"
   $plugin_parent_dir = inline_template('<%= @plugin_dir.split(\'/\')[0..-2].join(\'/\') %>')
   validate_bool($manage_config)
   validate_bool($enabled)
@@ -57,6 +56,15 @@ define jenkins::plugin(
     $base_url = "${plugins_host}/latest/"
     $search   = "${name} "
   }
+
+  # if $source is specified, it overrides any other URL construction
+  $download_url = $source ? {
+    undef   => "${base_url}${name}.hpi",
+    default => $source,
+  }
+
+  $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
+  $plugin     = "${name}.${plugin_ext}"
 
   if (!defined(File[$plugin_dir])) {
     if (!defined(File[$plugin_parent_dir])) {
@@ -123,31 +131,9 @@ define jenkins::plugin(
       notify  => Service['jenkins'],
     }
 
-    # Create disabled file for jpi extensions too.
-    file { "${plugin_dir}/${name}.jpi.disabled":
-      ensure  => $enabled_ensure,
+    file { "${plugin_dir}/${plugin}.pinned":
       owner   => $username,
-      mode    => '0644',
-      require => File["${plugin_dir}/${plugin}"],
-      notify  => Service['jenkins'],
-    }
-
-    # create a pinned file if the plugin has a .jpi extension
-    #   to override the builtin module versions
-    exec { "create-pinnedfile-${name}" :
-      command => "touch ${plugin_dir}/${name}.jpi.pinned",
-      cwd     => $plugin_dir,
-      require => File[$plugin_dir],
-      path    => ['/usr/bin', '/usr/sbin', '/bin'],
-      onlyif  => "test -f ${plugin_dir}/${name}.jpi -a ! -f ${plugin_dir}/${name}.jpi.pinned",
-      before  => Archive::Download[$plugin],
-      user    => $username,
-    }
-
-    # if $source is specified, it overrides any other URL construction
-    $download_url = $source ? {
-      undef   => "${base_url}${plugin}",
-      default => $source,
+      require => Archive::Download[$plugin],
     }
 
     if $digest_string == '' {
