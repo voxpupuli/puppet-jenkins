@@ -52,9 +52,9 @@ FSROOT="<%= @slave_home -%>"
 
 DESCRIPTION="<%= @description -%>"
 
-# credentials should be single quoted
-JENKINS_USERNAME="'<%= @ui_user.gsub!(/^\'|\'?$/, '') -%>'"
-JENKINS_PASSWORD="'<%= @ui_pass.gsub!(/^\'|\'?$/, '') -%>'"
+# credentials should be sinjle quoted
+JENKINS_USERNAME=<%= @quoted_ui_user %>
+JENKINS_PASSWORD=<%= @quoted_ui_pass %>
 
 OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
 

@@ -77,7 +77,7 @@ class jenkins::slave (
   $slave_name               = undef,
   $description              = undef,
   $masterurl                = undef,
-  $autodiscoveryaddress      = undef,
+  $autodiscoveryaddress     = undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,
   $version                  = $jenkins::params::swarm_version,
@@ -99,6 +99,9 @@ class jenkins::slave (
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
+  $quoted_ui_user = shellquote($ui_user)
+  $quoted_ui_pass = shellquote($ui_pass)
+
 
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
