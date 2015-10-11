@@ -60,6 +60,8 @@ describe 'jenkins::slave' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
     end
+
+    it { should_not contain_package('daemon') }
   end
 
   describe 'Debian' do
@@ -72,6 +74,11 @@ describe 'jenkins::slave' do
     describe 'with slave_name' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
+    end
+
+    it do
+      should contain_package('daemon')
+        .that_comes_before('Service[jenkins-slave]')
     end
   end
 
@@ -93,6 +100,8 @@ describe 'jenkins::slave' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
     end
+
+    it { should_not contain_package('daemon') }
   end
 
   describe 'Unknown' do
