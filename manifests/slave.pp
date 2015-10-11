@@ -14,6 +14,9 @@
 # [*masterurl*]
 #   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
+# [*tunnel*]
+#   Connect to the specified host and port, instead of connecting directly to Jenkins. Useful when connection to Hudson needs to be tunneled. Can be also HOST: or :PORT, in which case the missing portion will be auto-configured like the default behavior
+#
 # [*autodiscoveryaddress*]
 #   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
 #
@@ -77,6 +80,7 @@ class jenkins::slave (
   $slave_name               = undef,
   $description              = undef,
   $masterurl                = undef,
+  $tunnel                   = undef,
   $autodiscoveryaddress      = undef,
   $ui_user                  = undef,
   $ui_pass                  = undef,
