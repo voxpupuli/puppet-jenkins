@@ -113,10 +113,8 @@ class jenkins::slave (
     'Debian': {
       $defaults_location = '/etc/default'
 
-      package { 'daemon':
-        ensure => present,
-        before => Service['jenkins-slave'],
-      }
+      ensure_packages(['daemon'])
+      Package['daemon'] -> Service['jenkins-slave']
     }
     'Darwin': {
       $defaults_location = $slave_home
