@@ -13,5 +13,14 @@ describe 'jenkins::cli_helper', :type => :class do
         that_comes_before('Anchor[jenkins::end]')
     end
   end
+
+  it do
+    should contain_file('/usr/lib/jenkins/puppet_helper.groovy').with(
+      :source => 'puppet:///modules/jenkins/puppet_helper.groovy',
+      :owner  => 'jenkins',
+      :group  => 'jenkins',
+      :mode   => '0444',
+    )
+  end
 end
 

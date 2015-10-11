@@ -16,6 +16,12 @@ class jenkins::params {
   $cli_try_sleep         = 10
   $package_cache_dir     = '/var/cache/jenkins_pkgs'
   $package_name          = 'jenkins'
+  $localstatedir         = '/var/lib/jenkins'
+
+  $manage_user  = true
+  $user         = 'jenkins'
+  $manage_group = true
+  $group        = 'jenkins'
 
   case $::osfamily {
     'Debian': {
@@ -27,7 +33,7 @@ class jenkins::params {
       $package_provider = 'rpm'
     }
     default: {
-      $libdir = '/usr/lib/jenkins'
+      $libdir           = '/usr/lib/jenkins'
       $package_provider = false
     }
   }
