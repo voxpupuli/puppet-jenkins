@@ -44,6 +44,25 @@ describe 'jenkins::slave' do
         with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
         with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/) }
     end
+
+    describe 'with a UI user/password' do
+      let(:user) { '"frank"' }
+      let(:password) { "abignale's" }
+      let(:params) do
+        {
+          :ui_user => user,
+          :ui_pass => password,
+        }
+      end
+
+      it 'should escape the user' do
+        should contain_file(slave_runtime_file).with_content(/^JENKINS_USERNAME='#{user}'$/)
+      end
+
+      it 'should escape the password' do
+        should contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
+      end
+    end
   end
 
   shared_examples 'using slave_name' do
