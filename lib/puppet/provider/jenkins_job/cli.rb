@@ -1,7 +1,15 @@
 require 'puppet/util/warnings'
 
-require 'puppet_x/jenkins/util'
-require 'puppet_x/jenkins/provider/cli'
+begin
+  require 'puppet_x/jenkins/util'
+  require 'puppet_x/jenkins/provider/cli'
+rescue LoadError
+  require 'pathname' # WORK_AROUND #14073 and #7788
+  jenkins = Puppet::Module.find('jenkins', Puppet[:environment].to_s)
+  raise(LoadError, "Unable to find jenkins module in modulepath #{Puppet[:basemodulepath] || Puppet[:modulepath]}") unless jenkins
+  require File.join jenkins.path, 'lib/puppet_x/jenkins/util'
+  require File.join jenkins.path, 'lib/puppet_x/jenkins/provider/cli'
+end
 
 Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provider::Cli) do
 
