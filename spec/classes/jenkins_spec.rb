@@ -65,6 +65,22 @@ describe 'jenkins', :type => :module do
       it { expect { should raise_error(Puppet::Error) } }
     end
 
+    describe 'localstatedir =>' do
+      context 'undef' do
+        it { should contain_file('/var/lib/jenkins') }
+      end
+
+      context '/dne' do
+        let(:params) {{ :localstatedir => '/dne' }}
+        it { should contain_file('/dne') }
+      end
+
+      context './tmp' do
+        let(:params) {{ :localstatedir => './tmp' }}
+        it { should raise_error(Puppet::Error, /is not an absolute path/) }
+      end
+    end
+
     describe 'executors =>' do
       context 'undef' do
         it { should_not contain_class('jenkins::cli_helper') }
@@ -123,5 +139,136 @@ describe 'jenkins', :type => :module do
         end
       end
     end # slaveagentport =>
+
+    describe 'manage_user =>' do
+      context '(default)' do
+        it { should contain_user('jenkins') }
+      end
+
+      context 'true' do
+        let(:params) {{ :manage_user => true }}
+        it { should contain_user('jenkins') }
+      end
+
+      context 'false' do
+        let(:params) {{ :manage_user => false }}
+        it { should_not contain_user('jenkins') }
+      end
+
+      context '{}' do
+        let(:params) {{ :manage_user => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /is not a boolean./)
+        end
+      end
+    end # manage_user =>
+
+    describe 'user =>' do
+      context '(default)' do
+        it do
+          should contain_user('jenkins').with(
+            :ensure     => 'present',
+            :gid        => 'jenkins',
+            :home       => '/var/lib/jenkins',
+            :managehome => false,
+            :system     => true,
+          )
+        end
+      end
+
+      context 'bob' do
+        let(:params) {{ :user => 'bob' }}
+
+        it do
+          should contain_user('bob').with(
+            :ensure     => 'present',
+            :gid        => 'jenkins',
+            :home       => '/var/lib/jenkins',
+            :managehome => false,
+            :system     => true,
+          )
+        end
+      end
+
+      context '{}' do
+        let(:params) {{ :user => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /is not a string./)
+        end
+      end
+    end # user =>
+
+    describe 'manage_group =>' do
+      context '(default)' do
+        it { should contain_group('jenkins') }
+      end
+
+      context 'true' do
+        let(:params) {{ :manage_group => true }}
+        it { should contain_group('jenkins') }
+      end
+
+      context 'false' do
+        let(:params) {{ :manage_group => false }}
+        it { should_not contain_group('jenkins') }
+      end
+
+      context '{}' do
+        let(:params) {{ :manage_group => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /is not a boolean./)
+        end
+      end
+    end # manage_group =>
+
+    describe 'group =>' do
+      context '(default)' do
+        it do
+          should contain_group('jenkins').with(
+            :ensure => 'present',
+            :system => true,
+          )
+        end
+      end
+
+      context 'fred' do
+        let(:params) {{ :group => 'fred' }}
+
+        it do
+          should contain_group('fred').with(
+            :ensure => 'present',
+            :system => true,
+          )
+        end
+      end
+
+      context '{}' do
+        let(:params) {{ :group => {} }}
+
+        it 'should fail' do
+          should raise_error(Puppet::Error, /is not a string./)
+        end
+      end
+    end # group =>
+
+    describe 'manages state dirs' do
+      [
+        '/var/lib/jenkins',
+        '/var/lib/jenkins/jobs',
+        '/var/lib/jenkins/plugins',
+      ].each do |dir|
+        it do
+          should contain_file(dir).with(
+            :ensure => 'directory',
+            :owner  => 'jenkins',
+            :group  => 'jenkins',
+            :mode   => '0755',
+          )
+        end
+      end
+    end # manages state dirs
   end
 end

@@ -27,7 +27,7 @@ define jenkins::job::present(
 
   $jenkins_cli        = $jenkins::cli::cmd
   $tmp_config_path    = "/tmp/${jobname}-config.xml"
-  $job_dir            = "/var/lib/jenkins/jobs/${jobname}"
+  $job_dir            = "${::jenkins::jobs_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
   # Bring variables from Class['::jenkins'] into local scope.

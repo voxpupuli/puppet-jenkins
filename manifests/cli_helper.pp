@@ -20,8 +20,8 @@ class jenkins::cli_helper (
   $helper_groovy = "${libdir}/puppet_helper.groovy"
   file {$helper_groovy:
     source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
-    owner   => 'jenkins',
-    group   => 'jenkins',
+    owner   => $::jenkins::user,
+    group   => $::jenkins::group,
     mode    => '0444',
     require => Class['jenkins::cli'],
   }

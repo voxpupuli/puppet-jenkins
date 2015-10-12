@@ -21,18 +21,18 @@ define jenkins::plugin(
   $config_filename = undef,
   $config_content  = undef,
   $update_url      = undef,
-  $plugin_dir      = '/var/lib/jenkins/plugins',
-  $username        = 'jenkins',
-  $group           = 'jenkins',
   $enabled         = true,
-  $create_user     = true,
   $source          = undef,
   $digest_string   = '',
   $digest_type     = 'sha1',
+  # deprecated
+  $plugin_dir      = undef,
+  $username        = undef,
+  $group           = undef,
+  $create_user     = true,
 ) {
-  include ::jenkins::params
+  include ::jenkins
 
-  $plugin_parent_dir = inline_template('<%= @plugin_dir.split(\'/\')[0..-2].join(\'/\') %>')
   validate_bool($manage_config)
   validate_bool($enabled)
   # TODO: validate_str($update_url)
@@ -40,9 +40,22 @@ define jenkins::plugin(
   validate_string($digest_string)
   validate_string($digest_type)
 
+  if $plugin_dir {
+    warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
+  }
+  if $username {
+    warning('jenkins::plugin::username is deprecated and has no effect -- see jenkins::user')
+  }
+  if $group {
+    warning('jenkins::plugin::group is deprecated and has no effect -- see jenkins::group')
+  }
+  if $create_user {
+    warning('jenkins::plugin::create_user is deprecated and has no effect')
+  }
+
   if ($version != 0) {
     $plugins_host = $update_url ? {
-      undef   => $::jenkins::params::default_plugins_host,
+      undef   => $::jenkins::default_plugins_host,
       default => $update_url,
     }
     $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
@@ -50,7 +63,7 @@ define jenkins::plugin(
   }
   else {
     $plugins_host = $update_url ? {
-      undef   => $::jenkins::params::default_plugins_host,
+      undef   => $::jenkins::default_plugins_host,
       default => $update_url,
     }
     $base_url = "${plugins_host}/latest/"
@@ -66,50 +79,6 @@ define jenkins::plugin(
   $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
   $plugin     = "${name}.${plugin_ext}"
 
-  if (!defined(File[$plugin_dir])) {
-    if (!defined(File[$plugin_parent_dir])) {
-      # ensure ownership only when it's home directory for the new user
-      if $create_user {
-        file { $plugin_parent_dir:
-          ensure => directory,
-          owner  => $username,
-          group  => $group,
-          mode   => '0755',
-        }
-      } else {
-        file { $plugin_parent_dir:
-          ensure => directory,
-        }
-      }
-    }
-
-    file { $plugin_dir:
-      ensure => directory,
-      owner  => $username,
-      group  => $group,
-      mode   => '0755',
-    }
-
-  }
-
-  if $create_user {
-    if (!defined(Group[$group])) {
-      group { $group :
-        ensure  => present,
-        require => Package[$::jenkins::package_name],
-      }
-    }
-    if (!defined(User[$username])) {
-      user { $username :
-        ensure  => present,
-        home    => $plugin_parent_dir,
-        require => Package[$::jenkins::package_name],
-      }
-    }
-    User[$username] -> File[$plugin_dir]
-    Group[$group] -> File[$plugin_dir]
-  }
-
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     if ($jenkins::proxy_host) {
       $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
@@ -123,16 +92,18 @@ define jenkins::plugin(
     }
 
     # Allow plugins that are already installed to be enabled/disabled.
-    file { "${plugin_dir}/${plugin}.disabled":
+    file { "${::jenkins::plugin_dir}/${plugin}.disabled":
       ensure  => $enabled_ensure,
-      owner   => $username,
+      owner   => $::jenkins::user,
+      group   => $::jenkins::group,
       mode    => '0644',
-      require => File["${plugin_dir}/${plugin}"],
+      require => File["${::jenkins::plugin_dir}/${plugin}"],
       notify  => Service['jenkins'],
     }
 
-    file { "${plugin_dir}/${plugin}.pinned":
-      owner   => $username,
+    file { "${::jenkins::plugin_dir}/${plugin}.pinned":
+      owner   => $::jenkins::user,
+      group   => $::jenkins::group,
       require => Archive::Download[$plugin],
     }
 
@@ -144,21 +115,22 @@ define jenkins::plugin(
 
     archive::download { $plugin:
       url              => $download_url,
-      src_target       => $plugin_dir,
+      src_target       => $::jenkins::plugin_dir,
       allow_insecure   => true,
       follow_redirects => true,
       checksum         => $checksum,
       digest_string    => $digest_string,
       digest_type      => $digest_type,
-      user             => $username,
+      user             => $::jenkins::user,
       proxy_server     => $proxy_server,
       notify           => Service['jenkins'],
-      require          => File[$plugin_dir],
+      require          => File[$::jenkins::plugin_dir],
     }
 
-    file { "${plugin_dir}/${plugin}" :
+    file { "${::jenkins::plugin_dir}/${plugin}" :
       require => Archive::Download[$plugin],
-      owner   => $username,
+      owner   => $::jenkins::user,
+      group   => $::jenkins::group,
       mode    => '0644',
     }
   }
@@ -168,11 +140,11 @@ define jenkins::plugin(
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
-    file {"${plugin_parent_dir}/${config_filename}":
+    file {"${::jenkins::localstatedir}/${config_filename}":
       ensure  => present,
       content => $config_content,
-      owner   => $username,
-      group   => $group,
+      owner   => $::jenkins::user,
+      group   => $::jenkins::group,
       mode    => '0644',
       notify  => Service['jenkins']
     }

@@ -44,11 +44,25 @@
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# localstatedir = '/var/lib/jenkins' (default)
+#   base path, in the autoconf sense, for jenkins local data including jobs and
+#   plugins
+#
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
 #
 # slaveagentport = undef (Default)
 #   Integer number of portnumber for the slave agent.
+#
+# manage_user = true (default)
+#
+# user = 'jenkins' (default)
+#`  system user that owns the jenkins master's files
+#
+# manage_group = true (default)
+#
+# group = 'jenkins' (default)
+#`  system group that owns the jenkins master's files
 #
 # Example use
 #
@@ -146,6 +160,10 @@
 #   - Accepts input as array only.
 #   - Only effective if "proxy_host" and "proxy_port" are set.
 #
+# user = 'jenkins' (default)
+#
+# group = 'jenkins' (default)
+#
 #
 class jenkins(
   $version            = $jenkins::params::version,
@@ -173,8 +191,13 @@ class jenkins(
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
+  $localstatedir      = $::jenkins::params::localstatedir,
   $executors          = undef,
   $slaveagentport     = undef,
+  $manage_user        = $::jenkins::params::manage_user,
+  $user               = $::jenkins::params::user,
+  $manage_group       = $::jenkins::params::manage_group,
+  $group              = $::jenkins::params::group,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -184,6 +207,8 @@ class jenkins(
     validate_bool($configure_firewall)
   }
 
+  validate_absolute_path($localstatedir)
+
   if $no_proxy_list {
     validate_array($no_proxy_list)
   }
@@ -191,6 +216,14 @@ class jenkins(
   if $executors {
     validate_integer($executors)
   }
+
+  validate_bool($manage_user)
+  validate_string($user)
+  validate_bool($manage_group)
+  validate_string($group)
+
+  $plugin_dir = "${localstatedir}/plugins"
+  $job_dir = "${localstatedir}/jobs"
 
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
