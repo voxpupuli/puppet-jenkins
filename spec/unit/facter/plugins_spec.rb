@@ -48,20 +48,22 @@ describe Puppet::Jenkins::Facts do
       Puppet::Jenkins::Facts.install
     end
 
-    context 'on Linux' do
-      let(:kernel) { 'Linux' }
+    ['Linux', 'OpenBSD'].each do |kernel|
+      context "on #{kernel}" do
+        let(:kernel) { kernel }
 
-      context 'with no plugins' do
-        it { should be_nil }
-      end
-
-      context 'with plugins' do
-        let(:plugins_str) { 'ant 1.2, git 2.0.1' }
-        before :each do
-          Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
+        context 'with no plugins' do
+          it { should be_nil }
         end
 
-        it { should eql(plugins_str) }
+        context 'with plugins' do
+          let(:plugins_str) { 'ant 1.2, git 2.0.1' }
+          before :each do
+            Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
+          end
+
+          it { should eql(plugins_str) }
+        end
       end
     end
 

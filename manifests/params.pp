@@ -19,21 +19,28 @@ class jenkins::params {
   $package_name          = 'jenkins'
 
   $manage_datadirs = true
-  $localstatedir   = '/var/lib/jenkins'
 
   $manage_user  = true
-  $user         = 'jenkins'
   $manage_group = true
-  $group        = 'jenkins'
 
   case $::osfamily {
     'Debian': {
+      $user             = 'jenkins'
+      $group            = 'jenkins'
+      $jarbin           = 'jar'
+      $javabin          = 'java'
       $libdir           = '/usr/share/jenkins'
+      $localstatedir    = '/var/lib/jenkins'
       $package_provider = 'dpkg'
       $service_provider = undef
     }
     'RedHat': {
+      $user             = 'jenkins'
+      $group            = 'jenkins'
+      $jarbin           = 'jar'
+      $javabin          = 'java'
       $libdir           = '/usr/lib/jenkins'
+      $localstatedir    = '/var/lib/jenkins'
       $package_provider = 'rpm'
       case $::operatingsystem {
         'Fedora': {
@@ -51,8 +58,22 @@ class jenkins::params {
         }
       }
     }
+    'OpenBSD': {
+      $user             = '_jenkins'
+      $group            = '_jenkins'
+      $jarbin           = '/usr/local/jdk-1.8.0/bin/jar'
+      $javabin          = '/usr/local/jdk-1.8.0/bin/java'
+      $libdir           = '/usr/local/share/jenkins'
+      $localstatedir    = '/var/jenkins'
+      $package_provider = 'openbsd'
+    }
     default: {
+      $user             = 'jenkins'
+      $group            = 'jenkins'
+      $jarbin           = 'jar'
+      $javabin          = 'java'
       $libdir           = '/usr/lib/jenkins'
+      $localstatedir    = '/var/lib/jenkins'
       $package_provider = undef
       $service_provider = undef
     }

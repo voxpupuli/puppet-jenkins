@@ -14,13 +14,18 @@ describe Puppet::Jenkins do
     end
 
     context 'when a jenkins user does exist' do
-      let(:home) { '/rspec/jenkins' }
+      ['RedHat', 'OpenBSD'].each do |osfamily|
+        context "On #{osfamily}" do
+          let(:facts) { { :osfamily => osfamily } }
+          let(:home) { '/rspec/jenkins' }
 
-      before :each do
-        File.should_receive(:expand_path).and_return(home)
+          before :each do
+            File.should_receive(:expand_path).and_return(home)
+          end
+
+          it { should eql home }
+        end
       end
-
-      it { should eql home }
     end
   end
 end

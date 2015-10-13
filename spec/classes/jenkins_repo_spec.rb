@@ -32,6 +32,13 @@ describe 'jenkins', :type => :module do
         it { should_not contain_class('jenkins::repo::el') }
       end
 
+      describe 'OpenBSD' do
+        let(:facts) { { :osfamily => 'OpenBSD' } }
+        it { should_not contain_class('jenkins::repo::el') }
+        it { should_not contain_class('jenkins::repo::suse') }
+        it { should_not contain_class('jenkins::repo::debian') }
+      end
+
       describe 'Unknown' do
         let(:facts) { { :osfamily => 'SomethingElse', :operatingsystem => 'RedHat' } }
         it { expect { should raise_error(Puppet::Error) } }

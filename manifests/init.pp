@@ -41,6 +41,10 @@
 # service_ensure = 'running' (default)
 #   Status of the jenkins service.  running, stopped
 #
+# service_flags = undef (default)
+#   Service parameters for the jenkins service on OpenBSD, string, see daemon_flags
+#   in /etc/rc.d/jenkins for an example.
+#
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
@@ -53,6 +57,14 @@
 #
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
+#
+# jarbin = 'jar' (Default system dependent)
+#   short or full path to the Java 'jar' binary. Full path necessary for systems
+#   where it is not in the default PATH, otherwise short path.
+#
+# javabin = 'java' (Default system dependent)
+#   short or full path to the Java 'java' binary. Full path necessary for systems
+#   where it is not in the default PATH, otherwise short path.
 #
 # slaveagentport = undef (Default)
 #   Integer number of portnumber for the slave agent.
@@ -163,11 +175,6 @@
 #   - Accepts input as array only.
 #   - Only effective if "proxy_host" and "proxy_port" are set.
 #
-# user = 'jenkins' (default)
-#
-# group = 'jenkins' (default)
-#
-#
 class jenkins(
   $version            = $jenkins::params::version,
   $lts                = $jenkins::params::lts,
@@ -179,6 +186,7 @@ class jenkins(
   $service_enable     = $jenkins::params::service_enable,
   $service_ensure     = $jenkins::params::service_ensure,
   $service_provider   = $jenkins::params::service_provider,
+  $service_flags      = undef,
   $config_hash        = {},
   $plugin_hash        = {},
   $job_hash           = {},
@@ -198,6 +206,8 @@ class jenkins(
   $manage_datadirs    = $jenkins::params::manage_datadirs,
   $localstatedir      = $::jenkins::params::localstatedir,
   $executors          = undef,
+  $jarbin             = $::jenkins::params::jarbin,
+  $javabin            = $::jenkins::params::javabin,
   $slaveagentport     = undef,
   $manage_user        = $::jenkins::params::manage_user,
   $user               = $::jenkins::params::user,
