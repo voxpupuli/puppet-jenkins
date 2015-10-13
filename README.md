@@ -4,6 +4,27 @@ This is intended to be a re-usable
 [Puppet](http://www.puppetlabs.com/puppet/introduction/) module that you can
 include in your own tree.
 
+# Experimental Types and Providers
+
+_The experimental types/providers are **not for the faint of heart**. If you are
+starting out with this module you probably want to skip directly to [Getting
+Started](#getting-started)._
+
+A family of experimental native types and providers has been added to this
+module, in parallel to the existing classes and defined types, with the goal of
+soliciting feedback.  One of the primary benefits of these new types is not
+requiring manifest changes to manage jenkins with or without "security"
+enabled.  The goal is to eventually replace the functionality of the existing
+classes/defines with the new types.  _Usage feedback (positive and negative),
+bug reports and/or PRs would be greatly welcomed._
+
+**The semantics and API of these types should be considered _unstable_ and
+almost certainly will change based on feedback.  It is currently unclear if
+these types will be considered part of the public API or treated as private to
+the module.**
+
+See [NATIVE_TYPES_AND_PROVIDERS.md](NATIVE_TYPES_AND_PROVIDERS.md)
+
 # Using puppet-jenkins
 
 ## Getting Started
