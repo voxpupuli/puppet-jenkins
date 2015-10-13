@@ -92,7 +92,7 @@ class jenkins::slave (
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
   $ensure                   = 'running',
-  $enable                   = true
+  $enable                   = true,
   $maven_repo_url           = 'http://maven.jenkins-ci.org/content/repositories/releases',
 ) inherits jenkins::params {
 
