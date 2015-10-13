@@ -93,13 +93,17 @@ class jenkins::slave (
   $install_java             = $jenkins::params::install_java,
   $ensure                   = 'running',
   $enable                   = true,
+  $client_url               = undef,
   $maven_repo_url           = 'http://maven.jenkins-ci.org/content/repositories/releases',
 ) inherits jenkins::params {
 
   validate_string($tool_locations)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
-  $client_url = "${maven_repo_url}/org/jenkins-ci/plugins/swarm-client/${version}/"
+  $client_url = $client_url ? {
+    undef   => "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
+    default => $client_url,
+  }
   $quoted_ui_user = shellquote($ui_user)
   $quoted_ui_pass = shellquote($ui_pass)
 
