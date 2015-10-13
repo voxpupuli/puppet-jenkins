@@ -94,7 +94,6 @@ class jenkins::slave (
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
-  $maven_repo_url           = 'http://maven.jenkins-ci.org/content/repositories/releases',
 ) inherits jenkins::params {
 
   validate_string($tool_locations)
