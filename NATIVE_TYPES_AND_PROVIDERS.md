@@ -1,6 +1,29 @@
 Experimental native types and providers
 ==
 
+**The semantics and API of these types should be considered _unstable_ and
+almost certainly will change based on feedback.  It is currently unclear if
+these types will be considered part of the public API or treated as private to
+the module.**
+
+
+#### Table of Contents
+
+1. [Configuration](#configuration)
+    * [`puppetserver`](#puppetserver)
+2. [Types](#types)
+    * [`jenkins_authorization_strategy`](#jenkins_authorization_strategy)
+    * [`jenkins_credentials`](#jenkins_credentials)
+    * [`jenkins_job`](#jenkins_job)
+    * [`jenkins_num_executors`](#jenkins_num_executors)
+    * [`jenkins_security_realm`](#jenkins_security_realm)
+    * [`jenkins_slaveagent_port`](#jenkins_slaveagent_port)
+    * [`jenkins_user`](#jenkins_user)
+3. [TODO](#todo)
+
+
+Configuration
+--
 This family of types and providers that manages jenkins via the `cli` jar take
 common configuration from the parameters of a class named
 `jenkins::cli::config`.  The implementation of this class may be empty.
@@ -45,7 +68,45 @@ export FACTER_jenkins_ssh_private_key=/home/vagrant/insecure_private_key
 puppet resource --modulepath=/tmp/vagrant-puppet/modules-998ea1817cb4dea9c136a57fd18781c5/ jenkins_user --debug --trace
 ```
 
+All providers presently require `java`, the jenkins CLI jar, and the jenkins
+master service to be running.  Most require the presence of
+`puppet_helper.groovy`.  The following puppet code snippet will prepare a node
+sufficiently for all providers to function.
+
+```
+class { '::jenkins':
+  install_java => true,
+  cli          => true,
+}
+include ::jenkins::cli_helper
+```
+
 The ruby gem `retries` is presently required by all providers.
+
+### `puppetserver`
+
+There is a known issue with `puppetserver` being unable to load code from
+modules outside of `./lib/puppet`.  This effects all modules using the
+recommended `PuppetX::<vendor>` namespace.
+
+The work around (only required to use these new native types) is to edit
+`/etc/puppetlabs/puppetserver/conf.d/puppetserver.conf` and add the "cache" dir to the `ruby-load-path` entry.  Eg.,
+
+```
+jruby-puppet: {
+    ruby-load-path: [/opt/puppetlabs/puppet/lib/ruby/vendor_ruby, /opt/puppetlabs/puppet/cache/lib]
+    ...
+}
+```
+
+See [SERVER-973](https://tickets.puppetlabs.com/browse/SERVER-973)
+
+Additionally, the `retries` gem is required.  This may be installed on the master by running:
+
+```
+/opt/puppetlabs/bin/puppetserver gem install retries
+```
+
 
 Types
 --
