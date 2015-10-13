@@ -32,4 +32,14 @@ describe 'jenkins', :type => :module  do
     end
   end
 
+  context 'non default service_flags on OpenBSD' do
+    let(:facts) { { :osfamily => 'OpenBSD', :operatingsystem => 'OpenBSD' } }
+    let(:params) { { :service_flags => 'myflags' } }
+    it { should contain_service('jenkins').with(:flags => 'myflags') }
+  end
+  context 'service_flags set on not OpenBSD OS' do
+    let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+    let(:params) { { :service_flags => 'myflags' } }
+    it { should_not contain_service('jenkins').with(:flags => 'myflags') }
+  end
 end

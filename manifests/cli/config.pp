@@ -56,8 +56,8 @@ class jenkins::cli::config(
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
         # to retrive this information from.
-        owner => 'jenkins',
-        group => 'jenkins',
+        owner => $::jenkins::user,
+        group => $::jenkins::group,
       }
     }
   }
