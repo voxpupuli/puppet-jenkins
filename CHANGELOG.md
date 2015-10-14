@@ -2,6 +2,64 @@
 
 This is a manually kept file, and may not entirely reflect reality
 
+## v1.6.0 - Kato
+
+* [#219](https://github.com/jenkinsci/puppet-jenkins/issues/219) - Plugins are installed each time and restarting service
+* [#314](https://github.com/jenkinsci/puppet-jenkins/pull/314) - Update jenkins-slave.RedHat init.d script work bash < 4.0
+* [#362](https://github.com/jenkinsci/puppet-jenkins/issues/362) - Error on updating existing job
+* [#365](https://github.com/jenkinsci/puppet-jenkins/issues/365) - jenkins user and jenkins_home directory not configurable
+* [#367](https://github.com/jenkinsci/puppet-jenkins/pull/367) - [puppet-jenkins#366] Replace -toolLocations with --toolLocation
+* [#371](https://github.com/jenkinsci/puppet-jenkins/issues/371) - slave:  INFO: Failure authenticating with BASIC 'Jenkins'  401
+* [#372](https://github.com/jenkinsci/puppet-jenkins/issues/372) - Slave: swarm-client requires a cashe directory /home/jenkins-slave/.jenkins/ 
+* [#374](https://github.com/jenkinsci/puppet-jenkins/pull/374) - add single quotes for credentials
+* [#376](https://github.com/jenkinsci/puppet-jenkins/pull/376) - Add template in the jenkins::job
+* [#377](https://github.com/jenkinsci/puppet-jenkins/pull/377) - Making the management of the daemon package optional
+* [#378](https://github.com/jenkinsci/puppet-jenkins/pull/378) - fix rspec-puppet `raise_error` warning
+* [#382](https://github.com/jenkinsci/puppet-jenkins/pull/382) - (RFC) native types and providers
+* [#383](https://github.com/jenkinsci/puppet-jenkins/pull/383) - fix acceptance test path prefix for jenkins-cli.jar
+* [#385](https://github.com/jenkinsci/puppet-jenkins/pull/385) - WIP: completely rework the way imports work for the native types
+* [#386](https://github.com/jenkinsci/puppet-jenkins/pull/386) - set_security() does not save jenkins state
+* [#387](https://github.com/jenkinsci/puppet-jenkins/pull/387) - Avoid referring to class objects directly in the Groovy helper
+* [#388](https://github.com/jenkinsci/puppet-jenkins/pull/388) - Fix relationship for pinned files
+* [#389](https://github.com/jenkinsci/puppet-jenkins/pull/389) - remove seperate resources for handling plugin extension
+* [#390](https://github.com/jenkinsci/puppet-jenkins/pull/390) - Adds Examples for various platforms for Jenkins
+* [#391](https://github.com/jenkinsci/puppet-jenkins/pull/391) - use ensure_packages() to manage the daemon package
+* [#395](https://github.com/jenkinsci/puppet-jenkins/pull/395) - Fix username quoting
+* [#396](https://github.com/jenkinsci/puppet-jenkins/pull/396) - add user/group mgt. + localstatedir params to jenkins class
+* [#398](https://github.com/jenkinsci/puppet-jenkins/pull/398) - client_url is hardcoded in slave.pp
+* [#399](https://github.com/jenkinsci/puppet-jenkins/pull/399) - document types and providers puppetserver known issues
+
+## v1.5.0 - Jennings
+
+* [#227](https://github.com/jenkinsci/puppet-jenkins/pull/227) - Add parameter to set user uuid in jenkins::credentials define
+* [#288](https://github.com/jenkinsci/puppet-jenkins/pull/288) - add source parameter to jenkins::plugin define
+* [#289](https://github.com/jenkinsci/puppet-jenkins/pull/289) - set user on exec resources in jenkins::plugin define
+* [#290](https://github.com/jenkinsci/puppet-jenkins/pull/290) - Support getting external .xml job descriptions
+* [#292](https://github.com/jenkinsci/puppet-jenkins/pull/292) - Feature/puppet helper util
+* [#295](https://github.com/jenkinsci/puppet-jenkins/pull/295) - Use jenkins::cli::exec in security.pp
+* [#296](https://github.com/jenkinsci/puppet-jenkins/pull/296) - should be jenkins::cli::exec
+* [#297](https://github.com/jenkinsci/puppet-jenkins/pull/297) - Add jenkins::users class to declare all users
+* [#298](https://github.com/jenkinsci/puppet-jenkins/pull/298) - Maint/fix resource relationships
+* [#301](https://github.com/jenkinsci/puppet-jenkins/pull/301) - Apt upgrade
+* [#302](https://github.com/jenkinsci/puppet-jenkins/pull/302) - Package name no longer hardcoded
+* [#303](https://github.com/jenkinsci/puppet-jenkins/pull/303) - Puppet helper slaveagentport
+* [#319](https://github.com/jenkinsci/puppet-jenkins/pull/319) - Adding optional description to slave
+* [#320](https://github.com/jenkinsci/puppet-jenkins/issues/320) - Forge Project URL link broken
+* [#323](https://github.com/jenkinsci/puppet-jenkins/pull/323) - Upgraded apt module dependency to support v2
+* [#325](https://github.com/jenkinsci/puppet-jenkins/pull/325) - add puppet ~> 3.8 & ~> 4.1 to travis matrix
+* [#326](https://github.com/jenkinsci/puppet-jenkins/pull/326) - Fixed project_page in metadata.json
+* [#328](https://github.com/jenkinsci/puppet-jenkins/pull/328) - Support configuring a yum proxy server
+* [#331](https://github.com/jenkinsci/puppet-jenkins/pull/331) - Set retries in job configuration to global parameters
+* [#335](https://github.com/jenkinsci/puppet-jenkins/pull/335) - Fix jenkins::plugin with create_user false
+* [#336](https://github.com/jenkinsci/puppet-jenkins/pull/336) - Features/9618 stronger plugin verification
+* [#347](https://github.com/jenkinsci/puppet-jenkins/pull/347) - Fix require paths
+* [#351](https://github.com/jenkinsci/puppet-jenkins/pull/351) - add darwin/osx support to slave class
+* [#352](https://github.com/jenkinsci/puppet-jenkins/pull/352) - Adding cli_ssh_keyfile parameter to specify the location of a private key
+* [#353](https://github.com/jenkinsci/puppet-jenkins/pull/353) - Class cannot find exec in jenkins::cli::reload.
+* [#357](https://github.com/jenkinsci/puppet-jenkins/issues/357) - CLI classes unaware of Jenkins' --prefix
+* [#358](https://github.com/jenkinsci/puppet-jenkins/pull/358) - Added jenkins_prefix function to retrieve configured prefix
+
+
 ## v1.4.0 - Smithers
 
 * [#222](https://github.com/jenkinsci/puppet-jenkins/pull/222) - Add retry to credentials execs
