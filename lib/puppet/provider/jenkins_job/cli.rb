@@ -59,7 +59,13 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
   private_class_method :list_jobs
 
   def self.get_jobs(catalog = nil)
-    clihelper(['get_job_list'], :catalog => catalog)
+    raw = clihelper(['get_job_list'], :catalog => catalog)
+
+    begin
+      JSON.parse(raw)
+    rescue JSON::ParserError
+      fail("unable to parse as JSON: #{raw}")
+    end
   end
   private_class_method :get_jobs
 
