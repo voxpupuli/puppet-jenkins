@@ -1,5 +1,7 @@
 require 'puppet/property/boolean'
 require 'pathname'
+require 'puppet/util/diff'
+require 'puppet/util/checksums'
 
 require 'puppet_x/jenkins/type/cli'
 
@@ -14,7 +16,31 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
   end
 
   newproperty(:config) do
+    include Puppet::Util::Diff
+    include Puppet::Util::Checksums
+
     desc 'XML job configuration string'
+
+    def change_to_s(currentvalue, newvalue)
+      if currentvalue == :absent
+        return "created"
+      elsif newvalue == :absent
+        return "removed"
+      else
+        if Puppet[:show_diff] and resource.parameter(:show_diff)
+          send @resource[:loglevel], "\n" + lcs_diff(currentvalue, newvalue)
+        end
+
+        current_md5 = md5(currentvalue)
+        new_md5 = md5(newvalue)
+        return "content changed '{md5}#{current_md5}' to '{md5}#{new_md5}'"
+      end
+    end
+  end
+
+  newparam(:show_diff, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+    desc 'enable/disable displaying configuration diff'
+    defaultto true
   end
 
   newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
