@@ -875,6 +875,24 @@ class Actions {
     def disabled = Jenkins.getInstance().getJob(name).isDisabled()
     out.println(!disabled)
   }
+
+  /////////////////////////
+  // get_job_list
+  /////////////////////////
+  /*
+   * Return all the configured jobs as a list of maps
+   */
+  void get_job_list() {
+    def jobs = []
+    Jenkins.getInstance().items.each { job ->
+      def name = job.getName()
+      jobs << [name: name, config: job.getConfigFile().getFile().getText('utf-8'), enabled: !job.isDisabled()]
+    }
+
+    def builder = new groovy.json.JsonBuilder(jobs)
+    out.println(builder.toPrettyString())
+  }
+
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
