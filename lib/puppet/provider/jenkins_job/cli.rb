@@ -59,7 +59,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
   private_class_method :list_jobs
 
   def self.get_jobs(catalog = nil)
-    cli(['groovy', 'get_job_list'], :catalog => catalog)
+    clihelper(['get_job_list'], :catalog => catalog)
   end
   private_class_method :get_jobs
 
