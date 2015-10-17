@@ -17,6 +17,8 @@ class jenkins::params {
   $package_cache_dir     = '/var/cache/jenkins_pkgs'
   $package_name          = 'jenkins'
   $localstatedir         = '/var/lib/jenkins'
+  $localstatedir_type    = 'directory'
+  $localstatedir_link    = undef
 
   $manage_user  = true
   $user         = 'jenkins'

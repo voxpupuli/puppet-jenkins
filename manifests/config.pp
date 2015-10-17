@@ -34,8 +34,22 @@ class jenkins::config {
       system => true,
     })
   }
+  # Allow users to set jenkins home to a link in order to allow for NFS or 
+  # other remote file mounts to symlink to the directory. 
+  if $::jenkins::localstatedir_type == 'directory' {
+    ensure_resource('file', $::jenkins::localstatedir, $dir_params)
+  }
+  elsif $::jenkins::localstatedir_type == 'link' {
+    $link_params = {
+      ensure => link,
+      target => $::jenkins::localstatedir_link,
+      owner  => $::jenkins::user,
+      group  => $::jenkins::group,
+      mode   => '0755',
+    }
+    ensure_resource('file',  $::jenkins::localstatedir, $link_params)
+  }
 
-  ensure_resource('file', $::jenkins::localstatedir, $dir_params)
   ensure_resource('file', $::jenkins::plugin_dir, $dir_params)
   ensure_resource('file', $::jenkins::job_dir, $dir_params)
 }
