@@ -48,6 +48,12 @@
 #   base path, in the autoconf sense, for jenkins local data including jobs and
 #   plugins
 #
+# localstatedir_type = 'directory' (default)
+#   Type of file for $localstatedir, can be [directory, link]
+#
+# localstatedir_link = undef (default)
+#   If $localstatedir_type is set to link this must be a valid path to the link on the filesystem.
+#
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
 #
@@ -192,6 +198,8 @@ class jenkins(
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
   $localstatedir      = $::jenkins::params::localstatedir,
+  $localstatedir_type = $::jenkins::params::localstatedir_type,
+  $localstatedir_link = $::jenkins::params::localstatedir_link,
   $executors          = undef,
   $slaveagentport     = undef,
   $manage_user        = $::jenkins::params::manage_user,
@@ -208,6 +216,10 @@ class jenkins(
   }
 
   validate_absolute_path($localstatedir)
+  if $localstatedir_link {
+    validate_absolute_path($localstatedir_link)
+  }
+  validate_re($localstatedir_type, ['^directory$','^link$'])
 
   if $no_proxy_list {
     validate_array($no_proxy_list)
