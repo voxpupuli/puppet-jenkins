@@ -27,7 +27,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
         current_md5 = Digest::MD5.hexdigest(currentvalue)
         new_md5 = Digest::MD5.hexdigest(newvalue)
 
-        Puppet.notice(Puppet::Util::Diff.lcs_diff(currentvalue, newvalue))
+        Puppet.notice(Puppet::Util::Diff.diff(currentvalue, newvalue))
 
         return "content changed '{md5}#{current_md5}' to '{md5}#{new_md5}'"
       end
