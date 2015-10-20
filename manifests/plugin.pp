@@ -29,7 +29,7 @@ define jenkins::plugin(
   $plugin_dir      = undef,
   $username        = undef,
   $group           = undef,
-  $create_user     = true,
+  $create_user     = undef,
 ) {
   include ::jenkins
 
