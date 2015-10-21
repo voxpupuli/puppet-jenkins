@@ -24,18 +24,6 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
     desc 'XML job configuration string'
 
-#    munge do |value|
-#      if value == :absent
-#        value
-#      elsif checksum?(value)
-#        value
-#      else
-#        @actual_content = value
-#        resource.parameter(:checksum).sum(value)
-#      end
-#    end
-
-    # TODO: see if it's possible to log a diff of the change before
     def change_to_s(currentvalue, newvalue)
       if currentvalue == :absent
         return "created"
@@ -51,11 +39,6 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
       end
     end
 
-  end
-
-  newproperty(:show_diff, :boolean => true, :parent => Puppet::Property::Boolean) do
-    desc 'display a diff of the changes to job configuration'
-    defaultto true
   end
 
   newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
