@@ -22,8 +22,6 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
     include Puppet::Util::Diff
     include Puppet::Util::Checksums
 
-#    attr_reader :actual_content
-
     desc 'XML job configuration string'
 
 #    munge do |value|
@@ -53,14 +51,6 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
       end
     end
 
-    def content
-      self.should
-    end
-
-    def insync?(is)
-      result = super
-      if ! result and Puppet[:show_diff] and resource.show_diff?
-    end
   end
 
   newproperty(:show_diff, :boolean => true, :parent => Puppet::Property::Boolean) do
