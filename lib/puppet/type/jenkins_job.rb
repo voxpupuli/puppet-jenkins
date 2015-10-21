@@ -14,8 +14,28 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
     isnamevar
   end
 
+  newproperty(:checksum) do
+    desc 'The checksum of the XML job configuration'
+  end
+
   newproperty(:config) do
+    include Puppet::Util::Diff
+    include Puppet::Util::Checksums
+
+#    attr_reader :actual_content
+
     desc 'XML job configuration string'
+
+#    munge do |value|
+#      if value == :absent
+#        value
+#      elsif checksum?(value)
+#        value
+#      else
+#        @actual_content = value
+#        resource.parameter(:checksum).sum(value)
+#      end
+#    end
 
     # TODO: see if it's possible to log a diff of the change before
     def change_to_s(currentvalue, newvalue)
@@ -27,11 +47,25 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
         current_md5 = Digest::MD5.hexdigest(currentvalue)
         new_md5 = Digest::MD5.hexdigest(newvalue)
 
-        Puppet.notice(Puppet::Util::Diff.diff(currentvalue, newvalue))
+        Puppet.notice(lcs_diff(currentvalue, newvalue))
 
         return "content changed '{md5}#{current_md5}' to '{md5}#{new_md5}'"
       end
     end
+
+    def content
+      self.should
+    end
+
+    def insync?(is)
+      result = super
+      if ! result and Puppet[:show_diff] and resource.show_diff?
+    end
+  end
+
+  newproperty(:show_diff, :boolean => true, :parent => Puppet::Property::Boolean) do
+    desc 'display a diff of the changes to job configuration'
+    defaultto true
   end
 
   newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
