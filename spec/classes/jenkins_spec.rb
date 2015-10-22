@@ -65,6 +65,17 @@ describe 'jenkins', :type => :module do
       it { expect { should raise_error(Puppet::Error) } }
     end
 
+    describe 'manage_localstatedir =>' do
+      context 'false' do
+        let(:params) {{ :manage_localstatedir => false }}
+        it { should_not contain_file('/var/lib/jenkins') }
+      end
+
+      context '(default)' do
+        it { should contain_file('/var/lib/jenkins') }
+      end
+    end
+
     describe 'localstatedir =>' do
       context 'undef' do
         it { should contain_file('/var/lib/jenkins') }
