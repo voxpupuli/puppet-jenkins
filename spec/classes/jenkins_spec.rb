@@ -65,10 +65,17 @@ describe 'jenkins', :type => :module do
       it { expect { should raise_error(Puppet::Error) } }
     end
 
-    describe 'manage_localstatedir =>' do
+    describe 'manage_datadirs =>' do
       context 'false' do
-        let(:params) {{ :manage_localstatedir => false }}
+        let(:params) {{ :manage_datadirs => false }}
         it { should_not contain_file('/var/lib/jenkins') }
+        it { should_not contain_file('/var/lib/jenkins/plugins') }
+        it { should_not contain_file('/var/lib/jenkins/jobs') }
+      end
+
+      context '"false"' do
+        let(:params) {{ :manage_datadirs => "false" }}
+        it { should raise_error(Puppet::Error, /is not a boolean/) }
       end
 
       context '(default)' do
@@ -88,6 +95,38 @@ describe 'jenkins', :type => :module do
 
       context './tmp' do
         let(:params) {{ :localstatedir => './tmp' }}
+        it { should raise_error(Puppet::Error, /is not an absolute path/) }
+      end
+    end
+
+    describe 'plugin_dir =>' do
+      context '(default)' do
+        it { should contain_file('/var/lib/jenkins/plugins') }
+      end
+
+      context '/var/lib/jenkins/pd' do
+        let(:params) {{ :plugin_dir => '/var/lib/jenkins/pd' }}
+        it { should contain_file('/var/lib/jenkins/pd') }
+      end
+
+      context './pd' do
+        let(:params) {{ :plugin_dir => './pd' }}
+        it { should raise_error(Puppet::Error, /is not an absolute path/) }
+      end
+    end
+
+    describe 'job_dir =>' do
+      context '(default)' do
+        it { should contain_file('/var/lib/jenkins/jobs') }
+      end
+
+      context '/var/lib/jenkins/jd' do
+        let(:params) {{ :job_dir => '/var/lib/jenkins/jd' }}
+        it { should contain_file('/var/lib/jenkins/jd') }
+      end
+
+      context './jd' do
+        let(:params) {{ :job_dir => './jd' }}
         it { should raise_error(Puppet::Error, /is not an absolute path/) }
       end
     end

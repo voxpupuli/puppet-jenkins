@@ -44,12 +44,18 @@
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
-# manage_localstatedir = true (default)
-#   true if this module should manage the localstatedir
+# manage_datadirs = true (default)
+#   true if this module should manage the local state dir, plugins dir and jobs dir
 #
 # localstatedir = '/var/lib/jenkins' (default)
 #   base path, in the autoconf sense, for jenkins local data including jobs and
 #   plugins
+#
+# plugin_dir = '/var/lib/jenkins/plugins' (default)
+#   absolute path for jenkins plugins directory
+#
+# job_dir = '/var/lib/jenkins/jobs' (default)
+#   absolute path for jenkins jobs directory
 #
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
@@ -169,39 +175,41 @@
 #
 #
 class jenkins(
-  $version              = $jenkins::params::version,
-  $lts                  = $jenkins::params::lts,
-  $repo                 = $jenkins::params::repo,
-  $package_name         = $jenkins::params::package_name,
-  $direct_download      = false,
-  $package_cache_dir    = $jenkins::params::package_cache_dir,
-  $package_provider     = $jenkins::params::package_provider,
-  $service_enable       = $jenkins::params::service_enable,
-  $service_ensure       = $jenkins::params::service_ensure,
-  $config_hash          = {},
-  $plugin_hash          = {},
-  $job_hash             = {},
-  $user_hash            = {},
-  $configure_firewall   = undef,
-  $install_java         = $jenkins::params::install_java,
-  $repo_proxy           = undef,
-  $proxy_host           = undef,
-  $proxy_port           = undef,
-  $no_proxy_list        = undef,
-  $cli                  = undef,
-  $cli_ssh_keyfile      = undef,
-  $cli_tries            = $jenkins::params::cli_tries,
-  $cli_try_sleep        = $jenkins::params::cli_try_sleep,
-  $port                 = $jenkins::params::port,
-  $libdir               = $jenkins::params::libdir,
-  $manage_localstatedir = $jenkins::params::manage_localstatedir,
-  $localstatedir        = $::jenkins::params::localstatedir,
-  $executors            = undef,
-  $slaveagentport       = undef,
-  $manage_user          = $::jenkins::params::manage_user,
-  $user                 = $::jenkins::params::user,
-  $manage_group         = $::jenkins::params::manage_group,
-  $group                = $::jenkins::params::group,
+  $version            = $jenkins::params::version,
+  $lts                = $jenkins::params::lts,
+  $repo               = $jenkins::params::repo,
+  $package_name       = $jenkins::params::package_name,
+  $direct_download    = false,
+  $package_cache_dir  = $jenkins::params::package_cache_dir,
+  $package_provider   = $jenkins::params::package_provider,
+  $service_enable     = $jenkins::params::service_enable,
+  $service_ensure     = $jenkins::params::service_ensure,
+  $config_hash        = {},
+  $plugin_hash        = {},
+  $job_hash           = {},
+  $user_hash          = {},
+  $configure_firewall = undef,
+  $install_java       = $jenkins::params::install_java,
+  $repo_proxy         = undef,
+  $proxy_host         = undef,
+  $proxy_port         = undef,
+  $no_proxy_list      = undef,
+  $cli                = undef,
+  $cli_ssh_keyfile    = undef,
+  $cli_tries          = $jenkins::params::cli_tries,
+  $cli_try_sleep      = $jenkins::params::cli_try_sleep,
+  $port               = $jenkins::params::port,
+  $libdir             = $jenkins::params::libdir,
+  $manage_datadirs    = $jenkins::params::manage_datadirs,
+  $localstatedir      = $::jenkins::params::localstatedir,
+  $plugin_dir         = $::jenkins::params::plugin_dir,
+  $job_dir            = $::jenkins::params::job_dir,
+  $executors          = undef,
+  $slaveagentport     = undef,
+  $manage_user        = $::jenkins::params::manage_user,
+  $user               = $::jenkins::params::user,
+  $manage_group       = $::jenkins::params::manage_group,
+  $group              = $::jenkins::params::group,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
@@ -211,8 +219,10 @@ class jenkins(
     validate_bool($configure_firewall)
   }
 
-  validate_bool($manage_localstatedir)
+  validate_bool($manage_datadirs)
   validate_absolute_path($localstatedir)
+  validate_absolute_path($plugin_dir)
+  validate_absolute_path($job_dir)
 
   if $no_proxy_list {
     validate_array($no_proxy_list)
@@ -226,9 +236,6 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
-
-  $plugin_dir = "${localstatedir}/plugins"
-  $job_dir = "${localstatedir}/jobs"
 
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
