@@ -35,9 +35,6 @@ class jenkins::config {
     })
   }
 
-  if $::jenkins::manage_localstatedir {
-  }
-
   if $::jenkins::manage_datadirs {
     ensure_resource('file', $::jenkins::localstatedir, $dir_params)
     ensure_resource('file', $::jenkins::plugin_dir, $dir_params)
