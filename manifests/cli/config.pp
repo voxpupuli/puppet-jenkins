@@ -24,8 +24,10 @@ class jenkins::cli::config(
   validate_string($ssh_private_key_content)
 
   # required by PuppetX::Jenkins::Provider::Clihelper base
-  package { 'retries':
-    provider => 'gem',
+  if ! defined(Package['retries']) {
+    package { 'retries':
+      provider => 'gem',
+    }
   }
 
   if $ssh_private_key and $ssh_private_key_content {
