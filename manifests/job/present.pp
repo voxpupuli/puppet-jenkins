@@ -87,7 +87,7 @@ define jenkins::job::present(
   if ($enabled == 1) {
     exec { "jenkins enable-job ${jobname}":
       command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '$<disabled>true'",
+      onlyif  => "cat \"${config_path}\" | grep '^<disabled>true'",
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],
@@ -96,7 +96,7 @@ define jenkins::job::present(
   } else {
     exec { "jenkins disable-job ${jobname}":
       command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '$<disabled>false'",
+      onlyif  => "cat \"${config_path}\" | grep '^<disabled>false'",
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],
