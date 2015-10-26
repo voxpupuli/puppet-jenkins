@@ -1,6 +1,6 @@
 # Define: jenkins::job::create_tmp_file
 #
-define jenkins::job::create_tmp_file ( config, ) {
+define jenkins::job::create_tmp_file ( $config, ) {
 
   #
   # When a Jenkins job is imported via the cli, Jenkins will
