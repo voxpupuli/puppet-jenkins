@@ -25,5 +25,6 @@
     { "name": "darin/zypprepo", "version_requirement": ">= 1.0.1 < 2.0.0" },
     { "name": "nanliu/staging", "version_requirement": ">= 1.0.0 < 2.0.0" },
     { "name": "camptocamp/archive", "version_requirement": ">= 0.8.0" }
+    { "name": "logilab/xmldiff", "version_requirement": ">=0.6.10" },
   ]
 }
