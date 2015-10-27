@@ -20,7 +20,7 @@ define jenkins::job::create_tmp_file ( $config, ) {
   $d = regsubst($c, '&apos;', '\'', 'MG')
 
   # Temp file to use as stdin for Jenkins CLI executable
-  file { $tmp_config_path:
+  file { "/tmp/${title}-config.xml":
     content => $d,
     require => Exec['jenkins-cli'],
   }
