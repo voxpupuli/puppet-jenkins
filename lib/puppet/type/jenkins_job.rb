@@ -1,6 +1,6 @@
-require 'digest/md5'
 require 'puppet/property/boolean'
 require 'puppet/util/diff'
+require 'puppet/util/checksums'
 
 require 'puppet_x/jenkins/type/cli'
 
@@ -26,13 +26,12 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
       elsif newvalue == :absent
         return "removed"
       else
-        current_md5 = Digest::MD5.hexdigest(currentvalue)
-        new_md5 = Digest::MD5.hexdigest(newvalue)
-
         if Puppet[:show_diff] and resource.parameter(:show_diff)
           send @resource[:loglevel], "\n" + lcs_diff(currentvalue, newvalue)
         end
 
+        current_md5 = md5(currentvalue)
+        new_md5 = md5(newvalue)
         return "content changed '{md5}#{current_md5}' to '{md5}#{new_md5}'"
       end
     end
