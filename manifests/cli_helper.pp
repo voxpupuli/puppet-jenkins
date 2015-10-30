@@ -2,9 +2,7 @@
 #
 # A helper script for creating resources via the Jenkins cli
 #
-class jenkins::cli_helper (
-  $ssh_keyfile = undef,
-){
+class jenkins::cli_helper {
   include ::jenkins
   include ::jenkins::cli
 
@@ -26,11 +24,13 @@ class jenkins::cli_helper (
     require => Class['jenkins::cli'],
   }
 
-  if $ssh_keyfile {
-    $auth_arg = "-i ${ssh_keyfile}"
+  # Provide the -i flag if specified by the user.
+  if $::jenkins::cli_ssh_keyfile {
+    $auth_arg = "-i ${::jenkins::cli_ssh_keyfile}"
   } else {
     $auth_arg = undef
   }
+
   $helper_cmd = join(
     delete_undef_values([
       '/usr/bin/java',
