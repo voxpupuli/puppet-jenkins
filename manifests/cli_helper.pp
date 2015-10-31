@@ -2,7 +2,16 @@
 #
 # A helper script for creating resources via the Jenkins cli
 #
-class jenkins::cli_helper {
+# Parameters:
+#
+# ssh_keyfile = undef
+#   Defaults to the value of $::jenkins::cli_ssh_keyfile. This parameter is
+#   deprecated, please set $::jenkins::cli_ssh_keyfile instead of setting this
+#   directly
+#
+class jenkins::cli_helper (
+  $ssh_keyfile = $::jenkins::cli_ssh_keyfile,
+) {
   include ::jenkins
   include ::jenkins::cli
 
@@ -14,9 +23,9 @@ class jenkins::cli_helper {
   $cli_jar = $::jenkins::cli::jar
   $port = jenkins_port()
   $prefix = jenkins_prefix()
-
   $helper_groovy = "${libdir}/puppet_helper.groovy"
-  file {$helper_groovy:
+
+  file { $helper_groovy:
     source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
     owner   => $::jenkins::user,
     group   => $::jenkins::group,
@@ -25,8 +34,8 @@ class jenkins::cli_helper {
   }
 
   # Provide the -i flag if specified by the user.
-  if $::jenkins::cli_ssh_keyfile {
-    $auth_arg = "-i ${::jenkins::cli_ssh_keyfile}"
+  if $ssh_keyfile {
+    $auth_arg = "-i ${ssh_keyfile}"
   } else {
     $auth_arg = undef
   }
