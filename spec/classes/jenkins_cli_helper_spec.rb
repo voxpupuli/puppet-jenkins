@@ -22,5 +22,15 @@ describe 'jenkins::cli_helper', :type => :class do
       :mode   => '0444',
     )
   end
+
+  context 'should accept the ssh_keyfile parameter' do
+    let(:params) do
+      {
+        :ssh_keyfile => '/tmp/rspec'
+      }
+    end
+
+    it { should contain_class 'jenkins::cli_helper' }
+  end
 end
 
