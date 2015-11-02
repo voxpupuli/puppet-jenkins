@@ -34,6 +34,11 @@ define jenkins::job::present(
   $cli_tries          = $::jenkins::cli_tries
   $cli_try_sleep   = $::jenkins::cli_try_sleep
 
+  package { 'xmldiff':
+    ensure   => 'installed',
+    provider => 'pip',
+  }
+
   Exec {
     logoutput   => false,
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
@@ -41,9 +46,26 @@ define jenkins::job::present(
     try_sleep   => $cli_try_sleep,
   }
 
+  #
+  # When a Jenkins job is imported via the cli, Jenkins will
+  # re-format the xml file based on its own internal rules.
+  # In order to make job management idempotent, we need to
+  # apply that formatting before the import, so we can do a diff
+  # on any pre-existing job to determine if an update is needed.
+  #
+  # Jenkins likes to change single quotes to double quotes
+  $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
+                'version="1.0" encoding="UTF-8"')
+  # Change empty tags into self-closing tags
+  $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
+  # Change &quot; to " since Jenkins is weird like that
+  $c = regsubst($b, '&quot;', '"', 'MG')
+  # Change &apos; to ' since Jenkins is weird like that
+  $d = regsubst($c, '&apos;', '\'', 'MG')
+
   # Temp file to use as stdin for Jenkins CLI executable
   file { $tmp_config_path:
-    content => $config,
+    content => $d,
     require => Exec['jenkins-cli'],
   }
 
@@ -62,7 +84,7 @@ define jenkins::job::present(
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
     unless  => "xmldiff ${config_path} ${tmp_config_path}",
-    require => File[$tmp_config_path],
+    require => [ File[$tmp_config_path], Package['xmldiff'] ],
     notify  => Exec['reload-jenkins'],
   }
 
