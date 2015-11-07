@@ -207,6 +207,19 @@ describe 'jenkins::plugin' do
     end
   end # pinned file extension name
 
+
+  context 'with an updated timeout' do
+    let(:timeout) { 1337 }
+    let(:title) { 'foo' }
+    let(:params) do
+      {
+        :timeout => timeout,
+      }
+    end
+
+    it { should contain_archive__download('foo.hpi').with_timeout(timeout) }
+  end
+
   describe 'deprecated params' do
     [
       'plugin_dir',
