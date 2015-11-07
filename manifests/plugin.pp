@@ -25,6 +25,7 @@ define jenkins::plugin(
   $source          = undef,
   $digest_string   = '',
   $digest_type     = 'sha1',
+  $timeout         = 120,
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
@@ -125,6 +126,7 @@ define jenkins::plugin(
       proxy_server     => $proxy_server,
       notify           => Service['jenkins'],
       require          => File[$::jenkins::plugin_dir],
+      timeout          => $timeout,
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}" :
