@@ -108,6 +108,9 @@ If you need to peg a specific version, simply specify that as a string, i.e.:
   }
 ```
 
+Note that plugin will timeout if it takes longer than 120 seconds to download.
+You can increase this by specifying a timeout value, i.e: `timeout => 240`.
+
 #### Verifying
 
 This module will download the jenkins modules over HTTP, without SSL.
