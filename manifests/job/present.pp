@@ -34,6 +34,11 @@ define jenkins::job::present(
   $cli_tries          = $::jenkins::cli_tries
   $cli_try_sleep   = $::jenkins::cli_try_sleep
 
+  package { 'xmldiff':
+    ensure   => 'installed',
+    provider => 'pip',
+  }
+
   Exec {
     logoutput   => false,
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
@@ -78,8 +83,8 @@ define jenkins::job::present(
   exec { "jenkins update-job ${jobname}":
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
-    unless  => "diff -b -q ${config_path} ${tmp_config_path}",
-    require => File[$tmp_config_path],
+    unless  => "xmldiff ${config_path} ${tmp_config_path}",
+    require => [ File[$tmp_config_path], Package['xmldiff'] ],
     notify  => Exec['reload-jenkins'],
   }
 
