@@ -17,9 +17,12 @@ define jenkins::job::present(
   $config,
   $jobname  = $title,
   $enabled  = 1,
+  $difftool = '/usr/bin/diff -b -q',
 ){
   include jenkins::cli
   include jenkins::cli::reload
+
+  validate_string($difftool)
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
@@ -78,7 +81,7 @@ define jenkins::job::present(
   exec { "jenkins update-job ${jobname}":
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
-    unless  => "diff -b -q ${config_path} ${tmp_config_path}",
+    unless  => "${difftool} ${config_path} ${tmp_config_path}",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
   }
