@@ -93,7 +93,6 @@ class jenkins::slave (
   $labels                   = undef,
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
-  $java_memory              = 256,
   $manage_client_jar        = true,
   $ensure                   = 'running',
   $enable                   = true,
