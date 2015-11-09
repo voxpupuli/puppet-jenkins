@@ -25,12 +25,13 @@
 #     choose 'absent' to ensure the job is removed
 #
 define jenkins::job(
-  $config,
+  $config   = undef,
   $source   = undef,
   $template = undef,
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
+  $difftool = 'diff -b -q',
 ){
   include ::jenkins::cli
 
@@ -43,6 +44,9 @@ define jenkins::job(
       jobname => $jobname,
     }
   } else {
+    if $config == undef and $source == undef and $template == undef {
+      fail('You should at least specify one of the $config, $source or $template param')
+    }
     if $source {
       validate_string($source)
       $realconfig = file($source)
@@ -56,9 +60,10 @@ define jenkins::job(
     }
 
     jenkins::job::present { $title:
-      config  => $realconfig,
-      jobname => $jobname,
-      enabled => $enabled,
+      config   => $realconfig,
+      jobname  => $jobname,
+      enabled  => $enabled,
+      difftool => $difftool,
     }
   }
 
