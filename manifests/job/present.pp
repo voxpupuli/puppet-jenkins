@@ -7,7 +7,7 @@
 #   config
 #     the content of the jenkins job config file (template based)
 #
-#   tmp_config_path
+#   temp_config_path
 #     the jenkins job config file (file on disk)
 #
 #   jobname = $title
@@ -18,7 +18,7 @@
 #
 define jenkins::job::present(
   $config = undef,
-  $tmp_config_path = undef,
+  $temp_config_path = undef,
   $jobname  = $title,
   $enabled  = 1,
   $difftool = '/usr/bin/diff -b -q',
@@ -28,8 +28,8 @@ define jenkins::job::present(
 
   validate_string($difftool)
 
-  if $tmp_config_path != undef and $config != undef {
-    fail('You cannot set both \$tmp_config_path AND $config param, only one is required')
+  if $temp_config_path != undef and $config != undef {
+    fail('You cannot set both \$temp_config_path AND $config param, only one is required')
   }
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
@@ -37,9 +37,9 @@ define jenkins::job::present(
   }
 
   $jenkins_cli        = $jenkins::cli::cmd
-  if $tmp_config_path == undef {
+  if $temp_config_path == undef {
     if $config == undef {
-      fail('If you don\'t give a tmp_config_path you need to set the config param')
+      fail('If you don\'t give a temp_config_path you need to set the config param')
     }
     $tmp_config_path    = "/tmp/${jobname}-config.xml"
     #
@@ -64,6 +64,8 @@ define jenkins::job::present(
       content => $d,
       require => Exec['jenkins-cli'],
     }
+  } else {
+    $tmp_config_path = $temp_config_path
   }
 
   $job_dir            = "${::jenkins::job_dir}/${jobname}"
