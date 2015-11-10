@@ -191,7 +191,7 @@ describe 'jenkins::plugin' do
         should contain_file('/var/lib/jenkins/plugins/foo.hpi.pinned').with(
           :owner => 'jenkins',
           :group => 'jenkins',
-        ).that_requires('Archive::Download[foo.hpi]')
+        ).that_requires('Wget::Fetch[foo.hpi]')
       end
     end
 
@@ -202,7 +202,7 @@ describe 'jenkins::plugin' do
         should contain_file('/var/lib/jenkins/plugins/foo.jpi.pinned').with(
           :owner => 'jenkins',
           :group => 'jenkins',
-        ).that_requires('Archive::Download[foo.jpi]')
+        ).that_requires('Wget::Fetch[foo.jpi]')
       end
     end
   end # pinned file extension name
