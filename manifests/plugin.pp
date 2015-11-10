@@ -125,7 +125,7 @@ define jenkins::plugin(
       mode               => undef,
       nocheckcertificate => false,
       no_cookies         => false,
-      notify              => Service['jenkins'],
+      notify             => Service['jenkins'],
       password           => undef,
       redownload         => false,
       source             => $download_url,
