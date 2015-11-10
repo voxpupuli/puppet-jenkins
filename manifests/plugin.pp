@@ -33,6 +33,7 @@ define jenkins::plugin(
   $create_user     = undef,
 ) {
   include ::jenkins
+  include ::wget
 
   validate_bool($manage_config)
   validate_bool($enabled)
@@ -105,7 +106,7 @@ define jenkins::plugin(
     file { "${::jenkins::plugin_dir}/${plugin}.pinned":
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      require => Archive::Download[$plugin],
+      require => Wget::Fetch[$plugin],
     }
 
     if $digest_string == '' {
@@ -113,24 +114,28 @@ define jenkins::plugin(
     } else {
       $checksum = true
     }
-
-    archive::download { $plugin:
-      url              => $download_url,
-      src_target       => $::jenkins::plugin_dir,
-      allow_insecure   => true,
-      follow_redirects => true,
-      checksum         => $checksum,
-      digest_string    => $digest_string,
-      digest_type      => $digest_type,
-      user             => $::jenkins::user,
-      proxy_server     => $proxy_server,
-      notify           => Service['jenkins'],
-      require          => File[$::jenkins::plugin_dir],
-      timeout          => $timeout,
+    wget::fetch { $plugin:
+      backup             => false,
+      cache_dir          => undef,
+      cache_file         => undef,
+      destination        => "${::jenkins::plugin_dir}/${plugin}",
+      execuser           => undef,
+      flags              => undef,
+      headers            => undef,
+      mode               => undef,
+      nocheckcertificate => false,
+      no_cookies         => false,
+      notify              => Service['jenkins'],
+      password           => undef,
+      redownload         => false,
+      source             => $download_url,
+      source_hash        => undef,
+      timeout            => $timeout,
+      user               => undef,
+      verbose            => true,
     }
-
     file { "${::jenkins::plugin_dir}/${plugin}" :
-      require => Archive::Download[$plugin],
+      require => Wget::Fetch[$plugin],
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',

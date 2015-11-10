@@ -175,7 +175,7 @@ The dependencies for this module currently are:
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
 * [staging module](https://forge.puppetlabs.com/nanliu/staging)
-* [archive module](https://forge.puppetlabs.com/camptocamp/archive)
+* [wget module](https://forge.puppetlabs.com/maestrodev/wget)
 
 ### Depending on Jenkins
 
