@@ -119,6 +119,7 @@ define jenkins::plugin(
       src_target       => $::jenkins::plugin_dir,
       allow_insecure   => true,
       follow_redirects => true,
+      verbose          => false,
       checksum         => $checksum,
       digest_string    => $digest_string,
       digest_type      => $digest_type,
