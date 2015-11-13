@@ -198,6 +198,8 @@ class jenkins(
   $user               = $::jenkins::params::user,
   $manage_group       = $::jenkins::params::manage_group,
   $group              = $::jenkins::params::group,
+  $java_memory        = $::jenkins::params::java_memory,
+  $java_args          = $::jenkins::params::java_args,
 ) inherits jenkins::params {
 
   validate_bool($lts, $install_java, $repo)
