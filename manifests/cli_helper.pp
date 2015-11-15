@@ -40,6 +40,10 @@ class jenkins::cli_helper (
     $auth_arg = undef
   }
 
+  if $ssh_keyfile != $::jenkins::cli_ssh_keyfile {
+    info("Using jenkins::cli_helper($ssh_keyfile) is deprecated and will be removed in the next major version of this module")
+  }
+
   $helper_cmd = join(
     delete_undef_values([
       '/usr/bin/java',
