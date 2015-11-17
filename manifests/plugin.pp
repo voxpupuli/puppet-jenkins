@@ -59,7 +59,7 @@ define jenkins::plugin(
       undef   => $::jenkins::default_plugins_host,
       default => $update_url,
     }
-    $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
+    $base_url = "${plugins_host}/plugins/${name}/${version}/"
     $search   = "${name} ${version}(,|$)"
   }
   else {
