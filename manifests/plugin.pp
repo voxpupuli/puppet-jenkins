@@ -118,7 +118,7 @@ define jenkins::plugin(
       ensure  => $pinned_ensure,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      require => Archive::Download[$plugin],
+      require => Archive["${::jenkins::plugin_dir}/${plugin}"],
     }
 
     if $digest_string == '' {
@@ -127,20 +127,13 @@ define jenkins::plugin(
       $checksum = true
     }
 
-    archive::download { $plugin:
-      url              => $download_url,
-      src_target       => $::jenkins::plugin_dir,
-      allow_insecure   => true,
-      follow_redirects => true,
-      verbose          => false,
-      checksum         => $checksum,
-      digest_string    => $digest_string,
-      digest_type      => $digest_type,
-      user             => $::jenkins::user,
-      proxy_server     => $proxy_server,
-      notify           => Service['jenkins'],
-      require          => File[$::jenkins::plugin_dir],
-      timeout          => $timeout,
+    archive { "${::jenkins::plugin_dir}/${plugin}":
+      source          => $download_url,
+      checksum_verify => $checksum,
+      checksum        => $digest_string,
+      checksum_type   => $digest_type,
+      notify          => Service['jenkins'],
+      require         => File[$::jenkins::plugin_dir],
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}" :
