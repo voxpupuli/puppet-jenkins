@@ -132,6 +132,7 @@ define jenkins::plugin(
       checksum_verify => $checksum,
       checksum        => $digest_string,
       checksum_type   => $digest_type,
+      proxy_server    => $proxy_server,
       notify          => Service['jenkins'],
       require         => File[$::jenkins::plugin_dir],
     }

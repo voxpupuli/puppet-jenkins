@@ -105,6 +105,22 @@ describe 'jenkins::plugin' do
     })}
   end
 
+  describe 'with proxy' do
+    let(:pre_condition) { [
+      'class jenkins {
+        $proxy_host = "proxy.company.com"
+        $proxy_port = 8080
+      }',
+      'include jenkins'
+    ]}
+
+    it do
+      should contain_archive__download('myplug.hpi').with(
+        :proxy_server => "proxy.company.com:8080",
+      )
+    end
+  end
+
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'should retrieve the plugin' do
