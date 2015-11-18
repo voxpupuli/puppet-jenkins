@@ -115,7 +115,7 @@ describe 'jenkins::plugin' do
     ]}
 
     it do
-      should contain_archive__download('myplug.hpi').with(
+      should contain_archive('myplug.hpi').with(
         :proxy_server => "proxy.company.com:8080",
       )
     end
