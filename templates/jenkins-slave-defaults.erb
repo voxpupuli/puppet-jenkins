@@ -46,7 +46,12 @@ LABELS="<%= @labels -%>"
 
 EXECUTORS=<%= @executors -%>
 
+<% if @slave_name %>
 CLIENT_NAME="<%= @slave_name -%>"
+<% else %>
+CLIENT_NAME="<%= @fqdn -%>"
+<% end %>
+
 
 FSROOT="<%= @slave_home -%>"
 
