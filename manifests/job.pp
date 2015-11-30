@@ -24,6 +24,9 @@
 #   ensure = 'present'
 #     choose 'absent' to ensure the job is removed
 #
+#   difftool = '/usr/bin/diff -b-q'
+#     Provide a command to execute to compare Jenkins job files
+#
 define jenkins::job(
   $config,
   $source   = undef,
@@ -31,8 +34,11 @@ define jenkins::job(
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
+  $difftool = '/usr/bin/diff -b -q',
 ){
   include ::jenkins::cli
+
+  validate_string($difftool)
 
   Class['jenkins::cli'] ->
     Jenkins::Job[$title] ->
@@ -56,9 +62,10 @@ define jenkins::job(
     }
 
     jenkins::job::present { $title:
-      config  => $realconfig,
-      jobname => $jobname,
-      enabled => $enabled,
+      config   => $realconfig,
+      jobname  => $jobname,
+      enabled  => $enabled,
+      difftool => $difftool,
     }
   }
 
