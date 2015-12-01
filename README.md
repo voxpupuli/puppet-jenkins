@@ -146,7 +146,7 @@ parameters will have no effect on the plugin retrieval URL.
 If you need to create a configuration file to go with a plugin you can do this by setting `manage_config => true` *and*
 setting `config_filename => mypluginconfig.xml` *and* setting `config_content => 'string containing xml content of the file'`.
 Note that the filename is relative to `jenkins::localstatedir`, and that the content must be a string,
-although you can embed end of line characters (\n and \r). This is useful if you want to set values in the plugin configuration.
+although you can embed end of line characters if needed. This feature is useful if you want to set values in the plugin configuration.
 
 ```puppet
   jenkins::plugin { 'myplugin':
@@ -221,7 +221,7 @@ the following `require` statement:
 
 ### Plugin Hash
 
-Parameters described in [Installing Jenkins plugins](#installing-jenkins-plugins) can also be used in a plugin hash defined in Hiera.
+Parameters described in [Installing Jenkins plugins](#installing-jenkins-plugins) can also be used in a plugin hash defined in Hiera, for example:
 
 ```yaml
 jenkins::plugin_hash:
