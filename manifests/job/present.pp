@@ -73,6 +73,7 @@ define jenkins::job::present(
   exec { "jenkins create-job ${jobname}":
     command => "${cat_config} | ${create_job}",
     creates => [$config_path, "${job_dir}/builds"],
+    unless  => "${jenkins_cli} get-job \"${jobname}\"",
     require => File[$tmp_config_path],
   }
 
