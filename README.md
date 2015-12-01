@@ -141,6 +141,25 @@ hosted in the typical Jenkins' plugin directory structure.
 Note that that when `source` is specified, the `version` and `plugin_url`
 parameters will have no effect on the plugin retrieval URL.
 
+#### Configuration file
+
+If you need to create a configuration file to go with a plugin you can do this by setting `manage_config => true` *and*
+setting `config_filename => mypluginconfig.xml` *and* setting `config_content => 'string containing xml content of the file'`.
+Note that the filename is relative to `jenkins::localstatedir`, and that the content must be a string,
+although you can embed end of line characters (\n and \r). This is useful if you want to set values in the plugin configuration.
+
+```puppet
+  jenkins::plugin { 'myplugin':
+    version         => 2.2.2,
+    manage_config   => true,
+    config_filename => mypluginconfig.xml,
+    config_content  => "<?xml version='1.0' encoding='UTF-8'?><somexml></somexml>",
+  }
+```
+
+By default this will enforce the contents of the config file every time puppet runs. If instead you want to only enforce the
+content if the file does not exist, then also set `config_replace => false`.
+
 #### Plugin dependencies
 Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
 
@@ -190,7 +209,7 @@ the following `require` statement:
 
 
 ### Advanced features
-1. Plugin Hash - jenkins::plugins
+1. [Plugin Hash](#plugin-hash) - jenkins::plugin
 2. Config Hash - jennkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
@@ -199,6 +218,21 @@ the following `require` statement:
 6. Jenkins Users
 7. Credentials
 8. Simple security model configuration
+
+### Plugin Hash
+
+Parameters described in [Installing Jenkins plugins](#installing-jenkins-plugins) can also be used in a plugin hash defined in Hiera.
+
+```yaml
+jenkins::plugin_hash:
+  artifactdeployer: {}
+  credentials: {}
+  git:
+    version: 2.4.0
+  git-client:
+    version: 1.19.0
+  javadoc: {}
+```
 
 ### API-based Resources and Settings (Users, Credentials, security)
 

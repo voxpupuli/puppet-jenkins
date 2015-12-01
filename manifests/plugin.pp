@@ -20,6 +20,7 @@ define jenkins::plugin(
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
+  $config_replace  = true,
   $update_url      = undef,
   $enabled         = true,
   $source          = undef,
@@ -146,6 +147,7 @@ define jenkins::plugin(
     file {"${::jenkins::localstatedir}/${config_filename}":
       ensure  => present,
       content => $config_content,
+      replace => $config_replace,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
