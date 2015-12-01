@@ -13,7 +13,7 @@ module Puppet
       # @return [NilClass]
       def self.install
         Facter.add(:jenkins_plugins) do
-          confine :kernel => [ "Linux", "OpenBSD" ]
+          confine :kernel => [ 'Linux', 'OpenBSD' ]
           setcode do
             Puppet::Jenkins::Facts.plugins_str
           end
