@@ -77,7 +77,7 @@ class jenkins::params {
       $jarbin           = '/usr/local/jdk-1.8.0/bin/jar'
       $javabin          = '/usr/local/jdk-1.8.0/bin/java'
       $libdir           = '/usr/local/share/jenkins'
-      $localstatedir    = '/var/jenkins'
+      $localstatedir    = '/var/jenkins/.jenkins'
       $package_provider = 'openbsd'
     }
     default: {
