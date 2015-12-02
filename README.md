@@ -143,32 +143,42 @@ parameters will have no effect on the plugin retrieval URL.
 
 #### Configuration file
 
-If you need to create a configuration file to go with a plugin you can do this by setting `manage_config => true` *and*
-setting `config_filename => mypluginconfig.xml` *and* setting `config_content => 'string containing xml content of the file'`.
-Note that the filename is relative to `jenkins::localstatedir`, and that the content must be a string,
-although you can embed end of line characters if needed. This feature is useful if you want to set values in the plugin configuration.
+If you need to create a configuration file to go with a plugin you can do this
+by setting `manage_config => true` *and* setting
+`config_filename => mypluginconfig.xml` *and* setting
+`config_content => 'string containing xml content of the file'`. Note that the
+filename is relative to `jenkins::localstatedir`, and that the content must be
+a string, although you can embed end of line characters if needed. This
+feature is useful if you want to set values in the plugin configuration.
 
 ```puppet
   jenkins::plugin { 'myplugin':
     version         => 2.2.2,
     manage_config   => true,
     config_filename => mypluginconfig.xml,
-    config_content  => "<?xml version='1.0' encoding='UTF-8'?><somexml></somexml>",
+    config_content  => "<?xml version='1.0' encoding='UTF-8'?><myxml></myxml>",
   }
 ```
 
-By default this will enforce the contents of the config file every time puppet runs. If instead you want to only enforce the
-content if the file does not exist, then also set `config_replace => false`.
+By default this will enforce the contents of the config file every time puppet
+runs. If instead you want to only enforce the content if the file does not
+exist, then also set `config_replace => false`.
 
 #### Plugin dependencies
-Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
+Dependencies are not automatically installed. You need to manually determine
+the plugin dependencies and include those as well. The Jenkins wiki is a good
+place to do this. For example: The Git plugin page is at
+https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
 
 ### Slaves
-You can automatically add slaves to jenkins, and have them auto register themselves.  Most options are actually optional, as nodes will autodiscover the master, and connect.
+You can automatically add slaves to jenkins, and have them auto register
+themselves.  Most options are actually optional, as nodes will autodiscover
+the master, and connect.
 
 Full documention for the slave code is in jenkins::slave.
 
-It requires the swarm plugin on the master & the class jenkins::slave on the slaves, as below:
+It requires the swarm plugin on the master & the class jenkins::slave on the
+slaves, as below:
 
 ```puppet
     node /jenkins-slave.*/ {
@@ -221,7 +231,9 @@ the following `require` statement:
 
 ### Plugin Hash
 
-Parameters described in [Installing Jenkins plugins](#installing-jenkins-plugins) can also be used in a plugin hash defined in Hiera, for example:
+Parameters described in
+[Installing Jenkins plugins](#installing-jenkins-plugins) can also be used in
+a plugin hash defined in Hiera, for example:
 
 ```yaml
 jenkins::plugin_hash:
