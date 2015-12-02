@@ -36,11 +36,13 @@ define jenkins::plugin(
   include ::jenkins
 
   validate_bool($manage_config)
+  validate_bool($config_replace)
   validate_bool($enabled)
   # TODO: validate_str($update_url)
   validate_string($source)
   validate_string($digest_string)
   validate_string($digest_type)
+  
 
   if $plugin_dir {
     warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
@@ -143,7 +145,7 @@ define jenkins::plugin(
     if $config_filename == undef or $config_content == undef {
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
-
+    validate_string($config_filename, $config_content)
     file {"${::jenkins::localstatedir}/${config_filename}":
       ensure  => present,
       content => $config_content,
