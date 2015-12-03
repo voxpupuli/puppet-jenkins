@@ -59,7 +59,9 @@
 #
 # [*manage_client_jar*]
 #   Should the class download the client jar file from the web? Defaults to true.
-
+# 
+# [*proxy_host*]
+#   If set define environment "http_proxy=$proxy_host" for get_swarm_client exec 
 # === Examples
 #
 #  class { 'jenkins::slave':
@@ -97,6 +99,7 @@ class jenkins::slave (
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
+  $proxy_host               = undef,
 ) inherits jenkins::params {
 
   validate_string($tool_locations)
@@ -218,13 +221,19 @@ class jenkins::slave (
     notify  => Service['jenkins-slave'],
   }
 
+
+  if ($proxy_host) {
+    $env="http_proxy=$proxy_host"
+  }
+
   if ($manage_client_jar) {
     exec { 'get_swarm_client':
-      command => $fetch_command,
-      path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-      user    => $slave_user,
-      creates => "${slave_home}/${client_jar}",
-      cwd     => $slave_home,
+      command     => $fetch_command,
+      path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+      user        => $slave_user,
+      creates     => "${slave_home}/${client_jar}",
+      cwd         => $slave_home,
+      environment => $env,
       #refreshonly  => true,
     ## needs to be fixed if you create another version..
     }
