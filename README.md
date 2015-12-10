@@ -220,12 +220,17 @@ credentials.
 ### CLI Helper
 
 The CLI helper assumes unauthenticated access unless configured otherwise.
-You can configure jenkins::cli_helper to use an SSH key on the managed system:
+You can configure jenkins::cli_helper to use an SSH key on the managed system
+by passing the keyfile path as a class parameter:
 ```puppet
-  class {'jenkins::cli_helper':
-    ssh_keyfile => '/path/to/id_rsa',
+  class {'jenkins':
+    cli_ssh_keyfile => '/path/to/id_rsa',
   }
 ```
+
+... or via hiera:
+
+    jenkins::cli_ssh_keyfile: "/path/to/id_rsa"
 
 There's an open bug in Jenkins (JENKINS-22346) that causes authentication to
 fail when a key is used but authentication is disabled. Until the bug is fixed,
