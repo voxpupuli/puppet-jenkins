@@ -33,7 +33,7 @@ module Puppet
           manifest = plugins[plugin]
           buffer << "#{plugin} #{manifest[:plugin_version]}"
         end
-        return buffer.join(', ')
+        return buffer.join(', ') unless buffer.length == 0
       end
     end
   end
