@@ -1,0 +1,112 @@
+# Define: jenkins::windows::job::present
+#
+#   Creates or updates a jenkins build job
+#
+# Parameters:
+#
+#   config
+#     the content of the jenkins job config file (required)
+#
+#   jobname = $title
+#     the name of the jenkins job
+#
+#   enabled = 1
+#     if the job should be enabled
+#
+define jenkins::windows::job::present(
+  $config,
+  $jobname  = $title,
+  $enabled  = 1,
+){
+  include jenkins::cli
+  include jenkins::cli::reload
+
+  if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
+    fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
+  }
+
+  $jenkins_cli        = $jenkins::cli::cmd
+  $tmp_config_path    = "C:/windows/temp/${jobname}-config.xml"
+  $job_dir            = "${jenkins::params::libdir}/jobs/${jobname}"
+  $config_path        = "${job_dir}/config.xml"
+
+  # Bring variables from Class['::jenkins'] into local scope.
+  $cli_tries          = $::jenkins::cli_tries
+  $cli_try_sleep   = $::jenkins::cli_try_sleep
+
+  Exec {
+    logoutput   => false,
+    path        => "${jenkins::params::libdir}",
+    tries       => $cli_tries,
+    try_sleep   => $cli_try_sleep,
+  }
+
+  #
+  # When a Jenkins job is imported via the cli, Jenkins will
+  # re-format the xml file based on its own internal rules.
+  # In order to make job management idempotent, we need to
+  # apply that formatting before the import, so we can do a diff
+  # on any pre-existing job to determine if an update is needed.
+  #
+  # Jenkins likes to change single quotes to double quotes
+  $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
+                'version="1.0" encoding="UTF-8"')
+  # Change empty tags into self-closing tags
+  $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
+  # Change &quot; to " since Jenkins is weird like that
+  $c = regsubst($b, '&quot;', '"', 'MG')
+  # Change &apos; to ' since Jenkins is weird like that
+  $d = regsubst($c, '&apos;', '\'', 'MG')
+
+  # Temp file to use as stdin for Jenkins CLI executable
+  file { $tmp_config_path:
+    content => $d,
+    require => Exec['jenkins-cli'],
+    source_permissions => ignore,
+  }
+  
+  # Use Jenkins CLI to create the job
+  $cat_config = "get-content \"${tmp_config_path}\""
+  $create_job = "${jenkins_cli} create-job \"${jobname}\""
+  exec { "jenkins create-job ${jobname}":
+    command => "${cat_config} | & ${jenkins_cli} create-job ${jobname}",
+    creates => "${config_path}",
+    require => File[$tmp_config_path],
+    provider  => 'powershell',
+  }
+
+  # Use Jenkins CLI to update the job if it already exists
+  $update_job = "${jenkins_cli} update-job ${jobname}"
+  exec { "jenkins update-job ${jobname}":
+    command  => "${cat_config} | & ${update_job}",
+    onlyif   => "test-path ${config_path}",
+    unless   => "& diff \"${config_path}\" ${tmp_config_path}",
+    require  => File[$tmp_config_path],
+    notify   => Exec['reload-jenkins'],
+    provider => 'powershell',
+  }
+
+  # Enable or disable the job (if necessary)
+  if ($enabled == 1) {
+    exec { "jenkins enable-job ${jobname}":
+      command => "& ${jenkins_cli} enable-job ${jobname}",
+      provider  => 'powershell',
+      onlyif  => "if ((get-content \"${config_path}\" | out-string) -inotlike \"<disabled>true\") {exit 0} else {exit 1}",
+      require => [
+        Exec["jenkins create-job ${jobname}"],
+        Exec["jenkins update-job ${jobname}"],
+      ],
+    }
+  } else {
+    exec { "jenkins disable-job ${jobname}":
+      command => "& ${jenkins_cli} disable-job \"${jobname}\"",
+      provider  => 'powershell',
+      onlyif  => "if ((get-content \"${config_path}\" | out-string) -inotlike \"<disabled>false\") {exit 0} else {exit 1}",
+      require => [
+        Exec["jenkins create-job ${jobname}"],
+        Exec["jenkins update-job ${jobname}"],
+      ],
+    }
+  }
+
+}

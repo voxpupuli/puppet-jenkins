@@ -8,11 +8,18 @@ class jenkins::config {
 
   create_resources( 'jenkins::sysconfig', $::jenkins::config_hash )
 
-  $dir_params = {
-    ensure => directory,
-    owner  => $::jenkins::user,
-    group  => $::jenkins::group,
-    mode   => '0755',
+  if ($::operatingsystem == 'windows')  {
+    $dir_params = {
+      ensure => directory,
+      source_permissions => ignore,
+    }
+  } else {
+    $dir_params = {
+      ensure => directory,
+      owner  => $::jenkins::user,
+      group  => $::jenkins::group,
+      mode   => '0755',
+    }
   }
 
   # ensure_resource is used to try to maintain backwards compatiblity with

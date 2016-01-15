@@ -6,22 +6,34 @@ class jenkins::cli_helper {
   include ::jenkins
   include ::jenkins::cli
 
+  $bin_path = $osfamily ? {
+    'Windows'          => '',
+    default            => '/usr/bin/',
+  }
   Class['jenkins::cli'] ->
     Class['jenkins::cli_helper'] ->
       Anchor['jenkins::end']
 
   $libdir = $::jenkins::libdir
-  $cli_jar = $::jenkins::cli::jar
+  $cli_jar = "${::jenkins::cli::jar}"
   $port = jenkins_port()
   $prefix = jenkins_prefix()
 
   $helper_groovy = "${libdir}/puppet_helper.groovy"
-  file {$helper_groovy:
-    source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
-    owner   => $::jenkins::user,
-    group   => $::jenkins::group,
-    mode    => '0444',
-    require => Class['jenkins::cli'],
+  if ($::operatingsystem == 'windows')  {
+    file {$helper_groovy:
+      source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
+      require => Class['jenkins::cli'],
+	  source_permissions => ignore,
+    }
+  } else {
+    file {$helper_groovy:
+      source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
+      owner   => $::jenkins::user,
+      group   => $::jenkins::group,
+      mode    => '0444',
+      require => Class['jenkins::cli'],
+    }
   }
 
   # Provide the -i flag if specified by the user.
@@ -33,11 +45,11 @@ class jenkins::cli_helper {
 
   $helper_cmd = join(
     delete_undef_values([
-      '/usr/bin/java',
-      "-jar ${::jenkins::cli::jar}",
+      "${bin_path}java",
+      "-jar '${::jenkins::cli::jar}'",
       "-s http://127.0.0.1:${port}${prefix}",
       $auth_arg,
-      "groovy ${helper_groovy}",
+      "groovy '${helper_groovy}'",
     ]),
     ' '
   )

@@ -30,6 +30,11 @@ define jenkins::credentials (
   Class['jenkins::cli_helper'] ->
     Jenkins::Credentials[$title] ->
       Anchor['jenkins::end']
+  if ($::operatingsystem == 'windows')  {
+    $unless = "${::jenkins::cli_helper::helper_cmd}"
+  } else {
+    $unless = "\$HELPER_CMD"
+  }
 
   case $ensure {
     'present': {
@@ -46,7 +51,7 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
+        unless  => "${unless} credential_info ${title} | grep ${title}",
       }
     }
     'absent': {

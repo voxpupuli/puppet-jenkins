@@ -36,14 +36,28 @@ define jenkins::cli::exec(
   } else {
     $environment_run = undef
   }
+  if ($::osfamily == 'Windows') {
 
   exec { $title:
-    provider    => 'shell',
-    command     => $run,
-    environment => $environment_run,
-    unless      => $unless,
-    tries       => $::jenkins::cli_tries,
-    try_sleep   => $::jenkins::cli_try_sleep,
-    notify      => Class['jenkins::cli::reload'],
+      provider    => 'powershell',
+      command     => $run,
+      environment => $environment_run,
+      unless      => $unless,
+      tries       => $::jenkins::cli_tries,
+      try_sleep   => $::jenkins::cli_try_sleep,
+      notify      => Class['jenkins::cli::reload'],
+      logoutput   => true,
+    }
+  }
+  else {
+    exec { $title:
+      provider    => 'shell',
+      command     => $run,
+      environment => $environment_run,
+      unless      => $unless,
+      tries       => $::jenkins::cli_tries,
+      try_sleep   => $::jenkins::cli_try_sleep,
+      notify      => Class['jenkins::cli::reload'],
+    }
   }
 }

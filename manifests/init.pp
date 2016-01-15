@@ -123,7 +123,7 @@
 #    - This default changed in v1.0 to be undef.
 #
 #
-# install_java = true (default)
+# install_java = true (default for non-windows, set to false for windows)
 #   - use puppetlabs-java module to install the correct version of a JDK.
 #   - Jenkins requires a JRE
 #
@@ -239,7 +239,7 @@ class jenkins(
     $jenkins_package_class = 'jenkins::direct_download'
   } else {
     $jenkins_package_class = 'jenkins::package'
-    if $repo {
+     if ($repo) and ($::osfamily != 'Windows') {
       $repo_ = true
       include jenkins::repo
     } else {
@@ -265,6 +265,8 @@ class jenkins(
   if defined('::firewall') {
     if $configure_firewall == undef {
       fail('The firewall module is included in your manifests, please configure $configure_firewall in the jenkins module')
+    } elsif ($configure_firewall == true) and ($::osfamily == 'Windows') {
+      fail('Configure firewall does not currently work on windows systems, set $configure_firewall to false')
     } elsif $configure_firewall {
       include jenkins::firewall
     }

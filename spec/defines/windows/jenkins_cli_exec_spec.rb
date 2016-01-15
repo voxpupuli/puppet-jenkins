@@ -5,12 +5,12 @@ describe 'jenkins::cli::exec', :type => :define do
 
   let(:facts) do
     {
-      :osfamily        => 'RedHat',
-      :operatingsystem => 'RedHat', # require by puppetlabs/java
+      :osfamily        => 'Windows',
+      :operatingsystem => 'Windows', # require by puppetlabs/java
     }
   end
 
-  let(:helper_cmd) { "/usr/bin/java -jar '/usr/lib/jenkins/jenkins-cli.jar' -s http://127.0.0.1:8080 groovy '/usr/lib/jenkins/puppet_helper.groovy'" }
+  let(:helper_cmd) { "java -jar 'C:/Program Files (x86)/Jenkins/jenkins-cli.jar' -s http://127.0.0.1:8080 groovy 'C:/Program Files (x86)/Jenkins/puppet_helper.groovy'" }
 
   describe 'relationships' do
     it do

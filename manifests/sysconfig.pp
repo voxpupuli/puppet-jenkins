@@ -6,6 +6,7 @@ define jenkins::sysconfig ( $value ) {
     'RedHat' => '/etc/sysconfig',
     'Suse'   => '/etc/sysconfig',
     'Debian' => '/etc/default',
+  'Windows' => $::jenkins::params::libdir,
     default  => fail( "Unsupported OSFamily ${::osfamily}" )
   }
 

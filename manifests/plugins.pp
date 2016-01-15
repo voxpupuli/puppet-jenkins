@@ -6,6 +6,12 @@ class jenkins::plugins {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  create_resources('jenkins::plugin',$jenkins::plugin_hash)
+   $plugin_dir      = "${jenkins::params::libdir}/plugins"
 
+  if $::osfamily == 'windows' {
+    
+    create_resources('jenkins::windows::plugin',$jenkins::plugin_hash)
+  } else{
+    create_resources('jenkins::plugin',$jenkins::plugin_hash)
+  }
 }

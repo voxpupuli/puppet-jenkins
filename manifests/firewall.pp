@@ -8,6 +8,9 @@ class jenkins::firewall {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  if ($::operatingsystem == 'windows')  {
+    fail("Firewall module does not support windows. Set firewall to false")
+  }
   firewall { '500 allow Jenkins inbound traffic':
     action => 'accept',
     state  => 'NEW',

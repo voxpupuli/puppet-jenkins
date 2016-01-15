@@ -9,11 +9,23 @@ class jenkins::cli::reload {
   }
 
   # Reload all Jenkins config from disk (only when notified)
-  exec { 'reload-jenkins':
-    command     => "${::jenkins::cli::cmd} reload-configuration",
-    path        => ['/bin', '/usr/bin'],
-    tries       => 10,
-    try_sleep   => 2,
-    refreshonly => true,
+  if ($::osfamily == 'Windows') {
+    exec { 'reload-jenkins':
+      command     => "& ${::jenkins::cli::cmd} reload-configuration",
+      path        => 'C:/',
+      tries       => 10,
+      try_sleep   => 2,
+      refreshonly => true,
+      provider    => powershell,
+    }
+  }
+  else {
+    exec { 'reload-jenkins':
+      command     => "${::jenkins::cli::cmd} reload-configuration",
+      path        => ['/bin', '/usr/bin'],
+      tries       => 10,
+      try_sleep   => 2,
+      refreshonly => true,
+    }
   }
 }
