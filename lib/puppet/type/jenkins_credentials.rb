@@ -30,7 +30,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   newproperty(:impl) do
     desc 'name of the java class implimenting the credential'
     defaultto :UsernamePasswordCredentialsImpl
-    newvalues(:UsernamePasswordCredentialsImpl, :BasicSSHUserPrivateKey)
+    newvalues(:UsernamePasswordCredentialsImpl, :BasicSSHUserPrivateKey, :FileCredentialsImpl)
   end
 
   newproperty(:description) do
