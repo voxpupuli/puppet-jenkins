@@ -19,7 +19,7 @@ PuppetLint::RakeTask.new(:lint) do |l|
   l.disable_checks = %w(80chars class_inherits_from_params_class)
   l.ignore_paths = exclude_paths
   l.fail_on_warnings = true
-  l.log_format = "FUK %{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
+  l.log_format = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
 end
 
 PuppetSyntax.exclude_paths = exclude_paths
