@@ -27,14 +27,31 @@ class jenkins::params {
     'Debian': {
       $libdir           = '/usr/share/jenkins'
       $package_provider = 'dpkg'
+      $service_provider = undef
     }
     'RedHat': {
       $libdir           = '/usr/lib/jenkins'
       $package_provider = 'rpm'
+      case $::operatingsystem {
+        'Fedora': {
+          if versioncmp($::operatingsystemrelease, '19') >= 0 or $::operatingsystemrelease == 'Rawhide' {
+            $service_provider = 'redhat'
+          }
+        }
+        /^(RedHat|CentOS|Scientific|OracleLinux)$/: {
+          if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+            $service_provider = 'redhat'
+          }
+        }
+        default: {
+          $service_provider = undef
+        }
+      }
     }
     default: {
       $libdir           = '/usr/lib/jenkins'
       $package_provider = false
+      $service_provider = undef
     }
   }
 }
