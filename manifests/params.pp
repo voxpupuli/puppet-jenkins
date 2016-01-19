@@ -16,7 +16,11 @@ class jenkins::params {
   $cli_try_sleep         = 10
   $package_cache_dir     = '/var/cache/jenkins_pkgs'
   $package_name          = 'jenkins'
-  $localstatedir         = '/var/lib/jenkins'
+
+  $manage_datadirs = true
+  $localstatedir   = '/var/lib/jenkins'
+  $plugin_dir      = "${localstatedir}/plugins"
+  $job_dir         = "${localstatedir}/jobs"
 
   $manage_user  = true
   $user         = 'jenkins'

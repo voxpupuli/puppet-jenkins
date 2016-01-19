@@ -44,9 +44,18 @@
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# manage_datadirs = true (default)
+#   true if this module should manage the local state dir, plugins dir and jobs dir
+#
 # localstatedir = '/var/lib/jenkins' (default)
 #   base path, in the autoconf sense, for jenkins local data including jobs and
 #   plugins
+#
+# plugin_dir = '/var/lib/jenkins/plugins' (default)
+#   absolute path for jenkins plugins directory
+#
+# job_dir = '/var/lib/jenkins/jobs' (default)
+#   absolute path for jenkins jobs directory
 #
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
@@ -191,7 +200,10 @@ class jenkins(
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
+  $manage_datadirs    = $jenkins::params::manage_datadirs,
   $localstatedir      = $::jenkins::params::localstatedir,
+  $plugin_dir         = $::jenkins::params::plugin_dir,
+  $job_dir            = $::jenkins::params::job_dir,
   $executors          = undef,
   $slaveagentport     = undef,
   $manage_user        = $::jenkins::params::manage_user,
@@ -207,7 +219,10 @@ class jenkins(
     validate_bool($configure_firewall)
   }
 
+  validate_bool($manage_datadirs)
   validate_absolute_path($localstatedir)
+  validate_absolute_path($plugin_dir)
+  validate_absolute_path($job_dir)
 
   if $no_proxy_list {
     validate_array($no_proxy_list)
@@ -221,9 +236,6 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
-
-  $plugin_dir = "${localstatedir}/plugins"
-  $job_dir = "${localstatedir}/jobs"
 
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
