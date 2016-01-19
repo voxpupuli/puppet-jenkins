@@ -28,7 +28,8 @@ describe Puppet::Type.type(:jenkins_credentials) do
         :UsernamePasswordCredentialsImpl,
         [
           :UsernamePasswordCredentialsImpl,
-          :BasicSSHUserPrivateKey
+          :BasicSSHUserPrivateKey,
+          :FileCredentialsImpl
         ]
     end
 
