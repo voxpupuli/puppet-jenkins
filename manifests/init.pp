@@ -48,6 +48,9 @@
 #   base path, in the autoconf sense, for jenkins local data including jobs and
 #   plugins
 #
+# manage_home = false (default)
+#   manage $localstatedir
+#
 # executors = undef (Default)
 #   Integer number of executors on the Jenkin's master.
 #
@@ -191,7 +194,8 @@ class jenkins(
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
-  $localstatedir      = $::jenkins::params::localstatedir,
+  $localstatedir      = $jenkins::params::localstatedir,
+  $manage_statedir    = $jenkins::params::manage_statedir,
   $executors          = undef,
   $slaveagentport     = undef,
   $manage_user        = $::jenkins::params::manage_user,
@@ -208,6 +212,7 @@ class jenkins(
   }
 
   validate_absolute_path($localstatedir)
+  validate_bool($manage_statedir)
 
   if $no_proxy_list {
     validate_array($no_proxy_list)

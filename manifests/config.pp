@@ -34,8 +34,10 @@ class jenkins::config {
       system => true,
     })
   }
-
-  ensure_resource('file', $::jenkins::localstatedir, $dir_params)
-  ensure_resource('file', $::jenkins::plugin_dir, $dir_params)
-  ensure_resource('file', $::jenkins::job_dir, $dir_params)
+  
+  if $manage_statedir {
+    ensure_resource('file', $::jenkins::localstatedir, $dir_params)
+    ensure_resource('file', $::jenkins::plugin_dir, $dir_params)
+    ensure_resource('file', $::jenkins::job_dir, $dir_params)
+  }
 }
