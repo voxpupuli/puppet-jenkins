@@ -184,6 +184,7 @@ class jenkins(
   $package_provider   = $jenkins::params::package_provider,
   $service_enable     = $jenkins::params::service_enable,
   $service_ensure     = $jenkins::params::service_ensure,
+  $service_provider   = $jenkins::params::service_provider,
   $config_hash        = {},
   $plugin_hash        = {},
   $job_hash           = {},
