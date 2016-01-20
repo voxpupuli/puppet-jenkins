@@ -15,6 +15,8 @@ class jenkins::cli_helper (
   include ::jenkins
   include ::jenkins::cli
 
+  if $ssh_keyfile { validate_absolute_path($ssh_keyfile) }
+
   Class['jenkins::cli'] ->
     Class['jenkins::cli_helper'] ->
       Anchor['jenkins::end']

@@ -1,6 +1,9 @@
 # Class: jenkins::sysconfig
 #
-define jenkins::sysconfig ( $value ) {
+define jenkins::sysconfig(
+  $value,
+) {
+  validate_string($value)
 
   $path = $::osfamily ? {
     'RedHat' => '/etc/sysconfig',

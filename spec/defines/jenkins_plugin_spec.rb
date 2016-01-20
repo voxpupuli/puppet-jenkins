@@ -160,7 +160,7 @@ describe 'jenkins::plugin' do
       include_examples 'should download from $source url'
 
       context 'and $version is set' do
-        before { params[:version] = 42 }
+        before { params[:version] = '42' }
 
         include_examples 'should download from $source url'
       end

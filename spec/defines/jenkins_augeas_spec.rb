@@ -13,7 +13,7 @@ describe 'jenkins::augeas' do
   # |---'`---'`---'`---|``   '    |---'`---^`    `---^` ' '
   # |              `---'          |
 
-  [false,'false'].each do |pval|
+  [false].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
       let (:params) {{ :config_filename => 'foo.xml', :changes => ['set foo bar'], :plugin => pval }}
       it do
@@ -29,7 +29,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  [true, 'true'].each do |pval|
+  [true].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
       let (:params) {{ :config_filename => 'foo.xml', :changes => ['set foo bar'], :plugin => pval }}
       it do
@@ -48,7 +48,7 @@ describe 'jenkins::augeas' do
   describe "with plugin param wrong type" do
     let (:params) {{:config_filename => 'foo.xml', :changes => [], :plugin => ['foo','bar'] }}
     it do
-      is_expected.to raise_error(Puppet::Error, /is not a string/i)
+      is_expected.to raise_error(Puppet::Error, /must be bool or string/i)
     end
   end
 
@@ -148,7 +148,7 @@ describe 'jenkins::augeas' do
       :onlyif          => false,
     }}
     it do
-      is_expected.to raise_error(Puppet::Error, /is not an array/i)
+      is_expected.to raise_error(Puppet::Error, /must be string or array/i)
     end
   end
 
@@ -180,7 +180,7 @@ describe 'jenkins::augeas' do
       :config_filename => 'foo.xml',
       :changes         => 13,
     }}
-    it { is_expected.to raise_error(Puppet::Error, /is not an array/i) }
+    it { is_expected.to raise_error(Puppet::Error, /must be string or array/i) }
   end
 
 
@@ -192,9 +192,7 @@ describe 'jenkins::augeas' do
   #                                        |
   {
     true    => 'safe-restart-jenkins',
-    'true'  => 'safe-restart-jenkins',
     false   => 'reload-jenkins',
-    'false' => 'reload-jenkins',
   }.each do |pval,expected|
     describe "with param restart set to '#{pval}' (#{pval.class})" do
       let (:params) {{
