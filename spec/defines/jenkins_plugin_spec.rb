@@ -116,7 +116,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        :proxy_server => "proxy.company.com:8080",
+        :proxy_server => "http://proxy.company.com:8080",
       )
     end
   end
