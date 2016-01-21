@@ -103,6 +103,7 @@ define jenkins::plugin(
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}.pinned":
+      ensure  => file,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       require => Archive::Download[$plugin],
