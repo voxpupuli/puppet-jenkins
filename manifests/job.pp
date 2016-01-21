@@ -24,6 +24,9 @@
 #   ensure = 'present'
 #     choose 'absent' to ensure the job is removed
 #
+#   folder
+#     name of the folder where the job should be added to (using the Folder plugin)
+#
 #   difftool = '/usr/bin/diff -b-q'
 #     Provide a command to execute to compare Jenkins job files
 #
@@ -34,11 +37,16 @@ define jenkins::job(
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
+  $folder   = undef,
   $difftool = '/usr/bin/diff -b -q',
 ){
   include ::jenkins::cli
 
-  validate_string($difftool)
+  validate_string($difftool, $folder)
+
+  if $folder and (!defined(Jenkins::Plugin['cloudbees-folder'])) {
+    fail('cloudbees-folder plugin is required for the \'folder\' parameter.')
+  }
 
   Class['jenkins::cli'] ->
     Jenkins::Job[$title] ->
@@ -65,6 +73,7 @@ define jenkins::job(
       config   => $realconfig,
       jobname  => $jobname,
       enabled  => $enabled,
+      folder   => $folder,
       difftool => $difftool,
     }
   }

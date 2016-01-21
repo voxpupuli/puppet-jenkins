@@ -159,4 +159,19 @@ eos
     it { should raise_error(Puppet::Error, /Must pass config/) }
   end
 
+  describe 'with folder, regular config and no cloudbees-folder plugin' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :ensure => 'present', :folder => 'MyFolder', :config => quotes }}
+    it { should raise_error(Puppet::Error, /cloudbees-folder plugin is required/) }
+  end
+
+  describe 'with folder, regular config and cloudbees-folder plugin' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :ensure => 'present', :folder => 'MyFolder', :config => quotes }}
+    let(:pre_condition) { "jenkins::plugin{'cloudbees-folder':}" }
+    it { should contain_archive__download('cloudbees-folder.hpi') }
+    it { should contain_file('/tmp/MyFolder-myjob-config.xml') }
+  end
+
+
 end

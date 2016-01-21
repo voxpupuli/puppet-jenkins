@@ -13,24 +13,39 @@
 #   enabled = 1
 #     if the job should be enabled
 #
+#   folder = undef
+#     if the job should reside in a folder (using the Folder plugin)
+#
 define jenkins::job::present(
   $config,
   $jobname  = $title,
   $enabled  = 1,
+  $folder   = undef,
   $difftool = '/usr/bin/diff -b -q',
 ){
   include jenkins::cli
   include jenkins::cli::reload
 
-  validate_string($difftool)
+  validate_string($difftool, $folder)
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
   }
 
   $jenkins_cli        = $jenkins::cli::cmd
-  $tmp_config_path    = "/tmp/${jobname}-config.xml"
-  $job_dir            = "${::jenkins::job_dir}/${jobname}"
+
+  # Add support for Folders plugin
+  if $folder {
+    $realjobname     = "${folder}/${jobname}"
+    $job_dir         = "${::jenkins::job_dir}/${folder}/jobs/${jobname}"
+    $tmp_config_path = "/tmp/${folder}-${jobname}-config.xml"
+  }
+  else {
+    $realjobname     = $jobname
+    $job_dir         = "${::jenkins::job_dir}/${jobname}"
+    $tmp_config_path = "/tmp/${jobname}-config.xml"
+  }
+
   $config_path        = "${job_dir}/config.xml"
 
   # Bring variables from Class['::jenkins'] into local scope.
@@ -69,16 +84,16 @@ define jenkins::job::present(
 
   # Use Jenkins CLI to create the job
   $cat_config = "cat \"${tmp_config_path}\""
-  $create_job = "${jenkins_cli} create-job \"${jobname}\""
-  exec { "jenkins create-job ${jobname}":
+  $create_job = "${jenkins_cli} create-job \"${realjobname}\""
+  exec { "jenkins create-job ${realjobname}":
     command => "${cat_config} | ${create_job}",
     creates => [$config_path, "${job_dir}/builds"],
     require => File[$tmp_config_path],
   }
 
   # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
-  exec { "jenkins update-job ${jobname}":
+  $update_job = "${jenkins_cli} update-job ${realjobname}"
+  exec { "jenkins update-job ${realjobname}":
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
     unless  => "${difftool} ${config_path} ${tmp_config_path}",
@@ -88,21 +103,21 @@ define jenkins::job::present(
 
   # Enable or disable the job (if necessary)
   if ($enabled == 1) {
-    exec { "jenkins enable-job ${jobname}":
-      command => "${jenkins_cli} enable-job \"${jobname}\"",
+    exec { "jenkins enable-job ${realjobname}":
+      command => "${jenkins_cli} enable-job \"${realjobname}\"",
       onlyif  => "cat \"${config_path}\" | grep '<disabled>true'",
       require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
+        Exec["jenkins create-job ${realjobname}"],
+        Exec["jenkins update-job ${realjobname}"],
       ],
     }
   } else {
-    exec { "jenkins disable-job ${jobname}":
-      command => "${jenkins_cli} disable-job \"${jobname}\"",
+    exec { "jenkins disable-job ${realjobname}":
+      command => "${jenkins_cli} disable-job \"${realjobname}\"",
       onlyif  => "cat \"${config_path}\" | grep '<disabled>false'",
       require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
+        Exec["jenkins create-job ${realjobname}"],
+        Exec["jenkins update-job ${realjobname}"],
       ],
     }
   }
