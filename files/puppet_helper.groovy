@@ -24,7 +24,6 @@ import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.plugins.credentials.domains.*;
 import com.cloudbees.plugins.credentials.impl.*
 import com.cloudbees.plugins.credentials.impl.*;
-import org.jenkinsci.plugins.plaincredentials.impl.*;
 import hudson.plugins.sshslaves.*;
 import jenkins.model.*;
 import org.jenkinsci.plugins.*;
@@ -33,11 +32,6 @@ import hudson.util.*;
 import hudson.model.*;
 import groovy.transform.InheritConstructors
 import org.apache.commons.io.IOUtils
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemHeaders;
-
-import java.io.*;
 
 class InvalidAuthenticationStrategy extends Exception{}
 @InheritConstructors
@@ -185,108 +179,6 @@ class Util {
     classList
   }
 } // class Util
-
-/**
- * Helper class to be used when creating a new instance of FileCredentialsImpl
- */
-public class DirectFileItem implements FileItem {
-  private final byte[] data;
-  private final String filename;
-
-  public DirectFileItem(final String filename, final String content) {
-    this(filename, content.getBytes());
-  }
-
-  public DirectFileItem(final String filename, final byte[] data) {
-    this.data = data;
-    this.filename = filename;
-  }
-
-  @Override
-  public InputStream getInputStream() throws IOException {
-    return new ByteArrayInputStream(data);
-  }
-
-  @Override
-  public String getContentType() {
-    return "text/plain";
-  }
-
-  @Override
-  public String getName() {
-    return filename;
-  }
-
-  @Override
-  public boolean isInMemory() {
-    return true;
-  }
-
-  @Override
-  public long getSize() {
-    return data.length;
-  }
-
-  @Override
-  public byte[] get() {
-    return data;
-  }
-
-  @Override
-  public String getString(String encoding) throws UnsupportedEncodingException {
-    return new String(data, encoding);
-  }
-
-  @Override
-  public String getString() {
-    return new String(data);
-  }
-
-  @Override
-  public void write(File file) throws Exception {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void delete() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public String getFieldName() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setFieldName(String name) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isFormField() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setFormField(boolean state) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public OutputStream getOutputStream() throws IOException {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public FileItemHeaders getHeaders() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setHeaders(FileItemHeaders headers) {
-    throw new UnsupportedOperationException();
-  }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Actions
@@ -660,18 +552,6 @@ class Actions {
           key,
           conf['passphrase'],
           conf['description']
-        )
-        break
-      case 'FileCredentialsImpl':
-        def file = new DirectFileItem(conf['file_name'], conf['content'])
-
-        cred = new FileCredentialsImpl(
-          CredentialsScope."${conf['scope']}",
-          conf['id'],
-          conf['description'],
-          file,
-          null,
-          null
         )
         break
       default:

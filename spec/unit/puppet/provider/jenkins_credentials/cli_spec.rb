@@ -24,15 +24,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "description": "bar",
             "private_key": "-----BEGIN RSA PRIVATE KEY-----",
             "passphrase": ""
-        },
-        {
-            "id": "08f8006e-371d-4daa-961b-f6e616f7a061",
-            "domain": null,
-            "scope": "GLOBAL",
-            "impl": "FileCredentialsImpl",
-            "description": "baz",
-            "file_name": "baz.file",
-            "content": "asdf"
         }
     ]
     EOS
@@ -59,8 +50,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       [
         'private_key',
         'passphrase',
-        'file_name',
-        'content'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -87,37 +76,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       [
         'username',
         'password',
-        'file_name',
-        'content'
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq :absent
-      end
-
-    end
-  end
-
-  shared_examples "a provider from example hash 3" do
-    it do
-      cred = credentials[2]
-
-      expect(provider.name).to eq cred['id']
-      expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'file_name',
-        'content',
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
-      end
-
-      [
-        'username',
-        'password',
-        'private_key',
-        'passphrase'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -135,7 +93,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it "should return the correct number of instances" do
-        expect(described_class.instances.size).to eq 3
+        expect(described_class.instances.size).to eq 2
       end
 
       context "first instance returned" do

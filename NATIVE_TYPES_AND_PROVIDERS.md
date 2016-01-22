@@ -231,7 +231,6 @@ jenkins_credentials { '<id>':
 
 * `UsernamePasswordCredentialsImpl`
 * `BasicSSHUserPrivateKey`
-* `FileCredentialsImpl`
 
 XXX This type has properties for other credentials classes that are not currently supported.
 
@@ -264,21 +263,6 @@ jenkins_credentials { 'a0469025-1202-4007-983d-0c62f230f1a7':
   username    => 'foo',
 }
 ```
-
-#### `FileCredentialsImpl`
-
-```
-jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
-  ensure      => 'present',
-  description => 'secret file with very secret data',
-  domain      => undef,
-  impl        => 'FileCredentialsImpl',
-  scope       => 'GLOBAL',
-  file_name   => 'foo.bar',
-  content     => 'secret data on 1st line\nsecret data on 2nd line'
-}
-```
-
 
 ### `jenkins_job`
 
