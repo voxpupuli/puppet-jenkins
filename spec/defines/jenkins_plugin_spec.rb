@@ -140,7 +140,7 @@ describe 'jenkins::plugin' do
   describe 'source' do
     shared_examples 'should download from $source url' do
       it 'should download from $source url' do
-         should contain_archive__download('myplug.hpi').with(
+        should contain_archive__download('myplug.hpi').with(
           :url  => 'http://e.org/myplug.hpi',
           :user => 'jenkins',
         )
@@ -203,6 +203,26 @@ describe 'jenkins::plugin' do
           :owner => 'jenkins',
           :group => 'jenkins',
         ).that_requires('Archive::Download[foo.jpi]')
+      end
+    end
+
+    describe 'pin parameter' do
+      context 'with pin => true' do
+        let(:params) {{ :pin => true } }
+        it do
+          should contain_file('/var/lib/jenkins/plugins/foo.hpi.pinned').with_ensure('file')
+        end
+      end
+      context 'with pin => false' do
+        let(:params) {{ :pin => false } }
+        it do
+          should contain_file('/var/lib/jenkins/plugins/foo.hpi.pinned').without_ensure
+        end
+      end
+      context 'with default pin param' do
+        it do
+          should contain_file('/var/lib/jenkins/plugins/foo.hpi.pinned').without_ensure
+        end
       end
     end
   end # pinned file extension name
