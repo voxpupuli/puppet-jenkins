@@ -67,6 +67,7 @@ define jenkins::augeas (
     lens    => 'Xml.lns',
     context => regsubst("/files${::jenkins::localstatedir}/${config_filename}/${context}", '\/\/', '/'),
     notify  => Exec['reload-jenkins'],
+    onlyif  => $onlyif,
     changes => $changes,
   }
 

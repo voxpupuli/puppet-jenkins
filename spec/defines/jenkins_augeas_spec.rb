@@ -79,5 +79,21 @@ describe 'jenkins::augeas' do
       )
     end
   end
+  describe "with onlyif set" do
+    let (:params) {{
+      :plugin          => false,
+      :config_filename => 'foo.xml',
+      :changes         => [ 'set foo bar' ],
+      :onlyif          => [ 'get foo != bar' ],
+    }}
+    it do
+      should contain_augeas('jenkins::augeas: myplug').with(
+        :incl    => '/var/lib/jenkins/foo.xml',
+        :context => '/files/var/lib/jenkins/foo.xml/',
+        :changes => ['set foo bar'],
+        :onlyif  => ['get foo != bar'],
+      )
+    end
+  end
 
 end
