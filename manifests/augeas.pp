@@ -80,10 +80,10 @@ define jenkins::augeas (
   }
 
   case $restart {
-    true,'true': {
+    true,'true': { # lint:ignore:quoted_booleans
       $notify_exec = 'safe-restart-jenkins'
     }
-    false,'false': {
+    false,'false': { # lint:ignore:quoted_booleans
       $notify_exec = 'reload-jenkins'
     }
     default: {
