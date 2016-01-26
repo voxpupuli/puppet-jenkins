@@ -50,6 +50,13 @@ describe 'jenkins::augeas' do
     end
   end
 
+  describe "with plugin param wrong type" do
+    let (:params) {{:config_filename => 'foo.xml', :changes => [], :plugin => ['foo','bar'] }}
+    it do
+      should raise_error(Puppet::Error, /is not a string/i)
+    end
+  end
+
   describe "with plugin_version set" do
     let (:params) {{
         :config_filename => 'foo.xml',
@@ -79,21 +86,63 @@ describe 'jenkins::augeas' do
       )
     end
   end
-  describe "with onlyif set" do
-    let (:params) {{
-      :plugin          => false,
-      :config_filename => 'foo.xml',
-      :changes         => [ 'set foo bar' ],
-      :onlyif          => [ 'get foo != bar' ],
-    }}
-    it do
-      should contain_augeas('jenkins::augeas: myplug').with(
-        :incl    => '/var/lib/jenkins/foo.xml',
-        :context => '/files/var/lib/jenkins/foo.xml/',
-        :changes => ['set foo bar'],
-        :onlyif  => ['get foo != bar'],
-      )
+
+  [ ['get foo != bar'], 'get foo != bar'].each do |pval|
+    describe "with param onlyif set and class is #{pval.class}" do
+      let (:params) {{
+        :plugin          => false,
+        :config_filename => 'foo.xml',
+        :changes         => [ 'set foo bar' ],
+        :onlyif          => pval,
+      }}
+      it do
+        should contain_augeas('jenkins::augeas: myplug').with(
+          :incl    => '/var/lib/jenkins/foo.xml',
+          :context => '/files/var/lib/jenkins/foo.xml/',
+          :changes => ['set foo bar'],
+          :onlyif  => pval,
+        )
+      end
     end
   end
 
+  describe "with param onlyif set and its a boolean" do
+    let (:params) {{
+      :plugin          => false,
+      :config_filename => 'foo.xml',
+      :changes         => ['set foo bar'],
+      :onlyif          => false,
+    }}
+    it do
+      should raise_error(Puppet::Error, /is not an array/i)
+    end
+  end
+
+  [ ['set foo bar'], 'set foo bar'].each do |pval|
+    describe "with param changes set and class is #{pval.class}" do
+      let (:params) {{
+        :plugin          => false,
+        :config_filename => 'foo.xml',
+        :changes         => pval,
+      }}
+      it do
+        should contain_augeas('jenkins::augeas: myplug').with(
+          :incl    => '/var/lib/jenkins/foo.xml',
+          :context => '/files/var/lib/jenkins/foo.xml/',
+          :changes => pval,
+        )
+      end
+    end
+  end
+
+  describe "with param changes is a number" do
+    let (:params) {{
+      :plugin          => false,
+      :config_filename => 'foo.xml',
+      :changes         => 13,
+    }}
+    it do
+      should raise_error(Puppet::Error, /is not an array/i)
+    end
+  end
 end

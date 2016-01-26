@@ -42,6 +42,17 @@ define jenkins::augeas (
 
   include ::jenkins
 
+  validate_string($config_filename)
+  validate_string($context)
+
+  # validate $plugin embedded in case.
+
+  if $plugin_version { validate_string($plugin_version) }
+
+  # changes and onlyif can be both a string or an array...
+  if ! is_string($onlyif) { validate_array($onlyif) }
+  if ! is_string($changes) { validate_array($changes) }
+
   case $plugin {
     true,'true': { # lint:ignore:quoted_booleans
       jenkins::plugin {$name:
@@ -54,6 +65,8 @@ define jenkins::augeas (
       #do nothing
     }
     default: {
+      validate_string($plugin)
+
       jenkins::plugin {$plugin:
         version       => $plugin_version,
         manage_config => false,
