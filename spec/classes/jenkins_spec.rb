@@ -99,38 +99,6 @@ describe 'jenkins', :type => :module do
       end
     end
 
-    describe 'plugin_dir =>' do
-      context '(default)' do
-        it { should contain_file('/var/lib/jenkins/plugins') }
-      end
-
-      context '/var/lib/jenkins/pd' do
-        let(:params) {{ :plugin_dir => '/var/lib/jenkins/pd' }}
-        it { should contain_file('/var/lib/jenkins/pd') }
-      end
-
-      context './pd' do
-        let(:params) {{ :plugin_dir => './pd' }}
-        it { should raise_error(Puppet::Error, /is not an absolute path/) }
-      end
-    end
-
-    describe 'job_dir =>' do
-      context '(default)' do
-        it { should contain_file('/var/lib/jenkins/jobs') }
-      end
-
-      context '/var/lib/jenkins/jd' do
-        let(:params) {{ :job_dir => '/var/lib/jenkins/jd' }}
-        it { should contain_file('/var/lib/jenkins/jd') }
-      end
-
-      context './jd' do
-        let(:params) {{ :job_dir => './jd' }}
-        it { should raise_error(Puppet::Error, /is not an absolute path/) }
-      end
-    end
-
     describe 'executors =>' do
       context 'undef' do
         it { should_not contain_class('jenkins::cli_helper') }
