@@ -383,12 +383,12 @@ class jenkins (
   }
   include $jenkins_package_class
 
-  include jenkins::user_setup
-  include jenkins::config
-  include jenkins::plugins
-  include jenkins::jobs
-  include jenkins::users
-  include jenkins::proxy
+  include ::jenkins::user_setup
+  include ::jenkins::config
+  include ::jenkins::plugins
+  include ::jenkins::jobs
+  include ::jenkins::users
+  include ::jenkins::proxy
 
   if $manage_service {
     include jenkins::service
