@@ -97,9 +97,11 @@ class jenkins::slave (
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
+  $java_args                = '',
 ) inherits jenkins::params {
 
   validate_string($tool_locations)
+  validate_string($java_args)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
