@@ -280,6 +280,73 @@ shared_examples 'autorequires cli resources' do
     expect(req[1].source).to eq helper_resource
     expect(req[1].target).to eq resource
   end
+
+  it "should autorequire cli_jar file from catalog" do
+    helper_resource = Puppet::Type.type(:file).new(
+      :path => '/dne/catalog',
+    )
+    resource = described_class.new(
+      :name => 'test',
+    )
+    jenkins = Puppet::Type.type(:component).new(
+      :name    => 'jenkins::cli::config',
+      :cli_jar => '/dne/catalog',
+    )
+
+    catalog = Puppet::Resource::Catalog.new
+    catalog.add_resource helper_resource
+    catalog.add_resource resource
+    catalog.add_resource jenkins
+    req = resource.autorequire
+
+    expect(req.size).to eq 1
+    expect(req[0].source).to eq helper_resource
+    expect(req[0].target).to eq resource
+  end
+
+  it "should autorequire cli_jar file from fact" do
+    helper_resource = Puppet::Type.type(:file).new(
+      :path => '/dne/fact',
+    )
+    resource = described_class.new(
+      :name => 'test',
+    )
+    Facter.add(:jenkins_cli_jar) { setcode { '/dne/fact' } }
+
+    catalog = Puppet::Resource::Catalog.new
+    catalog.add_resource helper_resource
+    catalog.add_resource resource
+    req = resource.autorequire
+
+    expect(req.size).to eq 1
+    expect(req[0].source).to eq helper_resource
+    expect(req[0].target).to eq resource
+  end
+
+  it "should autorequire cli_jar file from catalog instead of fact" do
+    helper_resource = Puppet::Type.type(:file).new(
+      :path => '/dne/catalog',
+    )
+    resource = described_class.new(
+      :name => 'test',
+    )
+    jenkins = Puppet::Type.type(:component).new(
+      :name    => 'jenkins::cli::config',
+      :cli_jar => '/dne/catalog',
+    )
+    Facter.add(:jenkins_cli_jar) { setcode { '/dne/fact' } }
+
+    catalog = Puppet::Resource::Catalog.new
+    catalog.add_resource helper_resource
+    catalog.add_resource resource
+    catalog.add_resource jenkins
+    req = resource.autorequire
+
+    expect(req.size).to eq 1
+    expect(req[0].source).to eq helper_resource
+    expect(req[0].target).to eq resource
+  end
+
 end # when autorequiring resources
 
 shared_examples 'autorequires all jenkins_user resources' do
