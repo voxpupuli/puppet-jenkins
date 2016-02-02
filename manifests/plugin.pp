@@ -82,7 +82,9 @@ define jenkins::plugin(
 
   if (empty(grep([ $::jenkins_plugins ], $search))) {
     if ($jenkins::proxy_host) {
-      $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
+      # archive expects protocol in proxy_server, but jenkins proxy.xml expects no protocol
+      # assume http
+      $proxy_server = "http://${jenkins::proxy_host}:${jenkins::proxy_port}"
     } else {
       $proxy_server = undef
     }
@@ -109,15 +111,17 @@ define jenkins::plugin(
     }
 
     if $digest_string == '' {
-      $checksum = false
+      $checksum_verify = false
+      $checksum = undef
     } else {
-      $checksum = true
+      $checksum_verify = true
+      $checksum = $digest_string
     }
 
     archive { "${::jenkins::plugin_dir}/${plugin}":
       source          => $download_url,
-      checksum_verify => $checksum,
-      checksum        => $digest_string,
+      checksum_verify => $checksum_verify,
+      checksum        => $checksum,
       checksum_type   => $digest_type,
       proxy_server    => $proxy_server,
       notify          => Service['jenkins'],
@@ -125,7 +129,7 @@ define jenkins::plugin(
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}" :
-      require => Archive::Download[$plugin],
+      require => Archive["${::jenkins::plugin_dir}/${plugin}"],
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
