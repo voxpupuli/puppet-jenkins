@@ -137,7 +137,7 @@
 #   - Jenkins requires a JRE
 #
 #
-# cli = false (default)
+# cli = true (default)
 #   - force installation of the jenkins CLI jar to $libdir/cli/jenkins-cli.jar
 #   - the cli is automatically installed when needed by components that use it,
 #     such as the user and credentials types, and the security class
@@ -195,7 +195,7 @@ class jenkins(
   $proxy_host         = undef,
   $proxy_port         = undef,
   $no_proxy_list      = undef,
-  $cli                = undef,
+  $cli                = true,
   $cli_ssh_keyfile    = undef,
   $cli_tries          = $jenkins::params::cli_tries,
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
@@ -285,6 +285,7 @@ class jenkins(
 
   if $cli {
     include jenkins::cli
+    include jenkins::cli_helper
   }
 
   if $executors {

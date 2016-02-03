@@ -5,7 +5,9 @@ describe 'jenkins', :type => :class do
 
   context 'cli' do
     context 'default' do
-      it { should_not contain_class('jenkins::cli') }
+      it { should contain_class('jenkins').with(:cli => true) }
+      it { should contain_class('jenkins::cli') }
+      it { should contain_class('jenkins::cli_helper') }
     end
 
     context '$cli => true' do
@@ -32,6 +34,13 @@ describe 'jenkins', :type => :class do
           end
         end
       end
+    end
+
+    context '$cli => false' do
+      let(:params) {{ :cli => false }}
+
+      it { should_not contain_class('jenkins::cli') }
+      it { should_not contain_class('jenkins::cli_helper') }
     end
   end
 end
