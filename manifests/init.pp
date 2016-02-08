@@ -203,8 +203,6 @@ class jenkins(
   $libdir             = $jenkins::params::libdir,
   $manage_datadirs    = $jenkins::params::manage_datadirs,
   $localstatedir      = $::jenkins::params::localstatedir,
-  $plugin_dir         = $::jenkins::params::plugin_dir,
-  $job_dir            = $::jenkins::params::job_dir,
   $executors          = undef,
   $slaveagentport     = undef,
   $manage_user        = $::jenkins::params::manage_user,
@@ -222,8 +220,6 @@ class jenkins(
 
   validate_bool($manage_datadirs)
   validate_absolute_path($localstatedir)
-  validate_absolute_path($plugin_dir)
-  validate_absolute_path($job_dir)
 
   if $no_proxy_list {
     validate_array($no_proxy_list)
@@ -237,6 +233,9 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
+
+  $plugin_dir = "${localstatedir}/plugins"
+  $job_dir = "${localstatedir}/jobs"
 
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}

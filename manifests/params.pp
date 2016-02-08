@@ -19,8 +19,6 @@ class jenkins::params {
 
   $manage_datadirs = true
   $localstatedir   = '/var/lib/jenkins'
-  $plugin_dir      = "${localstatedir}/plugins"
-  $job_dir         = "${localstatedir}/jobs"
 
   $manage_user  = true
   $user         = 'jenkins'
