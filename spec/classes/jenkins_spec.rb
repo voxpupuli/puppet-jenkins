@@ -133,14 +133,12 @@ describe 'jenkins', :type => :module do
 
     describe 'executors =>' do
       context 'undef' do
-        it { should_not contain_class('jenkins::cli_helper') }
         it { should_not contain_jenkins__cli__exec('set_num_executors') }
       end
 
       context '42' do
         let(:params) {{ :executors => 42 }}
 
-        it { should contain_class('jenkins::cli_helper') }
         it do
           should contain_jenkins__cli__exec('set_num_executors').with(
             :command => ['set_num_executors', 42],
@@ -162,7 +160,6 @@ describe 'jenkins', :type => :module do
 
     describe 'slaveagentport =>' do
       context 'undef' do
-        it { should_not contain_class('jenkins::cli_helper') }
         it { should_not contain_jenkins__cli__exec('set_slaveagent_port') }
       end
 
@@ -170,7 +167,6 @@ describe 'jenkins', :type => :module do
         let(:port) { 7777 }
         let(:params) {{ :slaveagentport => port }}
 
-        it { should contain_class('jenkins::cli_helper') }
         it do
           should contain_jenkins__cli__exec('set_slaveagent_port').with(
             :command => ['set_slaveagent_port', port],

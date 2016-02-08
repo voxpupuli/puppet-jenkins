@@ -41,7 +41,7 @@ puppet module install rtyler/jenkins
 ```
 Then the service should be running at [http://hostname.example.com:8080/](http://hostname.example.com:8080/).
 
-### Jenkin's options
+### Jenkins' options
 
 #### Master Executor Threads
 
@@ -145,9 +145,9 @@ parameters will have no effect on the plugin retrieval URL.
 Dependencies are not automatically installed. You need to manually determine the plugin dependencies and include those as well. The Jenkins wiki is a good place to do this. For example: The Git plugin page is at https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin.
 
 ### Slaves
-You can automatically add slaves to jenkins, and have them auto register themselves.  Most options are actually optional, as nodes will autodiscover the master, and connect.
+You can automatically add slaves to jenkins, and have them auto register themselves.  Most options are actually optional, as nodes will auto-discover the master, and connect.
 
-Full documention for the slave code is in jenkins::slave.
+Full documentation for the slave code is in jenkins::slave.
 
 It requires the swarm plugin on the master & the class jenkins::slave on the slaves, as below:
 
@@ -173,7 +173,7 @@ The dependencies for this module currently are:
 * [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
-* [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for Suse users)
+* [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
 * [staging module](https://forge.puppetlabs.com/nanliu/staging)
 * [archive module](https://forge.puppetlabs.com/camptocamp/archive)
 
@@ -207,7 +207,7 @@ This module includes a groovy-based helper script that uses the
 interact with the Jenkins API. Users, Credentials, and security model
 configuration are all driven through this script.
 
-When an API-based resource is defined, the Jenkins CLI is installed and run
+When an API-based resource is defined, the Jenkins' CLI is installed and run
 against the local system (127.0.0.1). Jenkins is assumed to be listening on
 port 8080, but the module is smart enough to notice if you've configured an
 alternate port using jenkins::config_hash['HTTP_PORT'].
@@ -220,7 +220,7 @@ credentials.
 ### CLI Helper
 
 The CLI helper assumes unauthenticated access unless configured otherwise.
-You can configure jenkins::cli_helper to use an SSH key on the managed system
+You can configure `jenkins::cli_helper` to use an SSH key on the managed system
 by passing the keyfile path as a class parameter:
 ```puppet
   class {'jenkins':
@@ -231,6 +231,8 @@ by passing the keyfile path as a class parameter:
 ... or via hiera:
 
     jenkins::cli_ssh_keyfile: "/path/to/id_rsa"
+
+__Direct including of the `jenkins::cli_helper` class into the manifest is deprecated.__
 
 There's an open bug in Jenkins (JENKINS-22346) that causes authentication to
 fail when a key is used but authentication is disabled. Until the bug is fixed,
