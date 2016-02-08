@@ -5,7 +5,10 @@
 # Parameters:
 #
 #   config
-#     the content of the jenkins job config file (required)
+#     the content of the jenkins job config file (template based)
+#
+#   temp_config_path
+#     the jenkins job config file (file on disk)
 #
 #   jobname = $title
 #     the name of the jenkins job
@@ -14,7 +17,8 @@
 #     if the job should be enabled
 #
 define jenkins::job::present(
-  $config,
+  $config = undef,
+  $temp_config_path = undef,
   $jobname  = $title,
   $enabled  = 1,
   $difftool = '/usr/bin/diff -b -q',
@@ -24,12 +28,43 @@ define jenkins::job::present(
 
   validate_string($difftool)
 
+  if $temp_config_path != undef and $config != undef {
+    fail('You cannot set both \$temp_config_path AND $config param, only one is required')
+  }
+
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
   }
 
   $jenkins_cli        = $jenkins::cli::cmd
-  $tmp_config_path    = "/tmp/${jobname}-config.xml"
+  if $config == undef {
+    $tmp_config_path = $temp_config_path
+  } else {
+      $tmp_config_path    = "/tmp/${jobname}-config.xml"
+      #
+      # When a Jenkins job is imported via the cli, Jenkins will
+      # re-format the xml file based on its own internal rules.
+      # In order to make job management idempotent, we need to
+      # apply that formatting before the import, so we can do a diff
+      # on any pre-existing job to determine if an update is needed.
+      #
+      # Jenkins likes to change single quotes to double quotes
+      $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
+                    'version="1.0" encoding="UTF-8"')
+      # Change empty tags into self-closing tags
+      $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
+      # Change &quot; to " since Jenkins is weird like that
+      $c = regsubst($b, '&quot;', '"', 'MG')
+      # Change &apos; to ' since Jenkins is weird like that
+      $d = regsubst($c, '&apos;', '\'', 'MG')
+
+      # Temp file to use as stdin for Jenkins CLI executable
+      file { $tmp_config_path:
+        content => $d,
+        require => Exec['jenkins-cli'],
+      }
+    }
+
   $job_dir            = "${::jenkins::job_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
@@ -42,29 +77,6 @@ define jenkins::job::present(
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
     tries       => $cli_tries,
     try_sleep   => $cli_try_sleep,
-  }
-
-  #
-  # When a Jenkins job is imported via the cli, Jenkins will
-  # re-format the xml file based on its own internal rules.
-  # In order to make job management idempotent, we need to
-  # apply that formatting before the import, so we can do a diff
-  # on any pre-existing job to determine if an update is needed.
-  #
-  # Jenkins likes to change single quotes to double quotes
-  $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
-                'version="1.0" encoding="UTF-8"')
-  # Change empty tags into self-closing tags
-  $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
-  # Change &quot; to " since Jenkins is weird like that
-  $c = regsubst($b, '&quot;', '"', 'MG')
-  # Change &apos; to ' since Jenkins is weird like that
-  $d = regsubst($c, '&apos;', '\'', 'MG')
-
-  # Temp file to use as stdin for Jenkins CLI executable
-  file { $tmp_config_path:
-    content => $d,
-    require => Exec['jenkins-cli'],
   }
 
   # Use Jenkins CLI to create the job
