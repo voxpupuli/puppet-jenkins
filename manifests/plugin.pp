@@ -26,6 +26,7 @@ define jenkins::plugin(
   $digest_string   = '',
   $digest_type     = 'sha1',
   $timeout         = 120,
+  $pin             = false,
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
@@ -36,6 +37,7 @@ define jenkins::plugin(
 
   validate_bool($manage_config)
   validate_bool($enabled)
+  validate_bool($pin)
   # TODO: validate_str($update_url)
   validate_string($source)
   validate_string($digest_string)
@@ -102,7 +104,13 @@ define jenkins::plugin(
       notify  => Service['jenkins'],
     }
 
+    $pinned_ensure = $pin ? {
+      true    => file,
+      default => undef,
+    }
+
     file { "${::jenkins::plugin_dir}/${plugin}.pinned":
+      ensure  => $pinned_ensure,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       require => Archive::Download[$plugin],
