@@ -59,6 +59,19 @@
 #
 # [*manage_client_jar*]
 #   Should the class download the client jar file from the web? Defaults to true.
+#
+# [*ensure*]
+#   Service ensure control for jenkins-slave service. Default running
+#
+# [*enable*]
+#   Service enable control for jenkins-slave service. Default true.
+#
+# [*source*]
+#   File source for jenkins slave jar. Default pulls from http://maven.jenkins-ci.org
+#
+# [*java_args*]
+#   Java arguments to add to slave command line. Allows configuration of heap, etc.
+#
 
 # === Examples
 #
@@ -97,9 +110,13 @@ class jenkins::slave (
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
+  $java_args                = undef,
 ) inherits jenkins::params {
 
   validate_string($tool_locations)
+  if $java_args {
+    validate_string($java_args)
+  }
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {

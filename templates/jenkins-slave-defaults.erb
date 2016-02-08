@@ -9,6 +9,9 @@ JAVA=/usr/bin/java
 # arguments to pass to java
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
+<% if @java_args -%>
+JAVA_ARGS="<%= @java_args -%>"
+<% end -%>
 
 PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
 

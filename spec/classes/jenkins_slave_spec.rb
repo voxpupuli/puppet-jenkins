@@ -63,6 +63,19 @@ describe 'jenkins::slave' do
         should contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
       end
     end
+
+    describe 'with java_args' do
+      let(:args) { '-Xmx2g' }
+      let(:params) do
+        {
+          :java_args => args
+        }
+      end
+
+      it 'should set java_args' do
+        should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
+      end
+    end
   end
 
   shared_examples 'using slave_name' do
