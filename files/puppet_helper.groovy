@@ -680,6 +680,21 @@ class Actions {
         ]
         break
 
+      //  active directory
+      case 'hudson.plugins.active_directory.ActiveDirectorySecurityRealm':
+        config = [
+          setSecurityRealm: [
+            (className): [
+              realm.domain,
+              realm.site,
+              realm.bindName,
+              realm.bindPassword,
+              realm.groupLookupStrategy,
+            ],
+          ],
+        ]
+        break
+
       // constructor with no arguments
       // "Delegate to servlet container"
       case 'hudson.security.LegacySecurityRealm':
