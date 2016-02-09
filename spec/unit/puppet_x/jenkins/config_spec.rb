@@ -5,7 +5,7 @@ require 'puppet_x/jenkins/config'
 describe PuppetX::Jenkins::Config do
   DEFAULTS = {
     :cli_jar         => '/usr/lib/jenkins/jenkins-cli.jar',
-    :port            => 8080,
+    :url             => 'http://localhost:8080',
     :ssh_private_key => nil,
     :puppet_helper   => '/usr/lib/jenkins/puppet_helper.groovy',
     :cli_tries       => 30,
@@ -15,7 +15,7 @@ describe PuppetX::Jenkins::Config do
   shared_context 'facts' do
     before do
       Facter.add(:jenkins_cli_jar) { setcode { 'fact.jar' } }
-      Facter.add(:jenkins_port) { setcode { 11 } }
+      Facter.add(:jenkins_url) { setcode { 'http://localhost:11' } }
       Facter.add(:jenkins_ssh_private_key) { setcode { 'fact.id_rsa' } }
       Facter.add(:jenkins_puppet_helper) { setcode { 'fact.groovy' } }
       Facter.add(:jenkins_cli_tries) { setcode { 22 } }
@@ -121,7 +121,7 @@ describe PuppetX::Jenkins::Config do
             jenkins = Puppet::Type.type(:component).new(
               :name            => 'jenkins::cli::config',
               :cli_jar         => 'cat.jar',
-              :port            => 111,
+              :url             => 'http://localhost:111',
               :ssh_private_key => 'cat.id_rsa',
               :puppet_helper   => 'cat.groovy',
               :cli_tries       => 222,

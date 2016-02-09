@@ -31,7 +31,7 @@ However, the version included in this module has provides some additional
 setup.  The parameters used to override default values are:
 
 * `cli_jar`
-* `port`
+* `url`
 * `ssh_private_key`
 * `puppet_helper`
 * `cli_tries`
@@ -48,11 +48,19 @@ class { 'jenkins::cli::config':
 }
 ```
 
+An example of setting an alternative port number and an addition of a prefix.
+
+```
+class { 'jenkins::cli::config':
+  ssh_private_key => 'http://localhost:9999/awesome-jenkins',
+}
+```
+
 These values may also be set via facts with the same name after the prefix
 `jenkins_`.  Class parameters have precedence over fact values.
 
 * `jenkins_cli_jar`
-* `jenkins_port`
+* `jenkins_url`
 * `jenkins_ssh_private_key`
 * `jenkins_puppet_helper`
 * `jenkins_cli_tries`

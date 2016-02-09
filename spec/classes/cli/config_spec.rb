@@ -78,8 +78,11 @@ describe 'jenkins::cli::config', :type => :class do
       it_behaves_like 'validate_absolute_path', :cli_jar
     end
 
-    context 'port' do
-      it_behaves_like 'validate_integer', :port
+    # context 'port' do
+    #   it_behaves_like 'validate_integer', :port
+    # end
+    context 'url' do
+      it_behaves_like 'validate_string', :url
     end
 
     context 'ssh_private_key' do
