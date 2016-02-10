@@ -887,10 +887,15 @@ class Actions {
    * Print the job's state as either "true" or "false"
   */
   void job_enabled(String name) {
-    def disabled = Jenkins.getInstance().getJob(name).isDisabled()
-    out.println(!disabled)
-  }
-} // class Actions
+    try {
+      def disabled = Jenkins.getInstance().getJob(name).isDisabled()
+      out.println(!disabled)
+    }
+    catch (MissingMethodException me) {
+      out.println("Found resource is not a job, skipping.")
+    }
+   }
+  } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
 // CLI Argument Processing
