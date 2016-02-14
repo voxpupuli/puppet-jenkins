@@ -155,7 +155,11 @@ eos
   describe 'with sourced config and no regular config' do
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :source => thesource }}
-    it { should raise_error(Puppet::Error, /Must pass config/) }
+    if Puppet.version.to_f < 4.3
+      it { should raise_error(Puppet::Error, /Must pass config/) }
+    else
+      it { should raise_error(Puppet::Error, /expects a value for parameter 'config'/) }
+    end
   end
 
   describe 'with templated config and blank regular config' do
@@ -176,7 +180,11 @@ eos
   describe 'with templated config and no regular config' do
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :template => thetemplate }}
-    it { should raise_error(Puppet::Error, /Must pass config/) }
+    if Puppet.version.to_f < 4.3
+      it { should raise_error(Puppet::Error, /Must pass config/) }
+    else
+      it { should raise_error(Puppet::Error, /expects a value for parameter 'config'/) }
+    end
   end
 
 end
