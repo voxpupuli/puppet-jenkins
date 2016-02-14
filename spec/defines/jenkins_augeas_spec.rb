@@ -3,7 +3,14 @@ require 'spec_helper'
 describe 'jenkins::augeas' do
 
   let(:title) { 'myplug' }
-  let(:facts) {{ :osfamily => 'RedHat', :operatingsystem => 'CentOS' }}
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
 
   #-------------------------------------------------------------------------------

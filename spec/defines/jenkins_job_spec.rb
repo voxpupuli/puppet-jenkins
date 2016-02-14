@@ -2,7 +2,14 @@ require 'spec_helper'
 
 describe 'jenkins::job' do
   let(:title) { 'myjob' }
-  let(:facts) {{ :osfamily => 'RedHat', :operatingsystem => 'RedHat' }}
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   describe 'relationships' do
     let(:params) {{ :config => '' }}
