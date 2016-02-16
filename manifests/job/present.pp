@@ -15,14 +15,16 @@
 #
 define jenkins::job::present(
   $config,
-  $jobname  = $title,
-  $enabled  = 1,
-  $difftool = '/usr/bin/diff -b -q',
+  $jobname   = $title,
+  $enabled   = 1,
+  $difftool  = '/usr/bin/diff -b -q',
+  $seed_only = false,
 ){
   include jenkins::cli
   include jenkins::cli::reload
 
   validate_string($difftool)
+  validate_bool($seed_only)
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
@@ -76,12 +78,19 @@ define jenkins::job::present(
     require => File[$tmp_config_path],
   }
 
+  if ($seed_only) {
+    $_update_unless = "/bin/true"
+  } else {
+    $_update_unless = "${difftool} ${config_path} ${tmp_config_path}"
+  }
+
+
   # Use Jenkins CLI to update the job if it already exists
   $update_job = "${jenkins_cli} update-job ${jobname}"
   exec { "jenkins update-job ${jobname}":
     command => "${cat_config} | ${update_job}",
     onlyif  => "test -e ${config_path}",
-    unless  => "${difftool} ${config_path} ${tmp_config_path}",
+    unless  => $_update_unless,
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
   }

@@ -27,18 +27,24 @@
 #   difftool = '/usr/bin/diff -b-q'
 #     Provide a command to execute to compare Jenkins job files
 #
+#   seed_only = false
+#     Do not replace the job, once it has been created
+#     (usefull to bootstrap Jenkins with job-dsl plugin)
+#
 define jenkins::job(
   $config,
-  $source   = undef,
-  $template = undef,
-  $jobname  = $title,
-  $enabled  = 1,
-  $ensure   = 'present',
-  $difftool = '/usr/bin/diff -b -q',
+  $source    = undef,
+  $template  = undef,
+  $jobname   = $title,
+  $enabled   = 1,
+  $ensure    = 'present',
+  $difftool  = '/usr/bin/diff -b -q',
+  $seed_only = false,
 ){
   include ::jenkins::cli
 
   validate_string($difftool)
+  validate_bool($seed_only)
 
   Class['jenkins::cli'] ->
     Jenkins::Job[$title] ->
@@ -62,10 +68,11 @@ define jenkins::job(
     }
 
     jenkins::job::present { $title:
-      config   => $realconfig,
-      jobname  => $jobname,
-      enabled  => $enabled,
-      difftool => $difftool,
+      config    => $realconfig,
+      jobname   => $jobname,
+      enabled   => $enabled,
+      difftool  => $difftool,
+      seed_only => $seed_only,
     }
   }
 
