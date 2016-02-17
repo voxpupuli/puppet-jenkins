@@ -79,7 +79,7 @@ define jenkins::job::present(
   }
 
   if ($seed_only) {
-    $_update_unless = "/bin/true"
+    $_update_unless = '/bin/true'
   } else {
     $_update_unless = "${difftool} ${config_path} ${tmp_config_path}"
   }
