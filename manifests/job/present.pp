@@ -79,9 +79,13 @@ define jenkins::job::present(
   }
 
   if ($seed_only) {
-    $_update_unless = '/bin/true'
+    $_update_unless  = '/bin/true'
+    $_enable_onlyif  = '/bin/false'
+    $_disable_onlyif = '/bin/false'
   } else {
-    $_update_unless = "${difftool} ${config_path} ${tmp_config_path}"
+    $_update_unless  = "${difftool} ${config_path} ${tmp_config_path}"
+    $_enable_onlyif  = "cat \"${config_path}\" | grep '<disabled>true'"
+    $_disable_onlyif = "cat \"${config_path}\" | grep '<disabled>false'"
   }
 
 
@@ -99,7 +103,7 @@ define jenkins::job::present(
   if ($enabled == 1) {
     exec { "jenkins enable-job ${jobname}":
       command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>true'",
+      onlyif  => $_enable_onlyif,
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],
@@ -108,7 +112,7 @@ define jenkins::job::present(
   } else {
     exec { "jenkins disable-job ${jobname}":
       command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>false'",
+      onlyif  => $_disable_onlyif,
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],
