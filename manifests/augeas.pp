@@ -42,35 +42,36 @@ define jenkins::augeas (
   $plugin           = false,
   $restart          = false,
 ) {
+  validate_string($config_filename)
+  if ! is_string($changes) and ! is_array($changes) {
+    fail('$changes must be string or array.')
+  }
+  if ! is_string($onlyif) and ! is_array($onlyif) {
+    fail('$onlyif must be string or array.')
+  }
+  validate_string($context)
+  validate_string($plugin_version)
+  if ! is_bool($plugin) and ! is_string($plugin) {
+    fail('$plugin must be bool or string.')
+  }
+  validate_bool($restart)
 
   include ::jenkins
   include ::jenkins::cli
 
-  validate_string($config_filename)
-  validate_string($context)
-
-  # validate $plugin embedded in case.
-
-  if $plugin_version { validate_string($plugin_version) }
-
-  # changes and onlyif can be both a string or an array...
-  if ! is_string($onlyif) { validate_array($onlyif) }
-  if ! is_string($changes) { validate_array($changes) }
 
   case $plugin {
-    true,'true': { # lint:ignore:quoted_booleans
+    true: {
       jenkins::plugin {$name:
         version       => $plugin_version,
         manage_config => false,
         before        => Augeas["jenkins::augeas: ${name}"],
       }
     }
-    false,'false': { # lint:ignore:quoted_booleans
-      #do nothing
+    false: {
+      # do nothing
     }
     default: {
-      validate_string($plugin)
-
       jenkins::plugin {$plugin:
         version       => $plugin_version,
         manage_config => false,
@@ -79,16 +80,10 @@ define jenkins::augeas (
     }
   }
 
-  case $restart {
-    true,'true': { # lint:ignore:quoted_booleans
+  if $restart {
       $notify_exec = 'safe-restart-jenkins'
-    }
-    false,'false': { # lint:ignore:quoted_booleans
+  } else {
       $notify_exec = 'reload-jenkins'
-    }
-    default: {
-      fail('restart parameter is not a boolean value')
-    }
   }
 
   augeas {"jenkins::augeas: ${name}":
@@ -99,6 +94,5 @@ define jenkins::augeas (
     onlyif  => $onlyif,
     changes => $changes,
   }
-
 
 }

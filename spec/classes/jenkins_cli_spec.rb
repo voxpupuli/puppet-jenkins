@@ -1,7 +1,14 @@
 require 'spec_helper'
 
 describe 'jenkins', :type => :class do
-  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   context 'cli' do
     context 'default' do

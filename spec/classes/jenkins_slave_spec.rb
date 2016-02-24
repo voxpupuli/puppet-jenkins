@@ -83,7 +83,16 @@ describe 'jenkins::slave' do
   end
 
   describe 'RedHat' do
-    let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'CentOS', :kernel => 'Linux' } }
+    let(:facts) do
+      {
+        :osfamily                  => 'RedHat',
+        :operatingsystem           => 'CentOS',
+        :operatingsystemrelease    => '6.7',
+        :operatingsystemmajrelease => '6',
+        :kernel                    => 'Linux',
+
+      }
+    end
     let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
     let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
     it_behaves_like 'a jenkins::slave catalog'

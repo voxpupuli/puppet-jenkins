@@ -16,7 +16,7 @@
 #   https://example.org/myplugin.hpi
 #
 define jenkins::plugin(
-  $version         = 0,
+  $version         = undef,
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
@@ -33,8 +33,7 @@ define jenkins::plugin(
   $group           = undef,
   $create_user     = undef,
 ) {
-  include ::jenkins
-
+  validate_string($version)
   validate_bool($manage_config)
   validate_bool($enabled)
   validate_bool($pin)
@@ -56,7 +55,9 @@ define jenkins::plugin(
     warning('jenkins::plugin::create_user is deprecated and has no effect')
   }
 
-  if ($version != 0) {
+  include ::jenkins
+
+  if $version {
     $plugins_host = $update_url ? {
       undef   => $::jenkins::default_plugins_host,
       default => $update_url,

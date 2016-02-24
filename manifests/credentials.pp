@@ -23,7 +23,11 @@ define jenkins::credentials (
   $ensure = 'present',
   $uuid = '',
 ){
-  validate_string($ensure)
+  validate_string($password)
+  validate_string($description)
+  validate_string($private_key_or_path)
+  validate_re($ensure, '^present$|^absent$')
+  validate_string($uuid)
 
   include ::jenkins::cli_helper
 

@@ -5,12 +5,13 @@ class jenkins::params {
   $version               = 'installed'
   $lts                   = false
   $repo                  = true
+  $direct_download       = undef
   $service_enable        = true
   $service_ensure        = 'running'
   $install_java          = true
   $swarm_version         = '1.22'
   $default_plugins_host  = 'https://updates.jenkins-ci.org'
-  $port                  = '8080'
+  $port                  = 8080
   $prefix                = ''
   $cli_tries             = 10
   $cli_try_sleep         = 10
@@ -52,7 +53,7 @@ class jenkins::params {
     }
     default: {
       $libdir           = '/usr/lib/jenkins'
-      $package_provider = false
+      $package_provider = undef
       $service_provider = undef
     }
   }

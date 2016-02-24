@@ -2,7 +2,14 @@ require 'spec_helper'
 
 describe 'jenkins', :type => :module do
   # Switching OS Family to prevent duplicate declaration
-  let(:facts) { { :osfamily => 'Redhat', :operatingsystem => 'CentOS' } }
+  let(:facts) do
+    {
+      :osfamily                  => 'Redhat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   context 'repo::el' do
     describe 'default' do

@@ -112,11 +112,28 @@ class jenkins::slave (
   $source                   = undef,
   $java_args                = undef,
 ) inherits jenkins::params {
-
+  validate_string($slave_name)
+  validate_string($description)
+  validate_string($masterurl)
+  validate_string($autodiscoveryaddress)
+  validate_string($ui_user)
+  validate_string($ui_pass)
+  validate_string($version)
+  validate_integer($executors)
+  validate_bool($manage_slave_user)
+  validate_string($slave_user)
+  if $slave_uid { validate_integer($slave_uid) }
+  validate_absolute_path($slave_home)
+  validate_re($slave_mode, '^normal$|^exclusive$')
+  validate_bool($disable_ssl_verification)
+  validate_string($labels)
   validate_string($tool_locations)
-  if $java_args {
-    validate_string($java_args)
-  }
+  validate_bool($install_java)
+  validate_bool($manage_client_jar)
+  validate_re($ensure, '^running$|^stopped$')
+  validate_bool($enable)
+  validate_string($source)
+  validate_string($java_args)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {

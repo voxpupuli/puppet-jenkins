@@ -10,17 +10,10 @@ script:
   - "bundle exec rake lint"
   - "bundle exec rake spec SPEC_OPTS='--format documentation'"
 env:
-  - PUPPET_VERSION="~> 2.7.0"
-  - PUPPET_VERSION="~> 3.6.0"
-  - PUPPET_VERSION="~> 3.7.0"
   - PUPPET_VERSION="~> 3.8.0"
   - PUPPET_VERSION="~> 4.0.0"
   - PUPPET_VERSION="~> 4.1.0"
-matrix:
-  exclude:
-    - rvm: 1.9.3
-      env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 2.7.0"
+  - PUPPET_VERSION="~> 4.2.0"
+  - PUPPET_VERSION="~> 4.3.0"
 notifications:
   email: false

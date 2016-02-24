@@ -2,7 +2,14 @@ require 'spec_helper'
 
 describe 'jenkins::credentials', :type => :define do
   let(:title) { 'foo' }
-  let(:facts) {{ :osfamily => 'RedHat', :operatingsystem => 'RedHat' }}
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
   let(:helper_cmd) { "/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy" }
   let(:pre_condition) {
     "class jenkins::cli_helper { $helper_cmd = '#{helper_cmd}' }"

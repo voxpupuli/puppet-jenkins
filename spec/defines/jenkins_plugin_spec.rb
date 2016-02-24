@@ -2,7 +2,14 @@ require 'spec_helper'
 
 describe 'jenkins::plugin' do
   let(:title) { 'myplug' }
-  let(:facts) {{ :osfamily => 'RedHat', :operatingsystem => 'CentOS' }}
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   describe 'without version' do
     it do
@@ -160,7 +167,7 @@ describe 'jenkins::plugin' do
       include_examples 'should download from $source url'
 
       context 'and $version is set' do
-        before { params[:version] = 42 }
+        before { params[:version] = '42' }
 
         include_examples 'should download from $source url'
       end
