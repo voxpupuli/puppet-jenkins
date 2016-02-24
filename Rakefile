@@ -22,6 +22,11 @@ PuppetLint::RakeTask.new(:lint) do |l|
   l.log_format = "%{path}:%{linenumber}:%{check}:%{KIND}:%{message}"
 end
 
+desc "Run acceptance tests"
+RSpec::Core::RakeTask.new(:acceptance) do |t|
+  t.pattern = 'spec/acceptance'
+end
+
 PuppetSyntax.exclude_paths = exclude_paths
 
 task :default => [:lint, :validate, :spec]
