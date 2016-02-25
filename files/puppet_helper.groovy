@@ -217,6 +217,45 @@ class Actions {
   }
 
   /////////////////////////
+  // check if user needs updating
+  /////////////////////////
+  void user_up_to_date(String user_name, String email, String password="", String full_name="", String public_keys="") {
+    def user = hudson.model.User.get(user_name, false)
+
+    if (user != null) {
+      def configured_full_name = user.getFullName()
+
+      def configured_email = user.getProperty(hudson.tasks.Mailer.UserProperty).getAddress()
+
+      def configured_public_keys = ''
+      def ssh = user.getProperty(org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl)
+      if (ssh)
+        configured_public_keys = ssh.authorizedKeys
+
+      def correct_password = user.getProperty(hudson.security.HudsonPrivateSecurityRealm.Details).isPasswordCorrect(password)
+
+      if (configured_full_name == full_name && configured_email == email && configured_public_keys == public_keys && correct_password)
+        out.println("1")
+      else
+        out.println("0")
+    }
+    else
+      out.println("0")
+  }
+
+  /////////////////////////
+  // check if user exists
+  /////////////////////////
+  void user_exists(String user_name) {
+    def user = hudson.model.User.get(user_name, false)
+
+    if (user == null)
+      out.println("0")
+    else
+      out.println("0")
+  }
+
+  /////////////////////////
   // create or update user from JSON
   /////////////////////////
   void user_update() { // or create

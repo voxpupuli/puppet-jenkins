@@ -37,7 +37,6 @@ define jenkins::user (
       validate_string($password)
       validate_string($full_name)
       validate_string($public_key)
-      # XXX not idempotent
       jenkins::cli::exec { "create-jenkins-user-${title}":
         command => [
           'create_or_update_user',
@@ -47,15 +46,16 @@ define jenkins::user (
           "'${full_name}'",
           "'${public_key}'",
         ],
+        unless  => "[ \$(\$HELPER_CMD user_up_to_date ${title} ${email} '${password}' '${full_name}' '${public_key}') -eq 1 ]"
       }
     }
     'absent': {
-      # XXX not idempotent
       jenkins::cli::exec { "delete-jenkins-user-${title}":
         command => [
           'delete_user',
           $title,
         ],
+        unless  => "[ \$(\$HELPER_CMD user_exists ${title}) -eq 0 ]"
       }
     }
     default: {
