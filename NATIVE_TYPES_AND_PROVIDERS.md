@@ -52,7 +52,7 @@ An example of setting an alternative port number and an addition of a prefix.
 
 ```
 class { 'jenkins::cli::config':
-  ssh_private_key => 'http://localhost:9999/awesome-jenkins',
+  url => 'http://localhost:9999/awesome-jenkins',
 }
 ```
 
