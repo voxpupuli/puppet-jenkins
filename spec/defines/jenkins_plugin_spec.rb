@@ -49,6 +49,40 @@ describe 'jenkins::plugin' do
     it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
   end
 
+  describe 'with name and version' do
+    describe 'where name & version are a substring of another plugin' do
+      let(:params) { { :version => '1.2.3' } }
+      before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3' }
+
+      it { should contain_archive__download('myplug.hpi') }
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    end
+
+    describe 'where name & version are a substring of another plugin' do
+      let(:params) { { :version => '1.2.3' } }
+      before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3.4' }
+
+      it { should contain_archive__download('myplug.hpi') }
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    end
+
+    describe 'where version is a substring of the already installed plugin' do
+      let(:params) { { :version => '1.2.3' } }
+      before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3.4' }
+
+      it { should contain_archive__download('myplug.hpi') }
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    end
+
+    describe 'and no plugins are installed (should not actually happen)' do
+      let(:params) { { :version => '1.2.3' } }
+      before { facts[:jenkins_plugins] = '' }
+
+      it { should contain_archive__download('myplug.hpi') }
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    end
+  end # 'with name and version'
+
   describe 'with enabled is false' do
     let(:params) { { :enabled => false } }
 

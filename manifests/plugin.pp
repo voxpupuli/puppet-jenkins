@@ -63,7 +63,7 @@ define jenkins::plugin(
       default => $update_url,
     }
     $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
-    $search   = "${name} ${version}(,|$)"
+    $search   = "^${name} ${version}$"
   }
   else {
     $plugins_host = $update_url ? {
@@ -82,8 +82,12 @@ define jenkins::plugin(
 
   $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
   $plugin     = "${name}.${plugin_ext}"
+  $installed_plugins = $::jenkins_plugins ? {
+    undef   => [],
+    default => strip(split($::jenkins_plugins, ',')),
+  }
 
-  if (empty(grep([ $::jenkins_plugins ], $search))) {
+  if (empty(grep($installed_plugins, $search))) {
     if ($jenkins::proxy_host) {
       $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
     } else {
