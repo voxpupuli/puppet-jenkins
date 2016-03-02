@@ -107,7 +107,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
-      require => File["${::jenkins::plugin_dir}/${plugin}"],
+      require => Archive[$plugin],
       notify  => Service['jenkins'],
     }
 
@@ -120,7 +120,8 @@ define jenkins::plugin(
       ensure  => $pinned_ensure,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      require => Archive["${::jenkins::plugin_dir}/${plugin}"],
+      require => Archive[$plugin],
+      notify  => Service['jenkins'],
     }
 
     if $digest_string == '' {
@@ -131,21 +132,25 @@ define jenkins::plugin(
       $checksum = $digest_string
     }
 
-    archive { "${::jenkins::plugin_dir}/${plugin}":
+    archive { $plugin:
       source          => $download_url,
+      path            => "${::jenkins::plugin_dir}/${plugin}",
       checksum_verify => $checksum_verify,
       checksum        => $checksum,
       checksum_type   => $digest_type,
-      proxy_server    => $proxy_server,
-      notify          => Service['jenkins'],
+      proxy_server    => $::jenkins::proxy_server,
+      cleanup         => false,
+      extract         => false,
       require         => File[$::jenkins::plugin_dir],
+      notify          => Service['jenkins'],
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}" :
-      require => Archive["${::jenkins::plugin_dir}/${plugin}"],
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
+      require => Archive[$plugin],
+      before  => Service['jenkins'],
     }
   }
 
