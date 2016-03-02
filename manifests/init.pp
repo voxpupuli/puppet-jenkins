@@ -167,6 +167,8 @@
 #
 # group = 'jenkins' (default)
 #
+# global_config = undef (default)
+#   Allows you to override config.xml.
 #
 class jenkins(
   $version            = $jenkins::params::version,
@@ -203,6 +205,7 @@ class jenkins(
   $user               = $::jenkins::params::user,
   $manage_group       = $::jenkins::params::manage_group,
   $group              = $::jenkins::params::group,
+  $global_config      = undef,
 ) inherits jenkins::params {
 
   validate_string($version)
@@ -239,6 +242,7 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
+  validate_string($global_config)
 
   $plugin_dir = "${localstatedir}/plugins"
   $job_dir = "${localstatedir}/jobs"
@@ -345,6 +349,14 @@ class jenkins(
     Class['jenkins::service'] ->
       Class['jenkins::firewall'] ->
         Anchor['jenkins::end']
+  }
+
+  if $global_config {
+    include jenkins::config::global
+
+    Class['jenkins::config'] ->
+      Class['jenkins::config::global'] ->
+        Class['jenkins::service']
   }
 }
 # vim: ts=2 et sw=2 autoindent

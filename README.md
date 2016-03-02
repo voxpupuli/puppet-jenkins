@@ -199,6 +199,7 @@ the following `require` statement:
 6. Jenkins Users
 7. Credentials
 8. Simple security model configuration
+9. Overriding config.xml
 
 ### API-based Resources and Settings (Users, Credentials, security)
 
@@ -361,6 +362,11 @@ The Jenkins security model can be set to one of two modes:
 * `unsecured` - Authentication is not required.
 
 Jenkins security is not managed by puppet unless jenkins::security is defined.
+
+### Overriding `config.xml`
+
+You can use a template for managing `authorizationStrategy`, `securityRealm` and `views` among other things. To do this, define
+your template via param `jenkins::global_config`. This param accepts a string that can be configured via ERB, EPP, hiera lookup, etc.
 
 ## Using from Github / source
 
