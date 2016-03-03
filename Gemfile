@@ -10,6 +10,7 @@ gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
 gem 'metadata-json-lint'
 gem 'retries', '~> 0.0.5'
+gem 'travis', '~> 1.8'
 
 group :development do
   gem 'simplecov'
