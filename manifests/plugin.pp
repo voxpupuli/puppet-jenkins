@@ -23,10 +23,11 @@ define jenkins::plugin(
   $update_url      = undef,
   $enabled         = true,
   $source          = undef,
-  $digest_string   = '',
+  $digest_string   = undef,
   $digest_type     = 'sha1',
-  $timeout         = 120,
   $pin             = false,
+  # no worky
+  $timeout         = undef,
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
@@ -35,12 +36,18 @@ define jenkins::plugin(
 ) {
   validate_string($version)
   validate_bool($manage_config)
+  validate_string($config_filename)
+  validate_string($config_content)
+  validate_string($update_url)
   validate_bool($enabled)
-  validate_bool($pin)
-  # TODO: validate_str($update_url)
   validate_string($source)
   validate_string($digest_string)
   validate_string($digest_type)
+  validate_bool($pin)
+
+  if $timeout {
+    warning('jenkins::plugin::timeout presently has effect')
+  }
 
   if $plugin_dir {
     warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
@@ -124,12 +131,12 @@ define jenkins::plugin(
       notify  => Service['jenkins'],
     }
 
-    if $digest_string == '' {
-      $checksum_verify = false
-      $checksum = undef
-    } else {
+    if $digest_string {
       $checksum_verify = true
       $checksum = $digest_string
+    } else {
+      $checksum_verify = false
+      $checksum = undef
     }
 
     archive { $plugin:
