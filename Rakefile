@@ -29,4 +29,25 @@ end
 
 PuppetSyntax.exclude_paths = exclude_paths
 
-task :default => [:lint, :validate, :spec]
+namespace :travis do
+  desc "Syntax check travis.yml"
+  task :lint do
+    # warnings are currently non-fatal due to suspected problems with
+    # validation of matrix::include
+    #sh "travis lint --exit-code" do |ok, res|
+    sh "travis lint" do |ok, res|
+      unless ok
+        # exit without verbose rake error message
+        exit res.exitstatus
+      end
+    end
+  end
+end
+
+
+task :default => [
+  'travis:lint',
+  :lint,
+  :validate,
+  :spec,
+]
