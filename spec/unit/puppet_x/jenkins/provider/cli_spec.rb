@@ -22,7 +22,7 @@ describe PuppetX::Jenkins::Provider::Cli do
   shared_context 'facts' do
     before do
       Facter.add(:jenkins_cli_jar) { setcode { 'fact.jar' } }
-      Facter.add(:jenkins_port) { setcode { 11 } }
+      Facter.add(:jenkins_url) { setcode { 'http://localhost:11' } }
       Facter.add(:jenkins_ssh_private_key) { setcode { 'fact.id_rsa' } }
       Facter.add(:jenkins_puppet_helper) { setcode { 'fact.groovy' } }
       Facter.add(:jenkins_cli_tries) { setcode { 22 } }
@@ -399,7 +399,7 @@ describe PuppetX::Jenkins::Provider::Cli do
           jenkins = Puppet::Type.type(:component).new(
             :name            => 'jenkins::cli::config',
             :cli_jar         => 'cat.jar',
-            :port            => 111,
+            :url             => 'http://localhost:111',
             :ssh_private_key => 'cat.id_rsa',
             :cli_tries       => 222,
             :cli_try_sleep   => 333,

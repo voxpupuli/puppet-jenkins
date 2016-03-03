@@ -8,7 +8,7 @@
 # resource face.  No defaults should be set in this classes definition.
 class jenkins::cli::config(
   $cli_jar                 = undef,
-  $port                    = undef,
+  $url                     = undef,
   $ssh_private_key         = undef,
   $puppet_helper           = undef,
   $cli_tries               = undef,
@@ -16,7 +16,7 @@ class jenkins::cli::config(
   $ssh_private_key_content = undef,
 ) {
   if $cli_jar { validate_absolute_path($cli_jar) }
-  if $port { validate_integer($port) }
+  validate_string($url)
   if $ssh_private_key { validate_absolute_path($ssh_private_key) }
   if $puppet_helper { validate_absolute_path($puppet_helper) }
   if $cli_tries { validate_integer($cli_tries) }
