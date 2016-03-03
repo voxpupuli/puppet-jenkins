@@ -15,5 +15,15 @@ env:
   - PUPPET_VERSION="~> 4.1.0"
   - PUPPET_VERSION="~> 4.2.0"
   - PUPPET_VERSION="~> 4.3.0"
+matrix:
+  include:
+    - rvm: '2.1'
+      sudo: required
+      services: docker
+      env: PUPPET_VERSION="3.8.4" BEAKER_set="centos-6-docker"
+      script: bundle exec rake acceptance
+      bundler_args: --without development
+  allow_failures:
+    - env: PUPPET_VERSION="3.8.4" BEAKER_set="centos-6-docker"
 notifications:
   email: false
