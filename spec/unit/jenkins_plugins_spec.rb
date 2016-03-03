@@ -137,20 +137,37 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
   describe '.plugins_from_updatecenter' do
     subject(:plugins) { described_class.plugins_from_updatecenter(fixture) }
-    let(:fixture) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/update-center.json') }
 
-    it { should be_instance_of Hash }
-    # Our fixture file currently has 870 plugins in it
-    its(:size) { should eql 870 }
+    if RUBY_VERSION == '1.9.3'
+      # Ruby 1.9.3 has big performance issues with using okjson
+      # So we use a smaller json file for the fixture, with only 1 plugin
+      # See https://github.com/jenkinsci/puppet-jenkins/issues/517 for more info
+      let(:fixture) { File.expand_path(File.dirname(__FILE__) + "/../fixtures/update-center-1.9.3.json") }
+      # Set the count to just one for the smaller fixture file
+      plugin_count = 1
+    else
+      let(:fixture) { File.expand_path(File.dirname(__FILE__) + "/../fixtures/update-center.json") }
+      # Regular fixture file currently has 870 plugins in it
+      plugin_count = 870
+    end
 
-    context 'when json is not available' do
+    context 'uses json' do
+      it { should be_instance_of Hash }
+      it { should have_key('AdaptivePlugin')}
+      its (:size) { should eql plugin_count }
+    end
+
+    context 'uses okjson when json is not avaliable' do
       before :each do
         expect(::Kernel).to receive(:require).with('json').and_raise(LoadError)
         expect(::Kernel).to receive(:require).with('puppet/jenkins/okjson').and_call_original
       end
 
       it { should be_instance_of Hash }
+      it { should have_key('AdaptivePlugin')}
+      its (:size) { should eql plugin_count }
     end
+
   end
 
   let(:git_plugin) do
