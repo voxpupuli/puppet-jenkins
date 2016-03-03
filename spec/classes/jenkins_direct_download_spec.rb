@@ -29,7 +29,12 @@ describe 'jenkins', :type => :module do
     end
 
     context 'staging resource created' do
-      it { should contain_staging__file('jenkins.rpm').with_source('http://local.space/jenkins.rpm') }
+      it do
+        should contain_archive('jenkins.rpm').with({
+          :source => 'http://local.space/jenkins.rpm',
+          :path   => '/var/cache/jenkins_pkgs/jenkins.rpm',
+        })
+      end
     end
 
     context 'package removable' do

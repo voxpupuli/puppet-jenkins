@@ -253,14 +253,12 @@ class jenkins::slave (
   }
 
   if ($manage_client_jar) {
-    exec { 'get_swarm_client':
-      command => $fetch_command,
-      path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-      user    => $slave_user,
-      creates => "${slave_home}/${client_jar}",
-      cwd     => $slave_home,
-      #refreshonly  => true,
-    ## needs to be fixed if you create another version..
+    archive { 'get_swarm_client':
+      source       => "${client_url}/${client_jar}",
+      path         => "${slave_home}/${client_jar}",
+      proxy_server => $::jenkins::proxy_server,
+      cleanup      => false,
+      extract      => false,
     }
   }
 
