@@ -242,7 +242,7 @@ describe 'jenkins::plugin' do
     context 'default params' do
       it do
         should contain_file("#{pdir}/foo.hpi.pinned").with(
-          :ensure => nil,
+          :ensure => 'file',
           :owner  => 'jenkins',
           :group  => 'jenkins',
         ).that_requires("Archive[foo.hpi]")
@@ -253,7 +253,7 @@ describe 'jenkins::plugin' do
     context 'with source param' do
       let(:params) {{ :source => 'foo.jpi' }}
 
-      it { should contain_file("#{pdir}/foo.jpi.pinned").without_ensure }
+      it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('file') }
     end
 
     describe 'pin parameter' do
@@ -268,9 +268,7 @@ describe 'jenkins::plugin' do
         end
       end
       context 'with default pin param' do
-        it do
-          should contain_file("#{pdir}/foo.hpi.pinned").without_ensure
-        end
+        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
       end
     end
   end # pinned file extension name
