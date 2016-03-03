@@ -221,7 +221,7 @@ describe 'jenkins::plugin' do
 
     context 'validate_string' do
       context 'string' do
-        let(:params) {{ :source => 'foo' }}
+        let(:params) {{ :source => 'foo.hpi' }}
 
         it { should_not raise_error }
       end
