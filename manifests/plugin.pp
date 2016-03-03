@@ -95,14 +95,6 @@ define jenkins::plugin(
   }
 
   if (empty(grep($installed_plugins, $search))) {
-    if ($jenkins::proxy_host) {
-      # archive expects protocol in proxy_server, but jenkins proxy.xml expects no protocol
-      # assume http
-      $proxy_server = "http://${jenkins::proxy_host}:${jenkins::proxy_port}"
-    } else {
-      $proxy_server = undef
-    }
-
     $enabled_ensure = $enabled ? {
       false   => present,
       default => absent,
