@@ -170,7 +170,6 @@ class jenkins::slave (
 
   case $::kernel {
     'Linux': {
-      $fetch_command  = "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}"
       $service_name   = 'jenkins-slave'
       $defaults_user  = 'root'
       $defaults_group = 'root'
@@ -186,7 +185,6 @@ class jenkins::slave (
       }
     }
     'Darwin': {
-      $fetch_command    = "curl -O ${client_url}/${client_jar}"
       $service_name     = 'org.jenkins-ci.slave.jnlp'
       $defaults_user    = 'jenkins'
       $defaults_group   = 'wheel'
@@ -259,6 +257,7 @@ class jenkins::slave (
       proxy_server => $::jenkins::proxy_server,
       cleanup      => false,
       extract      => false,
+      require      => User['jenkins-slave_user'],
     }
   }
 
@@ -271,12 +270,12 @@ class jenkins::slave (
   }
 
   if ($manage_client_jar) {
-    Exec['get_swarm_client'] ->
-    Service['jenkins-slave']
+    Archive['get_swarm_client'] ->
+      Service['jenkins-slave']
   }
 
   if $install_java and ($::osfamily != 'Darwin') {
     Class['java'] ->
-    Service['jenkins-slave']
+      Service['jenkins-slave']
   }
 }

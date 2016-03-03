@@ -7,7 +7,7 @@ describe 'jenkins::slave' do
       should contain_archive('get_swarm_client').with(
         :cleanup => false,
         :extract => false,
-      )
+      ).that_requires('User[jenkins-slave_user]')
     end
     it { should contain_file(slave_service_file) }
     it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }

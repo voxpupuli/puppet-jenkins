@@ -30,10 +30,12 @@ describe 'jenkins', :type => :module do
 
     context 'staging resource created' do
       it do
-        should contain_archive('jenkins.rpm').with({
-          :source => 'http://local.space/jenkins.rpm',
-          :path   => '/var/cache/jenkins_pkgs/jenkins.rpm',
-        })
+        should contain_archive('jenkins.rpm').with(
+          :source  => 'http://local.space/jenkins.rpm',
+          :path    => '/var/cache/jenkins_pkgs/jenkins.rpm',
+          :cleanup => false,
+          :extract => false,
+        ).that_comes_before("Package[jenkins]")
       end
     end
 
