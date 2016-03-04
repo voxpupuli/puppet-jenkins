@@ -230,27 +230,14 @@ class jenkins::slave (
 
   #a Add jenkins slave user if necessary.
   if $manage_slave_user {
-    if $manage_client_jar {
-      user { 'jenkins-slave_user':
-        ensure     => present,
-        name       => $slave_user,
-        comment    => 'Jenkins Slave user',
-        home       => $slave_home,
-        managehome => $manage_user_home,
-        system     => true,
-        uid        => $slave_uid,
-        before     => Archive['get_swarm_client'],
-      }
-    } else {
-      user { 'jenkins-slave_user':
-        ensure     => present,
-        name       => $slave_user,
-        comment    => 'Jenkins Slave user',
-        home       => $slave_home,
-        managehome => $manage_user_home,
-        system     => true,
-        uid        => $slave_uid,
-      }
+    user { 'jenkins-slave_user':
+      ensure     => present,
+      name       => $slave_user,
+      comment    => 'Jenkins Slave user',
+      home       => $slave_home,
+      managehome => $manage_user_home,
+      system     => true,
+      uid        => $slave_uid,
     }
   }
 
@@ -284,6 +271,10 @@ class jenkins::slave (
   if ($manage_client_jar) {
     Archive['get_swarm_client'] ->
       Service['jenkins-slave']
+  }
+  if $manage_slave_user and $manage_client_jar {
+    User['jenkins-slave_user']->
+      Archive['get_swarm_client']
   }
 
   if $install_java and ($::osfamily != 'Darwin') {
