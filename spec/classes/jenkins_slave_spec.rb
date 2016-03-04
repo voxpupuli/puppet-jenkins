@@ -23,7 +23,7 @@ describe 'jenkins::slave' do
 
     describe 'with manage_slave_user true and manage_client_jar false' do
       let(:params) { { :manage_slave_user => true, :manage_client_jar => false } }
-      it { should contain_user('jenkins-slave_user').with_uid(nil).with_before(nil) }
+      it { should contain_user('jenkins-slave_user').with_uid(nil) }
     end
 
     describe 'with ssl verification disabled' do
