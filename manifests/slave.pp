@@ -238,6 +238,7 @@ class jenkins::slave (
       managehome => $manage_user_home,
       system     => true,
       uid        => $slave_uid,
+      before     => Archive['get_swarm_client'],
     }
   }
 
@@ -257,7 +258,6 @@ class jenkins::slave (
       proxy_server => $::jenkins::proxy_server,
       cleanup      => false,
       extract      => false,
-      require      => User['jenkins-slave_user'],
     }
   }
 

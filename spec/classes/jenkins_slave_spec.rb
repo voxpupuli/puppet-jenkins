@@ -7,11 +7,11 @@ describe 'jenkins::slave' do
       should contain_archive('get_swarm_client').with(
         :cleanup => false,
         :extract => false,
-      ).that_requires('User[jenkins-slave_user]')
+      )
     end
     it { should contain_file(slave_service_file) }
     it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }
-    it { should contain_user('jenkins-slave_user').with_uid(nil) }
+    it { should contain_user('jenkins-slave_user').with_uid(nil).that_comes_before('Archive[get_swarm_client]') }
     # Let the different platform blocks define  `slave_runtime_file` separately below
     it { should contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
     it { should contain_file(slave_runtime_file).without_content(/ -name /) }
