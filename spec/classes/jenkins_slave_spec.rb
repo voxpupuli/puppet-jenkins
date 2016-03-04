@@ -11,11 +11,20 @@ describe 'jenkins::slave' do
     end
     it { should contain_file(slave_service_file) }
     it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }
-    it { should contain_user('jenkins-slave_user').with_uid(nil).that_comes_before('Archive[get_swarm_client]') }
     # Let the different platform blocks define  `slave_runtime_file` separately below
     it { should contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
     it { should contain_file(slave_runtime_file).without_content(/ -name /) }
     it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS=""$/) }
+
+    describe 'with manage_slave_user true and manage_client_jar enabled' do
+      let(:params) { { :manage_slave_user => true, :manage_client_jar => true } }
+      it { should contain_user('jenkins-slave_user').with_uid(nil).that_comes_before('Archive[get_swarm_client]') }
+    end
+
+    describe 'with manage_slave_user true and manage_client_jar false' do
+      let(:params) { { :manage_slave_user => true, :manage_client_jar => false } }
+      it { should contain_user('jenkins-slave_user').with_uid(nil).with_before(nil) }
+    end
 
     describe 'with ssl verification disabled' do
       let(:params) { { :disable_ssl_verification => true } }
