@@ -23,10 +23,11 @@ define jenkins::plugin(
   $update_url      = undef,
   $enabled         = true,
   $source          = undef,
-  $digest_string   = '',
+  $digest_string   = undef,
   $digest_type     = 'sha1',
-  $timeout         = 120,
   $pin             = false,
+  # no worky
+  $timeout         = undef,
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
@@ -35,12 +36,18 @@ define jenkins::plugin(
 ) {
   validate_string($version)
   validate_bool($manage_config)
+  validate_string($config_filename)
+  validate_string($config_content)
+  validate_string($update_url)
   validate_bool($enabled)
-  validate_bool($pin)
-  # TODO: validate_str($update_url)
   validate_string($source)
   validate_string($digest_string)
   validate_string($digest_type)
+  validate_bool($pin)
+
+  if $timeout {
+    warning('jenkins::plugin::timeout presently has effect')
+  }
 
   if $plugin_dir {
     warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
@@ -88,12 +95,6 @@ define jenkins::plugin(
   }
 
   if (empty(grep($installed_plugins, $search))) {
-    if ($jenkins::proxy_host) {
-      $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
-    } else {
-      $proxy_server = undef
-    }
-
     $enabled_ensure = $enabled ? {
       false   => present,
       default => absent,
@@ -105,7 +106,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
-      require => File["${::jenkins::plugin_dir}/${plugin}"],
+      require => Archive[$plugin],
       notify  => Service['jenkins'],
     }
 
@@ -118,36 +119,37 @@ define jenkins::plugin(
       ensure  => $pinned_ensure,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      require => Archive::Download[$plugin],
+      require => Archive[$plugin],
+      notify  => Service['jenkins'],
     }
 
-    if $digest_string == '' {
-      $checksum = false
+    if $digest_string {
+      $checksum_verify = true
+      $checksum = $digest_string
     } else {
-      $checksum = true
+      $checksum_verify = false
+      $checksum = undef
     }
 
-    archive::download { $plugin:
-      url              => $download_url,
-      src_target       => $::jenkins::plugin_dir,
-      allow_insecure   => true,
-      follow_redirects => true,
-      verbose          => false,
-      checksum         => $checksum,
-      digest_string    => $digest_string,
-      digest_type      => $digest_type,
-      user             => $::jenkins::user,
-      proxy_server     => $proxy_server,
-      notify           => Service['jenkins'],
-      require          => File[$::jenkins::plugin_dir],
-      timeout          => $timeout,
+    archive { $plugin:
+      source          => $download_url,
+      path            => "${::jenkins::plugin_dir}/${plugin}",
+      checksum_verify => $checksum_verify,
+      checksum        => $checksum,
+      checksum_type   => $digest_type,
+      proxy_server    => $::jenkins::proxy_server,
+      cleanup         => false,
+      extract         => false,
+      require         => File[$::jenkins::plugin_dir],
+      notify          => Service['jenkins'],
     }
 
     file { "${::jenkins::plugin_dir}/${plugin}" :
-      require => Archive::Download[$plugin],
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
+      require => Archive[$plugin],
+      before  => Service['jenkins'],
     }
   }
 

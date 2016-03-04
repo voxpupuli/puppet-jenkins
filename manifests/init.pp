@@ -276,7 +276,13 @@ class jenkins(
       require => Package['jenkins'],
       notify  => Service['jenkins']
     }
+
+    # param format needed by puppet/archive
+    $proxy_server = "http://${jenkins::proxy_host}:${jenkins::proxy_port}"
+  } else {
+    $proxy_server = undef
   }
+
 
   include jenkins::service
 

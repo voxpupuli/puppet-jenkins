@@ -3,7 +3,12 @@ require 'spec_helper'
 describe 'jenkins::slave' do
 
   shared_context 'a jenkins::slave catalog' do
-    it { should contain_exec('get_swarm_client') }
+    it do
+      should contain_archive('get_swarm_client').with(
+        :cleanup => false,
+        :extract => false,
+      ).that_requires('User[jenkins-slave_user]')
+    end
     it { should contain_file(slave_service_file) }
     it { should contain_service('jenkins-slave').with(:enable => true, :ensure => 'running') }
     it { should contain_user('jenkins-slave_user').with_uid(nil) }

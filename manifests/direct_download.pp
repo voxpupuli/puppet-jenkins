@@ -26,10 +26,13 @@ class jenkins::direct_download {
 
   if $::jenkins::version != 'absent' {
     # make download optional if we are removing...
-    staging::file { $package_file:
-      source => $jenkins::direct_download,
-      target => $local_file,
-      before => Package[$::jenkins::package_name],
+    archive { $package_file:
+      source       => $jenkins::direct_download,
+      path         => $local_file,
+      proxy_server => $::jenkins::proxy_server,
+      cleanup      => false,
+      extract      => false,
+      before       => Package[$::jenkins::package_name],
     }
   }
 
