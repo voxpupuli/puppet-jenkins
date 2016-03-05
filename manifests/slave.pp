@@ -257,7 +257,6 @@ class jenkins::slave (
       proxy_server => $::jenkins::proxy_server,
       cleanup      => false,
       extract      => false,
-      require      => User['jenkins-slave_user'],
     }
   }
 
@@ -272,6 +271,10 @@ class jenkins::slave (
   if ($manage_client_jar) {
     Archive['get_swarm_client'] ->
       Service['jenkins-slave']
+  }
+  if $manage_slave_user and $manage_client_jar {
+    User['jenkins-slave_user']->
+      Archive['get_swarm_client']
   }
 
   if $install_java and ($::osfamily != 'Darwin') {
