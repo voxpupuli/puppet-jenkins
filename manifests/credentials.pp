@@ -50,7 +50,7 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
+        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title} | grep '${password}'",
       }
     }
     'absent': {
