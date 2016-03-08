@@ -1,17 +1,14 @@
 require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
+require 'beaker/puppet_install_helper'
 
 # Install Puppet
 unless ENV['RS_PROVISION'] == 'no'
-  # This will install the latest available package on el and deb based
-  # systems fail on windows and osx, and install via gem on other *nixes
-  foss_opts = { :default_action => 'gem_install' }
-
-  if default.is_pe?; then install_pe; else install_puppet( foss_opts ); end
-
-  hosts.each do |host|
-    on host, "mkdir -p #{host['distmoduledir']}"
-  end
+  ENV['PUPPET_INSTALL_TYPE'] ||= 'agent'
+  # puppet_install_helper does not understand pessimistic version constraints
+  # so we are ignoring PUPPET_VERSION.  Use PUPPET_INSTALL_VERSION instead.
+  ENV.delete 'PUPPET_VERSION'
+  run_puppet_install_helper
 end
 
 UNSUPPORTED_PLATFORMS = ['Suse','windows','AIX','Solaris']
@@ -28,7 +25,6 @@ RSpec.configure do |c|
     # Install module and dependencies
     hosts.each do |host|
       copy_module_to(host, :source => proj_root, :module_name => 'jenkins')
-      shell("/bin/touch #{default['puppetpath']}/hiera.yaml")
 
       on host, puppet('module install puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }

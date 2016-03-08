@@ -23,7 +23,16 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "impl": "BasicSSHUserPrivateKey",
             "description": "bar",
             "private_key": "-----BEGIN RSA PRIVATE KEY-----",
+            "username": "robin",
             "passphrase": ""
+        },
+        {
+            "id": "150b2895-b0eb-4813-b8a5-3779690c063c",
+            "domain": null,
+            "scope": "SYSTEM",
+            "impl": "StringCredentialsImpl",
+            "description": "baz",
+            "secret": "fluffy bunny"
         }
     ]
     EOS
@@ -50,6 +59,11 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       [
         'private_key',
         'passphrase',
+        'secret',
+        'file_name',
+        'content',
+        'source',
+        'key_store_impl'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -67,6 +81,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'scope',
         'impl',
         'description',
+        'username',
         'private_key',
         'passphrase',
       ].each do |k|
@@ -74,8 +89,44 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       [
+        'password',
+        'secret',
+        'file_name',
+        'content',
+        'source',
+        'key_store_impl'
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+
+    end
+  end
+
+  shared_examples "a provider from example hash 3" do
+    it do
+      cred = credentials[2]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      [
+        'domain',
+        'scope',
+        'impl',
+        'description',
+        'secret',
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      [
         'username',
         'password',
+        'private_key',
+        'passphrase',
+        'file_name',
+        'content',
+        'source',
+        'key_store_impl'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -93,7 +144,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it "should return the correct number of instances" do
-        expect(described_class.instances.size).to eq 2
+        expect(described_class.instances.size).to eq 3
       end
 
       context "first instance returned" do
@@ -108,6 +159,14 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         it_behaves_like "a provider from example hash 2" do
           let(:provider) do
             described_class.instances[1]
+          end
+        end
+      end
+
+      context "third instance returned" do
+        it_behaves_like "a provider from example hash 3" do
+          let(:provider) do
+            described_class.instances[2]
           end
         end
       end
@@ -164,6 +223,12 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     it_behaves_like "a provider from example hash 2" do
       let(:provider) do
         described_class.send :from_hash, credentials[1]
+      end
+    end
+
+    it_behaves_like "a provider from example hash 3" do
+      let(:provider) do
+        described_class.send :from_hash, credentials[2]
       end
     end
   end # ::from_hash

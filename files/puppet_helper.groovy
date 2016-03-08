@@ -38,6 +38,8 @@ class InvalidAuthenticationStrategy extends Exception{}
 class UnsupportedCredentialsClass extends Exception {}
 @InheritConstructors
 class InvalidCredentialsId extends Exception {}
+@InheritConstructors
+class MissingRequiredPlugin extends Exception {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util
@@ -554,15 +556,33 @@ class Actions {
           conf['description']
         )
         break
+      case 'StringCredentialsImpl':
+        if (! j.getPlugin('plain-credentials')) {
+          throw new MissingRequiredPlugin('plain-credentials')
+        }
+
+        // we can not declare:
+        // import org.jenkinsci.plugins.plaincredentials.impl.*
+        // if plain-credentials is not present
+        cred = this.class.classLoader.loadClass('org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl').newInstance(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          new Secret(conf['secret'])
+        )
+        break
       default:
         throw new UnsupportedCredentialsClass("unsupported " + conf['impl'])
     }
+    assert cred != null
 
     def domain = Domain.global()
     def existingCred = util.findCredentialsById(conf['id'], domain)
     def credStore = j.getExtensionList(
       'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
     )[0].getStore()
+    assert credStore != null
 
     if (existingCred != null) {
       credStore.updateCredentials(domain, existingCred, cred)

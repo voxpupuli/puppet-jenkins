@@ -239,6 +239,7 @@ jenkins_credentials { '<id>':
 
 * `UsernamePasswordCredentialsImpl`
 * `BasicSSHUserPrivateKey`
+* `FileCredentialsImpl`
 
 XXX This type has properties for other credentials classes that are not currently supported.
 
@@ -269,6 +270,22 @@ jenkins_credentials { 'a0469025-1202-4007-983d-0c62f230f1a7':
   private_key => '-----BEGIN RSA PRIVATE KEY----- ...',
   scope       => 'GLOBAL',
   username    => 'foo',
+}
+```
+
+#### `FileCredentialsImpl`
+
+Using this credential type requires that the jenkins `plain-credentials` plugin
+has been installed.
+
+```
+jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
+  ensure      => 'present',
+  description => 'secret string',
+  domain      => undef,
+  impl        => 'StringCredentialsImpl',
+  scope       => 'SYSTEM',
+  secret      => '42',
 }
 ```
 
