@@ -25,7 +25,7 @@ define jenkins::plugin(
   $source          = undef,
   $digest_string   = undef,
   $digest_type     = 'sha1',
-  $pin             = false,
+  $pin             = true,
   # no worky
   $timeout         = undef,
   # deprecated
@@ -89,6 +89,11 @@ define jenkins::plugin(
 
   $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
   $plugin     = "${name}.${plugin_ext}"
+  # sanity check extension
+  if ! $plugin_ext {
+    fail("unsupported plugin extension in source url: ${download_url}")
+  }
+
   $installed_plugins = $::jenkins_plugins ? {
     undef   => [],
     default => strip(split($::jenkins_plugins, ',')),
@@ -99,6 +104,29 @@ define jenkins::plugin(
       false   => present,
       default => absent,
     }
+
+    # at least as of jenkins 1.651, if the version of a plugin being downloaded
+    # has a .hpi extension, and there is an existing version of the plugin
+    # present with a .jpi extension, jenkins will actually delete the .hpi
+    # version when restarted. Essentially making it impossible to
+    # (up|down)grade a plugin from .jpi -> .hpi via puppet across extension
+    # changes.  Regardless, we should be relying on jenkins to guess which
+    # plugin archive to use and cleanup any conflicting extensions.
+    $inverse_plugin_ext = $plugin_ext ? {
+      'hpi'   => 'jpi',
+      'jpi'   => 'hpi',
+    }
+    $inverse_plugin     = "${name}.${inverse_plugin_ext}"
+
+    file {[
+      "${::jenkins::plugin_dir}/${inverse_plugin}",
+      "${::jenkins::plugin_dir}/${inverse_plugin}.disabled",
+      "${::jenkins::plugin_dir}/${inverse_plugin}.pinned",
+    ]:
+      ensure => absent,
+      before => Archive[$plugin],
+    }
+
 
     # Allow plugins that are already installed to be enabled/disabled.
     file { "${::jenkins::plugin_dir}/${plugin}.disabled":
