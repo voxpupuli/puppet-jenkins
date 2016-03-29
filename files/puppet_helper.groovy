@@ -855,9 +855,9 @@ class Actions {
    * Print the number of executors for the master
   */
   void get_num_executors() {
-     def j = Jenkins.getInstance()
-     def n = j.getNumExecutors()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getNumExecutors()
+    out.println(n)
   }
 
   ////////////////////////
@@ -867,9 +867,9 @@ class Actions {
    * Set the number of executors for the master
   */
   void set_num_executors(String n) {
-     def j = Jenkins.getInstance()
-     j.setNumExecutors(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setNumExecutors(n.toInteger())
+    j.save()
   }
 
   ////////////////////////
@@ -879,9 +879,9 @@ class Actions {
    * Print the portnumber of the slave agent
   */
   void get_slaveagent_port() {
-     def j = Jenkins.getInstance()
-     def n = j.getSlaveAgentPort()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getSlaveAgentPort()
+    out.println(n)
   }
 
   ////////////////////////
@@ -891,9 +891,9 @@ class Actions {
    * Set the portnumber of the slave agent
   */
   void set_slaveagent_port(String n) {
-     def j = Jenkins.getInstance()
-     j.setSlaveAgentPort(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setSlaveAgentPort(n.toInteger())
+    j.save()
   }
 
   /////////////////////////
@@ -910,8 +910,8 @@ class Actions {
     catch (MissingMethodException me) {
       out.println("Found resource is not a job, skipping.")
     }
-   }
-  } // class Actions
+  }
+} // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
 // CLI Argument Processing
