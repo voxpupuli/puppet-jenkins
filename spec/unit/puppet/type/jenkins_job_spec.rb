@@ -32,5 +32,59 @@ describe Puppet::Type.type(:jenkins_job) do
     it_behaves_like 'autorequires all jenkins_user resources'
     it_behaves_like 'autorequires jenkins_security_realm resource'
     it_behaves_like 'autorequires jenkins_authorization_strategy resource'
-  end
+
+    describe 'folders' do
+      it "should autorequire parent folder resource" do
+        folder = described_class.new(
+          :name => 'foo',
+        )
+
+        job = described_class.new(
+          :name => 'foo/bar',
+        )
+
+        folder[:ensure] = :present
+        job[:ensure] = :present
+
+        catalog = Puppet::Resource::Catalog.new
+        catalog.add_resource folder
+        catalog.add_resource job
+        req = job.autorequire
+
+        expect(req.size).to eq 1
+        expect(req[0].source).to eq folder
+        expect(req[0].target).to eq job
+      end
+
+      it "should autorequire multiple nested parent folder resources" do
+        folder1 = described_class.new(
+          :name => 'foo',
+        )
+
+        folder2 = described_class.new(
+          :name => 'foo/bar',
+        )
+
+        job = described_class.new(
+          :name => 'foo/bar/baz',
+        )
+
+        folder1[:ensure] = :present
+        folder2[:ensure] = :present
+        job[:ensure] = :present
+
+        catalog = Puppet::Resource::Catalog.new
+        catalog.add_resource folder1
+        catalog.add_resource folder2
+        catalog.add_resource job
+        req = job.autorequire
+
+        expect(req.size).to eq 2
+        expect(req[0].source).to eq folder1
+        expect(req[0].target).to eq job
+        expect(req[1].source).to eq folder2
+        expect(req[1].target).to eq job
+      end
+    end # folders
+  end # autorequire
 end
