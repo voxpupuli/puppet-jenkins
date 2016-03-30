@@ -16,22 +16,18 @@
 // limitations under the License.
 
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
-import com.cloudbees.jenkins.plugins.sshcredentials.impl.*;
 import com.cloudbees.plugins.credentials.*
-import com.cloudbees.plugins.credentials.*;
 import com.cloudbees.plugins.credentials.common.*
 import com.cloudbees.plugins.credentials.domains.*
-import com.cloudbees.plugins.credentials.domains.*;
 import com.cloudbees.plugins.credentials.impl.*
-import com.cloudbees.plugins.credentials.impl.*;
-import hudson.plugins.sshslaves.*;
-import jenkins.model.*;
-import org.jenkinsci.plugins.*;
-import jenkins.security.*;
-import hudson.util.*;
-import hudson.model.*;
 import groovy.transform.InheritConstructors
+import hudson.model.*
+import hudson.plugins.sshslaves.*
+import hudson.util.*
+import jenkins.model.*
+import jenkins.security.*
 import org.apache.commons.io.IOUtils
+import org.jenkinsci.plugins.*
 
 class InvalidAuthenticationStrategy extends Exception{}
 @InheritConstructors
@@ -859,9 +855,9 @@ class Actions {
    * Print the number of executors for the master
   */
   void get_num_executors() {
-     def j = Jenkins.getInstance()
-     def n = j.getNumExecutors()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getNumExecutors()
+    out.println(n)
   }
 
   ////////////////////////
@@ -871,9 +867,9 @@ class Actions {
    * Set the number of executors for the master
   */
   void set_num_executors(String n) {
-     def j = Jenkins.getInstance()
-     j.setNumExecutors(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setNumExecutors(n.toInteger())
+    j.save()
   }
 
   ////////////////////////
@@ -883,9 +879,9 @@ class Actions {
    * Print the portnumber of the slave agent
   */
   void get_slaveagent_port() {
-     def j = Jenkins.getInstance()
-     def n = j.getSlaveAgentPort()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getSlaveAgentPort()
+    out.println(n)
   }
 
   ////////////////////////
@@ -895,9 +891,9 @@ class Actions {
    * Set the portnumber of the slave agent
   */
   void set_slaveagent_port(String n) {
-     def j = Jenkins.getInstance()
-     j.setSlaveAgentPort(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setSlaveAgentPort(n.toInteger())
+    j.save()
   }
 
   /////////////////////////
@@ -914,8 +910,8 @@ class Actions {
     catch (MissingMethodException me) {
       out.println("Found resource is not a job, skipping.")
     }
-   }
-  } // class Actions
+  }
+} // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
 // CLI Argument Processing
