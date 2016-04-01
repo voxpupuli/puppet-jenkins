@@ -1,54 +1,6 @@
 require 'spec_helper'
 require 'unit/puppet_x/spec_jenkins_types'
 
-TEST_CONFIG1 = <<'EOS'
-<?xml version='1.0' encoding='UTF-8'?>
-<project>
-  <actions/>
-  <description>test job</description>
-  <keepDependencies>false</keepDependencies>
-  <properties/>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>/usr/bin/true</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
-EOS
-
-TEST_CONFIG2 = <<'EOS'
-<?xml version='1.0' encoding='UTF-8'?>
-<project>
-  <actions/>
-  <description>test job</description>
-  <keepDependencies>true</keepDependencies>
-  <properties/>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>true</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>true</blockBuildWhenUpstreamBuilding>
-  <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>/usr/bin/true</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
-EOS
-
 describe Puppet::Type.type(:jenkins_job) do
   before(:each) { Facter.clear }
 
@@ -58,7 +10,7 @@ describe Puppet::Type.type(:jenkins_job) do
     end
 
     describe 'show_diff' do
-      it_behaves_like 'boolean property', :show_diff, true
+      it_behaves_like 'boolean parameter', :show_diff, true
     end
   end #parameters
 
@@ -72,34 +24,51 @@ describe Puppet::Type.type(:jenkins_job) do
     end
 
     describe 'config' do
-      let(:config) { described_class.new(:resource => resource) }
+      let(:resource) { described_class.new(:name => 'foo', :config => 'bar') }
+      let(:property) { resource.property(:config) }
 
-      it { expect(described_class.attrtype('config')).to eq :config }
+      it { expect(described_class.attrtype(:config)).to eq :property }
 
       [true, false].product([true, false]).each do |cfg, param|
         describe "and Puppet[:show_diff] is #{cfg} and show_diff => #{param}" do
           before do
             Puppet[:show_diff] = cfg
-            resource.stubs(:show_diff?).returns param
-            resource[:loglevel] = "debug"
+            resource[:show_diff] = param
+            resource[:loglevel] = 'debug'
           end
 
           if cfg and param
             it "should display a diff" do
-              config.expects(:diff).returns("my diff").once
-              config.expects(:debug).with("\nmy diff").once
-              expect(content).not_to be_safe_insync("other content")
+              property.stub(:diff).and_return('foo')
+              expect(property).to receive(:diff).once
+              property.change_to_s('foo', 'bar')
             end
           else
             it "should not display a diff" do
-              config.expects(:diff).never
-              expect(content).not_to_be_safe_insync("other content")
+              property.stub(:diff)
+              expect(property).not_to receive (:diff)
+              property.change_to_s('foo', 'bar')
             end
           end
         end
       end
-    end
 
+      describe 'change_to_s change string' do
+
+        context 'created' do
+          it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
+        end
+        context 'removed' do
+          it { expect(property.change_to_s(nil, :absent)).to eq 'removed' }
+        end
+        context 'changed' do
+          it do
+            expect(property.change_to_s('foo', 'bar'))
+              .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
+          end
+        end
+      end #change_to_s change string
+    end #config
   end #properties
 
   describe 'autorequire' do

@@ -1,7 +1,9 @@
 require 'puppet/property/boolean'
-require 'pathname'
+require 'puppet/parameter/boolean'
 require 'puppet/util/diff'
 require 'puppet/util/checksums'
+require 'pathname'
+require 'tempfile'
 
 require 'puppet_x/jenkins/type/cli'
 
@@ -27,13 +29,27 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
       elsif newvalue == :absent
         return "removed"
       else
-        if Puppet[:show_diff] and resource.parameter(:show_diff)
-          send @resource[:loglevel], "\n" + lcs_diff(currentvalue, newvalue)
-        end
+        if Puppet[:show_diff] and resource[:show_diff]
+          # XXX this really should be turned into a helper method and submitted
+          # to # core puppet
+          Tempfile.open("puppet-file") do |d1|
+            d1.write(currentvalue)
+            d1.flush
+            Tempfile.open("puppet-file") do |d2|
+              d2.write(newvalue)
+              d2.flush
 
-        current_md5 = md5(currentvalue)
-        new_md5 = md5(newvalue)
-        return "content changed '{md5}#{current_md5}' to '{md5}#{new_md5}'"
+              send @resource[:loglevel], "\n" + diff(d1.path, d2.path)
+
+              d2.close
+              d2.unlink
+            end
+            d1.close
+            d1.unlink
+          end
+
+        end
+        return "content changed '{md5}#{md5(currentvalue)}' to '{md5}#{md5(newvalue)}'"
       end
     end
   end

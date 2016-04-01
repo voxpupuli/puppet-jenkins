@@ -69,6 +69,14 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 end # validated property
 
+shared_examples 'boolean parameter' do |param, default|
+  it 'does not allow non-boolean values' do
+    expect {
+      described_class.new(:name => 'foo', param => 'unknown')
+    }.to raise_error Puppet::ResourceError, /Valid values are true, false/
+  end
+end # boolean parameter
+
 shared_examples 'boolean property' do |param, default|
   it 'does not allow non-boolean values' do
     expect {

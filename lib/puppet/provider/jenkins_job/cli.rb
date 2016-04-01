@@ -8,7 +8,10 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
   mk_resource_methods
 
   def self.instances(catalog = nil)
-    jobs = get_jobs(catalog)
+    jobs = job_list_json(catalog)
+
+    Puppet.debug("#{sname} instances: #{jobs.collect {|i| i['name']}}")
+
     jobs.collect do |job|
       new(
         :name   => job['name'],
@@ -53,13 +56,14 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
 
   private
 
+  # currently unused
   def self.list_jobs(catalog = nil)
     cli(['list-jobs'], :catalog => catalog).split
   end
   private_class_method :list_jobs
 
-  def self.get_jobs(catalog = nil)
-    raw = clihelper(['get_job_list'], :catalog => catalog)
+  def self.job_list_json(catalog = nil)
+    raw = clihelper(['job_list_json'], :catalog => catalog)
 
     begin
       JSON.parse(raw)
@@ -67,13 +71,15 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
       fail("unable to parse as JSON: #{raw}")
     end
   end
-  private_class_method :get_jobs
+  private_class_method :job_list_json
 
+  # currently unused
   def self.get_job(job, catalog = nil)
     cli(['get-job', job], :catalog => catalog)
   end
   private_class_method :get_job
 
+  # currently unused
   def self.job_enabled(job, catalog = nil)
     raw = clihelper(['job_enabled', job], :catalog => catalog)
     !!(raw =~ /true/)
