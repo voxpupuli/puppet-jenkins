@@ -79,12 +79,24 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
   # if the job is contained in a `cloudbees-folder`, autorequire any parent
   # folder jobs
-  # XXX we can't inspect @resource[:name] or self[:name] here because of
-  # meta-programming funkiness
+  # XXX we can't inspect @resource[:name] or self[:name] here outside of teh
+  # autorequire block because of meta-programming funkiness
   autorequire(:jenkins_job) do
-    folders = []
-    Pathname(self[:name]).dirname.descend { |d| folders << d.to_path }
-    folders
+    if self[:ensure] == :present
+      folders = []
+      Pathname(self[:name]).dirname.descend { |d| folders << d.to_path }
+      folders
+    end
   end
 
+  # XXX completely punting on handling delete ordering for puppet < 4
+  unless Puppet.version.to_f < 4.0
+    autobefore(:jenkins_job) do
+      if self[:ensure] == :absent
+        folders = []
+        Pathname(self[:name]).dirname.descend { |d| folders << d.to_path }
+        folders
+      end
+    end
+  end
 end # PuppetX::Jenkins::Type::Cli.newtype

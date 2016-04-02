@@ -129,6 +129,37 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[1].source).to eq folder2
         expect(req[1].target).to eq job
       end
+
+      it "should autobefore multiple nested parent folder resources",
+          :unless => Puppet.version.to_f < 4.0 do
+        folder1 = described_class.new(
+          :name => 'foo',
+        )
+
+        folder2 = described_class.new(
+          :name => 'foo/bar',
+        )
+
+        job = described_class.new(
+          :name => 'foo/bar/baz',
+        )
+
+        folder1[:ensure] = :absent
+        folder2[:ensure] = :absent
+        job[:ensure] = :absent
+
+        catalog = Puppet::Resource::Catalog.new
+        catalog.add_resource folder1
+        catalog.add_resource folder2
+        catalog.add_resource job
+        req = job.autobefore
+
+        expect(req.size).to eq 2
+        expect(req[0].source).to eq job
+        expect(req[0].target).to eq folder1
+        expect(req[1].source).to eq job
+        expect(req[1].target).to eq folder2
+      end
     end # folders
   end # autorequire
 end
