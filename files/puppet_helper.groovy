@@ -123,10 +123,10 @@ class Util {
     def ctor
 
     // if we have a null arg, we don't know how to map that back to a class
-    // (hurray for java) and Class::getDeclaredConstructor() will fail. We are
+    // (hooray for java) and Class::getDeclaredConstructor() will fail. We are
     // being lazy here and trying to match only by the number of arguments.
     //
-    // A better impliementation would try to compare parameter types with null
+    // A better implementation would try to compare parameter types with null
     // matching any class that is an instance of Object
     if (args.any { it == null }) {
       def ctors = c.getDeclaredConstructors()
@@ -268,8 +268,8 @@ class Actions {
     }
 
     // it is not possible to directly set the API token because the user
-    // visible value is actualy a digest of the "plain text" token after it
-    // is unecnrypted.
+    // visible value is actually a digest of the "plain text" token after it
+    // is unencrypted.
     def api_token_plain = conf['api_token_plain']
     if (api_token_plain) {
       assert api_token_plain instanceof String
@@ -835,7 +835,7 @@ class Actions {
     def conf = slurper.parseText(text)
 
     // each key in the hash is a method on the Jenkins singleton.  The key's
-    // value is an object to instatiate and pass to the method.  (currently,
+    // value is an object to instantiate and pass to the method.  (currently,
     // only one parameter is supported)
     conf.each { entry ->
       def methodName = entry.key
@@ -901,7 +901,7 @@ class Actions {
   // get_slaveagent_port
   ////////////////////////
   /*
-   * Print the portnumber of the slave agent
+   * Print the port number of the slave agent
   */
   void get_slaveagent_port() {
     def j = Jenkins.getInstance()
