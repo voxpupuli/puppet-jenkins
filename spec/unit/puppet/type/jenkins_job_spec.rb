@@ -8,6 +8,10 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
+
+    describe 'show_diff' do
+      it_behaves_like 'boolean parameter', :show_diff, true
+    end
   end #parameters
 
   describe 'properties' do
@@ -19,12 +23,52 @@ describe Puppet::Type.type(:jenkins_job) do
       it_behaves_like 'boolean property', :enable, true
     end
 
-    # unvalidated properties
-    [:config].each do |property|
-      describe "#{property}" do
-        it { expect(described_class.attrtype(property)).to eq :property }
+    describe 'config' do
+      let(:resource) { described_class.new(:name => 'foo', :config => 'bar') }
+      let(:property) { resource.property(:config) }
+
+      it { expect(described_class.attrtype(:config)).to eq :property }
+
+      [true, false].product([true, false]).each do |cfg, param|
+        describe "and Puppet[:show_diff] is #{cfg} and show_diff => #{param}" do
+          before do
+            Puppet[:show_diff] = cfg
+            resource[:show_diff] = param
+            resource[:loglevel] = 'debug'
+          end
+
+          if cfg and param
+            it "should display a diff" do
+              property.stub(:diff).and_return('foo')
+              expect(property).to receive(:diff).once
+              property.change_to_s('foo', 'bar')
+            end
+          else
+            it "should not display a diff" do
+              property.stub(:diff)
+              expect(property).not_to receive (:diff)
+              property.change_to_s('foo', 'bar')
+            end
+          end
+        end
       end
-    end
+
+      describe 'change_to_s change string' do
+
+        context 'created' do
+          it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
+        end
+        context 'removed' do
+          it { expect(property.change_to_s(nil, :absent)).to eq 'removed' }
+        end
+        context 'changed' do
+          it do
+            expect(property.change_to_s('foo', 'bar'))
+              .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
+          end
+        end
+      end #change_to_s change string
+    end #config
   end #properties
 
   describe 'autorequire' do
@@ -84,6 +128,37 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[0].target).to eq job
         expect(req[1].source).to eq folder2
         expect(req[1].target).to eq job
+      end
+
+      it "should autobefore multiple nested parent folder resources",
+          :unless => Puppet.version.to_f < 4.0 do
+        folder1 = described_class.new(
+          :name => 'foo',
+        )
+
+        folder2 = described_class.new(
+          :name => 'foo/bar',
+        )
+
+        job = described_class.new(
+          :name => 'foo/bar/baz',
+        )
+
+        folder1[:ensure] = :absent
+        folder2[:ensure] = :absent
+        job[:ensure] = :absent
+
+        catalog = Puppet::Resource::Catalog.new
+        catalog.add_resource folder1
+        catalog.add_resource folder2
+        catalog.add_resource job
+        req = job.autobefore
+
+        expect(req.size).to eq 2
+        expect(req[0].source).to eq job
+        expect(req[0].target).to eq folder1
+        expect(req[1].source).to eq job
+        expect(req[1].target).to eq folder2
       end
     end # folders
   end # autorequire

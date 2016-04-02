@@ -8,19 +8,16 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
   mk_resource_methods
 
   def self.instances(catalog = nil)
-    job_names = list_jobs(catalog)
+    jobs = job_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{job_names}")
+    Puppet.debug("#{sname} instances: #{jobs.collect {|i| i['name']}}")
 
-    # XXX iterating over each job is slow because it requires 2 invocations of
-    # the cli jar.  This should be replaced with a puppet_helper method to
-    # return the configuration for all jobs at once.
-    job_names.collect do |job|
+    jobs.collect do |job|
       new(
-        :name   => job,
+        :name   => job['name'],
         :ensure => :present,
-        :config => get_job(job, catalog),
-        :enable => job_enabled(job, catalog),
+        :config => job['config'],
+        :enable => job['enabled'],
       )
     end
   end
@@ -59,16 +56,30 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
 
   private
 
+  # currently unused
   def self.list_jobs(catalog = nil)
     cli(['list-jobs'], :catalog => catalog).split
   end
   private_class_method :list_jobs
 
+  def self.job_list_json(catalog = nil)
+    raw = clihelper(['job_list_json'], :catalog => catalog)
+
+    begin
+      JSON.parse(raw)
+    rescue JSON::ParserError
+      fail("unable to parse as JSON: #{raw}")
+    end
+  end
+  private_class_method :job_list_json
+
+  # currently unused
   def self.get_job(job, catalog = nil)
     cli(['get-job', job], :catalog => catalog)
   end
   private_class_method :get_job
 
+  # currently unused
   def self.job_enabled(job, catalog = nil)
     raw = clihelper(['job_enabled', job], :catalog => catalog)
     !!(raw =~ /true/)

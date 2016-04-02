@@ -65,7 +65,7 @@ EOS
 
       jenkins::job { 'test-build-job':
         config  => \'#{test_build_job}\',
-        enabled => 0,
+        enabled => false,
       }
       EOS
 

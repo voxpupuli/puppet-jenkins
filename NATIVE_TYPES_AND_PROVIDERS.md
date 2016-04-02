@@ -293,12 +293,17 @@ jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
 
 ```
 jenkins_job { 'job name':
-  config => '<xml config string>',
-  enable => true, # true | false
+  ensure    => 'present', # present | absent
+  enable    => true, # true | false
+  config    => '<xml config string>',
+  show_diff => true, # true | false
 }
 ```
 
-XXX Note that enable is prefetch correctly but the value is ignored when
+Has basic support for the `cloudbees-folder` plugin including automatically
+ordering parent folders before nested jobs.
+
+XXX Note that enable is prefetched correctly but the value is ignored when
 syncing.
 
 ```
@@ -460,9 +465,6 @@ TODO
 
 * determine what to do about `jenkins_job` `enable` parameter which potentially
   breaks idempotency
-
-* add a method to `puppet_helper.groovy` to list all jobs so that `jenkins_job`
-  does not need to make multiple cli invocations when prefetching
 
 * test that the transition from authentication being required to disabled is
   properly handled

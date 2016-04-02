@@ -123,10 +123,10 @@ class Util {
     def ctor
 
     // if we have a null arg, we don't know how to map that back to a class
-    // (hurray for java) and Class::getDeclaredConstructor() will fail. We are
+    // (hooray for java) and Class::getDeclaredConstructor() will fail. We are
     // being lazy here and trying to match only by the number of arguments.
     //
-    // A better impliementation would try to compare parameter types with null
+    // A better implementation would try to compare parameter types with null
     // matching any class that is an instance of Object
     if (args.any { it == null }) {
       def ctors = c.getDeclaredConstructors()
@@ -176,6 +176,31 @@ class Util {
 
     classList
   }
+
+  def Map findJobs(Object obj, String namespace = null) {
+    def found = [:]
+
+    // groovy apparently can't #collect on a list and return a map?
+    obj.items.each { job ->
+      // a possibly better approach would be to walk the parent chain from //
+      // each job
+      def path = job.getName()
+      if (namespace) {
+        path = "${namespace}/" + path
+      }
+
+      found[path] = job
+
+      // intentionally not using `instanceof` here so we don't blow up if the
+      // cloudbees-folder plugin is not installed
+      if (job.getClass().getName() == 'com.cloudbees.hudson.plugins.folder.Folder') {
+        found << findJobs(job, path)
+      }
+    }
+
+    found
+  }
+
 } // class Util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -243,8 +268,8 @@ class Actions {
     }
 
     // it is not possible to directly set the API token because the user
-    // visible value is actualy a digest of the "plain text" token after it
-    // is unecnrypted.
+    // visible value is actually a digest of the "plain text" token after it
+    // is unencrypted.
     def api_token_plain = conf['api_token_plain']
     if (api_token_plain) {
       assert api_token_plain instanceof String
@@ -810,7 +835,7 @@ class Actions {
     def conf = slurper.parseText(text)
 
     // each key in the hash is a method on the Jenkins singleton.  The key's
-    // value is an object to instatiate and pass to the method.  (currently,
+    // value is an object to instantiate and pass to the method.  (currently,
     // only one parameter is supported)
     conf.each { entry ->
       def methodName = entry.key
@@ -876,7 +901,7 @@ class Actions {
   // get_slaveagent_port
   ////////////////////////
   /*
-   * Print the portnumber of the slave agent
+   * Print the port number of the slave agent
   */
   void get_slaveagent_port() {
     def j = Jenkins.getInstance()
@@ -911,6 +936,33 @@ class Actions {
       out.println("Found resource is not a job, skipping.")
     }
   }
+
+  /////////////////////////
+  // job_list_json
+  /////////////////////////
+  /*
+   * Return all the configured jobs as a list of maps
+   */
+  void job_list_json() {
+    def jobs = util.findJobs(Jenkins.getInstance())
+
+    def allInfo = jobs.collect { path, job ->
+      def enabled = false
+      // folders don't respond to #isDisabled
+      if (job.getClass().getName() != 'com.cloudbees.hudson.plugins.folder.Folder') {
+        enabled = !job.isDisabled()
+      }
+      [
+        name: path,
+        config: job.getConfigFile().getFile().getText('utf-8'),
+        enabled: enabled
+      ]
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
+    out.println(builder.toPrettyString())
+  }
+
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
