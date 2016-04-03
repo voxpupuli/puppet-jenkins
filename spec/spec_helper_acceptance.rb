@@ -35,3 +35,26 @@ RSpec.configure do |c|
     end
   end
 end
+
+shared_context 'jenkins' do
+  # rspec examples are not avaiable as variables to serverspec describe blocks
+  $libdir = case fact 'osfamily'
+  when 'RedHat'
+    '/usr/lib/jenkins'
+  when 'Debian'
+    '/usr/share/jenkins'
+  end
+
+  let(:libdir) { $libdir }
+
+  let(:base_manifest) do
+    <<-EOS
+      include ::jenkins
+
+      class { '::jenkins::cli::config':
+        cli_jar       => '#{libdir}/jenkins-cli.jar',
+        puppet_helper => '#{libdir}/puppet_helper.groovy',
+      }
+    EOS
+  end
+end
