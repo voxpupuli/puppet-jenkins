@@ -148,6 +148,7 @@ class jenkins::slave (
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
     include ::java
+    Class['java'] -> Service['jenkins-slave']
   }
 
   # customizations based on the OS family
@@ -202,12 +203,14 @@ class jenkins::slave (
         mode    => '0644',
         owner   => 'root',
         group   => 'wheel',
-      }
+      } ->
+      Service['jenkins-slave']
 
       file { '/var/log/jenkins':
         ensure => 'directory',
         owner  => $slave_user,
-      }
+      } ->
+      Service['jenkins-slave']
 
       if $manage_slave_user {
         # osx doesn't have managehome support, so create directory
@@ -218,10 +221,6 @@ class jenkins::slave (
           require => User['jenkins-slave_user'],
         }
       }
-
-      File['/var/log/jenkins'] ->
-        File['/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist'] ->
-          Service['jenkins-slave']
     }
     default: { }
   }
@@ -255,7 +254,8 @@ class jenkins::slave (
       proxy_server => $::jenkins::proxy_server,
       cleanup      => false,
       extract      => false,
-    }
+    } ->
+    Service['jenkins-slave']
   }
 
   service { 'jenkins-slave':
@@ -266,17 +266,8 @@ class jenkins::slave (
     hasrestart => true,
   }
 
-  if ($manage_client_jar) {
-    Archive['get_swarm_client'] ->
-      Service['jenkins-slave']
-  }
   if $manage_slave_user and $manage_client_jar {
     User['jenkins-slave_user']->
       Archive['get_swarm_client']
-  }
-
-  if $install_java and ($::osfamily != 'Darwin') {
-    Class['java'] ->
-      Service['jenkins-slave']
   }
 }
