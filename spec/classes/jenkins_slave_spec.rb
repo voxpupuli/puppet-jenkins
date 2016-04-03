@@ -117,6 +117,17 @@ describe 'jenkins::slave' do
     end
 
     it { should_not contain_package('daemon') }
+
+    context '::jenkins & ::jenkins::slave should co-exist' do
+      let(:pre_condition) do
+        <<-'EOS'
+          include ::jenkins
+          include ::jenkins::slave
+        EOS
+      end
+
+      it { should_not raise_error }
+    end
   end
 
   describe 'Debian' do

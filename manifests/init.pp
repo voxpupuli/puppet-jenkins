@@ -247,9 +247,7 @@ class jenkins(
   anchor {'jenkins::end':}
 
   if $install_java {
-    class {'java':
-      distribution => 'jdk'
-    }
+    include ::java
   }
 
   if $direct_download {
