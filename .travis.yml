@@ -10,10 +10,10 @@ script:
   - "bundle exec rake parallel_spec SPEC_OPTS='--format documentation --order random'"
 env:
   - PUPPET_VERSION="~> 3.8.0"
-  - PUPPET_VERSION="~> 4.0.0"
   - PUPPET_VERSION="~> 4.1.0"
   - PUPPET_VERSION="~> 4.2.0"
   - PUPPET_VERSION="~> 4.3.0"
+  - PUPPET_VERSION="~> 4.4.0"
 matrix:
   include:
     - rvm: '2.1'
