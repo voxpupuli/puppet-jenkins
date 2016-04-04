@@ -55,12 +55,7 @@ EOS
     example.gsub("'", %q(\\\'))
   end
 
-  let(:base_manifest) do
-    <<-EOS
-      include ::jenkins
-      include ::jenkins::cli::config
-    EOS
-  end
+  include_context 'jenkins'
 
   context 'ensure =>' do
     context 'present' do
