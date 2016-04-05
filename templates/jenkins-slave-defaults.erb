@@ -73,9 +73,9 @@ if [ -n "$MASTER_URL" ]; then
   MASTER_URL_ARG="-master $MASTER_URL"
 fi
 
-if [ -n "$LABELS" ]; then
-  LABELS_ARG="-labels '$LABELS'"
-fi
+for LABEL in $LABELS; do
+  LABELS_ARG+="-labels $LABEL "
+done
 
 if [ -n "$FSROOT" ]; then
   FSROOT_ARG="-fsroot '$FSROOT'"
