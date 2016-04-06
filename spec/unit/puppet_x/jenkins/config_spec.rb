@@ -53,11 +53,11 @@ describe PuppetX::Jenkins::Config do
 
   # we are relying on a side effect of this method being to test features /
   # load libs
-  describe "#initialize" do
+  describe '#initialize' do
     it { expect(described_class.new).to be_kind_of PuppetX::Jenkins::Config }
   end
 
-  describe "#[]" do
+  describe '#[]' do
     context 'unknown config key' do
       it do
         expect{described_class.new[:foo]}

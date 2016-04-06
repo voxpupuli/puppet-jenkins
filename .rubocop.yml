@@ -335,8 +335,8 @@ Style/LineEndConcatenation:
 Style/TrailingWhitespace:
   Enabled: false
 
-Style/StringLiterals:
-  Enabled: false
+#Style/StringLiterals:
+#  Enabled: false
 
 Style/TrailingCommaInLiteral:
   Enabled: false

@@ -133,7 +133,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        :proxy_server => "http://proxy.company.com:8080",
+        :proxy_server => 'http://proxy.company.com:8080',
       )
     end
   end
@@ -248,7 +248,7 @@ describe 'jenkins::plugin' do
           :owner  => 'jenkins',
           :group  => 'jenkins',
         )
-          .that_requires("Archive[foo.hpi]")
+          .that_requires('Archive[foo.hpi]')
           .that_notifies('Service[jenkins]')
       end
     end

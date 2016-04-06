@@ -10,7 +10,7 @@ describe 'jenkins::credentials', :type => :define do
       :operatingsystemmajrelease => '6',
     }
   end
-  let(:helper_cmd) { "/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy" }
+  let(:helper_cmd) { '/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy' }
   let(:pre_condition) {
     "class jenkins::cli_helper { $helper_cmd = '#{helper_cmd}' }"
   }
@@ -33,7 +33,7 @@ describe 'jenkins::credentials', :type => :define do
       :password => 'mypass',
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
-      :command    => [ "create_or_update_credentials" , "#{title}", "'mypass'",
+      :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "''", "'Managed by Puppet'", "''" ],
       :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
     })}
@@ -45,7 +45,7 @@ describe 'jenkins::credentials', :type => :define do
       :password => 'mypass',
     }}
     it { should contain_jenkins__cli__exec('delete-jenkins-credentials-foo').with({
-      :command    => [ "delete_credentials", "#{title}" ],
+      :command    => [ 'delete_credentials', "#{title}" ],
     })}
   end
 
@@ -56,7 +56,7 @@ describe 'jenkins::credentials', :type => :define do
       :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
-      :command    => [ "create_or_update_credentials" , "#{title}", "'mypass'",
+      :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
       :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
     })}
