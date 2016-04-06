@@ -12,6 +12,7 @@ gem 'metadata-json-lint'
 gem 'retries', '~> 0.0.5'
 gem 'travis', '~> 1.8'
 gem 'parallel_tests'
+gem 'rubocop', '~> 0.39'
 
 group :development do
   gem 'simplecov'

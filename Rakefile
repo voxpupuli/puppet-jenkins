@@ -5,6 +5,9 @@ require 'puppet-lint/tasks/puppet-lint'
 require 'puppet-syntax/tasks/puppet-syntax'
 require 'parallel_tests'
 require 'parallel_tests/cli'
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
 
 exclude_paths = [
   "pkg/**/*",
@@ -55,6 +58,7 @@ end
 
 task :default => [
   'travis:lint',
+  :rubocop,
   :lint,
   :validate,
   :spec,
