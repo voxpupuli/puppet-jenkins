@@ -21,9 +21,13 @@ describe 'jenkins', :type => :module  do
     end
 
     context 'with cli disabled' do
-      let(:params) { { :service_ensure => 'stopped',
-                       :cli => false,
-                       :job_hash => { 'build' => { 'config' => '<xml/>' } } } }
+      let(:params) do
+        {
+          :service_ensure => 'stopped',
+          :cli => false,
+          :job_hash => { 'build' => { 'config' => '<xml/>' } }
+        }
+      end
       it do
         expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
       end

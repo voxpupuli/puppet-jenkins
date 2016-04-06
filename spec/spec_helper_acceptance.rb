@@ -39,11 +39,11 @@ end
 shared_context 'jenkins' do
   # rspec examples are not avaiable as variables to serverspec describe blocks
   $libdir = case fact 'osfamily'
-  when 'RedHat'
-    '/usr/lib/jenkins'
-  when 'Debian'
-    '/usr/share/jenkins'
-  end
+            when 'RedHat'
+              '/usr/lib/jenkins'
+            when 'Debian'
+              '/usr/share/jenkins'
+            end
 
   let(:libdir) { $libdir }
 

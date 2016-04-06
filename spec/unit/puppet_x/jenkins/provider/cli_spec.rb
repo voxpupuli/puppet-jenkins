@@ -35,7 +35,7 @@ describe PuppetX::Jenkins::Provider::Cli do
   before(:each) do
     # clear class level state
     if described_class.class_variable_defined?(:@@cli_auth_required)
-       described_class.class_variable_set(:@@cli_auth_required, false)
+      described_class.class_variable_set(:@@cli_auth_required, false)
     end
   end
 

@@ -63,8 +63,7 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 
   it "should reject unknown values" do
-    expect { described_class.new(:name => 'nobody',
-                                 param => :foo) }.
+    expect { described_class.new(:name => 'nobody', param => :foo) }.
       to raise_error(Puppet::Error)
   end
 end # validated property

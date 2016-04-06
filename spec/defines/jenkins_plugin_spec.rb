@@ -20,7 +20,7 @@ describe 'jenkins::plugin' do
         :cleanup => false,
         :extract => false,
       ).that_requires("File[#{pdir}]")
-       .that_notifies('Service[jenkins]')
+        .that_notifies('Service[jenkins]')
     end
     it do
       should contain_file("#{pdir}/#{title}.hpi").with(
@@ -28,7 +28,7 @@ describe 'jenkins::plugin' do
         :group => 'jenkins',
         :mode  => '0644',
       ).that_requires("Archive[#{title}.hpi]")
-       .that_comes_before('Service[jenkins]')
+        .that_comes_before('Service[jenkins]')
     end
   end
 
@@ -105,7 +105,7 @@ describe 'jenkins::plugin' do
         :group  => 'jenkins',
         :mode   => '0644',
       ).that_requires("Archive[#{title}.hpi]")
-       .that_notifies('Service[jenkins]')
+        .that_notifies('Service[jenkins]')
     end
   end
 
@@ -122,12 +122,14 @@ describe 'jenkins::plugin' do
   end
 
   describe 'with proxy' do
-    let(:pre_condition) { [
-      'class { jenkins:
-        proxy_host => "proxy.company.com",
-        proxy_port => 8080,
-      }',
-    ]}
+    let(:pre_condition) do
+      <<-EOS
+        class { jenkins:
+          proxy_host => "proxy.company.com",
+          proxy_port => 8080,
+        }
+      EOS
+    end
 
     it do
       should contain_archive('myplug.hpi').with(
@@ -194,10 +196,10 @@ describe 'jenkins::plugin' do
   describe 'source' do
     shared_examples 'should download from $source url' do
       it 'should download from $source url' do
-         should contain_archive('myplug.hpi').with(
+        should contain_archive('myplug.hpi').with(
           :source  => 'http://e.org/myplug.hpi',
         )
-        .that_requires("File[#{pdir}]")
+          .that_requires("File[#{pdir}]")
       end
     end
 
@@ -245,8 +247,9 @@ describe 'jenkins::plugin' do
           :ensure => 'file',
           :owner  => 'jenkins',
           :group  => 'jenkins',
-        ).that_requires("Archive[foo.hpi]")
-         .that_notifies('Service[jenkins]')
+        )
+          .that_requires("Archive[foo.hpi]")
+          .that_notifies('Service[jenkins]')
       end
     end
 

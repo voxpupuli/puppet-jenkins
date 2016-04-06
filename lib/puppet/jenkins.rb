@@ -5,7 +5,7 @@ module Puppet
     def self.home_dir
       begin
         return File.expand_path('~jenkins')
-      rescue ArgumentError => ex
+      rescue ArgumentError
         # The Jenkins user doesn't exist!
         return nil
       end

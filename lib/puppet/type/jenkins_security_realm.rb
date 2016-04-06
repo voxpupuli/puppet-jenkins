@@ -20,14 +20,14 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_security_realm) do
   # jenkins_authorization_strategy state changes.
   autorequire(:jenkins_user) do
     catalog.resources.find_all do |r|
-     r.is_a?(Puppet::Type.type(:jenkins_user))
+      r.is_a?(Puppet::Type.type(:jenkins_user))
     end
   end
 
   autorequire(:jenkins_authorization_strategy) do
     if self[:ensure] == :absent
       catalog.resources.find_all do |r|
-       r.is_a?(Puppet::Type.type(:jenkins_authorization_strategy))
+        r.is_a?(Puppet::Type.type(:jenkins_authorization_strategy))
       end
     end
   end
