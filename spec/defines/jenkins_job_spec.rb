@@ -110,46 +110,62 @@ eos
 </xml>
 eos
 
-   let(:params) {{ :ensure => 'present',
-                   :config => unformatted_config }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(formatted_config) }
+    let(:params) do
+      {
+        :ensure => 'present',
+        :config => unformatted_config,
+      }
+    end
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(formatted_config)
+    end
   end
 
   describe 'with config with single quotes' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) {{ :ensure => 'present', :config => quotes }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(/version="1\.0" encoding="UTF-8"/) }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(/version="1\.0" encoding="UTF-8"/)
+    end
   end
 
   describe 'with config with empty tags' do
     empty_tags = '<xml><notempty><empty></empty></notempty><emptytwo></emptytwo></xml>'
     let(:params) {{ :ensure => 'present', :config => empty_tags }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>') }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
+    end
   end
 
   describe 'with config with &quot;' do
     quotes = "<config>the dog said &quot;woof&quot;</config>"
     let(:params) {{ :ensure => 'present', :config => quotes }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content('<config>the dog said "woof"</config>') }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content('<config>the dog said "woof"</config>')
+    end
   end
 
   describe 'with sourced config and blank regular config' do
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :source => thesource, :config => '' }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(/sourcedconfig/) }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(/sourcedconfig/)
+    end
   end
 
   describe 'with sourced config and regular config' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :source => thesource, :config => quotes }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(/sourcedconfig/) }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(/sourcedconfig/)
+    end
   end
 
   describe 'with sourced config and no regular config' do
@@ -165,16 +181,20 @@ eos
   describe 'with templated config and blank regular config' do
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :template => thetemplate, :config => '' }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(/sourcedconfig/) }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(/sourcedconfig/)
+    end
   end
 
   describe 'with templated config and regular config' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) {{ :ensure => 'present', :template => thetemplate, :config => quotes }}
-    it { should contain_file('/tmp/myjob-config.xml')\
-      .with_content(/sourcedconfig/) }
+    it do
+      should contain_file('/tmp/myjob-config.xml')
+        .with_content(/sourcedconfig/)
+    end
   end
 
   describe 'with templated config and no regular config' do

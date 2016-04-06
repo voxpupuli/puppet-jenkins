@@ -32,8 +32,8 @@ describe 'jenkins::slave' do
     end
 
     describe 'with auto discovery address' do
-       let(:params) { { :autodiscoveryaddress => '255.255.255.0' } }
-       it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
+      let(:params) { { :autodiscoveryaddress => '255.255.255.0' } }
+      it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
     end
 
     describe 'slave_uid' do
@@ -54,9 +54,11 @@ describe 'jenkins::slave' do
 
     describe 'with tool_locations' do
       let(:params) { { :tool_locations => 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
-      it { should contain_file(slave_runtime_file).
-        with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
-        with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/) }
+      it do
+        should contain_file(slave_runtime_file).
+          with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
+          with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/)
+      end
     end
 
     describe 'with a UI user/password' do

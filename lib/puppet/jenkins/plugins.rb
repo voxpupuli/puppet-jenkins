@@ -57,7 +57,7 @@ module Puppet
             if manifest
               plugins[plugin] = manifest
             end
-          rescue StandardError => ex
+          rescue StandardError
             # Nothing really to do about it, failing means no version which will
             # result in a new plugin if needed
           end
