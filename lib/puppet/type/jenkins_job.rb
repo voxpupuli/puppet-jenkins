@@ -25,17 +25,17 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
     def change_to_s(currentvalue, newvalue)
       if currentvalue == :absent
-        return "created"
+        return 'created'
       elsif newvalue == :absent
-        return "removed"
+        return 'removed'
       else
         if Puppet[:show_diff] and resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
-          Tempfile.open("puppet-file") do |d1|
+          Tempfile.open('puppet-file') do |d1|
             d1.write(currentvalue)
             d1.flush
-            Tempfile.open("puppet-file") do |d2|
+            Tempfile.open('puppet-file') do |d2|
               d2.write(newvalue)
               d2.flush
 

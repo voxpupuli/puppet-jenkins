@@ -141,7 +141,7 @@ eos
   end
 
   describe 'with config with &quot;' do
-    quotes = "<config>the dog said &quot;woof&quot;</config>"
+    quotes = '<config>the dog said &quot;woof&quot;</config>'
     let(:params) {{ :ensure => 'present', :config => quotes }}
     it do
       should contain_file('/tmp/myjob-config.xml')

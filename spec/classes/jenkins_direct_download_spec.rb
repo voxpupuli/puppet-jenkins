@@ -35,7 +35,7 @@ describe 'jenkins', :type => :module do
           :path    => '/var/cache/jenkins_pkgs/jenkins.rpm',
           :cleanup => false,
           :extract => false,
-        ).that_comes_before("Package[jenkins]")
+        ).that_comes_before('Package[jenkins]')
       end
     end
 

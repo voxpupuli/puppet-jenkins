@@ -32,7 +32,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     info
   end
 
-  shared_examples "a provider from example hash 1" do
+  shared_examples 'a provider from example hash 1' do
     it do
       expect(provider.name).to eq user_info[0]['id']
       expect(provider.ensure).to eq :present
@@ -45,7 +45,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     end
   end
 
-  shared_examples "a provider from example hash 2" do
+  shared_examples 'a provider from example hash 2' do
     it do
       expect(provider.name).to eq user_info[1]['id']
       expect(provider.ensure).to eq :present
@@ -60,27 +60,27 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
   include_examples 'confines to cli dependencies'
 
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
         expect(described_class).to receive(:user_info_all).
           with(nil) { user_info }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 2
       end
 
-      context "first instance returned" do
-        it_behaves_like "a provider from example hash 1" do
+      context 'first instance returned' do
+        it_behaves_like 'a provider from example hash 1' do
           let(:provider) do
             described_class.instances[0]
           end
         end
       end
 
-      context "second instance returned" do
-        it_behaves_like "a provider from example hash 2" do
+      context 'second instance returned' do
+        it_behaves_like 'a provider from example hash 2' do
           let(:provider) do
             described_class.instances[1]
           end
@@ -88,8 +88,8 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::user_info_all" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::user_info_all' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:user_info_all).
@@ -138,13 +138,13 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   #
 
   describe '::from_hash' do
-    it_behaves_like "a provider from example hash 1" do
+    it_behaves_like 'a provider from example hash 1' do
       let(:provider) do
         described_class.send :from_hash, user_info[0]
       end
     end
 
-    it_behaves_like "a provider from example hash 2" do
+    it_behaves_like 'a provider from example hash 2' do
       let(:provider) do
         described_class.send :from_hash, user_info[1]
       end

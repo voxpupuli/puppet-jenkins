@@ -39,7 +39,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   end
   let(:credentials) { JSON.parse(credentials_list_json_raw) }
 
-  shared_examples "a provider from example hash 1" do
+  shared_examples 'a provider from example hash 1' do
     it do
       cred = credentials[0]
 
@@ -70,7 +70,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
   end
 
-  shared_examples "a provider from example hash 2" do
+  shared_examples 'a provider from example hash 2' do
     it do
       cred = credentials[1]
 
@@ -102,7 +102,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
   end
 
-  shared_examples "a provider from example hash 3" do
+  shared_examples 'a provider from example hash 3' do
     it do
       cred = credentials[2]
 
@@ -136,35 +136,35 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
   include_examples 'confines to cli dependencies'
 
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
         expect(described_class).to receive(:credentials_list_json).
           with(nil) { credentials }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 3
       end
 
-      context "first instance returned" do
-        it_behaves_like "a provider from example hash 1" do
+      context 'first instance returned' do
+        it_behaves_like 'a provider from example hash 1' do
           let(:provider) do
             described_class.instances[0]
           end
         end
       end
 
-      context "second instance returned" do
-        it_behaves_like "a provider from example hash 2" do
+      context 'second instance returned' do
+        it_behaves_like 'a provider from example hash 2' do
           let(:provider) do
             described_class.instances[1]
           end
         end
       end
 
-      context "third instance returned" do
-        it_behaves_like "a provider from example hash 3" do
+      context 'third instance returned' do
+        it_behaves_like 'a provider from example hash 3' do
           let(:provider) do
             described_class.instances[2]
           end
@@ -172,8 +172,8 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::credentials_list_json" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::credentials_list_json' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:credentials_list_json).
@@ -214,19 +214,19 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   #
 
   describe '::from_hash' do
-    it_behaves_like "a provider from example hash 1" do
+    it_behaves_like 'a provider from example hash 1' do
       let(:provider) do
         described_class.send :from_hash, credentials[0]
       end
     end
 
-    it_behaves_like "a provider from example hash 2" do
+    it_behaves_like 'a provider from example hash 2' do
       let(:provider) do
         described_class.send :from_hash, credentials[1]
       end
     end
 
-    it_behaves_like "a provider from example hash 3" do
+    it_behaves_like 'a provider from example hash 3' do
       let(:provider) do
         described_class.send :from_hash, credentials[2]
       end

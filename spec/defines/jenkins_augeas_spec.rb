@@ -25,8 +25,8 @@ describe 'jenkins::augeas' do
       let (:params) {{ :config_filename => 'foo.xml', :changes => ['set foo bar'], :plugin => pval }}
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
-          :incl    => "/var/lib/jenkins/foo.xml",
-          :context => "/files/var/lib/jenkins/foo.xml/",
+          :incl    => '/var/lib/jenkins/foo.xml',
+          :context => '/files/var/lib/jenkins/foo.xml/',
           :changes => ['set foo bar'],
           :lens    => 'Xml.lns',
         )
@@ -52,7 +52,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe "with plugin param wrong type" do
+  describe 'with plugin param wrong type' do
     let (:params) {{:config_filename => 'foo.xml', :changes => [], :plugin => ['foo','bar'] }}
     it do
       is_expected.to raise_error(Puppet::Error, /must be bool or string/i)
@@ -67,7 +67,7 @@ describe 'jenkins::augeas' do
   # |---'`---'`---'`---|``   '     `'  `---'`    `---'``---'`   '    |---'`---^`    `---^` ' '
   # |              `---'      ---                                    |
 
-  describe "with plugin_version set" do
+  describe 'with plugin_version set' do
     let (:params) {{
         :config_filename => 'foo.xml',
         :changes         => [],
@@ -89,7 +89,7 @@ describe 'jenkins::augeas' do
   # |    |   ||   ||    |---' >< |        |   |,---||    ,---|| | |
   # `---'`---'`   '`---'`---''  ``---'    |---'`---^`    `---^` ' '
   #                                       |
-  describe "without context set" do
+  describe 'without context set' do
     let (:params) {{
       :plugin          => false,
       :config_filename => 'foo.xml',
@@ -104,7 +104,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe "with context set" do
+  describe 'with context set' do
     let (:params) {{
       :plugin          => false,
       :config_filename => 'foo.xml',
@@ -147,7 +147,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe "with param onlyif set and its a boolean" do
+  describe 'with param onlyif set and its a boolean' do
     let (:params) {{
       :plugin          => false,
       :config_filename => 'foo.xml',
@@ -181,7 +181,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe "with param changes is a number" do
+  describe 'with param changes is a number' do
     let (:params) {{
       :plugin          => false,
       :config_filename => 'foo.xml',
@@ -212,7 +212,7 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe "with param restart set to an invalid value" do
+  describe 'with param restart set to an invalid value' do
     let (:params) {{
         :plugin => false,
         :config_filename => 'foo.xml',

@@ -53,18 +53,18 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
   include_examples 'confines to cli dependencies'
 
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
         expect(described_class).to receive(:job_list_json).
           with(nil) { job_list_json_info }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 2
       end
 
-      context "first instance returned" do
+      context 'first instance returned' do
         let(:provider) do
           described_class.instances[0]
         end
@@ -73,7 +73,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         it { expect(provider.enable).to eq true }
       end
 
-      context "second instance returned" do
+      context 'second instance returned' do
         let(:provider) do
           described_class.instances[1]
         end
@@ -83,8 +83,8 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::get_job_list" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::get_job_list' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:job_list_json).

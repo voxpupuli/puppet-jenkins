@@ -43,28 +43,28 @@ describe PuppetX::Jenkins::Provider::Cli do
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
-  describe "::suitable?" do
+  describe '::suitable?' do
     it { expect(described_class.suitable?).to eq true }
   end
 
   include_examples 'confines to cli dependencies'
 
-  describe "::sname" do
-    it "should return a short class name" do
-      expect(described_class.sname).to eq "Jenkins::Provider::Cli"
+  describe '::sname' do
+    it 'should return a short class name' do
+      expect(described_class.sname).to eq 'Jenkins::Provider::Cli'
     end
   end
 
-  describe "::instances" do
-    it "should not be implemented" do
+  describe '::instances' do
+    it 'should not be implemented' do
       expect{ described_class.instances }.to raise_error(Puppet::DevError)
     end
   end
 
-  describe "::prefetch" do
+  describe '::prefetch' do
     let(:catalog) { Puppet::Resource::Catalog.new }
 
-    it "should associate a provider with an instance" do
+    it 'should associate a provider with an instance' do
       resource = Puppet::Type.type(:notify).new(:name => 'test')
       catalog.add_resource resource
 
@@ -536,10 +536,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(30).times.and_raise(UnknownError, "foo")
+          ).exactly(30).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from catalog value' do
@@ -557,10 +557,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(2).times.and_raise(UnknownError, "foo")
+          ).exactly(2).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from fact' do
@@ -579,10 +579,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(3).times.and_raise(UnknownError, "foo")
+          ).exactly(3).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from catalog overriding fact' do
@@ -602,10 +602,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(2).times.and_raise(UnknownError, "foo")
+          ).exactly(2).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
       end # n times
 

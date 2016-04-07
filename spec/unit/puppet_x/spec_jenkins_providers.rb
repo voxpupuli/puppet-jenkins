@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 shared_examples 'confines to cli dependencies' do
-  describe "confine" do
+  describe 'confine' do
     it 'should have no matched confines' do
       expect(described_class.confine_collection.summary).to eq({})
     end
@@ -29,7 +29,7 @@ shared_examples 'confines to cli dependencies' do
     end
   end
 
-  describe "commands" do
+  describe 'commands' do
     before(:each) do
       allow(described_class).to receive(:command).with(:java).and_return('java')
     end

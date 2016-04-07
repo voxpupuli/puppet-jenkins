@@ -62,7 +62,7 @@ describe Puppet::Type.type(:jenkins_user) do
 
       it 'should support array of string' do
         value = ['ssh-rsa blah comment', 'ssh-rsa foo comment']
-        user = described_class.new(:name => "nobody", :public_keys => value)
+        user = described_class.new(:name => 'nobody', :public_keys => value)
         expect(user[:public_keys]).to eq value
       end
     end #public_keys
