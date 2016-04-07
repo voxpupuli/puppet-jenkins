@@ -947,11 +947,14 @@ class Actions {
     def jobs = util.findJobs(Jenkins.getInstance())
 
     def allInfo = jobs.collect { path, job ->
+      // at least these job classes do not respond to respond to #isDisabled:
+      // - org.jenkinsci.plugins.workflow.job.WorkflowJob
+      // - com.cloudbees.hudson.plugins.folder.Folder
       def enabled = false
-      // folders don't respond to #isDisabled
-      if (job.getClass().getName() != 'com.cloudbees.hudson.plugins.folder.Folder') {
+      if (job.metaClass.respondsTo(job, 'isDisabled')) {
         enabled = !job.isDisabled()
       }
+
       [
         name: path,
         config: job.getConfigFile().getFile().getText('utf-8'),
