@@ -6,6 +6,7 @@ class jenkins::master (
   $source  = undef,
 ) inherits jenkins::params {
   validate_string($version)
+  validate_string($source)
 
   jenkins::plugin {'swarm':
     version => $version,
