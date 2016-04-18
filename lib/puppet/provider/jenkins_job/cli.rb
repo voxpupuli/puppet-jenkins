@@ -1,5 +1,7 @@
 require 'puppet/util/warnings'
 
+require 'json'
+
 require 'puppet_x/jenkins/util'
 require 'puppet_x/jenkins/provider/cli'
 
