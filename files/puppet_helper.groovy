@@ -966,6 +966,51 @@ class Actions {
     out.println(builder.toPrettyString())
   }
 
+  ////////////////////////
+  // Add Global variables
+  ///////////////////////
+  void create_global_variables(String key, String value) {
+    def hudson = hudson.model.Hudson.instance
+    def globalProps = hudson.globalNodeProperties
+    def props = globalProps.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    for (prop in props) {
+        prop.envVars.put(key, value)
+    }
+    hudson.save() //This is needed in order to persist the change
+  }
+
+  ////////////////////////
+  // Get Global variables
+  ///////////////////////
+  void get_global_variables(String key) {
+    def hudson = hudson.model.Hudson.instance
+    def globalProps = hudson.globalNodeProperties
+    def props = globalProps.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    def val = ''
+    for (prop in props) {
+        out.println(prop.envVars.get(key))
+    }
+  }
+
+  ////////////////////////////
+  // Set URL & Sysadmin email
+  ///////////////////////////
+  void set_url_email(String url, String admin_name, String admin_email) {
+    def jlc = jenkins.model.JenkinsLocationConfiguration.get()
+    jlc.setUrl(url)
+    jlc.setAdminAddress('"' +  admin_name + ' ' +'<' +  admin_email  + '>' + '"')
+    jlc.save()
+  }
+
+  ///////////////////////
+  // Get System Config
+  //////////////////////
+  void get_location_config() {
+    def jenkinsLocationConfiguration = JenkinsLocationConfiguration.get()
+    out.println("URL: " + jenkinsLocationConfiguration.url)
+    out.println("Admin email:" + jenkinsLocationConfiguration.adminAddress)
+  }
+
 } // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
