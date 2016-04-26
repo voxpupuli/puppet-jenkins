@@ -184,7 +184,7 @@ describe 'jenkins::slave' do
         :operatingsystemrelease    => '6.7',
         :operatingsystemmajrelease => '6',
         :kernel                    => 'Linux',
-
+        :systemd                   => 'false'
       }
     end
     let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
@@ -216,6 +216,25 @@ describe 'jenkins::slave' do
           :proxy_server => 'https://foo'
         )
       end
+    end
+
+    describe 'with systemd' do
+      let(:facts) do
+        {
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'CentOS',
+          :operatingsystemrelease    => '7.2',
+          :operatingsystemmajrelease => '7',
+          :kernel                    => 'Linux',
+          :systemd                   => 'true'
+        }
+      end
+      let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
+      let(:slave_startup_script) { '/usr/sbin/jenkins-slave' }
+      let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
+      it_behaves_like 'a jenkins::slave catalog'
+      it { should contain_file(slave_startup_script) }
+      it { should contain_file(slave_sysv_file).with_ensure('absent') }
     end
   end
 
