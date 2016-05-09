@@ -191,6 +191,8 @@ class jenkins(
   $no_proxy_list      = undef,
   $cli                = true,
   $cli_ssh_keyfile    = undef,
+  $cli_username       = undef,
+  $cli_password       = undef,
   $cli_tries          = $jenkins::params::cli_tries,
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
