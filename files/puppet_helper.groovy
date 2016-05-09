@@ -28,6 +28,7 @@ import jenkins.model.*
 import jenkins.security.*
 import org.apache.commons.io.IOUtils
 import org.jenkinsci.plugins.*
+import hudson.slaves.*
 
 class InvalidAuthenticationStrategy extends Exception{}
 @InheritConstructors
@@ -969,14 +970,19 @@ class Actions {
   ////////////////////////
   // Add Global variables
   ///////////////////////
-  void create_global_variables(String key, String value) {
-    def hudson = hudson.model.Hudson.instance
-    def globalProps = hudson.globalNodeProperties
-    def props = globalProps.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
-    for (prop in props) {
-        prop.envVars.put(key, value)
+  void create_global_variables(String env_key, String env_value) {
+    def instance = Jenkins.getInstance()
+    def props = instance.globalNodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    if(props.empty) {
+      def entry = new EnvironmentVariablesNodeProperty.Entry(env_key, env_value)
+      def evnp = new EnvironmentVariablesNodeProperty(entry)
+      instance.globalNodeProperties.add(evnp)
+    } else {
+      for (prop in props) {
+      prop.envVars.put(env_key, env_value)
+      }
     }
-    hudson.save() //This is needed in order to persist the change
+    instance.save() //This is needed in order to persist the change
   }
 
   ////////////////////////
