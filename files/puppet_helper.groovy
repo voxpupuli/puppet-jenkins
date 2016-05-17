@@ -376,7 +376,7 @@ class Actions {
       )
     } else {
       def key_source
-      if (private_key.startsWith('-----BEGIN')) {
+      if (private_key =~ /^(\s*)-----BEGIN(.*)/) {
         key_source = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(private_key)
       } else {
         key_source = new BasicSSHUserPrivateKey.FileOnMasterPrivateKeySource(private_key)
