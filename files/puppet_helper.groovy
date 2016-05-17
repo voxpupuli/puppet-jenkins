@@ -388,7 +388,7 @@ class Actions {
       util.requirePlugin('ssh-credentials')
 
       def key_source
-      if (private_key.startsWith('-----BEGIN')) {
+      if (private_key =~ /^(\s*)-----BEGIN(.*)/) {
         key_source = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource').newInstance(private_key)
       } else {
         key_source = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$FileOnMasterPrivateKeySource').newInstance(private_key)
