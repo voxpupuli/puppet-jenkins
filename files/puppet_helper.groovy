@@ -730,7 +730,7 @@ class Actions {
               realm.site,
               realm.bindName,
               realm.bindPassword,
-              realm.groupLookupStrategy,
+              realm.server,
             ],
           ],
         ]
