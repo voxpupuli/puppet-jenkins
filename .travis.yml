@@ -2,25 +2,37 @@ sudo: false
 language: ruby
 before_install: gem install bundler -v '~> 1.6.0' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
-script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
 rvm:
   - 1.9.3
   - 2.1.0
 script:
   - "bundle exec rake lint"
-  - "bundle exec rake spec SPEC_OPTS='--format documentation'"
+  - "bundle exec rake parallel_spec SPEC_OPTS='--format documentation --order random'"
 env:
-  - PUPPET_VERSION="~> 2.7.0"
-  - PUPPET_VERSION="~> 3.6.0"
-  - PUPPET_VERSION="~> 3.7.0"
   - PUPPET_VERSION="~> 3.8.0"
-  - PUPPET_VERSION="~> 4.0.0"
   - PUPPET_VERSION="~> 4.1.0"
+  - PUPPET_VERSION="~> 4.2.0"
+  - PUPPET_VERSION="~> 4.3.0"
+  - PUPPET_VERSION="~> 4.4.0"
 matrix:
-  exclude:
-    - rvm: 1.9.3
-      env: PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.1.0
-      env: PUPPET_VERSION="~> 2.7.0"
+  include:
+    - rvm: '2.1'
+      sudo: required
+      services: docker
+      env: BEAKER_set="centos-6-docker"
+      script: bundle exec rake acceptance
+      bundler_args: --without development
+    - rvm: '2.1'
+      sudo: required
+      services: docker
+      env: BEAKER_set="centos-7-docker"
+      script: bundle exec rake acceptance
+      bundler_args: --without development
+    - rvm: '2.1'
+      sudo: required
+      services: docker
+      env: BEAKER_set="ubuntu-14.04-docker"
+      script: bundle exec rake acceptance
+      bundler_args: --without development
 notifications:
   email: false

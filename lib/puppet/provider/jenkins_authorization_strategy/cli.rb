@@ -58,7 +58,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Pupp
     end
     Puppet.debug("to_hash arguments #{arguments}")
 
-    info = { "setAuthorizationStrategy" => ctor }
+    info = { 'setAuthorizationStrategy' => ctor }
     # map :undef -> nil
     PuppetX::Jenkins::Util.unundef(info)
   end
@@ -83,8 +83,8 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Pupp
 
   def set_strategy_unsecured
     input = {
-      "setAuthorizationStrategy" => {
-        "hudson.security.AuthorizationStrategy$Unsecured" => [],
+      'setAuthorizationStrategy' => {
+        'hudson.security.AuthorizationStrategy$Unsecured' => [],
       },
     }
     set_jenkins_instance(input)

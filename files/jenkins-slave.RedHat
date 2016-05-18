@@ -37,7 +37,7 @@ slave_start() {
 
   # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
   # so we let su do so for us now
-  $RUNUSER - $JENKINS_SLAVE_USER -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS &>> $JENKINS_SLAVE_LOG &"
+  $RUNUSER - $JENKINS_SLAVE_USER -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS >> $JENKINS_SLAVE_LOG 2>&1 &"
   pgrep -f -u $JENKINS_SLAVE_USER $JENKINS_SLAVE_JAR > $PIDFILE
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCK_FILE

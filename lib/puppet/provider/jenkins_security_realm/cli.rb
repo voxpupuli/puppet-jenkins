@@ -84,8 +84,8 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => PuppetX::Jen
 
   def set_security_none
     input = {
-      "setSecurityRealm" => {
-        "hudson.security.SecurityRealm$None" => [],
+      'setSecurityRealm' => {
+        'hudson.security.SecurityRealm$None' => [],
       },
     }
     set_jenkins_instance(input)

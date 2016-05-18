@@ -11,7 +11,7 @@ class PuppetX::Jenkins::Config
 
   DEFAULTS = {
     :cli_jar         => '/usr/lib/jenkins/jenkins-cli.jar',
-    :port            => 8080,
+    :url             => 'http://localhost:8080',
     :ssh_private_key => nil,
     :puppet_helper   => '/usr/lib/jenkins/puppet_helper.groovy',
     :cli_tries       => 30,

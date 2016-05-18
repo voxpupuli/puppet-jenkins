@@ -1,7 +1,7 @@
 require 'yaml'
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'aws'
 
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
   access_key_id = File.read('.vagrant_key_id').chomp
   secret_access_key = File.read('.vagrant_secret_access_key').chomp
   keypair = File.read('.vagrant_keypair_name').chomp
@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     name = File.basename(dname)
     spec_config = YAML.load_file(File.join(dname + '/config.yml'))
 
-    config.vm.synced_folder ".", "/vagrant/jenkins", type: "rsync"
+    config.vm.synced_folder '.', '/vagrant/jenkins', type: 'rsync'
 
     config.vm.define(name) do |node|
       # This is a Vagrant-local hack to make sure we have properly udpated apt

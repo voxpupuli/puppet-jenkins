@@ -143,7 +143,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
 
     config = PuppetX::Jenkins::Config.new(catalog)
     cli_jar         = config[:cli_jar]
-    port            = config[:port]
+    url             = config[:url]
     ssh_private_key = config[:ssh_private_key]
     cli_tries       = config[:cli_tries]
     cli_try_sleep   = config[:cli_try_sleep]
@@ -151,7 +151,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = [
       command(:java),
       '-jar', cli_jar,
-      '-s', "http://localhost:#{port}",
+      '-s', url,
     ]
 
     cli_cmd = base_cmd + [command]

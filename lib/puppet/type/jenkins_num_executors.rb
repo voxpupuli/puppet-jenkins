@@ -30,7 +30,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
   ].each do |type|
     autorequire(type) do
       catalog.resources.find_all do |r|
-       r.is_a?(Puppet::Type.type(type))
+        r.is_a?(Puppet::Type.type(type))
       end
     end
   end

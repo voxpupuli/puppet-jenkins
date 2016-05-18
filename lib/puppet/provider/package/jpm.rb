@@ -8,7 +8,7 @@ require 'jpm' if Puppet.features.jpm?
 
 Puppet::Type.type(:package).provide :jpm, :parent => Puppet::Provider::Package do
   confine :feature => :jpm
-  desc "Provider for managing Jenkins plugins"
+  desc 'Provider for managing Jenkins plugins'
 
   has_feature :installable
   has_feature :uninstallable

@@ -4,7 +4,7 @@
 # jenkins plugins + versions.
 #
 #
-require File.join(File.dirname(__FILE__), '..', 'puppet/jenkins/facts.rb')
+require 'puppet/jenkins/facts'
 
 # If we're being loaded inside the module, we'll need to go ahead and add our
 # facts then won't we?
