@@ -32,7 +32,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   end
   let(:realm_none) { JSON.parse(realm_none_json) }
 
-  shared_examples "a provider from example realm" do
+  shared_examples 'a provider from example realm' do
     it do
       method_name = 'setSecurityRealm'
       class_name = info[method_name].keys.first
@@ -44,27 +44,27 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     end
   end
 
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
         expect(described_class).to receive(:get_security_realm).
           with(nil) { realm_oauth }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 1
       end
 
-      context "first instance returned" do
-        it_behaves_like "a provider from example realm" do
+      context 'first instance returned' do
+        it_behaves_like 'a provider from example realm' do
           let(:info) { realm_oauth }
           let(:provider) { described_class.instances[0] }
         end
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::get_security_realm" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::get_security_realm' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:get_security_realm).
@@ -105,12 +105,12 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   #
 
   describe '::from_hash' do
-    it_behaves_like "a provider from example realm" do
+    it_behaves_like 'a provider from example realm' do
       let(:info) { realm_oauth }
       let(:provider) { described_class.send(:from_hash, info) }
     end
 
-    it_behaves_like "a provider from example realm" do
+    it_behaves_like 'a provider from example realm' do
       let(:info) { realm_none }
       let(:provider) { described_class.send(:from_hash, info) }
     end
@@ -129,10 +129,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   describe '::get_security_realm' do
     # not isolated from ::from_hash in the interests of staying DRY
     it do
-      expect(described_class).to receive(:clihelper).with({
+      expect(described_class).to receive(:clihelper).with(
         ['get_security_realm'],
         {:catalog => nil}
-}) { realm_oauth_json }
+      ) { realm_oauth_json }
 
       raw = described_class.send :get_security_realm
       expect(raw).to eq realm_oauth
@@ -143,10 +143,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.send :from_hash, realm_oauth
 
-      expect(described_class).to receive(:clihelper).with({
+      expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
         { :stdinjson => realm_oauth },
-})
+      )
 
       provider.send :set_jenkins_instance
     end
@@ -156,10 +156,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.new(:name => 'test')
 
-      expect(described_class).to receive(:clihelper).with({
+      expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
         { :stdinjson => realm_none },
-})
+      )
 
       provider.send :set_security_none
     end

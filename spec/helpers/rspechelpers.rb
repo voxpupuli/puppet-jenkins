@@ -7,7 +7,7 @@ module Jenkins
     def clear_facts
     end
 
-    shared_context "custom fact example", :type => :fact do
+    shared_context 'custom fact example', :type => :fact do
       # Need to make sure we clear out our facts at the start to make sure that
       # we don't pick up some facts left over from rspec-puppet
       #
@@ -18,7 +18,7 @@ module Jenkins
       end
     end
 
-    shared_context "module pre-conditions", :type => :module do
+    shared_context 'module pre-conditions', :type => :module do
       let(:pre_condition) { [] }
 
       before :each do

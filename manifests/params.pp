@@ -4,18 +4,25 @@
 #
 class jenkins::params {
   $version               = 'installed'
-  $lts                   = false
+  $lts                   = true
+  $repo                  = true
+  $direct_download       = undef
   $service_enable        = true
   $service_ensure        = 'running'
-  $swarm_version         = '1.22'
+  $swarm_version         = '2.0'
   $default_plugins_host  = 'https://updates.jenkins-ci.org'
-  $port                  = '8080'
+  $port                  = 8080
   $prefix                = ''
   $cli_tries             = 10
   $cli_try_sleep         = 10
   $package_name          = 'jenkins'
-  $user                  = 'jenkins'  
-  $group                 = 'jenkins'
+
+  $manage_datadirs = true
+
+  $manage_user  = true
+  $user         = 'jenkins'
+  $manage_group = true
+  $group        = 'jenkins'
 
   case $::osfamily {
     'Debian': {
@@ -24,24 +31,21 @@ class jenkins::params {
       $install_java      = true
 	  $localstatedir     = '/var/lib/jenkins'
 	  $package_cache_dir = '/var/cache/jenkins_pkgs'
-	  $manage_user       = true
-      $manage_group      = true
 	  $provider          = shell
 	  $path              = ['/bin', '/usr/bin']
       $cwd               = '/tmp'
       $difftool          = '/usr/bin/diff -b -q'
 	  $repo              = true
 	  $javapath          = '/usr/bin/'
-    $cred_unless = "\$HELPER_CMD"
+      $cred_unless = "\$HELPER_CMD"
+	  $service_provider = undef
     }
     'RedHat': {
       $libdir            = '/usr/lib/jenkins'
       $package_provider  = 'rpm'
       $install_java      = true
-	  $localstatedir     = '/var/lib/jenkins'
+	  $localstatedir   = '/var/lib/jenkins'
 	  $package_cache_dir = '/var/cache/jenkins_pkgs'
-	  $manage_user       = true
-	  $manage_group      = true
 	  $provider          = shell
 	  $path              = ['/bin', '/usr/bin', '/sbin' , '/usr/sbin']
       $cwd               = '/tmp'
@@ -49,6 +53,21 @@ class jenkins::params {
 	  $repo              = true
 	  $javapath          = '/usr/bin/'
 	  $cred_unless = "\$HELPER_CMD"
+	  case $::operatingsystem {
+        'Fedora': {
+          if versioncmp($::operatingsystemrelease, '19') >= 0 or $::operatingsystemrelease == 'Rawhide' {
+            $service_provider = 'redhat'
+          }
+        }
+        /^(RedHat|CentOS|Scientific|OracleLinux)$/: {
+          if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+            $service_provider = 'redhat'
+          }
+        }
+        default: {
+          $service_provider = undef
+        }
+      }
     }
     'windows': {
       $libdir            = 'C:/Program Files (x86)/Jenkins'
@@ -65,12 +84,13 @@ class jenkins::params {
 	  $repo              = false
 	  $javapath          = ''
 	  $cred_unless = "${::jenkins::cli_helper::helper_cmd}"
+	  $service_provider = undef
 	  }
     default: {
-      $libdir = '/usr/lib/jenkins'
-      $package_provider  = false
+      $libdir            = '/usr/lib/jenkins'
+      $package_provider  = undef
       $install_java      = true
-      $localstatedir     = '/var/lib/jenkins'
+      $localstatedir   = '/var/lib/jenkins'
 	  $package_cache_dir = '/var/cache/jenkins_pkgs'
 	  $manage_user       = true
 	  $manage_group      = true
@@ -81,6 +101,7 @@ class jenkins::params {
 	  $repo              = true
 	  $javapath          = '/usr/bin/'
 	  $cred_unless = "\$HELPER_CMD"
+	  $service_provider = undef
 	  }
   }
 }

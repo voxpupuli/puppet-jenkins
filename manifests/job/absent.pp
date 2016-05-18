@@ -2,6 +2,8 @@
 #
 #   Removes a jenkins build job
 #
+#   This define should be considered private.
+#
 # Parameters:
 #
 #   config
@@ -11,8 +13,10 @@
 #     the name of the jenkins job
 #
 define jenkins::job::absent(
-  $jobname  = $title,
+  $jobname = $title,
 ){
+  validate_string($jobname)
+
   include jenkins::cli
   
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {

@@ -5,8 +5,10 @@ describe 'jenkins::cli::exec', :type => :define do
 
   let(:facts) do
     {
-      :osfamily        => 'RedHat',
-      :operatingsystem => 'RedHat', # require by puppetlabs/java
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat', # require by puppetlabs/java
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
     }
   end
 
@@ -28,12 +30,12 @@ describe 'jenkins::cli::exec', :type => :define do
       # default title...
 
       it do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command   => "#{helper_cmd} foo",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
       it { should contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
     end
@@ -42,12 +44,12 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:title) { 'bar' }
 
       it do
-        should contain_exec('bar').with({
+        should contain_exec('bar').with(
           :command   => "#{helper_cmd} bar",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
       it { should contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
     end
@@ -58,12 +60,12 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:params) {{ :command => 'bar' }}
 
       it do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command   => "#{helper_cmd} bar",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
     end
 
@@ -71,12 +73,12 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:params) {{ :command => %w{ bar } }}
 
       it do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command   => "#{helper_cmd} bar",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
     end
 
@@ -84,12 +86,12 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:params) {{ :command => %w{bar baz} }}
 
       it do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command   => "#{helper_cmd} bar baz",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
     end
 
@@ -97,12 +99,12 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:params) {{ :command => ['bar', Undef.new, 'baz'] }}
 
       it 'should remove the undef' do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command   => "#{helper_cmd} bar baz",
           :tries     => 10,
           :try_sleep => 10,
           :unless    => nil,
-})
+        )
       end
     end
 
@@ -120,13 +122,13 @@ describe 'jenkins::cli::exec', :type => :define do
       let(:params) {{ :unless => 'bar' }}
 
       it do
-        should contain_exec('foo').with({
+        should contain_exec('foo').with(
           :command     => "#{helper_cmd} foo",
           :environment => [ "HELPER_CMD=#{helper_cmd}" ],
           :unless      => 'bar',
           :tries       => 10,
           :try_sleep   => 10,
-})
+        )
       end
     end
 

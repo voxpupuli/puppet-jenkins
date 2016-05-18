@@ -78,8 +78,11 @@ describe 'jenkins::cli::config', :type => :class do
       it_behaves_like 'validate_absolute_path', :cli_jar
     end
 
-    context 'port' do
-      it_behaves_like 'validate_integer', :port
+    # context 'port' do
+    #   it_behaves_like 'validate_integer', :port
+    # end
+    context 'url' do
+      it_behaves_like 'validate_string', :url
     end
 
     context 'ssh_private_key' do
@@ -113,13 +116,13 @@ describe 'jenkins::cli::config', :type => :class do
           let(:facts) {{ :id => 'user' }}
 
           it do
-            should contain_file('/dne').with({
+            should contain_file('/dne').with(
               :ensure => 'file',
               :mode   => '0400',
               :backup => false,
               :owner  => nil,
               :group  => nil,
-})
+            )
           end
           it { should contain_file('/dne').with_content('foo') }
         end # as non-root user
@@ -128,13 +131,13 @@ describe 'jenkins::cli::config', :type => :class do
           let(:facts) {{ :id => 'root' }}
 
           it do
-            should contain_file('/dne').with({
+            should contain_file('/dne').with(
               :ensure => 'file',
               :mode   => '0400',
               :backup => false,
               :owner  => 'jenkins',
               :group  => 'jenkins',
-})
+            )
           end
           it { should contain_file('/dne').with_content('foo') }
         end # as root
@@ -142,6 +145,41 @@ describe 'jenkins::cli::config', :type => :class do
     end # ssh_private_key_content
   end # parameters
 
-  it { should contain_package('retries').with(:provider => 'gem') }
+  describe 'package gem provider' do
+    context 'is_pe fact' do
+      context 'true' do
+        let(:facts) {{ :is_pe => true }}
+        it { should contain_package('retries').with(:provider => 'pe_gem') }
+      end
 
+      context 'false' do
+        let(:facts) {{ :is_pe => false }}
+        it { should contain_package('retries').with(:provider => 'gem') }
+      end
+    end # 'is_pe fact' do
+
+    context 'puppetversion facts' do
+      context '=> 3.8.4' do
+        let(:facts) {{ :puppetversion => '3.8.4' }}
+        it { should contain_package('retries').with(:provider => 'gem') }
+      end
+
+      context '=> 4.0.0' do
+        let(:facts) {{ :puppetversion => '4.0.0' }}
+        it { should contain_package('retries').with(:provider => 'gem') }
+
+        context 'rubysitedir fact' do
+          context '=> /foo/bar' do
+            before { facts[:rubysitedir] = '/foo/bar' }
+            it { should contain_package('retries').with(:provider => 'gem') }
+          end
+
+          context '=> /opt/puppetlabs/puppet/lib/ruby/site_ruby/2.1.0' do
+            before { facts[:rubysitedir] = '/opt/puppetlabs/puppet/lib/ruby/site_ruby/2.1.0' }
+            it { should contain_package('retries').with(:provider => 'puppet_gem') }
+          end
+        end
+      end
+    end # 'puppetversion facts' do
+  end # 'package gem provider' do
 end

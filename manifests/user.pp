@@ -23,7 +23,7 @@ define jenkins::user (
   $public_key = '',
   $ensure = 'present',
 ){
-  validate_string($ensure)
+  validate_re($ensure, '^present$|^absent$')
 
   include ::jenkins::cli_helper
 

@@ -5,6 +5,7 @@ require 'puppetlabs_spec_helper/module_spec_helper'
 
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/fixtures/modules/archive/lib'))
 
 require 'spec/helpers/rspechelpers'
 

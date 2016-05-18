@@ -59,6 +59,19 @@
 #
 # [*manage_client_jar*]
 #   Should the class download the client jar file from the web? Defaults to true.
+#
+# [*ensure*]
+#   Service ensure control for jenkins-slave service. Default running
+#
+# [*enable*]
+#   Service enable control for jenkins-slave service. Default true.
+#
+# [*source*]
+#   File source for jenkins slave jar. Default pulls from http://maven.jenkins-ci.org
+#
+# [*java_args*]
+#   Java arguments to add to slave command line. Allows configuration of heap, etc.
+#
 
 # === Examples
 #
@@ -97,9 +110,30 @@ class jenkins::slave (
   $ensure                   = 'running',
   $enable                   = true,
   $source                   = undef,
+  $java_args                = undef,
 ) inherits jenkins::params {
-
+  validate_string($slave_name)
+  validate_string($description)
+  validate_string($masterurl)
+  validate_string($autodiscoveryaddress)
+  validate_string($ui_user)
+  validate_string($ui_pass)
+  validate_string($version)
+  validate_integer($executors)
+  validate_bool($manage_slave_user)
+  validate_string($slave_user)
+  if $slave_uid { validate_integer($slave_uid) }
+  validate_absolute_path($slave_home)
+  validate_re($slave_mode, '^normal$|^exclusive$')
+  validate_bool($disable_ssl_verification)
+  validate_string($labels)
   validate_string($tool_locations)
+  validate_bool($install_java)
+  validate_bool($manage_client_jar)
+  validate_re($ensure, '^running$|^stopped$')
+  validate_bool($enable)
+  validate_string($source)
+  validate_string($java_args)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -113,9 +147,8 @@ class jenkins::slave (
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
-    class { 'java':
-      distribution => 'jdk',
-    }
+    include ::java
+    Class['java'] -> Service['jenkins-slave']
   }
 
   # customizations based on the OS family
@@ -136,7 +169,6 @@ class jenkins::slave (
 
   case $::kernel {
     'Linux': {
-      $fetch_command  = "wget -O ${slave_home}/${client_jar} ${client_url}/${client_jar}"
       $service_name   = 'jenkins-slave'
       $defaults_user  = 'root'
       $defaults_group = 'root'
@@ -152,7 +184,6 @@ class jenkins::slave (
       }
     }
     'Darwin': {
-      $fetch_command    = "curl -O ${client_url}/${client_jar}"
       $service_name     = 'org.jenkins-ci.slave.jnlp'
       $defaults_user    = 'jenkins'
       $defaults_group   = 'wheel'
@@ -172,12 +203,14 @@ class jenkins::slave (
         mode    => '0644',
         owner   => 'root',
         group   => 'wheel',
-      }
+      } ->
+      Service['jenkins-slave']
 
       file { '/var/log/jenkins':
         ensure => 'directory',
         owner  => $slave_user,
-      }
+      } ->
+      Service['jenkins-slave']
 
       if $manage_slave_user {
         # osx doesn't have managehome support, so create directory
@@ -188,10 +221,6 @@ class jenkins::slave (
           require => User['jenkins-slave_user'],
         }
       }
-
-      File['/var/log/jenkins'] ->
-        File['/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist'] ->
-          Service['jenkins-slave']
     }
     default: { }
   }
@@ -219,15 +248,14 @@ class jenkins::slave (
   }
 
   if ($manage_client_jar) {
-    exec { 'get_swarm_client':
-      command => $fetch_command,
-      path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-      user    => $slave_user,
-      creates => "${slave_home}/${client_jar}",
-      cwd     => $slave_home,
-      #refreshonly  => true,
-    ## needs to be fixed if you create another version..
-    }
+    archive { 'get_swarm_client':
+      source       => "${client_url}/${client_jar}",
+      path         => "${slave_home}/${client_jar}",
+      proxy_server => $::jenkins::proxy_server,
+      cleanup      => false,
+      extract      => false,
+    } ->
+    Service['jenkins-slave']
   }
 
   service { 'jenkins-slave':
@@ -238,13 +266,8 @@ class jenkins::slave (
     hasrestart => true,
   }
 
-  if ($manage_client_jar) {
-    Exec['get_swarm_client'] ->
-    Service['jenkins-slave']
-  }
-
-  if $install_java and ($::osfamily != 'Darwin') {
-    Class['java'] ->
-    Service['jenkins-slave']
+  if $manage_slave_user and $manage_client_jar {
+    User['jenkins-slave_user']->
+      Archive['get_swarm_client']
   }
 }

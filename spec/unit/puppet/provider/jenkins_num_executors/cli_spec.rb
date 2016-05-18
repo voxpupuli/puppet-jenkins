@@ -2,26 +2,26 @@ require 'spec_helper'
 require 'json'
 
 describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
         expect(described_class).to receive(:get_num_executors).
           with(nil) { 42 }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 1
       end
 
-      context "first instance returned" do
+      context 'first instance returned' do
         let(:provider) { described_class.instances[0] }
 
         it { expect(provider.name).to eq 42 }
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::get_num_executors" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::get_num_executors' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:get_num_executors).

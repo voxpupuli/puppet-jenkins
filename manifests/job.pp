@@ -32,13 +32,24 @@ define jenkins::job(
   $source   = undef,
   $template = undef,
   $jobname  = $title,
-  $enabled  = 1,
+  $enabled  = true,
   $ensure   = 'present',
   $difftool = $::jenkins::difftool,
 ){
-  include ::jenkins::cli
-
+  validate_string($config)
+  if $source { validate_absolute_path($source) }
+  if $template { validate_absolute_path($template) }
+  validate_string($jobname)
+  if ! is_bool($enabled) {
+    warning("Passing non-boolean values to jenkins::job::enabled is deprecated-- ${enabled} is not a boolean")
+    $real_enabled = num2bool($enabled)
+  } else {
+    $real_enabled = $enabled
+  }
+  validate_re($ensure, '^present$|^absent$')
   validate_string($difftool)
+
+  include ::jenkins::cli
 
   Class['jenkins::cli'] ->
     Jenkins::Job[$title] ->
@@ -50,11 +61,9 @@ define jenkins::job(
     }
   } else {
     if $source {
-      validate_string($source)
       $realconfig = file($source)
     }
     elsif $template {
-      validate_string($template)
       $realconfig = template($template)
     }
     else {
@@ -64,7 +73,7 @@ define jenkins::job(
     jenkins::job::present { $title:
       config   => $realconfig,
       jobname  => $jobname,
-      enabled  => $enabled,
+      enabled  => $real_enabled,
       difftool => $difftool,
     }
   }

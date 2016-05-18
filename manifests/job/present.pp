@@ -2,6 +2,8 @@
 #
 #   Creates or updates a jenkins build job
 #
+#   This define should be considered private.
+#
 # Parameters:
 #
 #   config
@@ -10,20 +12,22 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = 1
+#   enabled = true
 #     if the job should be enabled
 #
 define jenkins::job::present(
   $config,
   $jobname  = $title,
-  $enabled  = 1,
+  $enabled  = true,
   $difftool = $::jenkins::difftool,
-  #$difftool = '/usr/bin/diff -b -q',
 ){
+  validate_string($config)
+  validate_string($jobname)
+  validate_bool($enabled)
+  validate_string($difftool)
+
   include jenkins::cli
   include jenkins::cli::reload
-
-  validate_string($difftool)
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
@@ -105,7 +109,7 @@ define jenkins::job::present(
   }
 
   # Enable or disable the job (if necessary)
-  if ($enabled == 1) {
+  if ($enabled) {
     exec { "jenkins enable-job ${jobname}":
       command => "${jenkins_cli} enable-job \"${jobname}\"",
       onlyif  => $onlyifenable,

@@ -1,16 +1,10 @@
 HOSTS:
-  win-2012R2-std:
+  ubuntu-server-12042-x64:
     roles:
-     - default 
-     - agent
-    platform: windows-server-amd64
-    box : opentable/win-2012r2-standard-amd64-nocm
-    box_url : https://atlas.hashicorp.com/opentable/boxes/win-2012r2-standard-amd64-nocm
-    hypervisor : vagrant_virtualbox
-    user: vagrant
-    ip: 192.168.50.4
-    is_cygwin: false
-    provider: virtualbox
+      - master
+    platform: ubuntu-12.04-amd64
+    box : ubuntu-server-12042-x64-vbox4210-nocm
+    box_url : http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210-nocm.box
+    hypervisor : vagrant
 CONFIG:
-  log_level: verbose
-  type: git
+  type: foss

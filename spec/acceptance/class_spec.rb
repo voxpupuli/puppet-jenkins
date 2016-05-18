@@ -1,6 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
+  include_context 'jenkins'
 
   context 'default parameters' do
     it 'should work with no errors' do
@@ -22,7 +23,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file('/usr/lib/jenkins/jenkins-cli.jar') do
+    describe file("#{$libdir}/jenkins-cli.jar") do
       it { should be_file }
     end
 

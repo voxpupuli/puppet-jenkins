@@ -1,7 +1,14 @@
 require 'spec_helper'
 
 describe 'jenkins', :type => :module  do
-  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   context 'jobs' do
     context 'default' do
@@ -14,9 +21,13 @@ describe 'jenkins', :type => :module  do
     end
 
     context 'with cli disabled' do
-      let(:params) { { :service_ensure => 'stopped',
-                       :cli => false,
-                       :job_hash => { 'build' => { 'config' => '<xml/>' } } } }
+      let(:params) do
+        {
+          :service_ensure => 'stopped',
+          :cli => false,
+          :job_hash => { 'build' => { 'config' => '<xml/>' } }
+        }
+      end
       it do
         expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
       end

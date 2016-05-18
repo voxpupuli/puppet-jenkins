@@ -16,30 +16,38 @@
 #   https://example.org/myplugin.hpi
 #
 define jenkins::plugin(
-  $version         = 0,
+  $version         = undef,
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
   $update_url      = undef,
   $enabled         = true,
   $source          = undef,
-  $digest_string   = '',
+  $digest_string   = undef,
   $digest_type     = 'sha1',
-  $timeout         = 120,
+  $pin             = true,
+  # no worky
+  $timeout         = undef,
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
   $group           = undef,
   $create_user     = undef,
 ) {
-  include ::jenkins
-
+  validate_string($version)
   validate_bool($manage_config)
+  validate_string($config_filename)
+  validate_string($config_content)
+  validate_string($update_url)
   validate_bool($enabled)
-  # TODO: validate_str($update_url)
   validate_string($source)
   validate_string($digest_string)
   validate_string($digest_type)
+  validate_bool($pin)
+
+  if $timeout {
+    warning('jenkins::plugin::timeout presently has effect')
+  }
 
   if $plugin_dir {
     warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
@@ -54,13 +62,15 @@ define jenkins::plugin(
     warning('jenkins::plugin::create_user is deprecated and has no effect')
   }
 
-  if ($version != 0) {
+  include ::jenkins
+
+  if $version {
     $plugins_host = $update_url ? {
       undef   => $::jenkins::default_plugins_host,
       default => $update_url,
     }
     $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
-    $search   = "${name} ${version}(,|$)"
+    $search   = "^${name} ${version}$"
   }
   else {
     $plugins_host = $update_url ? {
@@ -79,18 +89,44 @@ define jenkins::plugin(
 
   $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
   $plugin     = "${name}.${plugin_ext}"
+  # sanity check extension
+  if ! $plugin_ext {
+    fail("unsupported plugin extension in source url: ${download_url}")
+  }
 
-  if (empty(grep([ $::jenkins_plugins ], $search))) {
-    if ($jenkins::proxy_host) {
-      $proxy_server = "${jenkins::proxy_host}:${jenkins::proxy_port}"
-    } else {
-      $proxy_server = undef
-    }
+  $installed_plugins = $::jenkins_plugins ? {
+    undef   => [],
+    default => strip(split($::jenkins_plugins, ',')),
+  }
 
+  if (empty(grep($installed_plugins, $search))) {
     $enabled_ensure = $enabled ? {
       false   => present,
       default => absent,
     }
+
+    # at least as of jenkins 1.651, if the version of a plugin being downloaded
+    # has a .hpi extension, and there is an existing version of the plugin
+    # present with a .jpi extension, jenkins will actually delete the .hpi
+    # version when restarted. Essentially making it impossible to
+    # (up|down)grade a plugin from .jpi -> .hpi via puppet across extension
+    # changes.  Regardless, we should be relying on jenkins to guess which
+    # plugin archive to use and cleanup any conflicting extensions.
+    $inverse_plugin_ext = $plugin_ext ? {
+      'hpi'   => 'jpi',
+      'jpi'   => 'hpi',
+    }
+    $inverse_plugin     = "${name}.${inverse_plugin_ext}"
+
+    file {[
+      "${::jenkins::plugin_dir}/${inverse_plugin}",
+      "${::jenkins::plugin_dir}/${inverse_plugin}.disabled",
+      "${::jenkins::plugin_dir}/${inverse_plugin}.pinned",
+    ]:
+      ensure => absent,
+      before => Archive[$plugin],
+    }
+
 
     # Allow plugins that are already installed to be enabled/disabled.
     file { "${::jenkins::plugin_dir}/${plugin}.disabled":
@@ -98,52 +134,69 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
-      require => File["${::jenkins::plugin_dir}/${plugin}"],
+      require => Archive[$plugin],
       notify  => Service['jenkins'],
     }
 
+    $pinned_ensure = $pin ? {
+      true    => file,
+      default => undef,
+    }
+
     file { "${::jenkins::plugin_dir}/${plugin}.pinned":
+      ensure  => $pinned_ensure,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       require => $require,
+	  notify  => Service['jenkins'],
     }
 
-    if $digest_string == '' {
-      $checksum = false
+    if $digest_string {
+      $checksum_verify = true
+      $checksum = $digest_string
     } else {
-      $checksum = true
+      $checksum_verify = false
+      $checksum = undef
     }
+
     if $::osfamily == 'windows' { 
-	  pget { "${plugin}" :
-        source => $download_url,
-        target => $::jenkins::plugin_dir,
-        notify => Service['jenkins'],
-        require          => File[$::jenkins::plugin_dir],
+	  pget { "${plugin}-${version}" :
+        source         => $download_url,
+        target         => 'C:/windows/temp',
+        targetfilename => "${plugin}-${version}",
+        notify         => Exec["copy_${plugin}"],
+		require          => File[$::jenkins::plugin_dir],
+      }
+      exec { "copy_${plugin}":
+        command     => "Copy-Item C:/windows/temp/${plugin}-${version} 'C:/Program Files (x86)/Jenkins/plugins/${plugin}' -Force -ErrorAction SilentlyContinue | out-null ",
+        refreshonly => true,
+        provider    => powershell,
+        onlyif      => "if (test-path C:/windows/temp/${plugin}-${version}) {exit 0} else {exit 1}",
+		notify => Service['jenkins'],
       }
     $require = Pget[$plugin]
     } else { 
-      archive::download { $plugin:
-        url              => $download_url,
-        src_target       => $::jenkins::plugin_dir,
-        allow_insecure   => true,
-        follow_redirects => true,
-        verbose          => false,
-        checksum         => $checksum,
-        digest_string    => $digest_string,
-        digest_type      => $digest_type,
-        user             => $::jenkins::user,
-        proxy_server     => $proxy_server,
-        notify           => Service['jenkins'],
-        require          => File[$::jenkins::plugin_dir],
-        timeout          => $timeout,
+      archive { $plugin:
+        source          => $download_url,
+        path            => "${::jenkins::plugin_dir}/${plugin}",
+        checksum_verify => $checksum_verify,
+        checksum        => $checksum,
+        checksum_type   => $digest_type,
+        proxy_server    => $::jenkins::proxy_server,
+        cleanup         => false,
+        extract         => false,
+        require         => File[$::jenkins::plugin_dir],
+        notify          => Service['jenkins'],
       }
-      $require = Archive::Download[$plugin]
+      $require = Archive[$plugin]
     }
     file { "${::jenkins::plugin_dir}/${plugin}" :
       require => $require,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
+      require => Archive[$plugin],
+      before  => Service['jenkins'],
     }
   }
 
