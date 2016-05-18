@@ -61,17 +61,6 @@ describe 'jenkins::job' do
     it { should contain_exec('jenkins delete-job myjob') }
   end
 
-  describe 'with an invalid $difftool' do
-    let(:params) do
-      {
-        :config => '',
-        :difftool => true
-      }
-    end
-
-    it { should_not compile }
-  end
-
   describe 'with unformatted config' do
     unformatted_config = <<eos
 <xml version='1.0' encoding='UTF-8'>

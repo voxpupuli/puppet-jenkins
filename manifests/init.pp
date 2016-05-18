@@ -234,12 +234,12 @@ class jenkins(
     }
   }
 
-  if $direct_download {
+   if $direct_download {
     $repo_ = false
     $jenkins_package_class = 'jenkins::direct_download'
   } else {
     $jenkins_package_class = 'jenkins::package'
-     if ($repo) and ($::osfamily != 'Windows') {
+    if $repo {
       $repo_ = true
       include jenkins::repo
     } else {

@@ -6,10 +6,11 @@ class jenkins::cli_helper {
   include ::jenkins
   include ::jenkins::cli
 
-  $bin_path = $osfamily ? {
-    'Windows'          => '',
-    default            => '/usr/bin/',
-  }
+  $bin_path = $::jenkins::javapath
+  #$bin_path = $osfamily ? {
+  #  'Windows'          => '',
+  #   default            => '/usr/bin/',
+  #}
   Class['jenkins::cli'] ->
     Class['jenkins::cli_helper'] ->
       Anchor['jenkins::end']
@@ -20,20 +21,12 @@ class jenkins::cli_helper {
   $prefix = jenkins_prefix()
 
   $helper_groovy = "${libdir}/puppet_helper.groovy"
-  if ($::operatingsystem == 'windows')  {
-    file {$helper_groovy:
-      source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
-      require => Class['jenkins::cli'],
-	  source_permissions => ignore,
-    }
-  } else {
-    file {$helper_groovy:
-      source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
-      mode    => '0444',
-      require => Class['jenkins::cli'],
-    }
+  file {$helper_groovy:
+    source  => 'puppet:///modules/jenkins/puppet_helper.groovy',
+    owner   => $::jenkins::user,
+    group   => $::jenkins::group,
+    mode    => '0444',
+    require => Class['jenkins::cli'],
   }
 
   # Provide the -i flag if specified by the user.

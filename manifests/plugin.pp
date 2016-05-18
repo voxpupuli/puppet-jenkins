@@ -105,7 +105,7 @@ define jenkins::plugin(
     file { "${::jenkins::plugin_dir}/${plugin}.pinned":
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      require => Archive::Download[$plugin],
+      require => $require,
     }
 
     if $digest_string == '' {
@@ -113,25 +113,34 @@ define jenkins::plugin(
     } else {
       $checksum = true
     }
-
-    archive::download { $plugin:
-      url              => $download_url,
-      src_target       => $::jenkins::plugin_dir,
-      allow_insecure   => true,
-      follow_redirects => true,
-      verbose          => false,
-      checksum         => $checksum,
-      digest_string    => $digest_string,
-      digest_type      => $digest_type,
-      user             => $::jenkins::user,
-      proxy_server     => $proxy_server,
-      notify           => Service['jenkins'],
-      require          => File[$::jenkins::plugin_dir],
-      timeout          => $timeout,
+    if $::osfamily == 'windows' { 
+	  pget { "${plugin}" :
+        source => $download_url,
+        target => $::jenkins::plugin_dir,
+        notify => Service['jenkins'],
+        require          => File[$::jenkins::plugin_dir],
+      }
+    $require = Pget[$plugin]
+    } else { 
+      archive::download { $plugin:
+        url              => $download_url,
+        src_target       => $::jenkins::plugin_dir,
+        allow_insecure   => true,
+        follow_redirects => true,
+        verbose          => false,
+        checksum         => $checksum,
+        digest_string    => $digest_string,
+        digest_type      => $digest_type,
+        user             => $::jenkins::user,
+        proxy_server     => $proxy_server,
+        notify           => Service['jenkins'],
+        require          => File[$::jenkins::plugin_dir],
+        timeout          => $timeout,
+      }
+      $require = Archive::Download[$plugin]
     }
-
     file { "${::jenkins::plugin_dir}/${plugin}" :
-      require => Archive::Download[$plugin],
+      require => $require,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',

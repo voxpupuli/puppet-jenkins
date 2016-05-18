@@ -17,7 +17,8 @@ define jenkins::job::present(
   $config,
   $jobname  = $title,
   $enabled  = 1,
-  $difftool = '/usr/bin/diff -b -q',
+  $difftool = $::jenkins::difftool,
+  #$difftool = '/usr/bin/diff -b -q',
 ){
   include jenkins::cli
   include jenkins::cli::reload
@@ -29,7 +30,7 @@ define jenkins::job::present(
   }
 
   $jenkins_cli        = $jenkins::cli::cmd
-  $tmp_config_path    = "/tmp/${jobname}-config.xml"
+  $tmp_config_path    = "$jenkins::cwd/${jobname}-config.xml"
   $job_dir            = "${::jenkins::job_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
@@ -39,11 +40,31 @@ define jenkins::job::present(
 
   Exec {
     logoutput   => false,
-    path        => '/bin:/usr/bin:/sbin:/usr/sbin',
+    path        => $path,
     tries       => $cli_tries,
     try_sleep   => $cli_try_sleep,
+    provider    => $jenkins::provider,
   }
-
+  
+  #Exec commands and different OS's are not easy to handle, 
+  #the if windows logic is hard to avoid when there are this 
+  #many commands to consider 
+  if $::osfamily == 'windows' {
+    $onlyifenable    = "if (test-path \"${config_path}\") {if ((get-content \"${config_path}\" | out-string) -inotlike \"<disabled>true\") {exit 0} else {exit 1}} else {exit 1}"
+    $onlyifupdate     = "if (test-path \"${config_path}\") {exit 0} else {exit 1}"
+    $onlyifdisable     = "if (test-path \"${config_path}\") {if ((get-content \"${config_path}\" | out-string) -inotlike \"<disabled>false\") {exit 0} else {exit 1}} else {exit 1}"
+  } else {
+    $onlyifenable     = "cat \"${config_path}\" | grep '<disabled>false'"
+    $onlyifupdate     = "test -e \"${config_path}\""
+    $onlyifdisable     = "cat \"${config_path}\" | grep '<disabled>true'"
+  }
+  $discommand = "${jenkins_cli} disable-job \"${jobname}\""
+  $create_job = "${jenkins_cli} create-job \"${jobname}\""
+  $update_job = "${jenkins_cli} update-job ${jobname}"
+  $enbcommand = "${jenkins_cli} enable-job \"${jobname}\""
+  $unless     = "${difftool} ${config_path} ${tmp_config_path}"
+  $cat_config = "cat \"${tmp_config_path}\""
+  $onlyif     = "${::jenkins::testpath} ${config_path}"
   #
   # When a Jenkins job is imported via the cli, Jenkins will
   # re-format the xml file based on its own internal rules.
@@ -68,8 +89,6 @@ define jenkins::job::present(
   }
 
   # Use Jenkins CLI to create the job
-  $cat_config = "cat \"${tmp_config_path}\""
-  $create_job = "${jenkins_cli} create-job \"${jobname}\""
   exec { "jenkins create-job ${jobname}":
     command => "${cat_config} | ${create_job}",
     creates => [$config_path, "${job_dir}/builds"],
@@ -77,11 +96,10 @@ define jenkins::job::present(
   }
 
   # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
   exec { "jenkins update-job ${jobname}":
     command => "${cat_config} | ${update_job}",
-    onlyif  => "test -e ${config_path}",
-    unless  => "${difftool} ${config_path} ${tmp_config_path}",
+    onlyif  => $onlyifupdate,
+    unless  => "${difftool} '${config_path}' ${tmp_config_path}",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
   }
@@ -90,7 +108,7 @@ define jenkins::job::present(
   if ($enabled == 1) {
     exec { "jenkins enable-job ${jobname}":
       command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>true'",
+      onlyif  => $onlyifenable,
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],
@@ -99,7 +117,7 @@ define jenkins::job::present(
   } else {
     exec { "jenkins disable-job ${jobname}":
       command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>false'",
+      onlyif  => $onlyifdisable,
       require => [
         Exec["jenkins create-job ${jobname}"],
         Exec["jenkins update-job ${jobname}"],

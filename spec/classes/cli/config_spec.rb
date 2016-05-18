@@ -113,13 +113,13 @@ describe 'jenkins::cli::config', :type => :class do
           let(:facts) {{ :id => 'user' }}
 
           it do
-            should contain_file('/dne').with(
+            should contain_file('/dne').with({
               :ensure => 'file',
               :mode   => '0400',
               :backup => false,
               :owner  => nil,
               :group  => nil,
-            )
+})
           end
           it { should contain_file('/dne').with_content('foo') }
         end # as non-root user
@@ -128,13 +128,13 @@ describe 'jenkins::cli::config', :type => :class do
           let(:facts) {{ :id => 'root' }}
 
           it do
-            should contain_file('/dne').with(
+            should contain_file('/dne').with({
               :ensure => 'file',
               :mode   => '0400',
               :backup => false,
               :owner  => 'jenkins',
               :group  => 'jenkins',
-            )
+})
           end
           it { should contain_file('/dne').with_content('foo') }
         end # as root

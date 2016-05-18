@@ -37,32 +37,6 @@ describe 'jenkins::slave' do
       let(:params) { {:enable => false, :ensure => 'stopped' } }
       it { should contain_service('jenkins-slave').with(:enable => false, :ensure => 'stopped') }
     end
-
-    describe 'with tool_locations' do
-      let(:params) { { :tool_locations => 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
-      it { should contain_file(slave_runtime_file).
-        with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
-        with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/) }
-    end
-
-    describe 'with a UI user/password' do
-      let(:user) { '"frank"' }
-      let(:password) { "abignale's" }
-      let(:params) do
-        {
-          :ui_user => user,
-          :ui_pass => password,
-        }
-      end
-
-      it 'should escape the user' do
-        should contain_file(slave_runtime_file).with_content(/^JENKINS_USERNAME='#{user}'$/)
-      end
-
-      it 'should escape the password' do
-        should contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
-      end
-    end
   end
 
   shared_examples 'using slave_name' do
@@ -79,8 +53,6 @@ describe 'jenkins::slave' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
     end
-
-    it { should_not contain_package('daemon') }
   end
 
   describe 'Debian' do
@@ -93,11 +65,6 @@ describe 'jenkins::slave' do
     describe 'with slave_name' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
-    end
-
-    it do
-      should contain_package('daemon')
-        .that_comes_before('Service[jenkins-slave]')
     end
   end
 
@@ -119,8 +86,6 @@ describe 'jenkins::slave' do
       let(:params) { { :slave_name => 'jenkins-slave' } }
       it_behaves_like 'using slave_name'
     end
-
-    it { should_not contain_package('daemon') }
   end
 
   describe 'Unknown' do

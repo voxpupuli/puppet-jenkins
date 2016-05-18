@@ -139,10 +139,10 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
   describe '::list_jobs' do
     it do
-      expect(described_class).to receive(:cli).with(
+      expect(described_class).to receive(:cli).with({
         ['list-jobs'],
         {:catalog => nil}
-      ) { list_jobs_output }
+}) { list_jobs_output }
 
       ret = described_class.send :list_jobs
       expect(ret).to eq ['foo', 'bar']
@@ -151,10 +151,10 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
   describe '::get_job' do
     it do
-      expect(described_class).to receive(:cli).with(
+      expect(described_class).to receive(:cli).with({
         ['get-job', 'foo'],
         {:catalog => nil}
-      ) { foo_xml }
+}) { foo_xml }
 
       ret = described_class.send :get_job, 'foo'
       expect(ret).to eq foo_xml
@@ -163,10 +163,10 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
   describe '::job_enabled' do
     it do
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['job_enabled', 'foo'],
         {:catalog => nil}
-      ) { 'true' }
+}) { 'true' }
 
       ret = described_class.send :job_enabled, 'foo'
       expect(ret).to eq true
@@ -178,12 +178,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new(
         :name   => 'foo',
         :config => foo_xml,
-      )
+})
 
-      expect(described_class).to receive(:cli).with(
+      expect(described_class).to receive(:cli).with({
         ['create-job', 'foo'],
         {:stdin => foo_xml}
-      )
+})
 
       provider.send :create_job
     end
@@ -194,12 +194,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new(
         :name   => 'foo',
         :config => foo_xml,
-      )
+})
 
-      expect(described_class).to receive(:cli).with(
+      expect(described_class).to receive(:cli).with({
         ['update-job', 'foo'],
         {:stdin => foo_xml}
-      )
+})
 
       provider.send :update_job
     end
@@ -210,11 +210,11 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new(
         :name   => 'foo',
         :config => foo_xml,
-      )
+})
 
-      expect(described_class).to receive(:cli).with(
+      expect(described_class).to receive(:cli).with({
         ['delete-job', 'foo']
-      )
+})
 
       provider.send :delete_job
     end

@@ -21,6 +21,7 @@ class jenkins::cli {
   Class['jenkins::service'] ->
     Class['jenkins::cli'] ->
       Anchor['jenkins::end']
+	  
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
   case $::osfamily {
     'Windows': {
@@ -28,8 +29,6 @@ class jenkins::cli {
       $move_jar    = "move-item WEB-INF/jenkins-cli.jar '${jar}'"
       $remove_dir  = 'remove-item -recurse -force WEB-INF'
       $and_var	   = ';'
-      $path	   = ''
-      $cwd	   = $jenkins::libdir
       $sleep_cmd  = 'start-sleep -seconds 10'
     }
     default: {
@@ -37,30 +36,17 @@ class jenkins::cli {
       $move_jar    = "mv WEB-INF/jenkins-cli.jar ${jar}"
       $remove_dir  = 'rm -rf WEB-INF'
       $and_var     = '&&'
-      $path	   = "['/bin', '/usr/bin']"
-      $cwd	   = '/tmp'
       $sleep_cmd  = '/bin/sleep 10'
     }
   }
   
-  if ($::operatingsystem == 'windows')  {
-    #In windows, there is a pause here because jenkins takes a while to start up in windows
-    exec { 'jenkins-cli' :
-      command  => "${extract_jar} ${and_var} ${move_jar} ${and_var} ${remove_dir}",
-      path     => $path,
-      cwd      => $cwd,
-      creates  => "${jar}",
-      require  => Service['jenkins'],
-      provider => 'powershell',
-    }
-  } else {
-    exec { 'jenkins-cli' :
-      command => "${extract_jar} ${and_var} ${move_jar} ${and_var} ${remove_dir}",
-      path    => $path,
-      cwd     => $cwd,
-      creates => $jar,
-      require => Service['jenkins'],
-    }
+  exec { 'jenkins-cli' :
+    command  => "${extract_jar} ${and_var} ${move_jar} ${and_var} ${remove_dir}",
+    creates  => $jar,
+    require  => Service['jenkins'],
+    provider => $jenkins::provider,
+    path     => $jenkins::path,
+    cwd      => $jenkins::cwd,
   }
   
   file { "${jar}":
@@ -106,7 +92,7 @@ class jenkins::cli {
   # Do a safe restart of Jenkins (only when notified)
   exec { 'safe-restart-jenkins':
     command     => "${cmd} safe-restart ${and_var} ${sleep_cmd}",
-    path        => $path,
+    path        => $jenkins::path,
     tries       => 10,
     try_sleep   => 2,
     refreshonly => true,

@@ -9,7 +9,7 @@ class jenkins::firewall {
   }
 
   if ($::operatingsystem == 'windows')  {
-    fail("Firewall module does not support windows. Set firewall to false")
+    fail("Firewall does not support windows. Set firewall to false")
   }
   firewall { '500 allow Jenkins inbound traffic':
     action => 'accept',

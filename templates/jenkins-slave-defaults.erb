@@ -50,11 +50,13 @@ CLIENT_NAME="<%= @slave_name -%>"
 
 FSROOT="<%= @slave_home -%>"
 
+TOOL_LOCATIONS="<%= @tool_locations -%>"
+
 DESCRIPTION="<%= @description -%>"
 
-# credentials should be sinjle quoted
-JENKINS_USERNAME=<%= @quoted_ui_user %>
-JENKINS_PASSWORD=<%= @quoted_ui_pass %>
+# credentials
+JENKINS_USERNAME="<%= @ui_user -%>"
+JENKINS_PASSWORD="<%= @ui_pass -%>"
 
 OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
 
@@ -78,12 +80,9 @@ if [ -n "$FSROOT" ]; then
   FSROOT_ARG="-fsroot '$FSROOT'"
 fi
 
-<% if @tool_locations %>
-  TOOL_LOCATIONS_ARG=""
-  <% @tool_locations.split.each do |tool_location| %>
-    TOOL_LOCATIONS_ARG='$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>'
-  <% end %>
-<% end %>
+if [ -n "$TOOL_LOCATIONS" ]; then
+  TOOL_LOCATIONS_ARG="-toolLocations '$TOOL_LOCATIONS'"
+fi
 
 if [ -n "$DESCRIPTION" ]; then
   DESCRIPTION_ARG="-description '$DESCRIPTION'"

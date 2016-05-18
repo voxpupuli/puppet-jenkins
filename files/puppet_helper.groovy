@@ -626,21 +626,19 @@ class Actions {
     }
     j.setAuthorizationStrategy(strategy)
     j.setSecurityRealm(realm)
-    j.save()
   }
 
   void get_security_realm() {
     def j = Jenkins.getInstance()
     def realm = j.getSecurityRealm()
 
-    def className = realm.getClass().getName()
     def config
-    switch (className) {
+    switch (realm) {
       // "Jenkins’ own user database"
-      case 'hudson.security.HudsonPrivateSecurityRealm':
+      case hudson.security.HudsonPrivateSecurityRealm:
         config = [
           setSecurityRealm: [
-            (className): [
+            (realm.getClass().getName()): [
               realm.allowsSignup(),
               realm.isEnableCaptcha(),
               null,
@@ -650,10 +648,10 @@ class Actions {
         break
 
       // "Unix user/group database"
-      case 'hudson.security.PAMSecurityRealm':
+      case hudson.security.PAMSecurityRealm:
         config = [
           setSecurityRealm: [
-            (className): [
+            (realm.getClass().getName()): [
               // there is no accessor for the serviceName field
               realm.@serviceName
             ],
@@ -666,10 +664,10 @@ class Actions {
       // public LDAPSecurityRealm(String server, String rootDN, String userSearchBase, String userSearch, String groupSearchBase, String groupSearchFilter, LDAPGroupMembershipStrategy groupMembershipStrategy, String managerDN, Secret managerPasswordSecret, boolean inhibitInferRootDN, boolean disableMailAddressResolver, CacheConfiguration cache, EnvironmentProperty[] environmentProperties, String displayNameAttributeName, String mailAddressAttributeName, IdStrategy userIdStrategy, IdStrategy groupIdStrategy)
 
       // github-oauth
-      case 'org.jenkinsci.plugins.GithubSecurityRealm':
+      case org.jenkinsci.plugins.GithubSecurityRealm:
         config = [
           setSecurityRealm: [
-            (className): [
+            (realm.getClass().getName()): [
               realm.getGithubWebUri(),
               realm.getGithubApiUri(),
               realm.getClientID(),
@@ -682,7 +680,7 @@ class Actions {
 
       // constructor with no arguments
       // "Delegate to servlet container"
-      case 'hudson.security.LegacySecurityRealm':
+      case hudson.security.LegacySecurityRealm:
       default:
         config = [
           setSecurityRealm: [
@@ -703,14 +701,13 @@ class Actions {
     def j = Jenkins.getInstance()
     def strategy = j.getAuthorizationStrategy()
 
-    def className = strategy.getClass().getName()
     def config
     switch (strategy) {
       // github-oauth
-      case 'org.jenkinsci.plugins.GithubAuthorizationStrategy':
+      case org.jenkinsci.plugins.GithubAuthorizationStrategy:
         config = [
           setAuthorizationStrategy: [
-            (className): [
+            (strategy.getClass().getName()): [
               strategy.adminUserNames,
               strategy.authenticatedUserReadPermission,
               strategy.useRepositoryPermissions,
@@ -726,23 +723,23 @@ class Actions {
 
       // constructor with no arguments
       // "Anyone can do anything"
-      case 'hudson.security.AuthorizationStrategy$Unsecured':
+      case hudson.security.AuthorizationStrategy$Unsecured:
       // "Legacy mode"
-      case 'hudson.security.LegacyAuthorizationStrategy':
+      case hudson.security.LegacyAuthorizationStrategy:
       // "Logged-in users can do anything"
-      case 'hudson.security.FullControlOnceLoggedInAuthorizationStrategy':
+      case hudson.security.FullControlOnceLoggedInAuthorizationStrategy:
       // "Matrix-based security"
-      case 'hudson.security.GlobalMatrixAuthorizationStrategy':
+      case hudson.security.GlobalMatrixAuthorizationStrategy:
         // technically, you can select this class but it will "brick" the
         // authorization strategy without additional method calls to configure
         // the matrix which are not presently supported
       // "Project-based Matrix Authorization Strategy"
-      case 'hudson.security.ProjectMatrixAuthorizationStrategy':
+      case hudson.security.ProjectMatrixAuthorizationStrategy:
         // same issue as hudson.security.GlobalMatrixAuthorizationStrategy
       default:
         config = [
           setAuthorizationStrategy: [
-            (className): [],
+            (strategy.getClass().getName()): [],
           ],
         ]
     }

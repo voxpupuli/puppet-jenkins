@@ -7,11 +7,7 @@ class jenkins::plugins {
   }
 
    $plugin_dir      = "${jenkins::params::libdir}/plugins"
-
-  if $::osfamily == 'windows' {
-    
-    create_resources('jenkins::windows::plugin',$jenkins::plugin_hash)
-  } else{
-    create_resources('jenkins::plugin',$jenkins::plugin_hash)
-  }
+   
+   create_resources('jenkins::plugin',$jenkins::plugin_hash)
+  
 }

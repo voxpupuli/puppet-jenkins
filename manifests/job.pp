@@ -34,7 +34,7 @@ define jenkins::job(
   $jobname  = $title,
   $enabled  = 1,
   $ensure   = 'present',
-  $difftool = '/usr/bin/diff -b -q',
+  $difftool = $::jenkins::difftool,
 ){
   include ::jenkins::cli
 

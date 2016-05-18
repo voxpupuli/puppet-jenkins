@@ -14,15 +14,21 @@ define jenkins::job::absent(
   $jobname  = $title,
 ){
   include jenkins::cli
-
+  
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
   }
 
-  $tmp_config_path  = "/tmp/${jobname}-config.xml"
-  $job_dir          = "${::jenkins::job_dir}/${jobname}"
-  $config_path      = "${job_dir}/config.xml"
+  $tmp_config_path    = "$jenkins::cwd/${jobname}-config.xml"
+  $job_dir            = "${::jenkins::job_dir}/${jobname}"
+  $config_path        = "${job_dir}/config.xml"
 
+   if $::osfamily == 'windows' {
+    $onlyif     = "if (test-path \"${config_path}\") {exit 0} else {exit 1}"
+  } else {
+    $onlyif     = "test -f \"${config_path}\""
+  }
+  
   # Temp file to use as stdin for Jenkins CLI executable
   file { $tmp_config_path:
     ensure  => absent,
@@ -30,10 +36,10 @@ define jenkins::job::absent(
 
   # Delete the job
   exec { "jenkins delete-job ${jobname}":
-    path      => ['/usr/bin', '/usr/sbin', '/bin'],
+    path      => $::jenkins::path,
     command   => "${jenkins::cli::cmd} delete-job \"${jobname}\"",
     logoutput => false,
-    onlyif    => "test -f \"${config_path}\"",
+    onlyif    => $onlyif,
     require   => Exec['jenkins-cli'],
   }
 

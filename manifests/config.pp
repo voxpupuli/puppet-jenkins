@@ -8,19 +8,21 @@ class jenkins::config {
 
   create_resources( 'jenkins::sysconfig', $::jenkins::config_hash )
 
-  if ($::operatingsystem == 'windows')  {
-    $dir_params = {
-      ensure => directory,
-      source_permissions => ignore,
-    }
-  } else {
+  #if ($::operatingsystem == 'windows')  {
+  #  $dir_params = {
+  #    ensure => directory,
+  #    source_permissions => ignore,
+#	  owner  => $::jenkins::user,
+#      group  => $::jenkins::group,
+ #   }
+ # } else {
     $dir_params = {
       ensure => directory,
       owner  => $::jenkins::user,
       group  => $::jenkins::group,
       mode   => '0755',
     }
-  }
+  #}
 
   # ensure_resource is used to try to maintain backwards compatiblity with
   # manifests that were able to external declare resources due to the

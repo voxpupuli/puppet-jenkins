@@ -10,7 +10,7 @@ describe 'jenkins', :type => :module  do
 
     context 'managing service' do
       let(:params) { { :service_ensure => 'stopped', :service_enable => false } }
-      it { should contain_service('jenkins').with(:ensure => 'stopped', :enable => false ) }
+      it { should contain_service('jenkins').with(:ensure => 'stopped', :enable => false}) }
     end
   end
 

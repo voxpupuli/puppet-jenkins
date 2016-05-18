@@ -181,10 +181,10 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   describe '::credentials_list_json' do
     # not isolated from ::from_hash in the interests of staying DRY
     it do
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['credentials_list_json'],
         {:catalog => nil}
-      ) { JSON.pretty_generate(credentials[0]) }
+}) { JSON.pretty_generate(credentials[0]) }
 
       raw = described_class.send :credentials_list_json
       expect(raw).to eq credentials[0]
@@ -199,10 +199,10 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     it do
       provider = described_class.send :from_hash, credentials[0]
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['credentials_update_json'],
         {:stdinjson => credentials[0]},
-      )
+})
 
       provider.send :credentials_update_json
     end
@@ -212,9 +212,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     it do
       provider = described_class.send :from_hash, credentials[0]
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['credentials_delete_id', '9b07d668-a87e-4877-9407-ae05056e32ac']
-      )
+})
 
       provider.send :credentials_delete_id
     end

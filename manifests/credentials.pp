@@ -30,12 +30,14 @@ define jenkins::credentials (
   Class['jenkins::cli_helper'] ->
     Jenkins::Credentials[$title] ->
       Anchor['jenkins::end']
+  
+  #Can't be placed in params
   if ($::operatingsystem == 'windows')  {
     $unless = "${::jenkins::cli_helper::helper_cmd}"
   } else {
     $unless = "\$HELPER_CMD"
   }
-
+  
   case $ensure {
     'present': {
       validate_string($password)

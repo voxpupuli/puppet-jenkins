@@ -179,10 +179,10 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     it do
       provider = described_class.send :from_hash, user_info[0]
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['user_update'],
         { :stdinjson => mutable_user_info },
-      )
+})
 
       provider.send :user_update
     end
@@ -192,9 +192,9 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     it do
       provider = described_class.send :from_hash, user_info[0]
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['delete_user', 'test']
-      )
+})
 
       provider.send :delete_user
     end

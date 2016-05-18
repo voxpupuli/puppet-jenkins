@@ -129,10 +129,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   describe '::get_security_realm' do
     # not isolated from ::from_hash in the interests of staying DRY
     it do
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['get_security_realm'],
         {:catalog => nil}
-      ) { realm_oauth_json }
+}) { realm_oauth_json }
 
       raw = described_class.send :get_security_realm
       expect(raw).to eq realm_oauth
@@ -143,10 +143,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.send :from_hash, realm_oauth
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['set_jenkins_instance'],
         { :stdinjson => realm_oauth },
-      )
+})
 
       provider.send :set_jenkins_instance
     end
@@ -156,10 +156,10 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.new(:name => 'test')
 
-      expect(described_class).to receive(:clihelper).with(
+      expect(described_class).to receive(:clihelper).with({
         ['set_jenkins_instance'],
         { :stdinjson => realm_none },
-      )
+})
 
       provider.send :set_security_none
     end

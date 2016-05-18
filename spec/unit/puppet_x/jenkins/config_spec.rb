@@ -100,7 +100,7 @@ describe PuppetX::Jenkins::Config do
           before do
             jenkins = Puppet::Type.type(:component).new(
               :name => 'jenkins::cli::config',
-            )
+})
 
             catalog.add_resource jenkins
           end
@@ -126,7 +126,7 @@ describe PuppetX::Jenkins::Config do
               :puppet_helper   => 'cat.groovy',
               :cli_tries       => 222,
               :cli_try_sleep   => 333,
-            )
+})
 
             catalog.add_resource jenkins
           end

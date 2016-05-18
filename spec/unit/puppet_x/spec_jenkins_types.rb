@@ -103,10 +103,10 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire service" do
     service_resource = Puppet::Type.type(:service).new(
       :name => 'jenkins',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource service_resource
@@ -121,14 +121,14 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire ssh_private_key file from catalog" do
     ssh_resource = Puppet::Type.type(:file).new(
       :path => '/dne/id_rsa',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     jenkins = Puppet::Type.type(:component).new(
       :name            => 'jenkins::cli::config',
       :ssh_private_key => '/dne/id_rsa',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource ssh_resource
@@ -144,10 +144,10 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire ssh_private_key file from fact" do
     ssh_resource = Puppet::Type.type(:file).new(
       :path => '/dne/id_rsa',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     Facter.add(:jenkins_ssh_private_key) { setcode { '/dne/id_rsa' } }
 
     catalog = Puppet::Resource::Catalog.new
@@ -163,14 +163,14 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire ssh_private_key file from catalog instead of fact" do
     ssh_resource = Puppet::Type.type(:file).new(
       :path => '/dne/catalog',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     jenkins = Puppet::Type.type(:component).new(
       :name            => 'jenkins::cli::config',
       :ssh_private_key => '/dne/catalog',
-    )
+})
     Facter.add(:jenkins_ssh_private_key) { setcode { '/dne/fact' } }
 
     catalog = Puppet::Resource::Catalog.new
@@ -187,14 +187,14 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire puppet_helper file from catalog" do
     helper_resource = Puppet::Type.type(:file).new(
       :path => '/dne/foo.groovy',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     jenkins = Puppet::Type.type(:component).new(
       :name          => 'jenkins::cli::config',
       :puppet_helper => '/dne/foo.groovy',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource helper_resource
@@ -210,10 +210,10 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire puppet_helper file from fact" do
     helper_resource = Puppet::Type.type(:file).new(
       :path => '/dne/foo.groovy',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     Facter.add(:jenkins_puppet_helper) { setcode { '/dne/foo.groovy' } }
 
     catalog = Puppet::Resource::Catalog.new
@@ -229,14 +229,14 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire puppet_helper file from catalog instead of fact" do
     helper_resource = Puppet::Type.type(:file).new(
       :path => '/dne/catalog',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     jenkins = Puppet::Type.type(:component).new(
       :name          => 'jenkins::cli::config',
       :puppet_helper => '/dne/catalog',
-    )
+})
     Facter.add(:jenkins_puppet_helper) { setcode { '/dne/fact' } }
 
     catalog = Puppet::Resource::Catalog.new
@@ -253,18 +253,18 @@ shared_examples 'autorequires cli resources' do
   it "should autorequire both ssh_private_key key and puppet_helper from catalog" do
     ssh_resource = Puppet::Type.type(:file).new(
       :path => '/dne/id_rsa',
-    )
+})
     helper_resource = Puppet::Type.type(:file).new(
       :path => '/dne/foo.groovy',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
     jenkins = Puppet::Type.type(:component).new(
       :name            => 'jenkins::cli::config',
       :ssh_private_key => '/dne/id_rsa',
       :puppet_helper   => '/dne/foo.groovy',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource ssh_resource
@@ -286,10 +286,10 @@ shared_examples 'autorequires all jenkins_user resources' do
   it "should autorequire single jenkins_user" do
     larry = Puppet::Type.type(:jenkins_user).new(
       :name => 'larry',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource larry
@@ -304,13 +304,13 @@ shared_examples 'autorequires all jenkins_user resources' do
   it "should autorequire multiple jenkins_user(s)" do
     larry = Puppet::Type.type(:jenkins_user).new(
       :name => 'larry',
-    )
+})
     moe = Puppet::Type.type(:jenkins_user).new(
       :name => 'moe',
-    )
+})
     resource = described_class.new(
       :name => 'test',
-    )
+})
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource larry
@@ -331,10 +331,10 @@ shared_examples 'autorequires jenkins_security_realm resource' do
   it "should autorequire jenkins_security_realm resource" do
     required = Puppet::Type.type(:jenkins_security_realm).new(
       :name => 'test',
-    )
+})
     resource = described_class.new(
       :name   => 'test',
-    )
+})
     if described_class.validproperty?(:ensure)
       resource[:ensure] = :present
     end
@@ -354,10 +354,10 @@ shared_examples 'autorequires jenkins_authorization_strategy resource' do
   it "should autorequire jenkins_authorization_strategy resource" do
     required = Puppet::Type.type(:jenkins_authorization_strategy).new(
       :name => 'test',
-    )
+})
     resource = described_class.new(
       :name   => 'test',
-    )
+})
     if described_class.validproperty?(:ensure)
       resource[:ensure] = :present
     end
