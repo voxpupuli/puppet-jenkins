@@ -3,7 +3,7 @@
 #
 class jenkins::params {
   $version               = 'installed'
-  $lts                   = false
+  $lts                   = true
   $repo                  = true
   $direct_download       = undef
   $service_enable        = true
