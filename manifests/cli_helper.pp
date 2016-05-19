@@ -38,7 +38,12 @@ class jenkins::cli_helper (
   # Provide the -i flag if specified by the user.
   if $ssh_keyfile {
     $auth_arg = "-i ${ssh_keyfile}"
-  } else {
+  }
+  # If username and password are provided
+  elsif ($::jenkins::cli_username) and ($::jenkins::cli_password) {
+    $auth_arg = "--username ${::jenkins::cli_username} --password ${::jenkins::cli_password}"
+  }
+  else {
     $auth_arg = undef
   }
 
@@ -51,8 +56,8 @@ class jenkins::cli_helper (
       '/usr/bin/java',
       "-jar ${::jenkins::cli::jar}",
       "-s http://127.0.0.1:${port}${prefix}",
-      $auth_arg,
       "groovy ${helper_groovy}",
+      $auth_arg,
     ]),
     ' '
   )
