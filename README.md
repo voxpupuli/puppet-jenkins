@@ -180,7 +180,7 @@ The dependencies for this module currently are:
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
 * [staging module](https://forge.puppetlabs.com/nanliu/staging)
-* [archive module](https://forge.puppetlabs.com/camptocamp/archive)
+* [archive module](https://forge.puppetlabs.com/puppet/archive)
 
 ### Depending on Jenkins
 
