@@ -12,18 +12,13 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = true
-#     if the job should be enabled
-#
 define jenkins::job::present(
   $config,
   $jobname  = $title,
-  $enabled  = true,
   $difftool = '/usr/bin/diff -b -q',
 ){
   validate_string($config)
   validate_string($jobname)
-  validate_bool($enabled)
   validate_string($difftool)
 
   include jenkins::cli
@@ -90,26 +85,4 @@ define jenkins::job::present(
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
   }
-
-  # Enable or disable the job (if necessary)
-  if ($enabled) {
-    exec { "jenkins enable-job ${jobname}":
-      command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>true'",
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
-    }
-  } else {
-    exec { "jenkins disable-job ${jobname}":
-      command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>false'",
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
-    }
-  }
-
 }
