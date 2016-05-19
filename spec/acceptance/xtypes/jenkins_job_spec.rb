@@ -162,8 +162,6 @@ EOS
             jenkins_job { 'foo/bar/baz': ensure => absent }
           EOS
 
-          # Run it twice and test for idempotency
-          apply(pp, :catch_failures => true)
           apply(pp, :catch_failures => true)
         end
 
@@ -207,7 +205,6 @@ EOS
           jenkins_job { 'foo': ensure => absent }
         EOS
 
-        # Run it twice and test for idempotency
         apply(pp, :catch_failures => true)
       end
     end #convert existing job to folder
