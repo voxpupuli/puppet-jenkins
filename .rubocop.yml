@@ -3,7 +3,7 @@
 
 AllCops:
   Exclude:
-    - 'spec/fixtures/**'
+    - 'spec/fixtures/**/*'
     - 'lib/puppet/jenkins/okjson.rb'
 
 Lint/ConditionPosition:
