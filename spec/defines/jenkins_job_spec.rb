@@ -12,7 +12,8 @@ describe 'jenkins::job' do
   end
 
   describe 'relationships' do
-    let(:params) {{ :config => '' }}
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :config => quotes }}
     it do
       should contain_jenkins__job('myjob').
         that_requires('Class[jenkins::cli]')
@@ -24,14 +25,16 @@ describe 'jenkins::job' do
   end
 
   describe 'with defaults' do
-    let(:params) {{ :config => '' }}
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :config => quotes }}
     it { should contain_exec('jenkins create-job myjob') }
     it { should contain_exec('jenkins update-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with job present' do
-    let(:params) {{ :ensure => 'present', :config => '' }}
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :ensure => 'present', :config => quotes }}
     it { should contain_exec('jenkins create-job myjob') }
     it { should contain_exec('jenkins update-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }
