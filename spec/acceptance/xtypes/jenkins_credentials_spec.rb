@@ -74,6 +74,7 @@ describe 'jenkins_credentials' do
               impl        => 'StringCredentialsImpl',
               scope       => 'SYSTEM',
               secret      => 'fluffy bunny',
+              username    => 'bruce',
             }
           EOS
 
@@ -88,6 +89,36 @@ describe 'jenkins_credentials' do
           # credentails
           it { should contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
         end
+
+      context 'StringCredentialsImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { 'plain-credentials':
+              pin => true,
+            }
+
+            jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
+              ensure      => 'present',
+              description => 'baz',
+              domain      => undef,
+              impl        => 'StringCredentialsImpl',
+              scope       => 'SYSTEM',
+              secret      => 'fluffy bunny',
+            }
+          EOS
+
+          # Run it twice and test for idempotency
+          apply_manifest(pp, :catch_failures => true)
+          apply_manifest(pp, :catch_failures => true)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+        end
+
       end
     end # 'present' do
 
