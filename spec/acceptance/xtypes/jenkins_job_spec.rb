@@ -209,6 +209,7 @@ EOS
 
         # Run it twice and test for idempotency
         apply(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
       end
     end #convert existing job to folder
   end #cloudbees-folder
