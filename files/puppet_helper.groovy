@@ -392,12 +392,11 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-
     def existing_credentials
 
     if ( id != null) {
       existing_credentials = util.findCredentialsById(id)
-      }
+    }
     else {
       existing_credentials = util.credentials_for_username(username)
     }
