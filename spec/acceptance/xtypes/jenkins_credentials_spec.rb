@@ -87,7 +87,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+          it { should contain '<username>bruce</username>'}
         end
 
       context 'StringCredentialsImpl' do
