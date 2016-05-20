@@ -59,7 +59,7 @@ DESCRIPTION="<%= @description -%>"
 JENKINS_USERNAME=<%= @quoted_ui_user %>
 JENKINS_PASSWORD=<%= @quoted_ui_pass %>
 
-OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
+OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%> <%= '-disableClientsUniqueId' if @disable_clients_unique_id -%>"
 
 if [ -n "$JENKINS_USERNAME" ]; then
   CREDENTIALS_ARG="-username $JENKINS_USERNAME -password $JENKINS_PASSWORD"
