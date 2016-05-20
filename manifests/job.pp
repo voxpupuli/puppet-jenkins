@@ -41,7 +41,7 @@ define jenkins::job(
   if $template { validate_absolute_path($template) }
   validate_string($jobname)
   if $enabled != undef {
-    warning("This parameter is now deprecated, nothing will change if you modify its value")
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
   validate_re($ensure, '^present$|^absent$')
   validate_string($difftool)

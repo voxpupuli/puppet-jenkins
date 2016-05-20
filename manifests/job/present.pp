@@ -92,6 +92,6 @@ define jenkins::job::present(
 
   # Deprecation warning if $enabled is set
   if $enabled != undef {
-    warning("This parameter is now deprecated, nothing will change if you modify its value")
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
 }

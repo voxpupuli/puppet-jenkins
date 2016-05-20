@@ -27,26 +27,6 @@ describe 'jenkins::job' do
     let(:params) {{ :config => '' }}
     it { should contain_exec('jenkins create-job myjob') }
     it { should contain_exec('jenkins update-job myjob') }
-    it { should contain_exec('jenkins enable-job myjob') }
-    it { should_not contain_exec('jenkins disable-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
-  end
-
-  describe 'with job enabled' do
-    let(:params) {{ :enabled => true, :config => '' }}
-    it { should contain_exec('jenkins create-job myjob') }
-    it { should contain_exec('jenkins update-job myjob') }
-    it { should contain_exec('jenkins enable-job myjob') }
-    it { should_not contain_exec('jenkins disable-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
-  end
-
-  describe 'with job disabled' do
-    let(:params) {{ :enabled => false, :config => '' }}
-    it { should contain_exec('jenkins create-job myjob') }
-    it { should contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins enable-job myjob') }
-    it { should contain_exec('jenkins disable-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }
   end
 
@@ -54,8 +34,6 @@ describe 'jenkins::job' do
     let(:params) {{ :ensure => 'present', :config => '' }}
     it { should contain_exec('jenkins create-job myjob') }
     it { should contain_exec('jenkins update-job myjob') }
-    it { should contain_exec('jenkins enable-job myjob') }
-    it { should_not contain_exec('jenkins disable-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }
   end
 
@@ -63,22 +41,7 @@ describe 'jenkins::job' do
     let(:params) {{ :ensure => 'absent', :config => '' }}
     it { should_not contain_exec('jenkins create-job myjob') }
     it { should_not contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins enable-job myjob') }
-    it { should_not contain_exec('jenkins disable-job myjob') }
     it { should contain_exec('jenkins delete-job myjob') }
-  end
-
-  context 'depreciated values' do
-    context 'with job enabled' do
-      describe '0' do
-        let(:params) {{ :enabled => 0, :config => '' }}
-        pending('rspec-puppet support for testing warning()')
-      end
-      describe '1' do
-        let(:params) {{ :enabled => 1, :config => '' }}
-        pending('rspec-puppet support for testing warning()')
-      end
-    end
   end
 
   describe 'with an invalid $difftool' do
