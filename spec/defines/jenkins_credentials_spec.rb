@@ -29,13 +29,15 @@ describe 'jenkins::credentials', :type => :define do
 
   describe 'with ensure is present' do
     let(:params) {{
-      :ensure   => 'present',
-      :password => 'mypass',
+      :ensure           => 'present',
+      :password         => 'mypass',
+      :unless_tries     => 2,
+      :unless_try_sleep => 2,
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "''", "'Managed by Puppet'", "''" ],
-      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
+      :unless     => "for i in \$(seq 1 2); do \$HELPER_CMD credential_info #{title} && break || sleep 2; done | grep #{title}",
     })}
   end
 
@@ -51,14 +53,16 @@ describe 'jenkins::credentials', :type => :define do
 
   describe 'with uuid set' do
     let(:params) {{
-      :ensure   => 'present',
-      :password => 'mypass',
-      :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
+      :ensure           => 'present',
+      :password         => 'mypass',
+      :uuid             => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
+      :unless_tries     => 2,
+      :unless_try_sleep => 2,
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
-      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
+      :unless     => "for i in \$(seq 1 2); do \$HELPER_CMD credential_info #{title} && break || sleep 2; done | grep #{title}",
     })}
   end
 
