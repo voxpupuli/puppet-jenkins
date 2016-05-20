@@ -12,9 +12,13 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
+#   enabled
+#     deprecated parameter (will have no effect if set)
+#
 define jenkins::job::present(
   $config,
   $jobname  = $title,
+  $enabled  = undef,
   $difftool = '/usr/bin/diff -b -q',
 ){
   validate_string($config)
@@ -84,5 +88,10 @@ define jenkins::job::present(
     unless  => "${difftool} ${config_path} ${tmp_config_path}",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
+  }
+
+  # Deprecation warning if $enabled is set
+  if $enabled != undef {
+    warning("This parameter is now deprecated, nothing will change if you modify its value")
   }
 }
