@@ -1001,10 +1001,10 @@ class Actions {
   ////////////////////////////
   // Set URL & Sysadmin email
   ///////////////////////////
-  void set_url_email(String url, String admin_name, String admin_email) {
+  void set_url_email(String url, String admin_email) {
     def jlc = jenkins.model.JenkinsLocationConfiguration.get()
     jlc.setUrl(url)
-    jlc.setAdminAddress('"' +  admin_name + ' ' +'<' +  admin_email  + '>' + '"')
+    jlc.setAdminAddress(admin_email)
     jlc.save()
   }
 
