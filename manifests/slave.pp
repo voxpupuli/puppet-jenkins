@@ -46,7 +46,7 @@
 #   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
 #
 # [*labels*]
-#   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
+#   Not required.  String, or Array, that contains the list of labels to be assigned for this slave.
 #
 # [*tool_locations*]
 #   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
@@ -126,7 +126,6 @@ class jenkins::slave (
   validate_absolute_path($slave_home)
   validate_re($slave_mode, '^normal$|^exclusive$')
   validate_bool($disable_ssl_verification)
-  validate_string($labels)
   validate_string($tool_locations)
   validate_bool($install_java)
   validate_bool($manage_client_jar)
@@ -142,6 +141,16 @@ class jenkins::slave (
   }
   $quoted_ui_user = shellquote($ui_user)
   $quoted_ui_pass = shellquote($ui_pass)
+
+  if $labels {
+    if is_array($labels) {
+      $_combined_labels = hiera_array('jenkins::slave::labels', $labels)
+      $_real_labels = join($_combined_labels, ' ')
+    }
+    else {
+      $_real_labels = $labels
+    }
+  }
 
 
   if $install_java and ($::osfamily != 'Darwin') {
