@@ -46,7 +46,7 @@
 #   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
 #
 # [*labels*]
-#   Not required.  Single string of whitespace-separated list of labels to be assigned for this slave.
+#   Not required.  Array of string that contains the list of labels to be assigned for this slave.
 #
 # [*tool_locations*]
 #   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
@@ -103,7 +103,7 @@ class jenkins::slave (
   $slave_home               = '/home/jenkins-slave',
   $slave_mode               = 'normal',
   $disable_ssl_verification = false,
-  $labels                   = undef,
+  $labels                   = [],
   $tool_locations           = undef,
   $install_java             = $jenkins::params::install_java,
   $manage_client_jar        = true,
@@ -126,7 +126,7 @@ class jenkins::slave (
   validate_absolute_path($slave_home)
   validate_re($slave_mode, '^normal$|^exclusive$')
   validate_bool($disable_ssl_verification)
-  validate_string($labels)
+  validate_array($labels)
   validate_string($tool_locations)
   validate_bool($install_java)
   validate_bool($manage_client_jar)
@@ -143,6 +143,7 @@ class jenkins::slave (
   $quoted_ui_user = shellquote($ui_user)
   $quoted_ui_pass = shellquote($ui_pass)
 
+  $_real_labels = hiera_array('jenkins::slave::labels', $labels)
 
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
