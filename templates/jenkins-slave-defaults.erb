@@ -45,7 +45,7 @@ MAXOPENFILES=8192
 
 MASTER_URL="<%= @masterurl -%>"
 AUTO_DISCOVERY_ADDRESS="<%= @autodiscoveryaddress -%>"
-LABELS="<%= @labels -%>"
+LABELS="<%= @_real_labels.sort.join(' ') -%>"
 
 EXECUTORS=<%= @executors -%>
 
