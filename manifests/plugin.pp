@@ -3,8 +3,12 @@
 #   Name of the config file for this plugin.
 #
 # config_content = undef
-#   Content of the config file for this plugin. It is up to the caller to
-#   create this content from a template or any other mean.
+#   Content of the config file for this plugin. See also $use_template
+#   when the use of a template is desired.
+#
+# use_template = false
+#   Wether to generate the content from a template, using teh template() function.
+#   The config_content must contain the location of the erb file.
 #
 # update_url = undef
 #
@@ -20,6 +24,7 @@ define jenkins::plugin(
   $manage_config   = false,
   $config_filename = undef,
   $config_content  = undef,
+  $use_template    = false,
   $update_url      = undef,
   $enabled         = true,
   $source          = undef,
@@ -38,6 +43,7 @@ define jenkins::plugin(
   validate_bool($manage_config)
   validate_string($config_filename)
   validate_string($config_content)
+  validate_bool($use_template)
   validate_string($update_url)
   validate_bool($enabled)
   validate_string($source)
@@ -186,9 +192,19 @@ define jenkins::plugin(
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
+    if $use_template {
+      if !($config_content =~ /.*\/.*.erb$/) {
+        fail 'when using  a template for the plugin configuration, the $config_content must contain the path to the template'
+      } else {
+        $_real_config_content = template($config_content)
+      }
+    } else {
+      $_real_config_content = $config_content
+    }
+
     file {"${::jenkins::localstatedir}/${config_filename}":
       ensure  => present,
-      content => $config_content,
+      content => $_real_config_content,
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
