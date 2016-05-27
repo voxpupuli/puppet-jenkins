@@ -207,4 +207,16 @@ eos
     end
   end
 
+  describe 'with an existing job name with spaces' do
+    let(:title) { 'my job' }
+    let(:params) {{ :config => '' }}
+    it {
+      should contain_exec("jenkins update-job #{title}")
+        .with_command("cat \"/tmp/my job-config.xml\" | " \
+                      "java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 update-job 'my job'")
+        .with_onlyif("test -e '/var/lib/jenkins/jobs/my job/config.xml'")
+        .with_unless("/usr/bin/diff -b -q '/var/lib/jenkins/jobs/my job/config.xml' '/tmp/my job-config.xml'")
+    }
+  end
+
 end

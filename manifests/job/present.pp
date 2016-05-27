@@ -82,11 +82,11 @@ define jenkins::job::present(
   }
 
   # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
+  $update_job = "${jenkins_cli} update-job '${jobname}'"
   exec { "jenkins update-job ${jobname}":
     command => "${cat_config} | ${update_job}",
-    onlyif  => "test -e ${config_path}",
-    unless  => "${difftool} ${config_path} ${tmp_config_path}",
+    onlyif  => "test -e '${config_path}'",
+    unless  => "${difftool} '${config_path}' '${tmp_config_path}'",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
   }
