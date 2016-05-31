@@ -1,0 +1,6 @@
+<%- | String $param1 = 'default1',
+      String $param2 = 'default2',
+| -%>
+This is a fake template for rspec testing
+parameter1 = <%= $param1 %>
+parameter2 = <%= $param2 %>

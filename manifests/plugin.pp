@@ -5,10 +5,17 @@
 # config_content = undef
 #   Content of the config file for this plugin. See also $use_template
 #   when the use of a template is desired.
+#   Supported formats :
+#   * $config_content => '<module>/plugin_config.xml.erb'
+#   * $config_content => '<module>/plugin_config.xml.part1.erb, '<module>/plugin_config.xml.part2.erb'
+#   * $config_content => '<module>/plugin_config.xml.epp'
+#   * $config_content => ['<module>/plugin_config.xml.epp', { 'param1' => 'value2', 'param2' => 'value2' } ]
+#   NOTE:  use of EPP templates requires puppet4.x or puppet 3.5+ with future parser enabled
 #
 # use_template = false
 #   Wether to generate the content from a template, using teh template() function.
 #   The config_content must contain the location of the erb file.
+#
 #
 # update_url = undef
 #
@@ -42,7 +49,9 @@ define jenkins::plugin(
   validate_string($version)
   validate_bool($manage_config)
   validate_string($config_filename)
-  validate_string($config_content)
+  #validate_string($config_content)
+  # validation is done at te end, since this can be either
+  # a string or an array
   validate_bool($use_template)
   validate_string($update_url)
   validate_bool($enabled)
@@ -193,12 +202,23 @@ define jenkins::plugin(
     }
 
     if $use_template {
-      if !($config_content =~ /.*\/.*.erb$/) {
-        fail 'when using  a template for the plugin configuration, the $config_content must contain the path to the template'
-      } else {
-        $_real_config_content = template($config_content)
+      if is_string($config_content) {
+        if $config_content =~ /.*\/.*.erb$/ {
+          $_real_config_content = template($config_content)
+        } elsif $config_content =~ /.*\/.*.epp$/ {
+          $_real_config_content = epp($config_content)
+        } else {
+          fail 'when using a template for the plugin configuration, the $config_content must contain the path to the template'
+        }
+      } elsif is_array($config_content) {
+        if is_string($config_content[0]) and is_hash($config_content[1]) {
+          $_real_config_content = epp($config_content[0], $config_content[1])
+        } else {
+          fail 'Wrong parameters given - check the epp() function documentation for more information'
+        }
       }
-    } else {
+    } else  { # endif use_template
+      validate_string($config_content)
       $_real_config_content = $config_content
     }
 

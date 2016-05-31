@@ -275,6 +275,101 @@ describe 'jenkins::plugin' do
       end
     end
   end # pinned file extension name
+  
+  describe 'when using a template' do
+    context 'using an erb template' do
+      let(:params) do 
+        {
+          :manage_config    => true,
+          :version          => '1.2.0',
+          :use_template     => true,
+          :config_content   => 'site_jenkins/fake_config.erb',
+          :config_filename => 'my_plugin.xml',
+        }
+      end
+      it do
+        should contain_file('/var/lib/jenkins/my_plugin.xml').with(
+          :ensure  => 'present',
+          :content => /myplug version 1.2.0/,
+          :owner   => 'jenkins',
+          :group   => 'jenkins',
+          :mode    => '0644',
+          :notify  => 'Service[jenkins]',
+        )
+      end
+    end
+    context 'using an epp template' do
+      if Puppet.version.to_f >= 4.0 or Puppet[:parser] == 'future'
+        context 'template name only' do
+          let(:params) do 
+            {
+              :manage_config    => true,
+              :version          => '1.2.0',
+              :use_template     => true,
+              :config_content   => 'site_jenkins/fake_config.epp',
+              :config_filename => 'my_plugin.xml',
+            }
+          end
+          it do
+            should contain_file('/var/lib/jenkins/my_plugin.xml').with(
+              :ensure  => 'present',
+              :content => /parameter1 = default1/,
+              :owner   => 'jenkins',
+              :group   => 'jenkins',
+              :mode    => '0644',
+              :notify  => 'Service[jenkins]',
+            )
+          end
+        end
+        context 'template with parameters' do
+          let(:params) do 
+            {
+              :manage_config   => true,
+              :version         => '1.2.0',
+              :use_template    => true,
+              :config_content  => [ 'site_jenkins/fake_config.epp', { 'param1' => 'value1', 'param2' => 'value2' } ],
+              :config_filename => 'my_plugin.xml',
+            }
+          end
+          it do
+            should contain_file('/var/lib/jenkins/my_plugin.xml').with(
+              :ensure  => 'present',
+              :content => /parameter1 = value1/,
+              :owner   => 'jenkins',
+              :group   => 'jenkins',
+              :mode    => '0644',
+              :notify  => 'Service[jenkins]',
+            )
+          end
+        end
+      else # puppet < 4 and parser!= future
+        context 'using epp without epp support' do
+          let(:params) do 
+            {
+              :manage_config   => true,
+              :version         => '1.2.0',
+              :use_template    => true,
+              :config_content  => 'site_jenkins/fake_config.epp',
+              :config_filename => 'my_plugin.xml',
+            }
+          end
+          it { expect { is_expected.to compile }.to raise_error }
+        end
+      end #if
+    end
+    context 'validation' do
+      let(:params) do
+        {
+          :manage_config   => true,
+          :version         => '1.2.0',
+          :use_template    => true,
+          :config_content  => 'wrongtemplate',
+          :config_filename => 'my_plugin.xml',
+        }
+      end
+      it { expect { is_expected.to compile }.to raise_error }
+    end
+  end # use_template
 
   describe 'deprecated params' do
     [
