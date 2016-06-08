@@ -33,6 +33,7 @@ define jenkins::plugin(
   $username        = undef,
   $group           = undef,
   $create_user     = undef,
+  $plugin_ext      = undef,
 ) {
   validate_string($version)
   validate_bool($manage_config)
@@ -44,6 +45,9 @@ define jenkins::plugin(
   validate_string($digest_string)
   validate_string($digest_type)
   validate_bool($pin)
+  if ! empty($plugin_ext) {
+    validate_re($plugin_ext, '^hpi$|^jpi$')
+  }
 
   if $timeout {
     warning('jenkins::plugin::timeout presently has effect')
@@ -87,10 +91,15 @@ define jenkins::plugin(
     default => $source,
   }
 
-  $plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
-  $plugin     = "${name}.${plugin_ext}"
+  if $plugin_ext != undef {
+    $_plugin_ext = $plugin_ext
+  } else {
+    $_plugin_ext = regsubst($download_url, '^.*\.(hpi|jpi)$', '\1')
+  }
+
+  $plugin     = "${name}.${_plugin_ext}"
   # sanity check extension
-  if ! $plugin_ext {
+  if ! $_plugin_ext {
     fail("unsupported plugin extension in source url: ${download_url}")
   }
 
@@ -112,7 +121,7 @@ define jenkins::plugin(
     # (up|down)grade a plugin from .jpi -> .hpi via puppet across extension
     # changes.  Regardless, we should be relying on jenkins to guess which
     # plugin archive to use and cleanup any conflicting extensions.
-    $inverse_plugin_ext = $plugin_ext ? {
+    $inverse_plugin_ext = $_plugin_ext ? {
       'hpi'   => 'jpi',
       'jpi'   => 'hpi',
     }

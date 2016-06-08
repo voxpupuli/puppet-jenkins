@@ -43,6 +43,17 @@ describe 'jenkins::plugin' do
     it { should contain_file("#{pdir}/myplug.hpi")}
   end
 
+  describe 'with version and plugin_ext hpi' do
+    let(:params) { { :version => '1.2.3', :plugin_ext => 'hpi' } }
+
+    it do
+      should contain_archive('myplug.hpi').with(
+        :source  =>  'https://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
+      )
+    end
+    it { should contain_file("#{pdir}/myplug.hpi")}
+  end
+
   describe 'with version and in middle of jenkins_plugins fact' do
     let(:params) { { :version => '1.2.3' } }
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
@@ -272,6 +283,30 @@ describe 'jenkins::plugin' do
       end
       context 'with default pin param' do
         it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+      end
+    end
+
+    describe 'with plugin_ext' do
+      context 'with plugin_ext => hpi' do
+        let(:params) {{ :plugin_ext => 'hpi' } }
+        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.jpi").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.jpi.disabled").with_ensure('absent') }
+      end
+      context 'with plugin_ext => jpi' do
+        let(:params) {{ :plugin_ext => 'jpi' } }
+        it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('file') }
+        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.hpi").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.hpi.disabled").with_ensure('absent') }
+      end
+      context 'with plugin_ext => undef' do
+        let(:params) {{ } }
+        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.jpi").with_ensure('absent') }
+        it { should contain_file("#{pdir}/foo.jpi.disabled").with_ensure('absent') }
       end
     end
   end # pinned file extension name
