@@ -18,11 +18,11 @@
 #
 define jenkins::credentials (
   $username            = undef,
-  $password,
   $description         = 'Managed by Puppet',
   $private_key_or_path = '',
   $ensure              = 'present',
   $uuid                = '',
+  $password,
 ){
   validate_string($password)
   validate_string($description)
@@ -45,7 +45,7 @@ define jenkins::credentials (
   
   ## Allow multiple users with same username but different credentials
   if $uuid == '' {
-    $_exec_comment      = "${_username}"
+    $_exec_comment      = ${_username}
     $_exec_grep_present = "\\\"${_username}\\\""
     $_exec_grep_absent  = "\\\"${_username}\\\""
   } else {
@@ -67,7 +67,7 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e $_exec_grep_present",
+        unless  => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e ${_exec_grep_present}",
       }
     }
     'absent': {
@@ -77,7 +77,7 @@ define jenkins::credentials (
           $_username,
           "'${uuid}'",
         ],
-        onlyif => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e $_exec_grep_absent",
+        onlyif  => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e ${_exec_grep_absent}",
       }
     }
     default: {
