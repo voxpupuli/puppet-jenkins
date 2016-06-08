@@ -35,7 +35,7 @@ describe 'jenkins::credentials', :type => :define do
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "''", "'Managed by Puppet'", "''" ],
-      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
+      :unless     => "\$HELPER_CMD credential_info '#{title}' '' | grep -e \\\"#{title}\\\"",
     })}
   end
 
@@ -45,7 +45,20 @@ describe 'jenkins::credentials', :type => :define do
       :password => 'mypass',
     }}
     it { should contain_jenkins__cli__exec('delete-jenkins-credentials-foo').with({
-      :command    => [ 'delete_credentials', "#{title}" ],
+      :command    => [ 'delete_credentials_by_name_or_id', "#{title}", "''" ],
+      :onlyif     => "\$HELPER_CMD credential_info '#{title}' '' | grep -e \\\"#{title}\\\"",
+     })}
+  end
+
+  describe 'with ensure is absent and uuid set' do
+    let(:params) {{
+      :ensure   => 'absent',
+      :password => 'mypass',
+      :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
+    }}
+    it { should contain_jenkins__cli__exec('delete-jenkins-credentials-foo-e94d3b98-5ba4-43b9-89ed-79a08ea97f6f').with({
+      :command    => [ 'delete_credentials_by_name_or_id', "#{title}", "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'" ],
+      :onlyif     => "\$HELPER_CMD credential_info '#{title}' 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f' | grep -e \\\"e94d3b98-5ba4-43b9-89ed-79a08ea97f6f\\\"",
     })}
   end
 
@@ -55,11 +68,26 @@ describe 'jenkins::credentials', :type => :define do
       :password => 'mypass',
       :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
     }}
-    it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
+    it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo-e94d3b98-5ba4-43b9-89ed-79a08ea97f6f').with({
       :command    => [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
-      :unless     => "\$HELPER_CMD credential_info #{title} | grep #{title}",
+      :unless     => "\$HELPER_CMD credential_info '#{title}' 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f' | grep -e \\\"#{title}\\\"",
     })}
   end
+
+  describe 'with username and uuid set' do
+    let(:params) {{
+      :username => 'mytest',
+      :ensure   => 'present',
+      :password => 'mypass',
+      :uuid     => 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
+    }}
+    it { should contain_jenkins__cli__exec('create-jenkins-credentials-mytest-e94d3b98-5ba4-43b9-89ed-79a08ea97f6f').with({
+      :command    => [ 'create_or_update_credentials' , "mytest", "'mypass'",
+                       "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
+      :unless     => "\$HELPER_CMD credential_info 'mytest' 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f' | grep -e \\\"mytest\\\"",
+    })}
+  end
+
 
 end

@@ -74,6 +74,17 @@ class Util {
     return CredentialsMatchers.firstOrNull(allCreds, idMatcher)
   }
 
+  def findCredentialsByNameOrId(String username, String id="") {
+    def existing_credentials
+ 
+    if ( id != null && id != "" ) {
+      existing_credentials = findCredentialsById(id)
+    } else {
+      existing_credentials = credentials_for_username(username)
+    }
+    return existing_credentials
+  }
+
   def userToMap(User user) {
     def conf = [:]
 
@@ -392,7 +403,7 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-    def existing_credentials = util.credentials_for_username(username)
+    def existing_credentials = util.findCredentialsByNameOrId(username,id)
 
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
@@ -402,6 +413,17 @@ class Actions {
       )
     } else {
       credentials_store.addCredentials(global_domain, credentials)
+    }
+  }
+
+  //////////////////////////
+  // delete credentials by name or id
+  //////////////////////////
+  void delete_credentials_by_name_or_id(String username, String id="") {
+    if ( id != null && id != "" ) {
+      credentials_delete_id(id)
+    } else {
+      delete_credentials(username)
     }
   }
 
@@ -427,8 +449,8 @@ class Actions {
   ////////////////////////
   // current credentials
   ////////////////////////
-  void credential_info(String username) {
-    def credentials = util.credentials_for_username(username)
+  void credential_info(String username, String id="") {
+    def credentials = util.findCredentialsByNameOrId(username, id)
 
     if(credentials == null) {
       return null
