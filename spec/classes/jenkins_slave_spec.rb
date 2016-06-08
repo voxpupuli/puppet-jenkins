@@ -26,11 +26,6 @@ describe 'jenkins::slave' do
       it { should contain_user('jenkins-slave_user').with_uid(nil) }
     end
 
-    describe 'with ssl verification disabled' do
-      let(:params) { { :disable_ssl_verification => true } }
-      it { should contain_file(slave_runtime_file).with_content(/-disableSslVerification/) }
-    end
-
     describe 'with auto discovery address' do
       let(:params) { { :autodiscoveryaddress => '255.255.255.0' } }
       it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
@@ -104,6 +99,33 @@ describe 'jenkins::slave' do
       it 'should convert java_args to a string' do
         args_as_string = args.join ' '
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
+      end
+    end
+
+    describe 'with swarm_client_args as a string' do
+      let(:args) { '-disableSslVerification -disableClientsUniqueId' }
+      let(:params) do
+        {
+          :swarm_client_args => args
+        }
+      end
+
+      it 'should set swarm_client_args' do
+        should contain_file(slave_runtime_file).with_content(/^SWARM_CLIENT_ARGS="#{args}"$/)
+      end
+    end
+
+    describe 'with swarm_client_args as an array' do
+      let(:args) { ['-disableSslVerification', '-disableClientsUniqueId' ] }
+      let(:params) do
+        {
+          :swarm_client_args => args
+        }
+      end
+
+      it 'should convert swarm_client_args to a string' do
+        args_as_string = args.join ' '
+        should contain_file(slave_runtime_file).with_content(/^SWARM_CLIENT_ARGS="#{args_as_string}"$/)
       end
     end
 
