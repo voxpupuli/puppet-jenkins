@@ -17,12 +17,12 @@
 # Jenkins credentials (via the CloudBees Credentials plugin
 #
 define jenkins::credentials (
+  $password,
   $username            = undef,
   $description         = 'Managed by Puppet',
   $private_key_or_path = '',
   $ensure              = 'present',
   $uuid                = '',
-  $password,
 ){
   validate_string($password)
   validate_string($description)
