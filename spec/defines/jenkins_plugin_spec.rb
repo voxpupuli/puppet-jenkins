@@ -91,6 +91,14 @@ describe 'jenkins::plugin' do
       it { should contain_archive('myplug.hpi') }
       it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     end
+
+    describe 'where version contains a + and is already installed' do
+      let(:params) { { :version => '1.2+3.4' } }
+      before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
+
+      it { should_not contain_archive('myplug.hpi') }
+      it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+    end
   end # 'with name and version'
 
   describe 'with enabled is false' do
