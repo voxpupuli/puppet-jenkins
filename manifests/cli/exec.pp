@@ -6,11 +6,13 @@
 define jenkins::cli::exec(
   $command = $title,
   $unless  = undef,
+  $onlyif  = undef,
 ) {
   if !(is_string($command) or is_array($command)) {
     fail('$command is not a string or an Array.')
   }
   validate_string($unless)
+  validate_string($onlyif)
 
   include ::jenkins
   include ::jenkins::cli_helper
@@ -31,7 +33,7 @@ define jenkins::cli::exec(
     ' '
   )
 
-  if $unless {
+  if $unless or $onlyif {
     $environment_run = [ "HELPER_CMD=${::jenkins::cli_helper::helper_cmd}" ]
   } else {
     $environment_run = undef
@@ -42,6 +44,7 @@ define jenkins::cli::exec(
     command     => $run,
     environment => $environment_run,
     unless      => $unless,
+    onlyif      => $onlyif,
     tries       => $::jenkins::cli_tries,
     try_sleep   => $::jenkins::cli_try_sleep,
     notify      => Class['jenkins::cli::reload'],
