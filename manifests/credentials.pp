@@ -45,7 +45,7 @@ define jenkins::credentials (
   
   ## Allow multiple users with same username but different credentials
   if $uuid == '' {
-    $_exec_comment      = ${_username}
+    $_exec_comment      = $_username
     $_exec_grep_present = "\\\"${_username}\\\""
     $_exec_grep_absent  = "\\\"${_username}\\\""
   } else {
