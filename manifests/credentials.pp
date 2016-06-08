@@ -17,11 +17,12 @@
 # Jenkins credentials (via the CloudBees Credentials plugin
 #
 define jenkins::credentials (
+  $username            = undef,
   $password,
-  $description = 'Managed by Puppet',
+  $description         = 'Managed by Puppet',
   $private_key_or_path = '',
-  $ensure = 'present',
-  $uuid = '',
+  $ensure              = 'present',
+  $uuid                = '',
 ){
   validate_string($password)
   validate_string($description)
@@ -35,31 +36,48 @@ define jenkins::credentials (
     Jenkins::Credentials[$title] ->
       Anchor['jenkins::end']
 
+  ## Allow multiple users with same username but different credentials
+  if $username == undef or $username == '' {
+    $_username = $title
+  } else {
+    $_username = $username
+  }
+  
+  ## Allow multiple users with same username but different credentials
+  if $uuid == '' {
+    $_exec_comment      = "${_username}"
+    $_exec_grep_present = "\\\"${_username}\\\""
+    $_exec_grep_absent  = "\\\"${_username}\\\""
+  } else {
+    $_exec_comment      = "${_username}-${uuid}"
+    $_exec_grep_present = "\\\"${_username}\\\""
+    $_exec_grep_absent  = "\\\"${uuid}\\\""
+  }
+
+  
   case $ensure {
     'present': {
-      validate_string($password)
-      validate_string($description)
-      validate_string($private_key_or_path)
-      validate_string($uuid)
-      jenkins::cli::exec { "create-jenkins-credentials-${title}":
+      validate_string($_username)
+      jenkins::cli::exec { "create-jenkins-credentials-${_exec_comment}":
         command => [
           'create_or_update_credentials',
-          $title,
+          $_username,
           "'${password}'",
           "'${uuid}'",
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
+        unless  => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e $_exec_grep_present",
       }
     }
     'absent': {
-      # XXX not idempotent
-      jenkins::cli::exec { "delete-jenkins-credentials-${title}":
+      jenkins::cli::exec { "delete-jenkins-credentials-${_exec_comment}":
         command => [
-          'delete_credentials',
-          $title,
+          'delete_credentials_by_name_or_id',
+          $_username,
+          "'${uuid}'",
         ],
+        onlyif => "\$HELPER_CMD credential_info '${_username}' '${uuid}' | grep -e $_exec_grep_absent",
       }
     }
     default: {
