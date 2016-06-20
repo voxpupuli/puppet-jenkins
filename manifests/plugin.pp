@@ -70,7 +70,14 @@ define jenkins::plugin(
       default => $update_url,
     }
     $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
-    $search   = "^${name} ${version}$"
+    # Escape +'s in $version when constructing $search.
+    # * We can't use single quotes for the replacement string because
+    #   puppet 3 and puppet 4 interpret '\\' differently.
+    # * We can't use double quotes without a variable interpolation or
+    #   lint complains.
+    $empty    = ''
+    $escver   = regsubst ($version, '\+', "${empty}\\\\+", 'G')
+    $search   = "^${name} ${escver}$"
   }
   else {
     $plugins_host = $update_url ? {
