@@ -92,6 +92,30 @@ describe 'jenkins::slave' do
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
       end
     end
+
+    describe 'with LABELS as an array' do
+      let(:params) do
+        {
+          :labels => ['hello', 'world']
+        }
+      end
+
+      it 'should set LABEL as a string' do
+        should contain_file(slave_runtime_file).with_content(/^LABELS="hello world"$/)
+      end
+    end
+
+    describe 'with LABELS as a string' do
+      let(:params) do
+        {
+          :labels => ['unlimited blades']
+        }
+      end
+
+      it 'should set LABEL as a string' do
+        should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
+      end
+    end
   end
 
   shared_examples 'using slave_name' do

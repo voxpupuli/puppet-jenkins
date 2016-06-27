@@ -6,6 +6,11 @@ This is intended to be a re-usable
 [Puppet](http://www.puppetlabs.com/puppet/introduction/) module that you can
 include in your own tree.
 
+# Jenkins 2
+
+This module does not presently support Jenkins 2.x due to incompatible changes
+with 1.x.  Support is planned for a future release.
+
 # Experimental Types and Providers
 
 _The experimental types/providers are **not for the faint of heart**. If you are
@@ -174,8 +179,7 @@ The dependencies for this module currently are:
 * [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
-* [staging module](https://forge.puppetlabs.com/nanliu/staging)
-* [archive module](https://forge.puppetlabs.com/camptocamp/archive)
+* [archive module](https://forge.puppetlabs.com/puppet/archive)
 
 ### Depending on Jenkins
 

@@ -6,10 +6,10 @@
 # version = 'latest'
 #    Will automatically update the version of jenkins to the current version available via your package manager.
 #
-# lts = false  (Default)
+# lts = false
 #   Use the most up to date version of jenkins
 #
-# lts = true
+# lts = true (Default)
 #   Use LTS verison of jenkins
 #
 # port = 8080 (default)
