@@ -21,9 +21,12 @@ import com.cloudbees.plugins.credentials.common.*
 import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.plugins.credentials.impl.*
 import groovy.transform.InheritConstructors
+import groovy.json.JsonSlurper
 import hudson.model.*
 import hudson.plugins.sshslaves.*
 import hudson.util.*
+import hudson.security.LDAPSecurityRealm
+import hudson.security.HudsonPrivateSecurityRealm
 import jenkins.model.*
 import jenkins.security.*
 import org.apache.commons.io.IOUtils
@@ -36,6 +39,7 @@ class UnsupportedCredentialsClass extends Exception {}
 class InvalidCredentialsId extends Exception {}
 @InheritConstructors
 class MissingRequiredPlugin extends Exception {}
+class CanNotLoadJsonMapFileException extends Exception{}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util
@@ -200,6 +204,18 @@ class Util {
 
     found
   }
+  
+  // Util function to load json
+  def loadJsonMap(String mapFileName) {
+    File mapFile = new File(mapFileName)
+    if (!mapFile.exists()) {
+      throw new CanNotLoadJsonMapFileException("JSON map file ${mapFileName} does not exist")
+    } else {
+      def slurper = new JsonSlurper()
+      return slurper.parseText(mapFile.text)
+    }
+  }
+
 
 } // class Util
 
@@ -642,29 +658,61 @@ class Actions {
    * Set up security for the Jenkins instance. This currently supports
    * only a small number of configurations. If authentication is enabled, it
    * uses the internal user database.
+   * Through user_realm your are able to set ldap as your user realm.
   */
-  void set_security(String security_model) {
+  void set_security(String security_model, String user_realm) {
     def j = Jenkins.getInstance()
 
     if (security_model == 'disabled') {
       j.disableSecurity()
+      j.save()
       return null
     }
+    
+    //load a Map with the ldap arguments from the json file.
+    Map ldapMap = [:]
+    ldapMap = util.loadJsonMap("/tmp/ldap_args.json")
 
     def strategy
     def realm
     switch (security_model) {
       case 'full_control':
         strategy = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
+        
         break
       case 'unsecured':
         strategy = new hudson.security.AuthorizationStrategy.Unsecured()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
+
         break
       default:
         throw new InvalidAuthenticationStrategy()
     }
+
+    switch (user_realm) {
+      case ['internal', '']:
+        realm = new HudsonPrivateSecurityRealm(false, false, null)
+        break
+      case 'ldap':
+        realm = new LDAPSecurityRealm(ldapMap.server,
+                ldapMap.rootDN,
+                ldapMap.userSearchBase,
+                ldapMap.userSearch,
+                ldapMap.groupSearchBase,
+                ldapMap.groupSearchFilter,
+                null,
+                ldapMap.managerDN,
+                Secret.fromString(ldapMap.managerPasswordSecret ?: ""),
+                Boolean.parseBoolean(ldapMap.inhibitInferRootDN ?: "false"),
+                Boolean.parseBoolean(ldapMap.disableMailAddressResolver ?: "false"),
+                null,
+                null,
+                ldapMap.displayNameAttributeName,
+                ldapMap.mailAddressAttributeName)
+        break
+      default:
+        throw new InvalidAuthenticationStrategy()
+    }
+
     j.setAuthorizationStrategy(strategy)
     j.setSecurityRealm(realm)
     j.save()

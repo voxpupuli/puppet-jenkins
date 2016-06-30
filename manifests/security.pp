@@ -18,8 +18,12 @@
 #
 class jenkins::security (
   $security_model = undef,
+  $user_realm     = 'internal',
+  $ldapconfig     = {},
 ){
   validate_string($security_model)
+  validate_string($user_realm)
+  validate_hash($ldapconfig)
 
   include ::jenkins::cli_helper
 
@@ -28,10 +32,21 @@ class jenkins::security (
       Anchor['jenkins::end']
 
   # XXX not idempotent
-  jenkins::cli::exec { "jenkins-security-${security_model}":
+  jenkins::cli::exec { "jenkins-security-${security_model}-${user_realm}":
     command => [
       'set_security',
       $security_model,
+      $user_realm,
     ],
+    require => File['/tmp/ldap_args.json'],
+  }
+
+  file { "/tmp/ldap_args.json":
+    ensure  => present,
+    owner   => 0,
+    group   => 0,
+    mode    => '0644',
+    content => template("${module_name}/ldap_args.json.erb"),
+    require => Class['::jenkins::cli_helper'],
   }
 }
