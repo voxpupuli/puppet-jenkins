@@ -660,3 +660,5 @@ Style/StructInheritance:
 Style/SymbolLiteral:
   Enabled: false
 
+Style/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
