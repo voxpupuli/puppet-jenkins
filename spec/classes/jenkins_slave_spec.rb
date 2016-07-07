@@ -192,8 +192,7 @@ describe 'jenkins::slave' do
     let(:facts) {
       {:osfamily => 'Darwin',
        :operatingsystem => 'Darwin',
-       :kernel => 'Darwin'
-      }
+       :kernel => 'Darwin'}
     }
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }

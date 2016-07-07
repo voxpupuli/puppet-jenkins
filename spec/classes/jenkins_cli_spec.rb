@@ -20,8 +20,8 @@ describe 'jenkins', :type => :class do
     context '$cli => true' do
       let(:params) {{ :cli => true,
                       :cli_ssh_keyfile => '/path/to/key',
-                      :config_hash => { 'HTTP_PORT' => { 'value' => '9000' } }
-      }}
+                      :config_hash => { 'HTTP_PORT' => { 'value' => '9000' } }}
+      }
       it { should contain_class('jenkins::cli') }
       it { should contain_exec('jenkins-cli') }
       it { should contain_exec('reload-jenkins').with_command(/http:\/\/localhost:9000/) }
