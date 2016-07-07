@@ -61,5 +61,5 @@ task :default => [
   :rubocop,
   :lint,
   :validate,
-  :spec,
+  :parallel_spec,
 ]
