@@ -70,7 +70,8 @@
 #   File source for jenkins slave jar. Default pulls from http://maven.jenkins-ci.org
 #
 # [*java_args*]
-#   Java arguments to add to slave command line. Allows configuration of heap, etc.
+#   Java arguments to add to slave command line. Allows configuration of heap, etc. This
+#   can be a String, or an Array.
 #
 
 # === Examples
@@ -78,7 +79,7 @@
 #  class { 'jenkins::slave':
 #    masterurl => 'http://jenkins-master1.example.com:8080',
 #    ui_user => 'adminuser',
-#    ui_pass => 'adminpass',
+#    ui_pass => 'adminpass'
 #  }
 #
 # === Authors
@@ -132,7 +133,6 @@ class jenkins::slave (
   validate_re($ensure, '^running$|^stopped$')
   validate_bool($enable)
   validate_string($source)
-  validate_string($java_args)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -152,6 +152,15 @@ class jenkins::slave (
     }
   }
 
+  if $java_args {
+    if is_array($java_args) {
+      $_combined_java_args = hiera_array('jenkins::slave::java_args', $java_args)
+      $_real_java_args = join($_combined_java_args, ' ')
+    }
+    else {
+      $_real_java_args = $java_args
+    }
+  }
 
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
