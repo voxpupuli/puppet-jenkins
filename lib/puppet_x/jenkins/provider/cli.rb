@@ -218,9 +218,10 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
   # convert Puppet::ExecutionFailure into a ::AuthError exception if it appears
   # that the command failure was due to an authication problem
   def self.execute_exceptionify(*args)
-    cli_auth_errors = ['You must authenticate to access this Jenkins.',
-                       'anonymous is missing the Overall/Read permission',
-                       'anonymous is missing the Overall/RunScripts permission',
+    cli_auth_errors = [
+                        'You must authenticate to access this Jenkins.',
+                        'anonymous is missing the Overall/Read permission',
+                        'anonymous is missing the Overall/RunScripts permission',
                       ]
     begin
       #return Puppet::Provider.execute(*args)

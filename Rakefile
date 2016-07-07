@@ -40,7 +40,7 @@ namespace :travis do
     # warnings are currently non-fatal due to suspected problems with
     # validation of matrix::include
     #sh "travis lint --exit-code" do |ok, res|
-    sh 'travis lint' do |ok, res|
+    sh 'travis lint --skip-completion-check' do |ok, res|
       unless ok
         # exit without verbose rake error message
         exit res.exitstatus
@@ -61,5 +61,5 @@ task :default => [
   :rubocop,
   :lint,
   :validate,
-  :spec,
+  :parallel_spec,
 ]

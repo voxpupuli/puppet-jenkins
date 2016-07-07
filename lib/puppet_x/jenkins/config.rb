@@ -26,7 +26,7 @@ class PuppetX::Jenkins::Config
 
   def [](key)
     key = key.to_sym
-    raise UnknownConfig unless DEFAULTS.has_key?(key)
+    raise UnknownConfig unless DEFAULTS.key?(key)
 
     value = catalog_lookup(key) || fact_lookup(key) || default_lookup(key)
     return if value.nil?
