@@ -57,7 +57,6 @@ task :parallel_spec do
 end
 
 task :default => [
-  'travis:lint',
   :rubocop,
   :lint,
   :validate,
