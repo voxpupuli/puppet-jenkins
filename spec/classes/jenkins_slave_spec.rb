@@ -168,6 +168,15 @@ describe 'jenkins::slave' do
 
       it { should_not raise_error }
     end
+
+    describe 'with proxy_server' do
+      let(:params) { { :proxy_server => 'https://foo' } }
+      it do
+        should contain_archive('get_swarm_client').with(
+          :proxy_server => 'https://foo'
+        )
+      end
+    end
   end
 
   describe 'Debian' do

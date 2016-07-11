@@ -73,6 +73,12 @@
 #   Java arguments to add to slave command line. Allows configuration of heap, etc. This
 #   can be a String, or an Array.
 #
+# [*proxy_server*]
+#
+#   Serves the same function as `::jenkins::proxy_server` but is an independent
+#   parameter so the `::jenkins` class does not need to be the catalog for
+#   slave only nodes.
+#
 
 # === Examples
 #
@@ -112,6 +118,7 @@ class jenkins::slave (
   $enable                   = true,
   $source                   = undef,
   $java_args                = undef,
+  $proxy_server             = undef,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -133,6 +140,7 @@ class jenkins::slave (
   validate_re($ensure, '^running$|^stopped$')
   validate_bool($enable)
   validate_string($source)
+  validate_string($proxy_server)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -269,7 +277,7 @@ class jenkins::slave (
     archive { 'get_swarm_client':
       source       => "${client_url}/${client_jar}",
       path         => "${slave_home}/${client_jar}",
-      proxy_server => $::jenkins::proxy_server,
+      proxy_server => $proxy_server,
       cleanup      => false,
       extract      => false,
     } ->
