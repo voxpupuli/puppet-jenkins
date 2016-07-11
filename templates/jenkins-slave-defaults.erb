@@ -84,7 +84,7 @@ fi
 <% if @tool_locations %>
   TOOL_LOCATIONS_ARG=""
   <% @tool_locations.split.each do |tool_location| %>
-    TOOL_LOCATIONS_ARG='$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>'
+    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>"
   <% end %>
 <% end %>
 
