@@ -16,12 +16,6 @@ matrix:
     - rvm: '2.1'
       sudo: required
       services: docker
-      env: BEAKER_set="centos-6-docker"
-      script: bundle exec rake acceptance
-      bundler_args: --without development
-    - rvm: '2.1'
-      sudo: required
-      services: docker
       env: BEAKER_set="centos-7-docker"
       script: bundle exec rake acceptance
       bundler_args: --without development
