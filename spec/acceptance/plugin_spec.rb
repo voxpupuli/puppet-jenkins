@@ -14,8 +14,8 @@ describe 'jenkins class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
     end
 
     # Check Git Plugin Installed

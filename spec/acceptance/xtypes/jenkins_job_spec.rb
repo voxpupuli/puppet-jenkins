@@ -68,8 +68,8 @@ EOS
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -90,8 +90,8 @@ EOS
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -128,8 +128,8 @@ EOS
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         %w{
@@ -163,8 +163,8 @@ EOS
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         %w{
@@ -189,7 +189,7 @@ EOS
           }
         EOS
 
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
 
         pp = manifest + <<-EOS
           jenkins_job { 'foo':
@@ -199,8 +199,8 @@ EOS
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
 
         # only for cleanup
         pp = manifest + <<-EOS
@@ -208,7 +208,7 @@ EOS
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
       end
     end #convert existing job to folder
   end #cloudbees-folder
