@@ -20,8 +20,8 @@ describe 'jenkins_credentials' do
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -48,8 +48,8 @@ describe 'jenkins_credentials' do
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -78,8 +78,8 @@ describe 'jenkins_credentials' do
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -110,8 +110,8 @@ describe 'jenkins_credentials' do
           EOS
 
           # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do

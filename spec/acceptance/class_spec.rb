@@ -12,8 +12,8 @@ describe 'jenkins class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_changes => true)
     end
 
     describe port(8080) do
@@ -43,8 +43,8 @@ describe 'jenkins class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_changes => true)
     end
 
     describe port(8080) do
@@ -72,8 +72,8 @@ describe 'jenkins class' do
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_changes => true)
+        apply(pp, :catch_failures => true)
+        apply(pp, :catch_changes => true)
       end
 
       describe port(8080) do

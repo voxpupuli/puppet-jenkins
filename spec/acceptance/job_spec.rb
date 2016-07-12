@@ -42,9 +42,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -70,9 +70,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -98,7 +98,7 @@ EOS
       }
       EOS
 
-      apply_manifest(pp)
+      apply(pp)
 
       # test job deletion
       pp = <<-EOS
@@ -111,9 +111,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
