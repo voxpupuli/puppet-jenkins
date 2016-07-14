@@ -27,5 +27,9 @@ matrix:
       env: BEAKER_set="ubuntu-14.04-docker"
       script: bundle exec rake acceptance
       bundler_args: --without development
+  allow_failures:
+    - env: BEAKER_set="centos-6-docker"
+    - env: BEAKER_set="centos-7-docker"
+    - env: BEAKER_set="ubuntu-14.04-docker"
 notifications:
   email: false
