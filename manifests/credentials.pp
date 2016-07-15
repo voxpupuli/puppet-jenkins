@@ -32,16 +32,23 @@ define jenkins::credentials (
   include ::jenkins::cli_helper
 
   Class['jenkins::cli_helper'] ->
-    Jenkins::Credentials[$title] ->
+    Jenkins::Credentials["${title}-${uuid}"] ->
       Anchor['jenkins::end']
 
+  if($uuid == '') {
+    $validator = "\$HELPER_CMD credential_info ${uuid} ${title} | grep ${title}"
+  }  
+  else {
+   $validator = "\$HELPER_CMD credential_info ${uuid} ${title} | grep ${uuid}"
+  }
+   
   case $ensure {
     'present': {
       validate_string($password)
       validate_string($description)
       validate_string($private_key_or_path)
       validate_string($uuid)
-      jenkins::cli::exec { "create-jenkins-credentials-${title}":
+      jenkins::cli::exec { "create-jenkins-credentials-${title}-${uuid}":
         command => [
           'create_or_update_credentials',
           $title,
@@ -50,7 +57,8 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
+        #unless  => "\$HELPER_CMD credential_info ${uuid} ${title} | grep ${uuid}",
+        unless  => $validator,
       }
     }
     'absent': {

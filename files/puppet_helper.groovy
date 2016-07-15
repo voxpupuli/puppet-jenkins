@@ -393,8 +393,13 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-    def existing_credentials = util.credentials_for_username(username)
-
+    def existing_credentials = null
+    if (id == null) {
+      existing_credentials = util.credentials_for_username(username)
+    }
+    else { 
+      existing_credentials = util.findCredentialsById(id)  
+    }
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
         global_domain,
@@ -428,8 +433,14 @@ class Actions {
   ////////////////////////
   // current credentials
   ////////////////////////
-  void credential_info(String username) {
-    def credentials = util.credentials_for_username(username)
+  void credential_info(String uuid = null, String username) {
+    def credentials = null 
+    if(uuid == null) {
+      credentials = util.credentials_for_username(username)
+    }
+    else  {
+     credentials = util.findCredentialsById(uuid)
+    }
 
     if(credentials == null) {
       return null
@@ -449,7 +460,7 @@ class Actions {
     }
 
     def builder = new groovy.json.JsonBuilder(current_credentials)
-    out.println(builder)
+    out.println(builder.toPrettyString())
   }
 
   ////////////////////////
