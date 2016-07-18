@@ -58,3 +58,11 @@ shared_context 'jenkins' do
     EOS
   end
 end
+
+def apply(pp, options = {})
+  if ENV.key?('PUPPET_DEBUG')
+    options[:debug] = true
+  end
+
+  apply_manifest(pp, options)
+end

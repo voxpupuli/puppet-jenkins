@@ -283,9 +283,6 @@ Style/Documentation:
 Style/DefWithParentheses:
   Enabled: false
 
-Style/DeprecatedHashMethods:
-  Enabled: false
-
 Style/DotPosition:
   Enabled: false
 
@@ -663,3 +660,5 @@ Style/StructInheritance:
 Style/SymbolLiteral:
   Enabled: false
 
+Style/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false

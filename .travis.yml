@@ -6,26 +6,19 @@ rvm:
   - 1.9.3
   - 2.1.0
 script:
-  - "bundle exec rake lint"
-  - "bundle exec rake parallel_spec SPEC_OPTS='--format documentation --order random'"
+  - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
 env:
   - PUPPET_VERSION="~> 3.8.0"
-  - PUPPET_VERSION="~> 4.1.0"
-  - PUPPET_VERSION="~> 4.2.0"
-  - PUPPET_VERSION="~> 4.3.0"
   - PUPPET_VERSION="~> 4.4.0"
+  - PUPPET_VERSION="~> 4.5.0"
 matrix:
   include:
     - rvm: '2.1'
       sudo: required
       services: docker
-      env: BEAKER_set="centos-6-docker"
-      script: bundle exec rake acceptance
-      bundler_args: --without development
-    - rvm: '2.1'
-      sudo: required
-      services: docker
-      env: BEAKER_set="centos-7-docker"
+      env:
+        - BEAKER_set="centos-7-docker"
+        - PUPPET_DEBUG=true
       script: bundle exec rake acceptance
       bundler_args: --without development
     - rvm: '2.1'

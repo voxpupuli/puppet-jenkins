@@ -70,7 +70,14 @@
 #   File source for jenkins slave jar. Default pulls from http://maven.jenkins-ci.org
 #
 # [*java_args*]
-#   Java arguments to add to slave command line. Allows configuration of heap, etc.
+#   Java arguments to add to slave command line. Allows configuration of heap, etc. This
+#   can be a String, or an Array.
+#
+# [*proxy_server*]
+#
+#   Serves the same function as `::jenkins::proxy_server` but is an independent
+#   parameter so the `::jenkins` class does not need to be the catalog for
+#   slave only nodes.
 #
 
 # === Examples
@@ -78,7 +85,7 @@
 #  class { 'jenkins::slave':
 #    masterurl => 'http://jenkins-master1.example.com:8080',
 #    ui_user => 'adminuser',
-#    ui_pass => 'adminpass',
+#    ui_pass => 'adminpass'
 #  }
 #
 # === Authors
@@ -111,6 +118,7 @@ class jenkins::slave (
   $enable                   = true,
   $source                   = undef,
   $java_args                = undef,
+  $proxy_server             = undef,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -132,7 +140,7 @@ class jenkins::slave (
   validate_re($ensure, '^running$|^stopped$')
   validate_bool($enable)
   validate_string($source)
-  validate_string($java_args)
+  validate_string($proxy_server)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -152,6 +160,15 @@ class jenkins::slave (
     }
   }
 
+  if $java_args {
+    if is_array($java_args) {
+      $_combined_java_args = hiera_array('jenkins::slave::java_args', $java_args)
+      $_real_java_args = join($_combined_java_args, ' ')
+    }
+    else {
+      $_real_java_args = $java_args
+    }
+  }
 
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
@@ -260,7 +277,7 @@ class jenkins::slave (
     archive { 'get_swarm_client':
       source       => "${client_url}/${client_jar}",
       path         => "${slave_home}/${client_jar}",
-      proxy_server => $::jenkins::proxy_server,
+      proxy_server => $proxy_server,
       cleanup      => false,
       extract      => false,
     } ->

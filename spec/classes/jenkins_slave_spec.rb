@@ -80,7 +80,7 @@ describe 'jenkins::slave' do
       end
     end
 
-    describe 'with java_args' do
+    describe 'with java_args as a string' do
       let(:args) { '-Xmx2g' }
       let(:params) do
         {
@@ -90,6 +90,20 @@ describe 'jenkins::slave' do
 
       it 'should set java_args' do
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
+      end
+    end
+
+    describe 'with java_args as an array' do
+      let(:args) { ['-Xmx2g', '-Xms128m' ] }
+      let(:params) do
+        {
+          :java_args => args
+        }
+      end
+
+      it 'should convert java_args to a string' do
+        args_as_string = args.join ' '
+        should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
       end
     end
 
@@ -154,6 +168,15 @@ describe 'jenkins::slave' do
 
       it { should_not raise_error }
     end
+
+    describe 'with proxy_server' do
+      let(:params) { { :proxy_server => 'https://foo' } }
+      it do
+        should contain_archive('get_swarm_client').with(
+          :proxy_server => 'https://foo'
+        )
+      end
+    end
   end
 
   describe 'Debian' do
@@ -178,8 +201,7 @@ describe 'jenkins::slave' do
     let(:facts) {
       {:osfamily => 'Darwin',
        :operatingsystem => 'Darwin',
-       :kernel => 'Darwin'
-      }
+       :kernel => 'Darwin'}
     }
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }
