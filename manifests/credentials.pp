@@ -15,14 +15,13 @@
 # Jenkins credentials (via the CloudBees Credentials plugin
 #
 define jenkins::credentials (
-  $username,
+  $username = $title,
   $password,
   $description = 'Managed by Puppet',
   $private_key_or_path = '',
   $ensure = 'present',
   $uuid = '',
 ){
-  validate_string($username)
   validate_string($password)
   validate_string($description)
   validate_string($private_key_or_path)
@@ -31,9 +30,9 @@ define jenkins::credentials (
 
   require ::jenkins::cli_helper
 
-  #Class['jenkins::cli_helper'] ->
-  #  Jenkins::Credentials["${title}-${uuid}"] ->
-  #    Anchor['jenkins::end']
+  Class['jenkins::cli_helper'] ->
+    Jenkins::Credentials[$title] ->
+      Anchor['jenkins::end']
 
   if($uuid == '') {
     $validator = "\$HELPER_CMD credential_info ${uuid} ${username} | grep ${username}"
@@ -44,7 +43,6 @@ define jenkins::credentials (
    
   case $ensure {
     'present': {
-      validate_string($username)
       validate_string($password)
       validate_string($description)
       validate_string($private_key_or_path)
