@@ -4,8 +4,6 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,41 +15,44 @@
 # Jenkins credentials (via the CloudBees Credentials plugin
 #
 define jenkins::credentials (
+  $username,
   $password,
   $description = 'Managed by Puppet',
   $private_key_or_path = '',
   $ensure = 'present',
   $uuid = '',
 ){
+  validate_string($username)
   validate_string($password)
   validate_string($description)
   validate_string($private_key_or_path)
   validate_re($ensure, '^present$|^absent$')
   validate_string($uuid)
 
-  include ::jenkins::cli_helper
+  require ::jenkins::cli_helper
 
-  Class['jenkins::cli_helper'] ->
-    Jenkins::Credentials["${title}-${uuid}"] ->
-      Anchor['jenkins::end']
+  #Class['jenkins::cli_helper'] ->
+  #  Jenkins::Credentials["${title}-${uuid}"] ->
+  #    Anchor['jenkins::end']
 
   if($uuid == '') {
-    $validator = "\$HELPER_CMD credential_info ${uuid} ${title} | grep ${title}"
+    $validator = "\$HELPER_CMD credential_info ${uuid} ${username} | grep ${username}"
   }  
   else {
-   $validator = "\$HELPER_CMD credential_info ${uuid} ${title} | grep ${uuid}"
+   $validator = "\$HELPER_CMD credential_info ${uuid} ${username} | grep ${uuid}"
   }
    
   case $ensure {
     'present': {
+      validate_string($username)
       validate_string($password)
       validate_string($description)
       validate_string($private_key_or_path)
       validate_string($uuid)
-      jenkins::cli::exec { "create-jenkins-credentials-${title}-${uuid}":
+      jenkins::cli::exec { "create-jenkins-credentials-${username}-${uuid}":
         command => [
           'create_or_update_credentials',
-          $title,
+          $username,
           "'${password}'",
           "'${uuid}'",
           "'${description}'",
@@ -63,10 +64,10 @@ define jenkins::credentials (
     }
     'absent': {
       # XXX not idempotent
-      jenkins::cli::exec { "delete-jenkins-credentials-${title}":
+      jenkins::cli::exec { "delete-jenkins-credentials-${username}-${uuid}":
         command => [
           'delete_credentials',
-          $title,
+          $username,
         ],
       }
     }
