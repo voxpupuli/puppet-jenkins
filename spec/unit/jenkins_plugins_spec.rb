@@ -3,6 +3,11 @@ require 'puppet/jenkins/plugins'
 
 describe Puppet::Jenkins::Plugins do
   describe '.exists?' do
+    let(:facts) do
+      {
+        :osfamily                  => 'RedHat',
+      }
+    end
     subject(:exists) { described_class.exists? }
 
     context 'if jenkins does not exist' do
