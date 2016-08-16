@@ -14,6 +14,8 @@ gem 'travis', '~> 1.8'
 gem 'parallel_tests'
 gem 'rubocop', '~> 0.39'
 
+gem 'json_pure', '< 2.0.2'
+
 group :development do
   gem 'simplecov'
   gem 'ci_reporter'
