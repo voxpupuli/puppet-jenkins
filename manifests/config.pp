@@ -6,7 +6,13 @@ class jenkins::config {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  create_resources( 'jenkins::sysconfig', $::jenkins::config_hash )
+  ensure_resource('jenkins::plugin', $::jenkins::params::default_plugins)
+
+  $config_hash = merge(
+    $::jenkins::params::config_hash_defaults,
+    $::jenkins::config_hash
+  )
+  create_resources('jenkins::sysconfig', $config_hash)
 
   $dir_params = {
     ensure => directory,

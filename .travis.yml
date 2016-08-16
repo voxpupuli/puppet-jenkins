@@ -27,5 +27,8 @@ matrix:
       env: BEAKER_set="ubuntu-14.04-docker"
       script: bundle exec rake acceptance
       bundler_args: --without development
+  allow_failures:
+    # jenkins 2.x support is currently broken with debian packaging
+    - env: BEAKER_set="ubuntu-14.04-docker"
 notifications:
   email: false
