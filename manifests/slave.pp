@@ -20,7 +20,7 @@ class jenkins::slave (
 ) {
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
-  $client_url = "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/"
+  $client_url = "http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${version}"
 
   #add jenkins slave if necessary.
 
