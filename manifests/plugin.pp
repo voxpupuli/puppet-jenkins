@@ -85,7 +85,7 @@ define jenkins::plugin(
       default => $update_url,
     }
     $base_url = "${plugins_host}/latest/"
-    $search   = "${name} "
+    $search   = "^${name} "
   }
 
   # if $source is specified, it overrides any other URL construction
