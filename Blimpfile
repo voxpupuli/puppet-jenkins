@@ -1,0 +1,19 @@
+# vim: ft=ruby
+# Blimpfile created on 2012-05-20 12:26:38 -0700
+
+Blimpy.fleet do |fleet|
+  fleet.add(:aws) do |ship|
+    ship.name = 'puppet-jenkins'
+    ship.ports = [22, 8080]
+    ship.region = 'us-west-2'
+    ship.username = 'ubuntu'
+    ship.image_id = 'ami-fa9cf1ca'
+
+    if ENV['RHEL']
+      ship.image_id = 'ami-b8a63b88'
+      ship.username = 'ec2-user'
+    end
+    ship.livery = Blimpy::Livery::CWD
+    ship.flavor = 'm1.small'
+  end
+end

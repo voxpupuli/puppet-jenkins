@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+source <%= @defaults_location %>/jenkins-slave 
+java -jar <%= @slave_home %>/<%= @client_jar %> $JENKINS_SLAVE_ARGS

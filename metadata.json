@@ -1,0 +1,28 @@
+{
+  "name": "rtyler-jenkins",
+  "version": "1.7.0",
+  "author": "R. Tyler Croy <tyler@monkeypox.org>, Joshua Hoblitt <josh@hoblitt.com>",
+  "license": "Apache-2.0",
+  "summary": "Manage the Jenkins continuous integration service with Puppet",
+  "source": "https://github.com/jenkinsci/puppet-jenkins",
+  "project_page": "https://github.com/jenkinsci/puppet-jenkins",
+  "issues_url": "https://github.com/jenkinsci/puppet-jenkins/issues",
+  "tags": ["jenkins", "jenkinsci"],
+  "operatingsystem_support": [
+    {
+    "operatingsystem":"RedHat",
+    "operatingsystemrelease": [ "7.0", "6.0" ]
+    },
+    {
+    "operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "14.04", "12.04", "10.04" ]
+    }
+   ],
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 4.6.0 < 5.0.0" },
+    { "name": "puppetlabs/apt", "version_requirement": ">= 0.0.3 < 3.0.0" },
+    { "name": "puppetlabs/java", "version_requirement": ">= 1.0.1 < 2.0.0" },
+    { "name": "darin/zypprepo", "version_requirement": ">= 1.0.1 < 2.0.0" },
+    { "name": "puppet/archive", "version_requirement": ">= 0.4.8" }
+  ]
+}

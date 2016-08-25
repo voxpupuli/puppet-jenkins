@@ -1,0 +1,99 @@
+# defaults for jenkins slave swarm clients
+
+# pulled in from the init script; makes things easier.
+NAME=jenkins-slave
+
+# location of java
+JAVA=/usr/bin/java
+
+# arguments to pass to java
+#JAVA_ARGS="-Xmx256m"
+#JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
+<% if @_real_java_args -%>
+JAVA_ARGS="<%= @_real_java_args -%>"
+<% end -%>
+
+PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
+
+# user id to be invoked as (otherwise will run as root; not wise!)
+JENKINS_SLAVE_USER=<%= @slave_user -%>
+
+# jenkins home location
+JENKINS_SLAVE_HOME=<%= @slave_home -%>
+
+# location of the jenkins war file
+JENKINS_SLAVE_JAR="${JENKINS_SLAVE_HOME}/<%= @client_jar -%>"
+
+# set this to false if you don't want Hudson to run by itself
+# in this set up, you are expected to provide a servlet container
+# to host jenkins.
+RUN_STANDALONE=true
+
+# log location.  this may be a syslog facility.priority
+JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
+
+# slave mode, can be either 'normal' (utilize this slave as much as possible)
+# or 'exclusive' (leave this machine for tied jobs only).
+JENKINS_SLAVE_MODE=<%= @slave_mode -%>
+
+# OS LIMITS SETUP
+#   comment this out to observe /etc/security/limits.conf
+#   this is on by default because http://github.com/jenkinsci/jenkins/commit/2fb288474e980d0e7ff9c4a3b768874835a3e92e
+#   reported that Ubuntu's PAM configuration doesn't include pam_limits.so, and as a result the # of file
+#   descriptors are forced to 1024 regardless of /etc/security/limits.conf
+MAXOPENFILES=8192
+
+MASTER_URL="<%= @masterurl -%>"
+AUTO_DISCOVERY_ADDRESS="<%= @autodiscoveryaddress -%>"
+LABELS="<%= @_real_labels -%>"
+
+EXECUTORS=<%= @executors -%>
+
+CLIENT_NAME="<%= @slave_name -%>"
+
+FSROOT="<%= @slave_home -%>"
+
+DESCRIPTION="<%= @description -%>"
+
+# credentials should be sinjle quoted
+JENKINS_USERNAME=<%= @quoted_ui_user %>
+JENKINS_PASSWORD=<%= @quoted_ui_pass %>
+
+OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%>"
+
+if [ -n "$JENKINS_USERNAME" ]; then
+  CREDENTIALS_ARG="-username $JENKINS_USERNAME -password $JENKINS_PASSWORD"
+fi
+
+if [ -n "$CLIENT_NAME" ]; then
+  NAME_ARG="-name $CLIENT_NAME"
+fi
+
+if [ -n "$MASTER_URL" ]; then
+  MASTER_URL_ARG="-master $MASTER_URL"
+fi
+
+if [ -n "$LABELS" ]; then
+  LABELS_ARG="-labels '$LABELS'"
+fi
+
+if [ -n "$FSROOT" ]; then
+  FSROOT_ARG="-fsroot '$FSROOT'"
+fi
+
+<% if @tool_locations %>
+  TOOL_LOCATIONS_ARG=""
+  <% @tool_locations.split.each do |tool_location| %>
+    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>"
+  <% end %>
+<% end %>
+
+if [ -n "$DESCRIPTION" ]; then
+  DESCRIPTION_ARG="-description '$DESCRIPTION'"
+fi
+
+if [ -n "$AUTO_DISCOVERY_ADDRESS" ]; then
+  AUTO_DISCOVERY_ADDRESS_ARG="-autoDiscoveryAddress '$AUTO_DISCOVERY_ADDRESS'"
+fi
+
+JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $CREDENTIALS_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $AUTO_DISCOVERY_ADDRESS_ARG $TOOL_LOCATIONS_ARG $DESCRIPTION_ARG $OTHER_ARGS"

@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+# /etc/init.d/jenkins-slave
+# init script for Jenkins Slave Swarm Client.
+#
+# chkconfig: 2345 90 60
+# description: Jenkins Slave Swarm Client
+#
+RETVAL=0
+
+NAME=jenkins-slave
+JENKINS_CONFIG=/etc/sysconfig/$NAME
+LOCK_FILE=/var/lock/subsys/$NAME
+
+# Source function library.
+. /etc/init.d/functions
+
+# Read config
+[ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
+
+if [ -x /sbin/runuser ] ; then
+    RUNUSER=runuser
+else
+    RUNUSER=su
+fi
+
+slave_start() {
+  echo Starting Jenkins Slave...
+
+  # the default location is /var/run/jenkins/jenkins.pid but the parent directory needs to be created
+  mkdir `dirname $PIDFILE` > /dev/null 2>&1 || true
+  chown $JENKINS_SLAVE_USER `dirname $PIDFILE`
+
+  # create log directory
+  mkdir -p `dirname $JENKINS_SLAVE_LOG` > /dev/null 2>&1 || true
+  chown $JENKINS_SLAVE_USER -R `dirname $JENKINS_SLAVE_LOG`
+
+  # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
+  # so we let su do so for us now
+  $RUNUSER - $JENKINS_SLAVE_USER -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS >> $JENKINS_SLAVE_LOG 2>&1 &"
+  pgrep -f -u $JENKINS_SLAVE_USER $JENKINS_SLAVE_JAR > $PIDFILE
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+}
+slave_stop() {
+  echo Stopping Jenkins Slave...
+  pid=`cat $PIDFILE`
+
+  killproc -p $PIDFILE
+
+  # Wait until the monitor exits
+  while (checkpid $pid)
+  do
+      usleep 100000
+  done
+
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+}
+
+slave_restart() {
+  echo Restarting Jenkins Slave...
+  slave_stop
+  slave_start
+
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+}
+slave_status() {
+  echo Jenkins Slave status:
+  status -p $PIDFILE
+  RETVAL=$?
+}
+case "$1" in
+  start)
+    slave_start
+    ;;
+  stop)
+    slave_stop
+    ;;
+  restart)
+    slave_restart
+    ;;
+  status)
+    slave_status
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit $RETVAL

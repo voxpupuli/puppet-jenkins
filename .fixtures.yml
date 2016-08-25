@@ -1,0 +1,13 @@
+fixtures:
+  repositories:
+    apt:
+      repo: "https://github.com/puppetlabs/puppetlabs-apt"
+      ref: "2.1.0"
+    stdlib:
+      repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
+      ref: "4.6.0"
+    java: "https://github.com/puppetlabs/puppetlabs-java"
+    zypprepo: "https://github.com/deadpoint/puppet-zypprepo.git"
+    archive: "https://github.com/voxpupuli/puppet-archive.git"
+  symlinks:
+    "jenkins": "#{source_dir}"
