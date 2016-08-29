@@ -7,8 +7,8 @@
   <mode>NORMAL</mode>
   <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
   <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.11">
-    <host><%= @job_host %></host>
-    <port><%= @job_port %></port>
+    <host><%= @node_host %></host>
+    <port><%= @node_port %></port>
     <credentialsId><%= @credentials_id %></credentialsId>
     <maxNumRetries>0</maxNumRetries>
     <retryWaitTime>0</retryWaitTime>
