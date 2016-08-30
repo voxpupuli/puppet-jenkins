@@ -20,11 +20,13 @@ define jenkins::job::present(
   $jobname  = $title,
   $enabled  = true,
   $difftool = '/usr/bin/diff -b -q',
+  $viewname = undef
 ){
   validate_string($config)
   validate_string($jobname)
   validate_bool($enabled)
   validate_string($difftool)
+  validate_string($viewname)
 
   include jenkins::cli
   include jenkins::cli::reload
@@ -89,6 +91,15 @@ define jenkins::job::present(
     unless  => "${difftool} ${config_path} ${tmp_config_path}",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins'],
+  }
+
+  if ($viewname != undef) {
+    $add_job_to_view = "${jenkins_cli} add-job-to-view \"${viewname}\" \"${jobname}\""
+    exec { "jenkins add-job-to-view ${viewname} ${jobname}":
+      command => $add_job_to_view,
+      onlyif  => "${jenkins_cli} get-view \"${viewname}\"",
+      require => Exec["jenkins create-job ${jobname}"]
+    }
   }
 
   # Enable or disable the job (if necessary)

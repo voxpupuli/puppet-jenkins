@@ -35,6 +35,7 @@ define jenkins::job(
   $enabled  = true,
   $ensure   = 'present',
   $difftool = '/usr/bin/diff -b -q',
+  $viewname = undef
 ){
   validate_string($config)
   if $source { validate_absolute_path($source) }
@@ -75,6 +76,7 @@ define jenkins::job(
       jobname  => $jobname,
       enabled  => $real_enabled,
       difftool => $difftool,
+      viewname => $viewname
     }
   }
 
