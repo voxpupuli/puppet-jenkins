@@ -130,6 +130,30 @@ describe 'jenkins::slave' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
       end
     end
+
+    describe 'with SLAVE_ARGS as an array' do
+      let(:params) do
+        {
+          :slave_args => ['-deleteExistingClients', '-disableClientsUniqueId']
+        }
+      end
+
+      it 'should set SLAVE_ARGS as a string' do
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="(\s?)-deleteExistingClients -disableClientsUniqueId"$/)
+      end
+    end
+
+    describe 'with SLAVE_ARGS as a string' do
+      let(:params) do
+        {
+          :slave_args => ['-deleteExistingClients -disableClientsUniqueId']
+        }
+      end
+
+      it 'should set SLAVE_ARGS as a string' do
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="(\s?)-deleteExistingClients -disableClientsUniqueId"$/)
+      end
+    end
   end
 
   shared_examples 'using slave_name' do

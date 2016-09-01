@@ -79,6 +79,11 @@
 #   parameter so the `::jenkins` class does not need to be the catalog for
 #   slave only nodes.
 #
+# [*slave_args*]
+#
+#   This takes a string, or an array, of additional arguments to pass into the Jenkins
+#   swarm client. Please see your version of the Swarm client for available options.
+#
 
 # === Examples
 #
@@ -119,6 +124,7 @@ class jenkins::slave (
   $source                   = undef,
   $java_args                = undef,
   $proxy_server             = undef,
+  $slave_args               = undef,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -167,6 +173,16 @@ class jenkins::slave (
     }
     else {
       $_real_java_args = $java_args
+    }
+  }
+
+  if $slave_args {
+    if is_array($slave_args) {
+      $_combined_slave_args = hiera_array('jenkins::slave::slave_args', $slave_args)
+      $_real_slave_args = join($_combined_slave_args, ' ')
+    }
+    else {
+      $_real_slave_args = $slave_args
     }
   }
 
