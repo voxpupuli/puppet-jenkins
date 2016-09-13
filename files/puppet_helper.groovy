@@ -234,7 +234,7 @@ class Actions {
     def user = hudson.model.User.get(user_name)
     user.setFullName(full_name)
 
-    def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer.UserProperty').newInstance(email)
+    def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty').newInstance(email)
     user.addProperty(email_param)
 
     def pw_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(password)
@@ -273,7 +273,7 @@ class Actions {
     if (email_address) {
       util.requirePlugin('mailer')
       assert email_address instanceof String
-      def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer.UserProperty').newInstance(email_address)
+      def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty').newInstance(email_address)
       user.addProperty(email_param)
     }
 
