@@ -1,30 +1,37 @@
 # == Class: jenkins::slave
 #
-# This module setups up a swarm client for a jenkins server.  It requires the swarm plugin on the Jenkins master.
+# This module setups up a swarm client for a jenkins server.  It requires the
+# swarm plugin on the Jenkins master.
 #
 # https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin
 #
-# It allows users to add more workers to Jenkins without having to specifically add them on the Jenkins master.
+# It allows users to add more workers to Jenkins without having to specifically
+# add them on the Jenkins master.
 #
 # === Parameters
 #
 # [*slave_name*]
-#   Specify the name of the slave.  Not required, by default it will use the fqdn.
+#   Specify the name of the slave.  Not required, by default it will use the
+#   fqdn.
 #
 # [*masterurl*]
-#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
+#   Specify the URL of the master server.  Not required, the plugin will do a
+#   UDP autodiscovery. If specified, the autodiscovery will be skipped.
 #
 # [*autodiscoveryaddress*]
 #   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
 #
 # [*ui_user*] & [*ui_pass*]
-#   User name & password for the Jenkins UI.  Not required, but may be ncessary for your config, depending on your security model.
+#   User name & password for the Jenkins UI.  Not required, but may be ncessary
+#   for your config, depending on your security model.
 #
 # [*version*]
-#   The version of the swarm client code. Must match the pluging version on the master.  Typically it's the latest available.
+#   The version of the swarm client code. Must match the pluging version on the
+#   master.  Typically it's the latest available.
 #
 # [*executors*]
-#   Number of executors for this slave.  (How many jenkins jobs can run simultaneously on this host.)
+#   Number of executors for this slave.  (How many jenkins jobs can run
+#   simultaneously on this host.)
 #
 # [*manage_slave_user*]
 #   Should the class add a user to run the slave code?  1 is currently true
@@ -34,22 +41,29 @@
 #   Defaults to 'jenkins-slave'. Change it if you'd like..
 #
 # [*slave_uid*]
-#   Not required.  Puppet will let your system add the user, with the new UID if necessary.
+#   Not required.  Puppet will let your system add the user, with the new UID if
+#   necessary.
 #
 # [*slave_home*]
-#   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
+#   Defaults to '/home/jenkins-slave'.  This is where the code will be
+#   installed, and the workspace will end up.
 #
 # [*slave_mode*]
-#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
+#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as
+#   possible) or 'exclusive' (leave this machine for tied jobs only).
 #
 # [*disable_ssl_verification*]
-#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#   Disable SSL certificate verification on Swarm clients. Not required, but is
+#   necessary if you're using a self-signed SSL cert. Defaults to false.
 #
 # [*labels*]
-#   Not required.  String, or Array, that contains the list of labels to be assigned for this slave.
+#   Not required.  String, or Array, that contains the list of labels to be
+#   assigned for this slave.
 #
 # [*tool_locations*]
-#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
+#   Not required.  Single string of whitespace-separated list of tool locations
+#   to be defined on this slave. A tool location is specified as
+#   'toolName:location'.
 #
 # [*java_version*]
 #   Specified which version of java will be used.
@@ -58,7 +72,8 @@
 #   Not required.  Description which will appear on the jenkins master UI.
 #
 # [*manage_client_jar*]
-#   Should the class download the client jar file from the web? Defaults to true.
+#   Should the class download the client jar file from the web? Defaults to
+#   true.
 #
 # [*ensure*]
 #   Service ensure control for jenkins-slave service. Default running
@@ -200,14 +215,33 @@ class jenkins::slave (
       $defaults_group = 'root'
       $manage_user_home = true
 
-      file { '/etc/init.d/jenkins-slave':
-        ensure => 'file',
-        mode   => '0755',
-        owner  => 'root',
-        group  => 'root',
-        source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
-        notify => Service['jenkins-slave'],
+      # Disable lint checking below because we actually do need a string here
+      # lint:ignore:quoted_booleans
+      if $::systemd == 'true' {
+        include ::systemd
+        file {
+          '/usr/sbin/jenkins-slave':
+            source => "puppet:///modules/${module_name}/jenkins-slave.sh",
+            notify => Service['jenkins-slave'],
+            mode   => '0700';
+          '/etc/init.d/jenkins-slave':
+            ensure => 'absent',
+        }
+        systemd::unit_file { 'jenkins-slave.service':
+          source => "puppet:///modules/${module_name}/jenkins-slave.service",
+          notify => Service['jenkins-slave'],
+        }
+      } else {
+        file { '/etc/init.d/jenkins-slave':
+          ensure => 'file',
+          mode   => '0755',
+          owner  => 'root',
+          group  => 'root',
+          source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
+          notify => Service['jenkins-slave'],
+        }
       }
+      # lint:endignore
     }
     'Darwin': {
       $service_name     = 'org.jenkins-ci.slave.jnlp'
