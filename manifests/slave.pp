@@ -12,7 +12,8 @@
 #   Specify the name of the slave.  Not required, by default it will use the fqdn.
 #
 # [*masterurl*]
-#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
+#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will
+#   be skipped.
 #
 # [*autodiscoveryaddress*]
 #   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
@@ -40,16 +41,19 @@
 #   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
 #
 # [*slave_mode*]
-#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
+#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive'
+#   (leave this machine for tied jobs only).
 #
 # [*disable_ssl_verification*]
-#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert.
+#   Defaults to false.
 #
 # [*labels*]
 #   Not required.  String, or Array, that contains the list of labels to be assigned for this slave.
 #
 # [*tool_locations*]
-#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
+#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified
+#   as 'toolName:location'.
 #
 # [*java_version*]
 #   Specified which version of java will be used.
