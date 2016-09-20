@@ -41,6 +41,11 @@ describe 'jenkins::slave' do
       it { should contain_user('jenkins-slave_user').with_uid(123) }
     end
 
+    describe 'slave_groups' do
+      let(:params) { { :slave_groups => 'docker' } }
+      it { should contain_user('jenkins-slave_user').with_groups('docker') }
+    end
+
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
       let(:params) { {:slave_home => home } }

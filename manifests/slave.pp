@@ -34,6 +34,9 @@
 # [*slave_user*]
 #   Defaults to 'jenkins-slave'. Change it if you'd like..
 #
+# [*slave_groups*]
+#   Not required.  Use to add the slave_user to other groups if you need to.  Defaults to undef.
+#
 # [*slave_uid*]
 #   Not required.  Puppet will let your system add the user, with the new UID if necessary.
 #
@@ -110,6 +113,7 @@ class jenkins::slave (
   $executors                = 2,
   $manage_slave_user        = true,
   $slave_user               = 'jenkins-slave',
+  $slave_groups             = undef,
   $slave_uid                = undef,
   $slave_home               = '/home/jenkins-slave',
   $slave_mode               = 'normal',
@@ -134,6 +138,7 @@ class jenkins::slave (
   validate_integer($executors)
   validate_bool($manage_slave_user)
   validate_string($slave_user)
+  if $slave_groups { validate_string($slave_groups) }
   if $slave_uid { validate_integer($slave_uid) }
   validate_absolute_path($slave_home)
   validate_re($slave_mode, '^normal$|^exclusive$')
@@ -265,6 +270,7 @@ class jenkins::slave (
       managehome => $manage_user_home,
       system     => true,
       uid        => $slave_uid,
+      groups     => $slave_groups,
     }
   }
 
