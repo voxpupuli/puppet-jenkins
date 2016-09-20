@@ -393,7 +393,7 @@ class Actions {
       } else {
         key_source = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$FileOnMasterPrivateKeySource').newInstance(private_key)
       }
-      cred = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey').newInstance(
+      credentials = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey').newInstance(
         CredentialsScope.GLOBAL,
         id,
         username,
