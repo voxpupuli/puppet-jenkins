@@ -328,5 +328,14 @@ describe 'jenkins', :type => :module do
         end
       end
     end # manages state dirs
+
+    describe 'with default plugins' do
+      it { should contain_jenkins__plugin 'credentials' }
+    end
+
+    describe 'with default plugins override' do
+      let (:params) {{ :default_plugins => [] }}
+      it { should_not contain_jenkins__plugin 'credentials' }
+    end
   end
 end
