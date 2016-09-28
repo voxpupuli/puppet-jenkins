@@ -1,0 +1,11 @@
+HOSTS:
+  ubuntu-14.04-x64:
+    platform: ubuntu-14.04-amd64
+    hypervisor : docker
+    #image: ubuntu:14.04
+    image: electrical/ubuntu:14.04
+    docker_preserve_image: true
+    docker_cmd: '["/sbin/init"]'
+CONFIG:
+  type: foss
+  log_level: debug

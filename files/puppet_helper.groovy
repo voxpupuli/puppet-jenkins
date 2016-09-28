@@ -16,28 +16,26 @@
 // limitations under the License.
 
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
-import com.cloudbees.jenkins.plugins.sshcredentials.impl.*;
 import com.cloudbees.plugins.credentials.*
-import com.cloudbees.plugins.credentials.*;
 import com.cloudbees.plugins.credentials.common.*
 import com.cloudbees.plugins.credentials.domains.*
-import com.cloudbees.plugins.credentials.domains.*;
 import com.cloudbees.plugins.credentials.impl.*
-import com.cloudbees.plugins.credentials.impl.*;
-import hudson.plugins.sshslaves.*;
-import jenkins.model.*;
-import org.jenkinsci.plugins.*;
-import jenkins.security.*;
-import hudson.util.*;
-import hudson.model.*;
 import groovy.transform.InheritConstructors
+import hudson.model.*
+import hudson.plugins.sshslaves.*
+import hudson.util.*
+import jenkins.model.*
+import jenkins.security.*
 import org.apache.commons.io.IOUtils
+import org.jenkinsci.plugins.*
 
 class InvalidAuthenticationStrategy extends Exception{}
 @InheritConstructors
 class UnsupportedCredentialsClass extends Exception {}
 @InheritConstructors
 class InvalidCredentialsId extends Exception {}
+@InheritConstructors
+class MissingRequiredPlugin extends Exception {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Util
@@ -125,10 +123,10 @@ class Util {
     def ctor
 
     // if we have a null arg, we don't know how to map that back to a class
-    // (hurray for java) and Class::getDeclaredConstructor() will fail. We are
+    // (hooray for java) and Class::getDeclaredConstructor() will fail. We are
     // being lazy here and trying to match only by the number of arguments.
     //
-    // A better impliementation would try to compare parameter types with null
+    // A better implementation would try to compare parameter types with null
     // matching any class that is an instance of Object
     if (args.any { it == null }) {
       def ctors = c.getDeclaredConstructors()
@@ -178,6 +176,38 @@ class Util {
 
     classList
   }
+
+  def Map findJobs(Object obj, String namespace = null) {
+    def found = [:]
+
+    // groovy apparently can't #collect on a list and return a map?
+    obj.items.each { job ->
+      // a possibly better approach would be to walk the parent chain from //
+      // each job
+      def path = job.getName()
+      if (namespace) {
+        path = "${namespace}/" + path
+      }
+
+      found[path] = job
+
+      // intentionally not using `instanceof` here so we don't blow up if the
+      // cloudbees-folder plugin is not installed
+      if (job.getClass().getName() == 'com.cloudbees.hudson.plugins.folder.Folder') {
+        found << findJobs(job, path)
+      }
+    }
+
+    found
+  }
+
+  def requirePlugin(String plugin) {
+    def j = Jenkins.getInstance()
+
+    if (! j.getPlugin(plugin)) {
+      throw new MissingRequiredPlugin(plugin)
+    }
+  }
 } // class Util
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,10 +229,12 @@ class Actions {
   // create or update user
   /////////////////////////
   void create_or_update_user(String user_name, String email, String password="", String full_name="", String public_keys="") {
+    util.requirePlugin('mailer')
+
     def user = hudson.model.User.get(user_name)
     user.setFullName(full_name)
 
-    def email_param = new hudson.tasks.Mailer.UserProperty(email)
+    def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty').newInstance(email)
     user.addProperty(email_param)
 
     def pw_param = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(password)
@@ -239,14 +271,15 @@ class Actions {
 
     def email_address = conf['email_address']
     if (email_address) {
+      util.requirePlugin('mailer')
       assert email_address instanceof String
-      def email_param = new hudson.tasks.Mailer.UserProperty(email_address)
+      def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty').newInstance(email_address)
       user.addProperty(email_param)
     }
 
     // it is not possible to directly set the API token because the user
-    // visible value is actualy a digest of the "plain text" token after it
-    // is unecnrypted.
+    // visible value is actually a digest of the "plain text" token after it
+    // is unencrypted.
     def api_token_plain = conf['api_token_plain']
     if (api_token_plain) {
       assert api_token_plain instanceof String
@@ -352,13 +385,15 @@ class Actions {
         password
       )
     } else {
+      util.requirePlugin('ssh-credentials')
+
       def key_source
       if (private_key.startsWith('-----BEGIN')) {
-        key_source = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(private_key)
+        key_source = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource').newInstance(private_key)
       } else {
-        key_source = new BasicSSHUserPrivateKey.FileOnMasterPrivateKeySource(private_key)
+        key_source = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$FileOnMasterPrivateKeySource').newInstance(private_key)
       }
-      credentials = new BasicSSHUserPrivateKey(
+      credentials = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey').newInstance(
         CredentialsScope.GLOBAL,
         id,
         username,
@@ -462,28 +497,28 @@ class Actions {
         impl:  cred.class.getSimpleName(),
       ]
 
-      switch (cred) {
-        case com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl:
+      switch (cred.getClass().getName()) {
+        case 'com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl':
           info['description'] = cred.description
           info['username'] = cred.username
           info['password'] = cred.password.plainText
           break
-        case com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey:
+        case 'com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey':
           info['description'] = cred.description
           info['username'] = cred.username
           info['private_key'] = cred.privateKey
           info['passphrase'] = cred.passphrase.plainText
           break
-        case org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl:
+        case 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl':
           info['description'] = cred.description
           info['secret'] = cred.secret.plainText
           break
-        case org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl:
+        case 'org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl':
           info['description'] = cred.description
           info['file_name'] = cred.getFileName()
           info['content'] = IOUtils.toString(cred.getContent(), "UTF-8")
           break
-        case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl:
+        case 'com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl':
           def keyStoreSource = cred.getKeyStoreSource()
 
           info['description'] = cred.description
@@ -491,11 +526,11 @@ class Actions {
           info['password_empty'] = cred.passwordEmpty
           info['key_store_impl'] = keyStoreSource.class.getSimpleName()
 
-          switch (keyStoreSource) {
-            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$UploadedKeyStoreSource:
+          switch (keyStoreSource.getClass().getName()) {
+            case 'com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$UploadedKeyStoreSource':
               info['content'] = IOUtils.toString(keyStoreSource.getKeyStoreBytes(), "UTF-8")
               break
-            case com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$FileOnMasterKeyStoreSource:
+            case 'com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl$FileOnMasterKeyStoreSource':
               info['source'] = keyStoreSource.getKeyStoreFile()
               break
             default:
@@ -541,10 +576,13 @@ class Actions {
         )
         break
       case 'BasicSSHUserPrivateKey':
-        def key = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(
+        util.requirePlugin('ssh-credentials')
+
+        def key = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource').newInstance(
           conf['private_key']
         )
-        cred = new BasicSSHUserPrivateKey(
+
+        cred = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey').newInstance(
           // CredentialsScope is an enum
           CredentialsScope."${conf['scope']}",
           conf['id'],
@@ -554,15 +592,31 @@ class Actions {
           conf['description']
         )
         break
+      case 'StringCredentialsImpl':
+        util.requirePlugin('plain-credentials')
+
+        // we can not declare:
+        // import org.jenkinsci.plugins.plaincredentials.impl.*
+        // if plain-credentials is not present
+        cred = this.class.classLoader.loadClass('org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl').newInstance(
+          // CredentialsScope is an enum
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          new Secret(conf['secret'])
+        )
+        break
       default:
         throw new UnsupportedCredentialsClass("unsupported " + conf['impl'])
     }
+    assert cred != null
 
     def domain = Domain.global()
     def existingCred = util.findCredentialsById(conf['id'], domain)
     def credStore = j.getExtensionList(
       'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
     )[0].getStore()
+    assert credStore != null
 
     if (existingCred != null) {
       credStore.updateCredentials(domain, existingCred, cred)
@@ -689,7 +743,7 @@ class Actions {
               realm.site,
               realm.bindName,
               realm.bindPassword,
-              realm.groupLookupStrategy,
+              realm.server,
             ],
           ],
         ]
@@ -794,7 +848,7 @@ class Actions {
     def conf = slurper.parseText(text)
 
     // each key in the hash is a method on the Jenkins singleton.  The key's
-    // value is an object to instatiate and pass to the method.  (currently,
+    // value is an object to instantiate and pass to the method.  (currently,
     // only one parameter is supported)
     conf.each { entry ->
       def methodName = entry.key
@@ -839,9 +893,9 @@ class Actions {
    * Print the number of executors for the master
   */
   void get_num_executors() {
-     def j = Jenkins.getInstance()
-     def n = j.getNumExecutors()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getNumExecutors()
+    out.println(n)
   }
 
   ////////////////////////
@@ -851,21 +905,21 @@ class Actions {
    * Set the number of executors for the master
   */
   void set_num_executors(String n) {
-     def j = Jenkins.getInstance()
-     j.setNumExecutors(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setNumExecutors(n.toInteger())
+    j.save()
   }
 
   ////////////////////////
   // get_slaveagent_port
   ////////////////////////
   /*
-   * Print the portnumber of the slave agent
+   * Print the port number of the slave agent
   */
   void get_slaveagent_port() {
-     def j = Jenkins.getInstance()
-     def n = j.getSlaveAgentPort()
-     out.println(n)
+    def j = Jenkins.getInstance()
+    def n = j.getSlaveAgentPort()
+    out.println(n)
   }
 
   ////////////////////////
@@ -875,9 +929,9 @@ class Actions {
    * Set the portnumber of the slave agent
   */
   void set_slaveagent_port(String n) {
-     def j = Jenkins.getInstance()
-     j.setSlaveAgentPort(n.toInteger())
-     j.save()
+    def j = Jenkins.getInstance()
+    j.setSlaveAgentPort(n.toInteger())
+    j.save()
   }
 
   /////////////////////////
@@ -894,8 +948,38 @@ class Actions {
     catch (MissingMethodException me) {
       out.println("Found resource is not a job, skipping.")
     }
-   }
-  } // class Actions
+  }
+
+  /////////////////////////
+  // job_list_json
+  /////////////////////////
+  /*
+   * Return all the configured jobs as a list of maps
+   */
+  void job_list_json() {
+    def jobs = util.findJobs(Jenkins.getInstance())
+
+    def allInfo = jobs.collect { path, job ->
+      // at least these job classes do not respond to respond to #isDisabled:
+      // - org.jenkinsci.plugins.workflow.job.WorkflowJob
+      // - com.cloudbees.hudson.plugins.folder.Folder
+      def enabled = false
+      if (job.metaClass.respondsTo(job, 'isDisabled')) {
+        enabled = !job.isDisabled()
+      }
+
+      [
+        name: path,
+        config: job.getConfigFile().getFile().getText('utf-8'),
+        enabled: enabled
+      ]
+    }
+
+    def builder = new groovy.json.JsonBuilder(allInfo)
+    out.println(builder.toPrettyString())
+  }
+
+} // class Actions
 
 ///////////////////////////////////////////////////////////////////////////////
 // CLI Argument Processing

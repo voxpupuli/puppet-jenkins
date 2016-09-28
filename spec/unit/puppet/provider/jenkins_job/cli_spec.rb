@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'unit/puppet_x/spec_jenkins_providers'
 
+require 'json'
+
 describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   let(:list_jobs_output) { "foo\nbar\n" }
   let(:foo_xml) do
@@ -31,65 +33,62 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   let(:bar_xml) do
     foo_xml.sub('<disabled>false</disabled>', '<disabled>true</disabled>')
   end
+  let(:job_list_json_output) do
+    <<-'EOS'
+    [
+        {
+            "name": "enabled-job",
+            "config": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+            "enabled": true
+        },
+        {
+            "name": "disabled-job",
+            "config": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+            "enabled": false
+        }
+    ]
+    EOS
+  end
+  let(:job_list_json_info) { JSON.parse(job_list_json_output) }
 
   include_examples 'confines to cli dependencies'
 
-  describe "::instances" do
-    context "without any params" do
+  describe '::instances' do
+    context 'without any params' do
       before do
-        expect(described_class).to receive(:list_jobs).
-          with(nil) { ['foo', 'bar']}
-
-        expect(described_class).to receive(:get_job).
-          with('foo', nil) { foo_xml }
-
-        expect(described_class).to receive(:job_enabled).
-          with('foo', nil) { true }
-
-        expect(described_class).to receive(:get_job).
-          with('bar', nil) { bar_xml }
-
-        expect(described_class).to receive(:job_enabled).
-          with('bar', nil) { false }
+        expect(described_class).to receive(:job_list_json).
+          with(nil) { job_list_json_info }
       end
 
-      it "should return the correct number of instances" do
+      it 'should return the correct number of instances' do
         expect(described_class.instances.size).to eq 2
       end
 
-      context "first instance returned" do
+      context 'first instance returned' do
         let(:provider) do
           described_class.instances[0]
         end
 
-        it { expect(provider.name).to eq 'foo' }
-        it { expect(provider.config).to eq foo_xml }
+        it { expect(provider.name).to eq 'enabled-job' }
         it { expect(provider.enable).to eq true }
       end
 
-      context "second instance returned" do
+      context 'second instance returned' do
         let(:provider) do
           described_class.instances[1]
         end
 
-        it { expect(provider.name).to eq 'bar' }
-        it { expect(provider.config).to eq bar_xml }
+        it { expect(provider.name).to eq 'disabled-job' }
         it { expect(provider.enable).to eq false }
       end
     end
 
-    context "when called with a catalog param" do
-      it "should pass it on ::list_jobs, ::get_job, & ::job_enabled" do
+    context 'when called with a catalog param' do
+      it 'should pass it on ::get_job_list' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:list_jobs).
-          with(kind_of(Puppet::Resource::Catalog)) { ['foo'] }
-
-        expect(described_class).to receive(:get_job).
-          with('foo', kind_of(Puppet::Resource::Catalog))
-
-        expect(described_class).to receive(:job_enabled).
-          with('foo', kind_of(Puppet::Resource::Catalog))
+        expect(described_class).to receive(:job_list_json).
+          with(kind_of(Puppet::Resource::Catalog)) { job_list_json_info }
 
         described_class.instances(catalog)
       end

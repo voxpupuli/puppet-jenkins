@@ -1,6 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
+  include_context 'jenkins'
 
   context 'default parameters' do
     it 'should work with no errors' do
@@ -11,8 +12,8 @@ describe 'jenkins class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_changes => true)
     end
 
     describe port(8080) do
@@ -22,7 +23,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file('/usr/lib/jenkins/jenkins-cli.jar') do
+    describe file("#{$libdir}/jenkins-cli.jar") do
       it { should be_file }
     end
 
@@ -42,8 +43,8 @@ describe 'jenkins class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_changes => true)
     end
 
     describe port(8080) do
@@ -71,8 +72,8 @@ describe 'jenkins class' do
         EOS
 
         # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_changes => true)
+        apply(pp, :catch_failures => true)
+        apply(pp, :catch_changes => true)
       end
 
       describe port(8080) do

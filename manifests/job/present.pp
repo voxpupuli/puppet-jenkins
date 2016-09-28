@@ -2,6 +2,8 @@
 #
 #   Creates or updates a jenkins build job
 #
+#   This define should be considered private.
+#
 # Parameters:
 #
 #   config
@@ -10,21 +12,31 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = 1
-#     if the job should be enabled
+#   enabled
+#     deprecated parameter (will have no effect if set)
+#
+#   difftool = '/usr/bin/diff -b -q'
+#     optional parameter to check for modified job configs
+#
+#   seed_only = false
+#     optional parameter to mark this job a "seederjob"
+#     (a job created, but not updated, so that other modules 
+#     can trigger the run, enable the job etc.)
 #
 define jenkins::job::present(
   $config,
   $jobname   = $title,
-  $enabled   = 1,
+  $enabled   = undef,
   $difftool  = '/usr/bin/diff -b -q',
   $seed_only = false,
 ){
+  validate_string($config)
+  validate_string($jobname)
+  validate_string($difftool)
+  validate_bool(str2bool($seed_only))
+
   include jenkins::cli
   include jenkins::cli::reload
-
-  validate_string($difftool)
-  validate_bool($seed_only)
 
   if $jenkins::service_ensure == 'stopped' or $jenkins::service_ensure == false {
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
@@ -78,46 +90,24 @@ define jenkins::job::present(
     require => File[$tmp_config_path],
   }
 
-  if ($seed_only) {
-    $_update_unless  = '/bin/true'
-    $_enable_onlyif  = '/bin/false'
-    $_disable_onlyif = '/bin/false'
+  ## if this a "seed only" job (a job only created and not updated)
+  ## we never update, otherwise only if diff 
+  if $seed_only {
+    notice("Jenkins job ${jobname} exists, config will not be updated as seed_only=${seed_only}")
   } else {
-    $_update_unless  = "${difftool} ${config_path} ${tmp_config_path}"
-    $_enable_onlyif  = "cat \"${config_path}\" | grep '<disabled>true'"
-    $_disable_onlyif = "cat \"${config_path}\" | grep '<disabled>false'"
-  }
-
-
-  # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
-  exec { "jenkins update-job ${jobname}":
-    command => "${cat_config} | ${update_job}",
-    onlyif  => "test -e ${config_path}",
-    unless  => $_update_unless,
-    require => File[$tmp_config_path],
-    notify  => Exec['reload-jenkins'],
-  }
-
-  # Enable or disable the job (if necessary)
-  if ($enabled == 1) {
-    exec { "jenkins enable-job ${jobname}":
-      command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => $_enable_onlyif,
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
-    }
-  } else {
-    exec { "jenkins disable-job ${jobname}":
-      command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => $_disable_onlyif,
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
+    # Use Jenkins CLI to update the job if it already exists
+    $update_job = "${jenkins_cli} update-job ${jobname}"
+    exec { "jenkins update-job ${jobname}":
+      command => "${cat_config} | ${update_job}",
+      onlyif  => "test -e ${config_path}",
+      unless  => "${difftool} ${config_path} ${tmp_config_path}",
+      require => File[$tmp_config_path],
+      notify  => Exec['reload-jenkins'],
     }
   }
 
+  # Deprecation warning if $enabled is set
+  if $enabled != undef {
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
+  }
 }

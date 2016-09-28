@@ -8,9 +8,10 @@ require 'puppet_x/jenkins/provider/cli'
 
 describe PuppetX::Jenkins::Provider::Cli do
   AuthError = PuppetX::Jenkins::Provider::Cli::AuthError
+  NetError = PuppetX::Jenkins::Provider::Cli::NetError
   UnknownError = PuppetX::Jenkins::Provider::Cli::UnknownError
 
-  CLI_AUTH_ERRORS =  [<<-EOS, <<-EOS, <<-EOS]
+  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS]
     anonymous is missing the Overall/Read permission
   EOS
     You must authenticate to access this Jenkins.
@@ -19,10 +20,16 @@ describe PuppetX::Jenkins::Provider::Cli do
     anonymous is missing the Overall/RunScripts permission
   EOS
 
+  CLI_NET_ERRORS = [<<-EOS, <<-EOS]
+    SEVERE: I/O error in channel CLI connection
+  EOS
+    java.net.SocketException: Connection reset
+  EOS
+
   shared_context 'facts' do
     before do
       Facter.add(:jenkins_cli_jar) { setcode { 'fact.jar' } }
-      Facter.add(:jenkins_port) { setcode { 11 } }
+      Facter.add(:jenkins_url) { setcode { 'http://localhost:11' } }
       Facter.add(:jenkins_ssh_private_key) { setcode { 'fact.id_rsa' } }
       Facter.add(:jenkins_puppet_helper) { setcode { 'fact.groovy' } }
       Facter.add(:jenkins_cli_tries) { setcode { 22 } }
@@ -35,7 +42,7 @@ describe PuppetX::Jenkins::Provider::Cli do
   before(:each) do
     # clear class level state
     if described_class.class_variable_defined?(:@@cli_auth_required)
-       described_class.class_variable_set(:@@cli_auth_required, false)
+      described_class.class_variable_set(:@@cli_auth_required, false)
     end
   end
 
@@ -43,28 +50,28 @@ describe PuppetX::Jenkins::Provider::Cli do
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
-  describe "::suitable?" do
+  describe '::suitable?' do
     it { expect(described_class.suitable?).to eq true }
   end
 
   include_examples 'confines to cli dependencies'
 
-  describe "::sname" do
-    it "should return a short class name" do
-      expect(described_class.sname).to eq "Jenkins::Provider::Cli"
+  describe '::sname' do
+    it 'should return a short class name' do
+      expect(described_class.sname).to eq 'Jenkins::Provider::Cli'
     end
   end
 
-  describe "::instances" do
-    it "should not be implemented" do
+  describe '::instances' do
+    it 'should not be implemented' do
       expect{ described_class.instances }.to raise_error(Puppet::DevError)
     end
   end
 
-  describe "::prefetch" do
+  describe '::prefetch' do
     let(:catalog) { Puppet::Resource::Catalog.new }
 
-    it "should associate a provider with an instance" do
+    it 'should associate a provider with an instance' do
       resource = Puppet::Type.type(:notify).new(:name => 'test')
       catalog.add_resource resource
 
@@ -399,7 +406,7 @@ describe PuppetX::Jenkins::Provider::Cli do
           jenkins = Puppet::Type.type(:component).new(
             :name            => 'jenkins::cli::config',
             :cli_jar         => 'cat.jar',
-            :port            => 111,
+            :url             => 'http://localhost:111',
             :ssh_private_key => 'cat.id_rsa',
             :cli_tries       => 222,
             :cli_try_sleep   => 333,
@@ -518,6 +525,28 @@ describe PuppetX::Jenkins::Provider::Cli do
       end # with ssh_private_key
     end # auth failure
 
+    context 'network failure' do
+      context 'without ssh_private_key' do
+        CLI_NET_ERRORS.each do |error|
+          it 'should not retry cli on AuthError exception' do
+            expect(described_class.superclass).to receive(:execute).with(
+              [
+                'java',
+                '-jar', '/usr/lib/jenkins/jenkins-cli.jar',
+                '-s', 'http://localhost:8080',
+                'foo'
+              ],
+              { :failonfail => true, :combine => true }
+            ).exactly(30).times.and_raise(NetError, error)
+
+            expect { described_class.cli('foo') }.
+              to raise_error(NetError)
+          end
+        end
+      end
+      # without ssh_private_key
+    end # network failure
+
     context 'when UnknownError exception' do
       let(:catalog) { Puppet::Resource::Catalog.new }
 
@@ -536,10 +565,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(30).times.and_raise(UnknownError, "foo")
+          ).exactly(30).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from catalog value' do
@@ -557,10 +586,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(2).times.and_raise(UnknownError, "foo")
+          ).exactly(2).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from fact' do
@@ -579,10 +608,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(3).times.and_raise(UnknownError, "foo")
+          ).exactly(3).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
 
         it 'from catalog overriding fact' do
@@ -602,10 +631,10 @@ describe PuppetX::Jenkins::Provider::Cli do
               'foo'
             ],
             { :failonfail => true, :combine => true }
-          ).exactly(2).times.and_raise(UnknownError, "foo")
+          ).exactly(2).times.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', { :catalog => catalog }) }.
-            to raise_error(UnknownError, "foo")
+            to raise_error(UnknownError, 'foo')
         end
       end # n times
 

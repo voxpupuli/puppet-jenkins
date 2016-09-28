@@ -2,11 +2,18 @@ require 'spec_helper'
 
 describe 'jenkins', :type => :module do
   # Switching OS Family to prevent duplicate declaration
-  let(:facts) { { :osfamily => 'Redhat', :operatingsystem => 'CentOS' } }
+  let(:facts) do
+    {
+      :osfamily                  => 'Redhat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
 
   context 'repo::el' do
     describe 'default' do
-      it { should contain_yumrepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/redhat/') }
+      it { should contain_yumrepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/redhat-stable/') }
       it { should contain_yumrepo('jenkins').with_proxy(nil) }
     end
 
@@ -14,6 +21,12 @@ describe 'jenkins', :type => :module do
       let(:params) { { :lts => true } }
       it { should contain_yumrepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/redhat-stable/') }
       it { should contain_yumrepo('jenkins').with_proxy(nil) }
+    end
+
+    describe 'lts = false' do
+      let(:params) { { :lts => false } }
+      it { should contain_yumrepo('jenkins').with_proxy(nil) }
+      it { should contain_yumrepo('jenkins').with_baseurl('http://pkg.jenkins-ci.org/redhat/') }
     end
 
     describe 'repo_proxy is set' do

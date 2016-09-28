@@ -18,8 +18,8 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = true
-#     whether to enable the job
+#   enabled
+#     deprecated parameter (will have no effect if set)
 #
 #   ensure = 'present'
 #     choose 'absent' to ensure the job is removed
@@ -33,18 +33,26 @@
 #
 define jenkins::job(
   $config,
-  $source    = undef,
-  $template  = undef,
-  $jobname   = $title,
-  $enabled   = 1,
-  $ensure    = 'present',
-  $difftool  = '/usr/bin/diff -b -q',
+  $source   = undef,
+  $template = undef,
+  $jobname  = $title,
+  $enabled  = undef,
+  $ensure   = 'present',
+  $difftool = '/usr/bin/diff -b -q',
   $seed_only = false,
 ){
-  include ::jenkins::cli
-
+  validate_string($config)
+  if $source { validate_absolute_path($source) }
+  if $template { validate_absolute_path($template) }
+  validate_string($jobname)
+  if $enabled != undef {
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
+  }
+  validate_re($ensure, '^present$|^absent$')
   validate_string($difftool)
-  validate_bool($seed_only)
+  validate_bool(str2bool($seed_only))
+
+  include ::jenkins::cli
 
   Class['jenkins::cli'] ->
     Jenkins::Job[$title] ->
@@ -56,11 +64,9 @@ define jenkins::job(
     }
   } else {
     if $source {
-      validate_string($source)
       $realconfig = file($source)
     }
     elsif $template {
-      validate_string($template)
       $realconfig = template($template)
     }
     else {

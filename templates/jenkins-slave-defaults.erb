@@ -9,8 +9,8 @@ JAVA=/usr/bin/java
 # arguments to pass to java
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-<% if @java_args -%>
-JAVA_ARGS="<%= @java_args -%>"
+<% if @_real_java_args -%>
+JAVA_ARGS="<%= @_real_java_args -%>"
 <% end -%>
 
 PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
@@ -45,7 +45,7 @@ MAXOPENFILES=8192
 
 MASTER_URL="<%= @masterurl -%>"
 AUTO_DISCOVERY_ADDRESS="<%= @autodiscoveryaddress -%>"
-LABELS="<%= @labels -%>"
+LABELS="<%= @_real_labels -%>"
 
 EXECUTORS=<%= @executors -%>
 
@@ -84,7 +84,7 @@ fi
 <% if @tool_locations %>
   TOOL_LOCATIONS_ARG=""
   <% @tool_locations.split.each do |tool_location| %>
-    TOOL_LOCATIONS_ARG='$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>'
+    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>"
   <% end %>
 <% end %>
 

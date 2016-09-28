@@ -11,7 +11,7 @@ class PuppetX::Jenkins::Config
 
   DEFAULTS = {
     :cli_jar         => '/usr/lib/jenkins/jenkins-cli.jar',
-    :port            => 8080,
+    :url             => 'http://localhost:8080',
     :ssh_private_key => nil,
     :puppet_helper   => '/usr/lib/jenkins/puppet_helper.groovy',
     :cli_tries       => 30,
@@ -26,7 +26,7 @@ class PuppetX::Jenkins::Config
 
   def [](key)
     key = key.to_sym
-    raise UnknownConfig unless DEFAULTS.has_key?(key)
+    raise UnknownConfig unless DEFAULTS.key?(key)
 
     value = catalog_lookup(key) || fact_lookup(key) || default_lookup(key)
     return if value.nil?

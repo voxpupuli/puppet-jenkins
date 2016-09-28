@@ -7,6 +7,8 @@ require 'puppet_x/jenkins/provider'
 class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
   # stdout/stderr indicates an authentication failure
   class AuthError < Puppet::ExecutionFailure; end
+  # network / jenkins not ready for connections
+  class NetError < Puppet::ExecutionFailure; end
   # any other execution error
   class UnknownError < Puppet::ExecutionFailure; end
 
@@ -143,7 +145,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
 
     config = PuppetX::Jenkins::Config.new(catalog)
     cli_jar         = config[:cli_jar]
-    port            = config[:port]
+    url             = config[:url]
     ssh_private_key = config[:ssh_private_key]
     cli_tries       = config[:cli_tries]
     cli_try_sleep   = config[:cli_try_sleep]
@@ -151,7 +153,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = [
       command(:java),
       '-jar', cli_jar,
-      '-s', "http://localhost:#{port}",
+      '-s', url,
     ]
 
     cli_cmd = base_cmd + [command]
@@ -173,7 +175,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
       :max_tries          => cli_tries,
       :base_sleep_seconds => 1,
       :max_sleep_seconds  => cli_try_sleep,
-      :rescue             => UnknownError,
+      :rescue             => [UnknownError, NetError],
       :handler            => handler,
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
@@ -218,10 +220,19 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
   # convert Puppet::ExecutionFailure into a ::AuthError exception if it appears
   # that the command failure was due to an authication problem
   def self.execute_exceptionify(*args)
-    cli_auth_errors = ['You must authenticate to access this Jenkins.',
-                       'anonymous is missing the Overall/Read permission',
-                       'anonymous is missing the Overall/RunScripts permission',
+    cli_auth_errors = [
+                        'You must authenticate to access this Jenkins.',
+                        'anonymous is missing the Overall/Read permission',
+                        'anonymous is missing the Overall/RunScripts permission',
                       ]
+    # network errors / jenkins not ready for connections not related to
+    # authenication failures
+    net_errors = [
+                   'SEVERE: I/O error in channel CLI connection',
+                   'java.net.SocketException: Connection reset',
+                   'java.net.ConnectException: Connection refused',
+                   'java.io.IOException: Failed to connect',
+                 ]
     begin
       #return Puppet::Provider.execute(*args)
       return superclass.execute(*args)
@@ -229,6 +240,12 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
       cli_auth_errors.each do |error|
         if e.message.match(error)
           raise AuthError, e.message, e.backtrace
+        end
+      end
+
+      net_errors.each do |error|
+        if e.message.match(error)
+          raise NetError, e.message, e.backtrace
         end
       end
 

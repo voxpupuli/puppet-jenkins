@@ -1,7 +1,14 @@
 require 'spec_helper'
 
 describe 'jenkins', :type => :module do
-  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:facts) do
+    {
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemrelease    => '6.7',
+      :operatingsystemmajrelease => '6',
+    }
+  end
   let(:params) { { :direct_download => 'http://local.space/jenkins.rpm' } }
 
   describe 'direct_download' do
@@ -22,7 +29,14 @@ describe 'jenkins', :type => :module do
     end
 
     context 'staging resource created' do
-      it { should contain_staging__file('jenkins.rpm').with_source('http://local.space/jenkins.rpm') }
+      it do
+        should contain_archive('jenkins.rpm').with(
+          :source  => 'http://local.space/jenkins.rpm',
+          :path    => '/var/cache/jenkins_pkgs/jenkins.rpm',
+          :cleanup => false,
+          :extract => false,
+        ).that_comes_before('Package[jenkins]')
+      end
     end
 
     context 'package removable' do

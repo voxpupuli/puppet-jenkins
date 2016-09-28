@@ -18,7 +18,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   # converged might require one of those accounts for administrative control
   autorequire(:jenkins_user) do
     catalog.resources.find_all do |r|
-     r.is_a?(Puppet::Type.type(:jenkins_user))
+      r.is_a?(Puppet::Type.type(:jenkins_user))
     end
   end
 
@@ -27,7 +27,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   autorequire(:jenkins_security_realm) do
     if self[:ensure] == :present
       catalog.resources.find_all do |r|
-       r.is_a?(Puppet::Type.type(:jenkins_security_realm))
+        r.is_a?(Puppet::Type.type(:jenkins_security_realm))
       end
     end
   end

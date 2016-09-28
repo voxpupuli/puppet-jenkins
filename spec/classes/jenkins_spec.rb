@@ -3,9 +3,14 @@ require 'spec_helper'
 # Note, rspec-puppet determines the class name from the top level describe
 # string.
 describe 'jenkins', :type => :module do
-  describe "on RedHat" do
+  describe 'on RedHat' do
     let(:facts) do
-      { :osfamily => 'RedHat', :operatingsystem => 'CentOS' }
+      {
+        :osfamily                  => 'RedHat',
+        :operatingsystem           => 'CentOS',
+        :operatingsystemrelease    => '6.7',
+        :operatingsystemmajrelease => '6',
+      }
     end
 
     describe 'default' do
@@ -74,7 +79,7 @@ describe 'jenkins', :type => :module do
       end
 
       context '"false"' do
-        let(:params) {{ :manage_datadirs => "false" }}
+        let(:params) {{ :manage_datadirs => 'false' }}
         it { should raise_error(Puppet::Error, /is not a boolean/) }
       end
 

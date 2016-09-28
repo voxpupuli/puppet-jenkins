@@ -1,0 +1,9 @@
+HOSTS:
+  centos-7-x64:
+    platform: el-7-x86_64
+    hypervisor : docker
+    docker_preserve_image: true
+    dockerfile: spec/acceptance/nodesets/centos-7-docker.Dockerfile
+CONFIG:
+  type: foss
+  log_level: debug

@@ -8,7 +8,7 @@
 # resource face.  No defaults should be set in this classes definition.
 class jenkins::cli::config(
   $cli_jar                 = undef,
-  $port                    = undef,
+  $url                     = undef,
   $ssh_private_key         = undef,
   $puppet_helper           = undef,
   $cli_tries               = undef,
@@ -16,17 +16,29 @@ class jenkins::cli::config(
   $ssh_private_key_content = undef,
 ) {
   if $cli_jar { validate_absolute_path($cli_jar) }
-  if $port { validate_integer($port) }
+  validate_string($url)
   if $ssh_private_key { validate_absolute_path($ssh_private_key) }
   if $puppet_helper { validate_absolute_path($puppet_helper) }
   if $cli_tries { validate_integer($cli_tries) }
   if $cli_try_sleep { validate_numeric($cli_try_sleep) }
   validate_string($ssh_private_key_content)
 
+  if str2bool($::is_pe) {
+    $gem_provider = 'pe_gem'
+  } elsif $::puppetversion
+      and (versioncmp($::puppetversion, '4.0.0') >= 0)
+      and $::rubysitedir
+      and ('/opt/puppetlabs/puppet/lib/ruby' in $::rubysitedir) {
+    # AIO puppet
+    $gem_provider = 'puppet_gem'
+  } else {
+    $gem_provider = 'gem'
+  }
+
   # required by PuppetX::Jenkins::Provider::Clihelper base
   if ! defined(Package['retries']) {
     package { 'retries':
-      provider => 'gem',
+      provider => $gem_provider,
     }
   }
 

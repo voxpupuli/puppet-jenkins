@@ -31,7 +31,7 @@ However, the version included in this module has provides some additional
 setup.  The parameters used to override default values are:
 
 * `cli_jar`
-* `port`
+* `url`
 * `ssh_private_key`
 * `puppet_helper`
 * `cli_tries`
@@ -48,11 +48,19 @@ class { 'jenkins::cli::config':
 }
 ```
 
+An example of setting an alternative port number and an addition of a prefix.
+
+```
+class { 'jenkins::cli::config':
+  url => 'http://localhost:9999/awesome-jenkins',
+}
+```
+
 These values may also be set via facts with the same name after the prefix
 `jenkins_`.  Class parameters have precedence over fact values.
 
 * `jenkins_cli_jar`
-* `jenkins_port`
+* `jenkins_url`
 * `jenkins_ssh_private_key`
 * `jenkins_puppet_helper`
 * `jenkins_cli_tries`
@@ -231,6 +239,7 @@ jenkins_credentials { '<id>':
 
 * `UsernamePasswordCredentialsImpl`
 * `BasicSSHUserPrivateKey`
+* `FileCredentialsImpl`
 
 XXX This type has properties for other credentials classes that are not currently supported.
 
@@ -264,16 +273,37 @@ jenkins_credentials { 'a0469025-1202-4007-983d-0c62f230f1a7':
 }
 ```
 
+#### `FileCredentialsImpl`
+
+Using this credential type requires that the jenkins `plain-credentials` plugin
+has been installed.
+
+```
+jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
+  ensure      => 'present',
+  description => 'secret string',
+  domain      => undef,
+  impl        => 'StringCredentialsImpl',
+  scope       => 'SYSTEM',
+  secret      => '42',
+}
+```
+
 ### `jenkins_job`
 
 ```
 jenkins_job { 'job name':
-  config => '<xml config string>',
-  enable => true, # true | false
+  ensure    => 'present', # present | absent
+  enable    => true, # true | false
+  config    => '<xml config string>',
+  show_diff => true, # true | false
 }
 ```
 
-XXX Note that enable is prefetch correctly but the value is ignored when
+Has basic support for the `cloudbees-folder` plugin including automatically
+ordering parent folders before nested jobs.
+
+XXX Note that enable is prefetched correctly but the value is ignored when
 syncing.
 
 ```
@@ -435,9 +465,6 @@ TODO
 
 * determine what to do about `jenkins_job` `enable` parameter which potentially
   breaks idempotency
-
-* add a method to `puppet_helper.groovy` to list all jobs so that `jenkins_job`
-  does not need to make multiple cli invocations when prefetching
 
 * test that the transition from authentication being required to disabled is
   properly handled
