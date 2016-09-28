@@ -33,12 +33,12 @@
 #
 define jenkins::job(
   $config,
-  $source   = undef,
-  $template = undef,
-  $jobname  = $title,
-  $enabled  = undef,
-  $ensure   = 'present',
-  $difftool = '/usr/bin/diff -b -q',
+  $source    = undef,
+  $template  = undef,
+  $jobname   = $title,
+  $enabled   = undef,
+  $ensure    = 'present',
+  $difftool  = '/usr/bin/diff -b -q',
   $seed_only = false,
 ){
   validate_string($config)
