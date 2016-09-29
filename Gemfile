@@ -7,7 +7,7 @@ gem 'rspec-puppet', '~> 2.1.0'
 gem 'puppetlabs_spec_helper',   :require => false
 gem 'puppet-syntax', '>= 1.1.0'
 gem 'json'
-gem 'puppet', ENV['PUPPET_VERSION'] || '~> 3.5'
+gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7'
 gem 'metadata-json-lint'
 gem 'retries', '~> 0.0.5'
 gem 'travis', '~> 1.8'
