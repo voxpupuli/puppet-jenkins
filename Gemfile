@@ -27,7 +27,7 @@ group :development do
 end
 
 group :system_tests do
-  gem 'beaker-rspec',  :require => false
+  gem 'beaker-rspec', '~> 5.6.0', :require => false
   gem 'serverspec',    :require => false
   gem 'vagrant-wrapper',:require => false
   gem 'beaker-puppet_install_helper', :require => false
