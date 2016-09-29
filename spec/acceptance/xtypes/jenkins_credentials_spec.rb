@@ -51,6 +51,7 @@ describe 'jenkins_credentials' do
 
           # Run it twice and test for idempotency
           apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
           #apply(pp, :catch_failures => true)
         end
 
