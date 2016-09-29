@@ -163,6 +163,7 @@ EOS
           EOS
 
           apply(pp, :catch_failures => true)
+          apply(pp, :catch_failures => true)
         end
 
         %w{
