@@ -21,7 +21,7 @@ describe 'jenkins', :type => :module do
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
       it { should_not contain_class 'jenkins::firewall' }
-      it { should_not contain_class 'jenkins::proxy' }
+      it { should contain_class 'jenkins::proxy' }
       it { should contain_class 'jenkins::repo' }
       it { should contain_class 'jenkins::repo::el' }
       it { should_not contain_class 'jenkins::repo::debian' }
@@ -40,12 +40,12 @@ describe 'jenkins', :type => :module do
 
     describe 'with only proxy host' do
       let(:params) { { :proxy_host => '1.2.3.4' } }
-      it { should_not contain_class('jenkins::proxy') }
+      it { should contain_class('jenkins::proxy') }
     end
 
     describe 'with only proxy_port' do
       let(:params) { { :proxy_port => 1234 } }
-      it { should_not contain_class('jenkins::proxy') }
+      it { should contain_class('jenkins::proxy') }
     end
 
     describe 'with proxy_host and proxy_port' do

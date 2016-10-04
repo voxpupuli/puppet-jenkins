@@ -10,6 +10,8 @@ class jenkins::direct_download {
   validate_string($::jenkins::direct_download)
   validate_absolute_path($::jenkins::package_cache_dir)
 
+  include ::jenkins::proxy
+
   # directory for temp files
   file { $::jenkins::package_cache_dir:
     ensure => directory,
@@ -29,7 +31,7 @@ class jenkins::direct_download {
     archive { $package_file:
       source       => $jenkins::direct_download,
       path         => $local_file,
-      proxy_server => $::jenkins::proxy_server,
+      proxy_server => $::jenkins::proxy::url,
       cleanup      => false,
       extract      => false,
       before       => Package[$::jenkins::package_name],

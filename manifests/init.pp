@@ -268,20 +268,7 @@ class jenkins(
   include jenkins::plugins
   include jenkins::jobs
   include jenkins::users
-
-  if $proxy_host and $proxy_port {
-    class { 'jenkins::proxy':
-      require => Package['jenkins'],
-      notify  => Service['jenkins']
-    }
-
-    # param format needed by puppet/archive
-    $proxy_server = "http://${jenkins::proxy_host}:${jenkins::proxy_port}"
-  } else {
-    $proxy_server = undef
-  }
-
-
+  include jenkins::proxy
   include jenkins::service
 
   if defined('::firewall') {
