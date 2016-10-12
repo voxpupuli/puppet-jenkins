@@ -51,6 +51,10 @@
 #   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert.
 #   Defaults to false.
 #
+# [*disable_clients_unique_id*]
+#   Disable setting the unique id for the swarm client
+#   Defaults to false
+#
 # [*labels*]
 #   Not required.  String, or Array, that contains the list of labels to be assigned for this slave.
 #
@@ -103,30 +107,31 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
-  $slave_name               = undef,
-  $description              = undef,
-  $masterurl                = undef,
-  $autodiscoveryaddress     = undef,
-  $ui_user                  = undef,
-  $ui_pass                  = undef,
-  $version                  = $jenkins::params::swarm_version,
-  $executors                = 2,
-  $manage_slave_user        = true,
-  $slave_user               = 'jenkins-slave',
-  $slave_groups             = undef,
-  $slave_uid                = undef,
-  $slave_home               = '/home/jenkins-slave',
-  $slave_mode               = 'normal',
+  $slave_name                = undef,
+  $description               = undef,
+  $masterurl                 = undef,
+  $autodiscoveryaddress      = undef,
+  $ui_user                   = undef,
+  $ui_pass                   = undef,
+  $version                   = $jenkins::params::swarm_version,
+  $executors                 = 2,
+  $manage_slave_user         = true,
+  $slave_user                = 'jenkins-slave',
+  $slave_groups              = undef,
+  $slave_uid                 = undef,
+  $slave_home                = '/home/jenkins-slave',
+  $slave_mode                = 'normal',
   $disable_ssl_verification = false,
-  $labels                   = undef,
-  $tool_locations           = undef,
-  $install_java             = $jenkins::params::install_java,
-  $manage_client_jar        = true,
-  $ensure                   = 'running',
-  $enable                   = true,
-  $source                   = undef,
-  $java_args                = undef,
-  $proxy_server             = undef,
+  $disable_clients_unique_id = false,
+  $labels                    = undef,
+  $tool_locations            = undef,
+  $install_java              = $jenkins::params::install_java,
+  $manage_client_jar         = true,
+  $ensure                    = 'running',
+  $enable                    = true,
+  $source                    = undef,
+  $java_args                 = undef,
+  $proxy_server              = undef,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
