@@ -12,18 +12,17 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = true
-#     if the job should be enabled
+#   enabled
+#     deprecated parameter (will have no effect if set)
 #
 define jenkins::job::present(
   $config,
   $jobname  = $title,
-  $enabled  = true,
+  $enabled  = undef,
   $difftool = '/usr/bin/diff -b -q',
 ){
   validate_string($config)
   validate_string($jobname)
-  validate_bool($enabled)
   validate_string($difftool)
 
   include jenkins::cli
@@ -91,25 +90,8 @@ define jenkins::job::present(
     notify  => Exec['reload-jenkins'],
   }
 
-  # Enable or disable the job (if necessary)
-  if ($enabled) {
-    exec { "jenkins enable-job ${jobname}":
-      command => "${jenkins_cli} enable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>true'",
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
-    }
-  } else {
-    exec { "jenkins disable-job ${jobname}":
-      command => "${jenkins_cli} disable-job \"${jobname}\"",
-      onlyif  => "cat \"${config_path}\" | grep '<disabled>false'",
-      require => [
-        Exec["jenkins create-job ${jobname}"],
-        Exec["jenkins update-job ${jobname}"],
-      ],
-    }
+  # Deprecation warning if $enabled is set
+  if $enabled != undef {
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
-
 }

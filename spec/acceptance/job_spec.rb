@@ -59,6 +59,7 @@ EOS
   end
 
   context 'disable' do
+    pending('Parameter $enabled is now deprecated, no need to test')
     it 'should work with no errors' do
       pp = <<-EOS
       class {'jenkins': }
@@ -81,10 +82,9 @@ EOS
       it { should be_grouped_into 'jenkins' }
       it { should be_mode 644 }
       it { should contain '<description>test job</description>' }
-      it { should contain '<disabled>true</disabled>' }
       it { should contain '<command>/usr/bin/true</command>' }
     end
-  end
+  end # deprecated param enabled
 
   context 'delete' do
     it 'should work with no errors' do

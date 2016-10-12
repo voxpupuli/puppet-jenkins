@@ -6,11 +6,6 @@ This is intended to be a re-usable
 [Puppet](http://www.puppetlabs.com/puppet/introduction/) module that you can
 include in your own tree.
 
-# Jenkins 2
-
-This module does not presently support Jenkins 2.x due to incompatible changes
-with 1.x.  Support is planned for a future release.
-
 # Experimental Types and Providers
 
 _The experimental types/providers are **not for the faint of heart**. If you are

@@ -1,7 +1,7 @@
 {
   "name": "rtyler-jenkins",
-  "version": "1.6.1",
-  "author": "R. Tyler Croy <tyler@monkeypox.org>",
+  "version": "1.7.0",
+  "author": "R. Tyler Croy <tyler@monkeypox.org>, Joshua Hoblitt <josh@hoblitt.com>",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
   "source": "https://github.com/jenkinsci/puppet-jenkins",

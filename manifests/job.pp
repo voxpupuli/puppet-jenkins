@@ -18,8 +18,8 @@
 #   jobname = $title
 #     the name of the jenkins job
 #
-#   enabled = true
-#     whether to enable the job
+#   enabled
+#     deprecated parameter (will have no effect if set)
 #
 #   ensure = 'present'
 #     choose 'absent' to ensure the job is removed
@@ -32,7 +32,7 @@ define jenkins::job(
   $source   = undef,
   $template = undef,
   $jobname  = $title,
-  $enabled  = true,
+  $enabled  = undef,
   $ensure   = 'present',
   $difftool = '/usr/bin/diff -b -q',
 ){
@@ -40,11 +40,8 @@ define jenkins::job(
   if $source { validate_absolute_path($source) }
   if $template { validate_absolute_path($template) }
   validate_string($jobname)
-  if ! is_bool($enabled) {
-    warning("Passing non-boolean values to jenkins::job::enabled is deprecated-- ${enabled} is not a boolean")
-    $real_enabled = num2bool($enabled)
-  } else {
-    $real_enabled = $enabled
+  if $enabled != undef {
+    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
   validate_re($ensure, '^present$|^absent$')
   validate_string($difftool)
@@ -73,7 +70,7 @@ define jenkins::job(
     jenkins::job::present { $title:
       config   => $realconfig,
       jobname  => $jobname,
-      enabled  => $real_enabled,
+      enabled  => $enabled,
       difftool => $difftool,
     }
   }

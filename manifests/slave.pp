@@ -12,7 +12,8 @@
 #   Specify the name of the slave.  Not required, by default it will use the fqdn.
 #
 # [*masterurl*]
-#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will be skipped.
+#   Specify the URL of the master server.  Not required, the plugin will do a UDP autodiscovery. If specified, the autodiscovery will
+#   be skipped.
 #
 # [*autodiscoveryaddress*]
 #   Use this addresss for udp-based auto-discovery (default: 255.255.255.255)
@@ -33,6 +34,9 @@
 # [*slave_user*]
 #   Defaults to 'jenkins-slave'. Change it if you'd like..
 #
+# [*slave_groups*]
+#   Not required.  Use to add the slave_user to other groups if you need to.  Defaults to undef.
+#
 # [*slave_uid*]
 #   Not required.  Puppet will let your system add the user, with the new UID if necessary.
 #
@@ -40,16 +44,19 @@
 #   Defaults to '/home/jenkins-slave'.  This is where the code will be installed, and the workspace will end up.
 #
 # [*slave_mode*]
-#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only).
+#   Defaults to 'normal'. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive'
+#   (leave this machine for tied jobs only).
 #
 # [*disable_ssl_verification*]
-#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert. Defaults to false.
+#   Disable SSL certificate verification on Swarm clients. Not required, but is necessary if you're using a self-signed SSL cert.
+#   Defaults to false.
 #
 # [*labels*]
 #   Not required.  String, or Array, that contains the list of labels to be assigned for this slave.
 #
 # [*tool_locations*]
-#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'.
+#   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified
+#   as 'toolName:location'.
 #
 # [*java_version*]
 #   Specified which version of java will be used.
@@ -106,6 +113,7 @@ class jenkins::slave (
   $executors                = 2,
   $manage_slave_user        = true,
   $slave_user               = 'jenkins-slave',
+  $slave_groups             = undef,
   $slave_uid                = undef,
   $slave_home               = '/home/jenkins-slave',
   $slave_mode               = 'normal',
@@ -130,6 +138,7 @@ class jenkins::slave (
   validate_integer($executors)
   validate_bool($manage_slave_user)
   validate_string($slave_user)
+  if $slave_groups { validate_string($slave_groups) }
   if $slave_uid { validate_integer($slave_uid) }
   validate_absolute_path($slave_home)
   validate_re($slave_mode, '^normal$|^exclusive$')
@@ -144,7 +153,7 @@ class jenkins::slave (
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
-    undef   => "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
+    undef   => "https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
     default => $source,
   }
   $quoted_ui_user = shellquote($ui_user)
@@ -261,6 +270,7 @@ class jenkins::slave (
       managehome => $manage_user_home,
       system     => true,
       uid        => $slave_uid,
+      groups     => $slave_groups,
     }
   }
 
