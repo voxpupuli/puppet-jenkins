@@ -74,7 +74,7 @@ if [ -n "$MASTER_URL" ]; then
 fi
 
 if [ -n "$LABELS" ]; then
-  LABELS_ARG="-labels '$LABELS'"
+  LABELS_ARG="-labels \"${LABELS//\"}\""
 fi
 
 if [ -n "$FSROOT" ]; then
