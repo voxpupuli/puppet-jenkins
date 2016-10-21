@@ -22,17 +22,14 @@ define jenkins::credentials (
   $private_key_or_path = '',
   $ensure = 'present',
   $uuid = '',
-  $unless_tries = 20,
-  $unless_try_sleep = 5,
 ){
   validate_string($password)
   validate_string($description)
   validate_string($private_key_or_path)
   validate_re($ensure, '^present$|^absent$')
   validate_string($uuid)
-  validate_integer($unless_tries, '', 1)
-  validate_integer($unless_try_sleep, '', 1)
 
+  include ::jenkins
   include ::jenkins::cli_helper
 
   Class['jenkins::cli_helper'] ->
@@ -54,7 +51,7 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "for i in \$(seq 1 ${unless_tries}); do \$HELPER_CMD credential_info ${title} && break || sleep ${unless_try_sleep}; done | grep ${title}",
+        unless  => "for i in \$(seq 1 ${::jenkins::cli_tries}); do \$HELPER_CMD credential_info ${title} && break || sleep ${::jenkins::cli_try_sleep}; done | grep ${title}",
       }
     }
     'absent': {
