@@ -12,7 +12,7 @@ describe 'jenkins', :type => :module do
 
   context 'proxy' do
     context 'default' do
-      it { should_not contain_class('jenkins::proxy') }
+      it { should contain_class('jenkins::proxy') }
     end
 
     context 'with basic proxy config' do
