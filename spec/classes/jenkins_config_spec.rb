@@ -32,12 +32,6 @@ describe 'jenkins', :type => :module do
       context 'default' do
         it { should contain_class('jenkins::config') }
       end
-      context 'create config' do
-        let(:params) { { :config_hash => { 'AJP_PORT' => { 'value' => '1234' } } }}
-        it 'should fail' do
-          expect { should compile }.to raise_error(Puppet::Error)
-        end
-      end
     end
   end
 end
