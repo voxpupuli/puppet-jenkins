@@ -135,6 +135,19 @@ describe 'jenkins::slave' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
       end
     end
+    describe 'disable unique client id' do
+      let(:params) do
+        {
+          :disable_clients_unique_id => true
+        }
+      end
+      it 'should have disable variable' do
+        should contain_file(slave_runtime_file)
+          .with_content(/^DISABLE_UNIQUE="-disableClientsUniqueId"$/)
+        should contain_file(slave_runtime_file)
+          .with_content(/^JENKINS_SLAVE_ARGS=".*\s\$DISABLE_UNIQUE(.*)"$/)
+      end
+    end
   end
 
   shared_examples 'using slave_name' do
