@@ -20,7 +20,7 @@ describe Puppet::Jenkins do
           let(:home) { '/rspec/jenkins' }
 
           before :each do
-            File.should_receive(:expand_path).and_return(home)
+            allow(File).to receive(:expand_path).and_return(home)
           end
 
           it { should eql home }

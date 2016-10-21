@@ -24,18 +24,18 @@ describe 'jenkins', :type => :module do
         end
       end
     end
+  end
 
-    context 'on OpenBSD' do
-      let(:facts) { { :osfamily => 'OpenBSD', :operatingsystem => 'OpenBSD' } }
-      context 'config' do
-        context 'default' do
-          it { should contain_class('jenkins::config') }
-        end
-        context 'create config' do
-          let(:params) { { :config_hash => { 'AJP_PORT' => { 'value' => '1234' } } }}
-          it 'should fail' do
-            expect { should compile }.to raise_error
-          end
+  context 'on OpenBSD' do
+    let(:facts) { { :osfamily => 'OpenBSD', :operatingsystem => 'OpenBSD' } }
+    context 'config' do
+      context 'default' do
+        it { should contain_class('jenkins::config') }
+      end
+      context 'create config' do
+        let(:params) { { :config_hash => { 'AJP_PORT' => { 'value' => '1234' } } }}
+        it 'should fail' do
+          expect { should compile }.to raise_error(Puppet::Error)
         end
       end
     end

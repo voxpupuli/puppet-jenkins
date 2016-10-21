@@ -23,6 +23,8 @@ class jenkins::cli::config(
   if $cli_try_sleep { validate_numeric($cli_try_sleep) }
   validate_string($ssh_private_key_content)
 
+  include ::jenkins::params
+
   if str2bool($::is_pe) {
     $gem_provider = 'pe_gem'
   } elsif $::puppetversion
@@ -56,8 +58,8 @@ class jenkins::cli::config(
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
         # to retrive this information from.
-        owner => $::jenkins::user,
-        group => $::jenkins::group,
+        owner => $::jenkins::params::user,
+        group => $::jenkins::params::group,
       }
     }
   }

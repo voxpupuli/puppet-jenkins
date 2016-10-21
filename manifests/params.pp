@@ -22,7 +22,6 @@ class jenkins::params {
 
   $manage_user  = true
   $manage_group = true
-  $group        = 'jenkins'
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
