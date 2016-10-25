@@ -28,6 +28,7 @@ define jenkins::plugin(
   $pin             = true,
   # no worky
   $timeout         = undef,
+  $plugins_base    = 'download/plugins',
   # deprecated
   $plugin_dir      = undef,
   $username        = undef,
@@ -69,7 +70,7 @@ define jenkins::plugin(
       undef   => $::jenkins::default_plugins_host,
       default => $update_url,
     }
-    $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
+    $base_url = "${plugins_host}/${plugins_base}/${name}/${version}/"
     # Escape +'s in $version when constructing $search.
     # * We can't use single quotes for the replacement string because
     #   puppet 3 and puppet 4 interpret '\\' differently.

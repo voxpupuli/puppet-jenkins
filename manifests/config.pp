@@ -19,6 +19,7 @@ class jenkins::config {
     owner  => $::jenkins::user,
     group  => $::jenkins::group,
     mode   => '0755',
+    links  => follow,
   }
 
   # ensure_resource is used to try to maintain backwards compatiblity with

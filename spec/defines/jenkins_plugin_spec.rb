@@ -199,6 +199,29 @@ describe 'jenkins::plugin' do
         include_examples 'execute the right fetch command'
       end
     end
+
+    context 'with a custom plugins_base' do
+      let(:plugins_base) { 'custom_plugins_base' }
+
+      context 'without a version' do
+        let(:params) { {:plugins_base => plugins_base} }
+        let(:expected_url) do
+          "https://updates.jenkins-ci.org/latest/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+
+      context 'with a version' do
+        let(:version) { '1.2.3' }
+        let(:params) { {:plugins_base => plugins_base, :version => version} }
+        let(:expected_url) do
+          "https://updates.jenkins-ci.org/custom_plugins_base/#{title}/#{version}/#{title}.hpi"
+        end
+
+        include_examples 'execute the right fetch command'
+      end
+    end
   end
 
   describe 'source' do
