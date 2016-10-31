@@ -35,6 +35,11 @@
 #   Optionally specify an alternate location to download packages to when using
 #   direct_download
 #
+# manage_service = true (default)
+#   Enable management of Service[jenkins] by the module. When setting to false
+#   please ensure something else defines Service[jenkins] in order for some
+#   module functionality (e.g. jenkins::cli) to work properly
+#
 # service_enable = true (default)
 #   Enable (or not) the jenkins service
 #
@@ -176,6 +181,7 @@ class jenkins(
   $direct_download    = $::jenkins::params::direct_download,
   $package_cache_dir  = $jenkins::params::package_cache_dir,
   $package_provider   = $jenkins::params::package_provider,
+  $manage_service     = true,
   $service_enable     = $jenkins::params::service_enable,
   $service_ensure     = $jenkins::params::service_ensure,
   $service_provider   = $jenkins::params::service_provider,
@@ -212,6 +218,7 @@ class jenkins(
   validate_string($direct_download)
   validate_absolute_path($package_cache_dir)
   validate_string($package_provider)
+  validate_bool($manage_service)
   validate_bool($service_enable)
   validate_re($service_ensure, '^running$|^stopped$')
   validate_string($service_provider)
@@ -269,7 +276,10 @@ class jenkins(
   include jenkins::jobs
   include jenkins::users
   include jenkins::proxy
-  include jenkins::service
+
+  if $manage_service {
+    include jenkins::service
+  }
 
   if defined('::firewall') {
     if $configure_firewall == undef {
@@ -306,13 +316,15 @@ class jenkins(
         Class['jenkins::jobs']
   }
 
-  Anchor['jenkins::begin'] ->
-    Class[$jenkins_package_class] ->
-      Class['jenkins::config'] ->
-        Class['jenkins::plugins'] ~>
-          Class['jenkins::service'] ->
-            Class['jenkins::jobs'] ->
-              Anchor['jenkins::end']
+  if $manage_service {
+    Anchor['jenkins::begin'] ->
+      Class[$jenkins_package_class] ->
+        Class['jenkins::config'] ->
+          Class['jenkins::plugins'] ~>
+            Class['jenkins::service'] ->
+              Class['jenkins::jobs'] ->
+                Anchor['jenkins::end']
+  }
 
   if $install_java {
     Anchor['jenkins::begin'] ->
@@ -328,7 +340,7 @@ class jenkins(
           Anchor['jenkins::end']
   }
 
-  if $configure_firewall {
+  if ($configure_firewall and $manage_service) {
     Class['jenkins::service'] ->
       Class['jenkins::firewall'] ->
         Anchor['jenkins::end']

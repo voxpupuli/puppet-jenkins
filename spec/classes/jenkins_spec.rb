@@ -183,6 +183,23 @@ describe 'jenkins', :type => :module do
       end
     end # manage_user =>
 
+
+    describe 'manage_service =>' do
+      context '(default)' do
+        it { should contain_class 'jenkins::service' }
+      end
+
+      context 'false' do
+        let(:params) do
+          {
+            :manage_service => false,
+          }
+        end
+        it { should_not contain_class 'jenkins::service' }
+        it { should_not contain_service 'jenkins' }
+      end
+    end # manage_service =>
+
     describe 'user =>' do
       context '(default)' do
         it do
