@@ -11,7 +11,7 @@ gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7'
 gem 'metadata-json-lint'
 gem 'retries', '~> 0.0.5'
 gem 'travis', '~> 1.8'
-gem 'parallel_tests'
+gem 'parallel_tests', :platform => [:mri_20, :mri_21]
 gem 'rubocop', '< 0.42.0'
 
 gem 'json_pure', '< 2.0.2'
