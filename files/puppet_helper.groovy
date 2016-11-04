@@ -509,6 +509,10 @@ class Actions {
           info['private_key'] = cred.privateKey
           info['passphrase'] = cred.passphrase.plainText
           break
+        case 'com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl':
+          info['apiToken'] = cred.apiToken.plainText
+          info['description'] = cred.description
+          break
         case 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl':
           info['description'] = cred.description
           info['secret'] = cred.secret.plainText
