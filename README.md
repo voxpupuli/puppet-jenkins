@@ -190,7 +190,7 @@ the following `require` statement:
 
 ### Advanced features
 1. Plugin Hash - jenkins::plugins
-2. Config Hash - jennkins::config
+2. Config Hash - jenkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
 5. [CLI Helper](#cli-helper)
