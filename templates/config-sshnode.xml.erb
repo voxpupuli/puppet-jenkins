@@ -14,5 +14,15 @@
     <retryWaitTime>0</retryWaitTime>
   </launcher>
   <label></label>
-  <nodeProperties/>
+  <nodeProperties>
+    <hudson.tools.ToolLocationNodeProperty>
+      <locations>
+        <hudson.tools.ToolLocationNodeProperty_-ToolLocation>
+          <type>hudson.model.JDK$DescriptorImpl</type>
+          <name>jdk8</name>
+          <home><%=@jdk_home%></home>
+        </hudson.tools.ToolLocationNodeProperty_-ToolLocation>
+      </locations>
+    </hudson.tools.ToolLocationNodeProperty>
+  </nodeProperties>
 </slave>

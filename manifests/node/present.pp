@@ -45,6 +45,10 @@ define jenkins::node::present (
     require => Exec['jenkins-cli'],
   }
 
+  # Bring variables from Class['::jenkins'] into local scope.
+  $cli_tries     = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
+
   Exec {
     logoutput   => false,
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
@@ -55,14 +59,14 @@ define jenkins::node::present (
   $create_node = "${jenkins_cli} create-node \"${node_name}\""
   exec { "jenkins create-node ${title}":
     command => "${cat_config} | ${create_node}",
-    unless  => "${jenkins_cli} get-node \"${node_name}\"",
+    creates => ["${jenkins::localstatedir}/nodes/${node_name}"],
     require => File[$tmp_config_path]
   }
 
   $update_node = "${jenkins_cli} update-node ${node_name}"
   exec { "jenkins update-node ${title}":
     command => "${cat_config} | ${update_node}",
-    onlyif  => "${jenkins_cli} get-node \"${node_name}\"",
+    onlyif  => "test -e ${jenkins::localstatedir}/nodes/${node_name}/config.xml",
     require => File[$tmp_config_path],
     notify  => Exec['reload-jenkins']
   }

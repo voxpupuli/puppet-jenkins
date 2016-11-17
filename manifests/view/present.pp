@@ -45,6 +45,10 @@ define jenkins::view::present (
     require => Exec['jenkins-cli'],
   }
 
+  # Bring variables from Class['::jenkins'] into local scope.
+  $cli_tries     = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
+
   Exec {
     logoutput   => false,
     path        => '/bin:/usr/bin:/sbin:/usr/sbin',
