@@ -11,7 +11,7 @@ class jenkins::cli::reload {
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
     command     => "${::jenkins::cli::cmd} reload-configuration",
-    path        => ['/bin', '/usr/bin'],
+    path        => ['/bin', '/usr/bin', "${jenkins::jdk_home}/bin"],
     tries       => 10,
     try_sleep   => 2,
     refreshonly => true,

@@ -30,13 +30,12 @@ define jenkins::view::absent (
 
   Exec {
     logoutput   => false,
-    path        => '/bin:/usr/bin:/sbin:/usr/sbin',
+    path        => "/bin:/usr/bin:/sbin:/usr/sbin:${jenkins::jdk_home}/bin",
     tries       => $cli_tries,
     try_sleep   => $cli_try_sleep,
   }
 
   exec { "jenkins delete-view ${view_name}":
-    path      => ['/usr/bin', '/usr/sbin', '/bin'],
     command   => "${jenkins::cli::cmd} delete-view \"${view_name}\"",
     logoutput => false,
     onlyif    => "${jenkins::cli::cmd} get-view \"${view_name}\"",

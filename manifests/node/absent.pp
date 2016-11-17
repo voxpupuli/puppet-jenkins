@@ -30,7 +30,7 @@ define jenkins::node::absent (
 
   Exec {
     logoutput   => false,
-    path        => '/bin:/usr/bin:/sbin:/usr/sbin',
+    path        => "/bin:/usr/bin:/sbin:/usr/sbin:${jenkins::jdk_home}/bin",
     tries       => $cli_tries,
     try_sleep   => $cli_try_sleep,
   }
