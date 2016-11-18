@@ -33,6 +33,6 @@ class jenkins::security (
       'set_security',
       $security_model,
     ],
-    unless => "\$HELPER_CMD get_authorization_strategyname | grep -q -e '^${security_model}\$'",
+    unless  => "\$HELPER_CMD get_authorization_strategyname | grep -q -e '^${security_model}\$'",
   }
 }
