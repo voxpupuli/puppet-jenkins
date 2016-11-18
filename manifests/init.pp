@@ -291,7 +291,7 @@ class jenkins(
     include jenkins::service
     validate_array($default_plugins)
     if empty($default_plugins){
-      notice(sprintf("INFO: make sure you install the following plugins with your code using this module: %s",join($::jenkins::params::default_plugins,',')))
+      notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($::jenkins::params::default_plugins,',')))
     }
   }
 
