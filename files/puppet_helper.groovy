@@ -766,6 +766,22 @@ class Actions {
   }
 
   ////////////////////////
+  // get_authorization_strategyname
+  ////////////////////////
+  void get_authorization_strategyname() {
+
+    def authorizationStrategyName = ''
+    def j = Jenkins.getInstance()
+    def strategy = j.getAuthorizationStrategy()
+    if ((String)strategy.getClass().getName() == 'hudson.security.FullControlOnceLoggedInAuthorizationStrategy' ) {
+      authorizationStrategyName = 'full_control'
+    } else if ((String)strategy.getClass().getName() == 'hudson.security.AuthorizationStrategy$Unsecured' ) {
+      authorizationStrategyName = 'unsecured'
+    }
+    out.println(authorizationStrategyName)
+  }
+
+  ////////////////////////
   // get_authorization_strategy
   ////////////////////////
   void get_authorization_strategy() {
