@@ -175,6 +175,7 @@ The dependencies for this module currently are:
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
 * [archive module](https://forge.puppetlabs.com/puppet/archive)
+* [firewall module](https://forge.puppet.com/puppetlabs/firewall)
 
 ### Depending on Jenkins
 
