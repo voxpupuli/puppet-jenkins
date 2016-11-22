@@ -15,15 +15,25 @@
 #   enabled
 #     deprecated parameter (will have no effect if set)
 #
+#   difftool = '/usr/bin/diff -b -q'
+#     optional parameter to check for modified job configs
+#
+#   seed_only = false
+#     optional parameter to mark this job a "seederjob"
+#     (a job created, but not updated, so that other modules 
+#     can trigger the run, enable the job etc.)
+#
 define jenkins::job::present(
   $config,
-  $jobname  = $title,
-  $enabled  = undef,
-  $difftool = '/usr/bin/diff -b -q',
+  $jobname   = $title,
+  $enabled   = undef,
+  $difftool  = '/usr/bin/diff -b -q',
+  $seed_only = false,
 ){
   validate_string($config)
   validate_string($jobname)
   validate_string($difftool)
+  validate_bool(str2bool($seed_only))
 
   include jenkins::cli
   include jenkins::cli::reload
@@ -80,14 +90,20 @@ define jenkins::job::present(
     require => File[$tmp_config_path],
   }
 
-  # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
-  exec { "jenkins update-job ${jobname}":
-    command => "${cat_config} | ${update_job}",
-    onlyif  => "test -e ${config_path}",
-    unless  => "${difftool} ${config_path} ${tmp_config_path}",
-    require => File[$tmp_config_path],
-    notify  => Exec['reload-jenkins'],
+  ## if this a "seed only" job (a job only created and not updated)
+  ## we never update, otherwise only if diff 
+  if $seed_only {
+    notice("Jenkins job ${jobname} exists, config will not be updated as seed_only=${seed_only}")
+  } else {
+    # Use Jenkins CLI to update the job if it already exists
+    $update_job = "${jenkins_cli} update-job ${jobname}"
+    exec { "jenkins update-job ${jobname}":
+      command => "${cat_config} | ${update_job}",
+      onlyif  => "test -e ${config_path}",
+      unless  => "${difftool} ${config_path} ${tmp_config_path}",
+      require => File[$tmp_config_path],
+      notify  => Exec['reload-jenkins'],
+    }
   }
 
   # Deprecation warning if $enabled is set
