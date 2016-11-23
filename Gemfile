@@ -13,6 +13,8 @@ gem 'retries', '~> 0.0.5'
 gem 'travis', '~> 1.8'
 gem 'parallel_tests', :platform => [:mri_20, :mri_21]
 gem 'rubocop', '< 0.42.0'
+gem 'public_suffix', '1.4.6', :require => false if RUBY_VERSION <= '1.9.3'
+gem 'public_suffix',          :require => false if RUBY_VERSION > '1.9.3'
 
 gem 'json_pure', '< 2.0.2'
 gem 'net-http-persistent', '<= 2.9.4', :require => false if RUBY_VERSION < '2.0.0'
