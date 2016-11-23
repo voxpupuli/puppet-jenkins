@@ -29,6 +29,7 @@ define jenkins::credentials (
   validate_re($ensure, '^present$|^absent$')
   validate_string($uuid)
 
+  include ::jenkins
   include ::jenkins::cli_helper
 
   Class['jenkins::cli_helper'] ->
@@ -50,7 +51,7 @@ define jenkins::credentials (
           "'${description}'",
           "'${private_key_or_path}'",
         ],
-        unless  => "\$HELPER_CMD credential_info ${title} | grep ${title}",
+        unless  => "for i in \$(seq 1 ${::jenkins::cli_tries}); do \$HELPER_CMD credential_info ${title} && break || sleep ${::jenkins::cli_try_sleep}; done | grep ${title}",
       }
     }
     'absent': {
