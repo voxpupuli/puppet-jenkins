@@ -92,7 +92,7 @@ do_start()
 #
 get_running()
 {
-    return `ps -U $JENKINS_SLAVE_USER --no-headers -f | egrep -e '(java|daemon)' | grep -c . `
+    return `ps -U $JENKINS_SLAVE_USER --no-headers | egrep -e '(java|daemon)' | grep -c . `
 }
 
 force_stop()
