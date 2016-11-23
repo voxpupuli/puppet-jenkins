@@ -90,6 +90,9 @@
 #   parameter so the `::jenkins` class does not need to be the catalog for
 #   slave only nodes.
 #
+# [*service_provider*]
+#   Service provider for jenkins-slave service.
+#
 
 # === Examples
 #
@@ -132,6 +135,7 @@ class jenkins::slave (
   $source                    = undef,
   $java_args                 = undef,
   $proxy_server              = undef,
+  $service_provider          = $jenkins::params::service_provider,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -155,6 +159,7 @@ class jenkins::slave (
   validate_bool($enable)
   validate_string($source)
   validate_string($proxy_server)
+  validate_string($service_provider)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -303,6 +308,7 @@ class jenkins::slave (
     ensure     => $ensure,
     name       => $service_name,
     enable     => $enable,
+    provider   => $service_provider,
     hasstatus  => true,
     hasrestart => true,
   }
