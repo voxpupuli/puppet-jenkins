@@ -18,9 +18,11 @@ class jenkins::cli {
   #
   # As an attempt to preserve backwards compatibility, there are includes and
   # resource relationships being scattered throughout this module.
-  Class['jenkins::service'] ->
-    Class['jenkins::cli'] ->
-      Anchor['jenkins::end']
+  if $::jenkins::manage_service {
+    Class['jenkins::service'] ->
+      Class['jenkins::cli'] ->
+        Anchor['jenkins::end']
+  }
 
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
   $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
