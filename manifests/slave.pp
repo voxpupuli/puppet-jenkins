@@ -90,6 +90,9 @@
 #   parameter so the `::jenkins` class does not need to be the catalog for
 #   slave only nodes.
 #
+# [*swarm_client_args*]
+#   Swarm client arguments to add to slave command line. More info: https://github.com/jenkinsci/swarm-plugin/blob/master/client/src/main/java/hudson/plugins/swarm/Options.java
+#
 
 # === Examples
 #
@@ -132,6 +135,7 @@ class jenkins::slave (
   $source                    = undef,
   $java_args                 = undef,
   $proxy_server              = undef,
+  $swarm_client_args        = undef,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -147,7 +151,6 @@ class jenkins::slave (
   if $slave_uid { validate_integer($slave_uid) }
   validate_absolute_path($slave_home)
   validate_re($slave_mode, '^normal$|^exclusive$')
-  validate_bool($disable_ssl_verification)
   validate_string($tool_locations)
   validate_bool($install_java)
   validate_bool($manage_client_jar)
@@ -181,6 +184,16 @@ class jenkins::slave (
     }
     else {
       $_real_java_args = $java_args
+    }
+  }
+
+  if $swarm_client_args {
+    if is_array($swarm_client_args) {
+      $_combined_swarm_client_args = hiera_array('jenkins::slave::swarm_client_args', $swarm_client_args)
+      $_real_swarm_client_args = join($_combined_swarm_client_args, ' ')
+    }
+    else {
+      $_real_swarm_client_args = $swarm_client_args
     }
   }
 
