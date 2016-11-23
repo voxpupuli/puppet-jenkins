@@ -3,8 +3,9 @@ language: ruby
 before_install: gem install bundler -v '~> 1.6.0' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
 rvm:
-  - 1.9.3
-  - 2.1.0
+  - 2.0
+  - 2.1
+  - 2.2
 script:
   - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
 env:
@@ -27,6 +28,9 @@ matrix:
       env: BEAKER_set="ubuntu-14.04-docker"
       script: bundle exec rake acceptance
       bundler_args: --without development
+  exclude:
+    - rvm: '2.2'
+      env: PUPPET_VERSION="~> 3.8.0"
   allow_failures:
     # jenkins 2.x support is currently broken with debian packaging
     - env: BEAKER_set="ubuntu-14.04-docker"
