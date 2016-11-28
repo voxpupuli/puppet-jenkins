@@ -19,7 +19,6 @@ matrix:
       services: docker
       env:
         - BEAKER_set="centos-7-docker"
-        - PUPPET_DEBUG=true
       script: travis_retry bundle exec rake acceptance
       bundler_args: --without development
     - rvm: '2.1'
