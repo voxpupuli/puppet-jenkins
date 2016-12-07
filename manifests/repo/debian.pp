@@ -7,7 +7,7 @@ class jenkins::repo::debian
   }
 
   include stdlib
-  include apt
+  if ! defined("apt") { include apt }
 
   if $::jenkins::lts  {
     apt::source { 'jenkins':
