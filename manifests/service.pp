@@ -6,12 +6,26 @@ class jenkins::service {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  service { 'jenkins':
-    ensure     => $jenkins::service_ensure,
-    enable     => $jenkins::service_enable,
-    provider   => $jenkins::service_provider,
-    hasstatus  => true,
-    hasrestart => true,
+  case $::osfamily  {
+    'OpenBSD': {
+        service { 'jenkins':
+          ensure     => $jenkins::service_ensure,
+          enable     => $jenkins::service_enable,
+          provider   => $jenkins::service_provider,
+          flags      => $jenkins::service_flags,
+          hasstatus  => true,
+          hasrestart => true,
+        }
+    }
+    default: {
+      service { 'jenkins':
+        ensure     => $jenkins::service_ensure,
+        enable     => $jenkins::service_enable,
+        provider   => $jenkins::service_provider,
+        hasstatus  => true,
+        hasrestart => true,
+      }
+    }
   }
 
 }

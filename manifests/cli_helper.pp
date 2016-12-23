@@ -48,7 +48,7 @@ class jenkins::cli_helper (
 
   $helper_cmd = join(
     delete_undef_values([
-      '/usr/bin/java',
+      $::jenkins::javabin,
       "-jar ${::jenkins::cli::jar}",
       "-s http://127.0.0.1:${port}${prefix}",
       $auth_arg,

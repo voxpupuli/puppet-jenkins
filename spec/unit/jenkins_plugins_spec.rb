@@ -3,6 +3,11 @@ require 'puppet/jenkins/plugins'
 
 describe Puppet::Jenkins::Plugins do
   describe '.exists?' do
+    let(:facts) do
+      {
+        :osfamily                  => 'RedHat',
+      }
+    end
     subject(:exists) { described_class.exists? }
 
     context 'if jenkins does not exist' do
@@ -19,7 +24,9 @@ describe Puppet::Jenkins::Plugins do
 
       before :each do
         Puppet::Jenkins.stub(:home_dir).and_return(home)
-        File.should_receive(:directory?).with(File.join(home, 'plugins')).and_return(dir_exists)
+        plugin_dir = File.join(home, 'plugins')
+        expect(File).to receive(:directory).with(plugin_dir).and_return(dir_exists)
+        expect(Facter).to receive(:value).with(:osfamily).and_return('RedHat').at_least(:once)
       end
 
       context 'and the directory exists' do
@@ -28,7 +35,7 @@ describe Puppet::Jenkins::Plugins do
       end
 
       context 'and the directory does not exist' do
-        it { should be false}
+        it { should be false }
       end
     end
   end

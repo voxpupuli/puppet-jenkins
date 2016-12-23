@@ -25,7 +25,7 @@ class jenkins::cli {
   }
 
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
-  $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
+  $extract_jar = "${::jenkins::jarbin} -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
 
@@ -55,7 +55,7 @@ class jenkins::cli {
   # The jenkins cli command with required parameter(s)
   $cmd = join(
     delete_undef_values([
-      'java',
+      $::jenkins::javabin,
       "-jar ${::jenkins::cli::jar}",
       "-s http://localhost:${port}${prefix}",
       $auth_arg,

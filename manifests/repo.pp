@@ -33,6 +33,7 @@ class jenkins::repo {
           Class['jenkins::repo::suse'] ->
           Anchor['jenkins::repo::end']
       }
+      'OpenBSD' : { }
 
       default: {
         fail( "Unsupported OS family: ${::osfamily}" )
