@@ -25,7 +25,7 @@ define jenkins::plugin(
   $source          = undef,
   $digest_string   = undef,
   $digest_type     = 'sha1',
-  $pin             = true,
+  $pin             = false,
   # no worky
   $timeout         = undef,
   # deprecated

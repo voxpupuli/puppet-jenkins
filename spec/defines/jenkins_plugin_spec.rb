@@ -249,37 +249,31 @@ describe 'jenkins::plugin' do
   context 'pinned file' do
     let(:title) { 'foo' }
 
-    context 'default params' do
-      it do
-        should contain_file("#{pdir}/foo.hpi.pinned").with(
-          :ensure => 'file',
-          :owner  => 'jenkins',
-          :group  => 'jenkins',
-        )
-          .that_requires('Archive[foo.hpi]')
-          .that_notifies('Service[jenkins]')
-      end
-    end
-
     context 'with source param' do
       let(:params) {{ :source => 'foo.jpi' }}
 
-      it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('file') }
+      it { should contain_file("#{pdir}/foo.jpi.pinned").without_ensure }
     end
 
     describe 'pin parameter' do
       context 'with pin => true' do
         let(:params) {{ :pin => true } }
-        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it do
+          should contain_file("#{pdir}/foo.hpi.pinned").with(
+            :ensure => 'file',
+            :owner  => 'jenkins',
+            :group  => 'jenkins',
+          )
+            .that_requires('Archive[foo.hpi]')
+            .that_notifies('Service[jenkins]')
+        end
       end
       context 'with pin => false' do
         let(:params) {{ :pin => false } }
-        it do
-          should contain_file("#{pdir}/foo.hpi.pinned").without_ensure
-        end
+        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
       context 'with default pin param' do
-        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
     end
   end # pinned file extension name
