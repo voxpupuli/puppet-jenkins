@@ -1,5 +1,5 @@
 #!/bin/sh
-JENKINS_CONFIG=/etc/sysconfig/jenkins-slave
+JENKINS_CONFIG=<%= scope['jenkins::params::sysconfdir'] %>/jenkins-slave
 
 # Read config
 [ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"

@@ -231,13 +231,13 @@ class jenkins::slave (
       # lint:ignore:quoted_booleans
       if $::systemd == 'true' {
         include ::systemd
-        file {
-          '/usr/sbin/jenkins-slave':
-            source => "puppet:///modules/${module_name}/jenkins-slave.sh",
-            notify => Service['jenkins-slave'],
-            mode   => '0700';
-          '/etc/init.d/jenkins-slave':
-            ensure => 'absent',
+        file { "${::jenkins::params::libdir}/jenkins-slave-run":
+          content => template("${module_name}/jenkins-slave-run.erb"),
+          mode    => '0700',
+          notify  => Service['jenkins-slave'],
+        }
+        file { '/etc/init.d/jenkins-slave':
+          ensure => 'absent',
         }
         systemd::unit_file { 'jenkins-slave.service':
           source => "puppet:///modules/${module_name}/jenkins-slave.service",

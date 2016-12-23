@@ -230,7 +230,7 @@ describe 'jenkins::slave' do
         }
       end
       let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
-      let(:slave_startup_script) { '/usr/sbin/jenkins-slave' }
+      let(:slave_startup_script) { '/usr/lib/jenkins/jenkins-slave-run' }
       let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
       it_behaves_like 'a jenkins::slave catalog'
       it { should contain_file(slave_startup_script) }
