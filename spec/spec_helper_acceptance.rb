@@ -44,6 +44,12 @@ shared_context 'jenkins' do
             when 'Debian'
               '/usr/share/jenkins'
             end
+  $sysconfdir = case fact 'osfamily'
+                when 'RedHat'
+                  '/etc/sysconfig'
+                when 'Debian'
+                  '/etc/default'
+                end
 
   let(:libdir) { $libdir }
 

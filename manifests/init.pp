@@ -49,6 +49,10 @@
 # config_hash = undef (Default)
 #   Hash with config options to set in sysconfig/jenkins defaults/jenkins
 #
+# sysconfdir = (/etc/sysconfig/jenkins /etc/default/jenkins)
+#   Controls the path to the "sysconfig" file that stores jenkins service
+#   startup variables
+#
 # manage_datadirs = true (default)
 #   true if this module should manage the local state dir, plugins dir and jobs dir
 #
@@ -201,6 +205,7 @@ class jenkins(
   $cli_try_sleep      = $jenkins::params::cli_try_sleep,
   $port               = $jenkins::params::port,
   $libdir             = $jenkins::params::libdir,
+  $sysconfdir         = $jenkins::params::sysconfdir,
   $manage_datadirs    = $jenkins::params::manage_datadirs,
   $localstatedir      = $::jenkins::params::localstatedir,
   $executors          = undef,
@@ -238,6 +243,7 @@ class jenkins(
   validate_integer($cli_try_sleep)
   validate_integer($port)
   validate_absolute_path($libdir)
+  validate_absolute_path($sysconfdir)
   validate_bool($manage_datadirs)
   validate_absolute_path($localstatedir)
   if $executors { validate_integer($executors) }

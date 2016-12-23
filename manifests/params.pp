@@ -35,6 +35,7 @@ class jenkins::params {
       $libdir           = '/usr/share/jenkins'
       $package_provider = 'dpkg'
       $service_provider = undef
+      $sysconfdir       = '/etc/default'
       $config_hash_defaults = {
         'JAVA_ARGS' => { value => $_java_args },
         'AJP_PORT'  => { value => '-1' },
@@ -58,15 +59,17 @@ class jenkins::params {
           $service_provider = undef
         }
       }
+      $sysconfdir           = '/etc/sysconfig'
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
         'JENKINS_AJP_PORT'     => { value => '-1' },
       }
     }
     default: {
-      $libdir           = '/usr/lib/jenkins'
-      $package_provider = undef
-      $service_provider = undef
+      $libdir               = '/usr/lib/jenkins'
+      $package_provider     = undef
+      $service_provider     = undef
+      $sysconfdir           = '/etc/sysconfig'
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
         'JENKINS_AJP_PORT'     => { value => '-1' },
