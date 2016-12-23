@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/sbin/jenkins-slave
+ExecStart=<%= scope['jenkins::params::libdir'] %>/jenkins-slave-run
 Restart=always
 RestartSec=60
 StartLimitInterval=0
@@ -13,4 +13,3 @@ SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target
-

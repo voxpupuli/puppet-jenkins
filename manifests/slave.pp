@@ -240,8 +240,8 @@ class jenkins::slave (
           ensure => 'absent',
         }
         systemd::unit_file { 'jenkins-slave.service':
-          source => "puppet:///modules/${module_name}/jenkins-slave.service",
-          notify => Service['jenkins-slave'],
+          content => template("${module_name}/jenkins-slave.service.erb"),
+          notify  => Service['jenkins-slave'],
         }
       } else {
         file { '/etc/init.d/jenkins-slave':
