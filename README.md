@@ -97,8 +97,7 @@ By default, the resource will install the latest plugin, i.e.:
 
 If you specify `version => 'latest'` in current releases of the module, the
 plugin will be downloaded and installed with *every* run of Puppet. This is a
-known issue and will be addressed in future releases. For now it is recommended
-that you pin plugin versions when using the `jenkins::plugin` type.
+known issue and will be addressed in future releases.
 
 #### By version
 If you need to peg a specific version, simply specify that as a string, i.e.:
