@@ -231,8 +231,9 @@ class jenkins::slave (
       # lint:ignore:quoted_booleans
       if $::systemd == 'true' {
         include ::systemd
-        file { "${::jenkins::params::libdir}/jenkins-slave-run":
+        file { "${slave_home}/jenkins-slave-run":
           content => template("${module_name}/jenkins-slave-run.erb"),
+          owner   => $slave_user,
           mode    => '0700',
           notify  => Service['jenkins-slave'],
         }

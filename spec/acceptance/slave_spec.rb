@@ -17,7 +17,7 @@ describe 'jenkins::slave class' do
     if fact('systemd') == 'true'
       describe file('/lib/systemd/system/jenkins-slave.service') do
         it { should be_file }
-        it { should contain "ExecStart=#{$libdir}/jenkins-slave-run" }
+        it { should contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
       end
       describe file('/etc/init.d/jenkins-slave') do
         it { should_not exist }

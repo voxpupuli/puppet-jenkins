@@ -226,11 +226,11 @@ describe 'jenkins::slave' do
           :operatingsystemrelease    => '7.2',
           :operatingsystemmajrelease => '7',
           :kernel                    => 'Linux',
-          :systemd                   => 'true'
+          :systemd                   => true
         }
       end
       let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
-      let(:slave_startup_script) { '/usr/lib/jenkins/jenkins-slave-run' }
+      let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
       let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
       it_behaves_like 'a jenkins::slave catalog'
       it { should contain_file(slave_startup_script) }
