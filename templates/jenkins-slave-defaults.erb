@@ -1,8 +1,5 @@
 # defaults for jenkins slave swarm clients
 
-# pulled in from the init script; makes things easier.
-NAME=jenkins-slave
-
 # location of java
 JAVA=/usr/bin/java
 
@@ -13,24 +10,20 @@ JAVA=/usr/bin/java
 JAVA_ARGS="<%= @_real_java_args -%>"
 <% end -%>
 
-PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
-
 # user id to be invoked as (otherwise will run as root; not wise!)
 JENKINS_SLAVE_USER=<%= @slave_user -%>
 
-# jenkins home location
-JENKINS_SLAVE_HOME=<%= @slave_home -%>
-
 # location of the jenkins war file
-JENKINS_SLAVE_JAR="${JENKINS_SLAVE_HOME}/<%= @client_jar -%>"
+JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
 
+# XXX this variable is only used by the debian init script
 # set this to false if you don't want Hudson to run by itself
 # in this set up, you are expected to provide a servlet container
 # to host jenkins.
 RUN_STANDALONE=true
 
 # log location.  this may be a syslog facility.priority
-JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
+JENKINS_SLAVE_LOG=/var/log/jenkins-slave/jenkins-slave.log
 
 # slave mode, can be either 'normal' (utilize this slave as much as possible)
 # or 'exclusive' (leave this machine for tied jobs only).

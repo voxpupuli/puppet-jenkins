@@ -24,7 +24,7 @@ describe 'jenkins::slave class' do
       it { should be_mode 600 }
     end
 
-    describe file('/home/jenkins-slave/swarm-client-2.0-jar-with-dependencies.jar') do
+    describe file('/home/jenkins-slave/swarm-client-2.2-jar-with-dependencies.jar') do
       it { should be_file }
       it { should be_mode 644 }
     end

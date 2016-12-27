@@ -17,6 +17,7 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin
 DESC="Jenkins Slave Swarm Client"
 NAME=jenkins-slave
 SCRIPTNAME=/etc/init.d/$NAME
+PIDFILE=/var/run/$NAME/$NAME.pid
 
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
