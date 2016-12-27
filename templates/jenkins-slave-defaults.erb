@@ -1,8 +1,5 @@
 # defaults for jenkins slave swarm clients
 
-# pulled in from the init script; makes things easier.
-NAME=jenkins-slave
-
 # location of java
 JAVA=/usr/bin/java
 
@@ -27,7 +24,7 @@ JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
 RUN_STANDALONE=true
 
 # log location.  this may be a syslog facility.priority
-JENKINS_SLAVE_LOG=/var/log/$NAME/$NAME.log
+JENKINS_SLAVE_LOG=/var/log/jenkins-slave/jenkins-slave.log
 
 # slave mode, can be either 'normal' (utilize this slave as much as possible)
 # or 'exclusive' (leave this machine for tied jobs only).
