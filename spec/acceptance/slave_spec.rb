@@ -14,9 +14,25 @@ describe 'jenkins::slave class' do
       apply(pp, :catch_changes => true)
     end
 
-    describe file('/etc/init.d/jenkins-slave') do
-      it { should be_file }
-      it { should be_mode 755 }
+    if fact('systemd') == 'true'
+      describe file('/lib/systemd/system/jenkins-slave.service') do
+        it { should be_file }
+        it { should contain "ExecStart=#{$libdir}/jenkins-slave-run" }
+      end
+      describe file('/etc/init.d/jenkins-slave') do
+        it { should_not exist }
+      end
+      describe service('jenkins-slave') do
+        it { should be_running.under('systemd') }
+      end
+    else
+      describe file('/lib/systemd/system/jenkins-slave.service') do
+        it { should_not exist }
+      end
+      describe file('/etc/init.d/jenkins-slave') do
+        it { should be_file }
+        it { should be_mode 755 }
+      end
     end
 
     describe file("#{$sysconfdir}/jenkins-slave") do

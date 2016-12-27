@@ -227,14 +227,33 @@ class jenkins::slave (
       $defaults_group = 'root'
       $manage_user_home = true
 
-      file { '/etc/init.d/jenkins-slave':
-        ensure => 'file',
-        mode   => '0755',
-        owner  => 'root',
-        group  => 'root',
-        source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
-        notify => Service['jenkins-slave'],
+      # Disable lint checking below because we actually do need a string here
+      # lint:ignore:quoted_booleans
+      if $::systemd == 'true' {
+        include ::systemd
+        file { "${::jenkins::params::libdir}/jenkins-slave-run":
+          content => template("${module_name}/jenkins-slave-run.erb"),
+          mode    => '0700',
+          notify  => Service['jenkins-slave'],
+        }
+        file { '/etc/init.d/jenkins-slave':
+          ensure => 'absent',
+        }
+        systemd::unit_file { 'jenkins-slave.service':
+          content => template("${module_name}/jenkins-slave.service.erb"),
+          notify  => Service['jenkins-slave'],
+        }
+      } else {
+        file { '/etc/init.d/jenkins-slave':
+          ensure => 'file',
+          mode   => '0755',
+          owner  => 'root',
+          group  => 'root',
+          source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
+          notify => Service['jenkins-slave'],
+        }
       }
+      # lint:endignore
     }
     'Darwin': {
       $service_name     = 'org.jenkins-ci.slave.jnlp'
