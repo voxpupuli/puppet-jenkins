@@ -227,9 +227,7 @@ class jenkins::slave (
       $defaults_group = 'root'
       $manage_user_home = true
 
-      # Disable lint checking below because we actually do need a string here
-      # lint:ignore:quoted_booleans
-      if $::systemd == 'true' {
+      if $::systemd {
         include ::systemd
         file { "${slave_home}/jenkins-slave-run":
           content => template("${module_name}/jenkins-slave-run.erb"),
@@ -254,7 +252,6 @@ class jenkins::slave (
           notify => Service['jenkins-slave'],
         }
       }
-      # lint:endignore
     }
     'Darwin': {
       $service_name     = 'org.jenkins-ci.slave.jnlp'

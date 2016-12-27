@@ -184,7 +184,7 @@ describe 'jenkins::slave' do
         :operatingsystemrelease    => '6.7',
         :operatingsystemmajrelease => '6',
         :kernel                    => 'Linux',
-        :systemd                   => 'false'
+        :systemd                   => false
       }
     end
     let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }

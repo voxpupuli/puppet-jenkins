@@ -14,7 +14,7 @@ describe 'jenkins::slave class' do
       apply(pp, :catch_changes => true)
     end
 
-    if fact('systemd') == 'true'
+    if fact('systemd')
       describe file('/lib/systemd/system/jenkins-slave.service') do
         it { should be_file }
         it { should contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
