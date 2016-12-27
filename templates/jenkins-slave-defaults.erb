@@ -10,8 +10,6 @@ JAVA=/usr/bin/java
 JAVA_ARGS="<%= @_real_java_args -%>"
 <% end -%>
 
-PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
-
 # user id to be invoked as (otherwise will run as root; not wise!)
 JENKINS_SLAVE_USER=<%= @slave_user -%>
 

@@ -11,6 +11,7 @@ RETVAL=0
 NAME=jenkins-slave
 JENKINS_CONFIG=/etc/sysconfig/$NAME
 LOCK_FILE=/var/lock/subsys/$NAME
+PIDFILE=/var/run/$NAME/$NAME.pid
 
 # Source function library.
 . /etc/init.d/functions
