@@ -27,6 +27,11 @@ describe 'jenkins class' do
       it { should be_file }
     end
 
+    describe file("#{$sysconfdir}/jenkins") do
+      it { should be_file }
+      it { should contain 'JENKINS_AJP_PORT="-1"' }
+    end
+
     describe service('jenkins') do
       it { should be_running }
       it { should be_enabled }

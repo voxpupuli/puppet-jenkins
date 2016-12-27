@@ -70,6 +70,28 @@ describe 'jenkins', :type => :module do
       it { expect { should raise_error(Puppet::Error) } }
     end
 
+    describe 'sysconfdir =>' do
+      context '/foo/bar' do
+        let(:params) {{ :sysconfdir => '/foo/bar' }}
+        it do
+          should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
+            .with_path('/foo/bar/jenkins')
+        end
+      end
+
+      context '../bar' do
+        let(:params) {{ :sysconfdir => '../bar' }}
+        it { should raise_error(Puppet::Error, /is not an absolute path/) }
+      end
+
+      context '(default)' do
+        it do
+          should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
+            .with_path('/etc/sysconfig/jenkins')
+        end
+      end
+    end
+
     describe 'manage_datadirs =>' do
       context 'false' do
         let(:params) {{ :manage_datadirs => false }}
