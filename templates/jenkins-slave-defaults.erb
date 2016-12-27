@@ -18,11 +18,8 @@ PIDFILE=/var/run/jenkins-slave/jenkins-slave.pid
 # user id to be invoked as (otherwise will run as root; not wise!)
 JENKINS_SLAVE_USER=<%= @slave_user -%>
 
-# jenkins home location
-JENKINS_SLAVE_HOME=<%= @slave_home -%>
-
 # location of the jenkins war file
-JENKINS_SLAVE_JAR="${JENKINS_SLAVE_HOME}/<%= @client_jar -%>"
+JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
 
 # set this to false if you don't want Hudson to run by itself
 # in this set up, you are expected to provide a servlet container
