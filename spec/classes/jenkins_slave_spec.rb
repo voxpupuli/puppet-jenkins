@@ -232,9 +232,35 @@ describe 'jenkins::slave' do
       let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
       let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
       let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
+
       it_behaves_like 'a jenkins::slave catalog'
-      it { should contain_file(slave_startup_script) }
-      it { should contain_file(slave_sysv_file).with_ensure('absent') }
+      it do
+        should contain_file(slave_startup_script)
+          .that_notifies('Service[jenkins-slave]')
+      end
+      # XXX the prior_to args check fails under puppet 3.8.7 for unknown
+      # reasons...
+      if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
+        it do
+          should contain_transition('stop jenkins-slave service').with(
+            :prior_to => [ "File[#{slave_sysv_file}]" ],
+          )
+        end
+      else
+        it { should contain_transition('stop jenkins-slave service') }
+      end
+      it do
+        should contain_file(slave_sysv_file)
+          .with(
+            :ensure => 'absent',
+            :selinux_ignore_defaults => true,
+          )
+          .that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
+      end
+      it do
+        should contain_systemd__unit_file('jenkins-slave.service')
+          .that_notifies('Service[jenkins-slave]')
+      end
     end
   end
 
