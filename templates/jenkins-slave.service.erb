@@ -11,7 +11,7 @@ Type=simple
 # the run/wrapper script.  This [sadly] requires that the run script be run as
 # root so that it has the effective permission to read this file.
 #
-ExecStart=<%= scope['jenkins::params::libdir'] %>/jenkins-slave-run
+ExecStart=<%= scope['jenkins::slave::slave_home'] %>/jenkins-slave-run
 Restart=always
 RestartSec=60
 StartLimitInterval=0

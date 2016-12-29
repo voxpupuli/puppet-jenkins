@@ -222,29 +222,47 @@ class jenkins::slave (
 
   case $::kernel {
     'Linux': {
-      $service_name   = 'jenkins-slave'
-      $defaults_user  = 'root'
-      $defaults_group = 'root'
+      $service_name     = 'jenkins-slave'
+      $defaults_user    = 'root'
+      $defaults_group   = 'root'
       $manage_user_home = true
+      $sysv_init        = '/etc/init.d/jenkins-slave'
 
-      # Disable lint checking below because we actually do need a string here
-      # lint:ignore:quoted_booleans
-      if $::systemd == 'true' {
+      if $::systemd {
         include ::systemd
-        file { "${::jenkins::params::libdir}/jenkins-slave-run":
+        file { "${slave_home}/jenkins-slave-run":
           content => template("${module_name}/jenkins-slave-run.erb"),
+          owner   => $slave_user,
           mode    => '0700',
           notify  => Service['jenkins-slave'],
         }
-        file { '/etc/init.d/jenkins-slave':
-          ensure => 'absent',
+        transition { 'stop jenkins-slave service':
+          resource   => Service['jenkins-slave'],
+          attributes => {
+            # lint:ignore:ensure_first_param
+            ensure => stopped
+            # lint:endignore
+          },
+          prior_to   => [
+            File[$sysv_init],
+          ],
         }
+        # transition can not set a prior_to on
+        # Systemd::Unit_file['jenkins-slave.service'] as it is not a native
+        # type so we must us the sysv init script as a proxy
+        file { $sysv_init:
+          ensure                  => 'absent',
+          # XXX if this is not set, the seluser property will claim is it out
+          # of sync and the transition resource will always fire.  It isn't
+          # clear if this is a bug or a feature of the file resource.
+          selinux_ignore_defaults => true,
+        } ->
         systemd::unit_file { 'jenkins-slave.service':
           content => template("${module_name}/jenkins-slave.service.erb"),
           notify  => Service['jenkins-slave'],
         }
       } else {
-        file { '/etc/init.d/jenkins-slave':
+        file { $sysv_init:
           ensure => 'file',
           mode   => '0755',
           owner  => 'root',
@@ -253,7 +271,6 @@ class jenkins::slave (
           notify => Service['jenkins-slave'],
         }
       }
-      # lint:endignore
     }
     'Darwin': {
       $service_name     = 'org.jenkins-ci.slave.jnlp'
