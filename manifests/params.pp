@@ -1,7 +1,9 @@
 # Class: jenkins::params
 #
 #
-class jenkins::params {
+class jenkins::params(
+  $default_plugins = [ 'credentials' ], # required by puppet_helper.groovy
+) {
   $version               = 'installed'
   $lts                   = true
   $repo                  = true
@@ -26,9 +28,6 @@ class jenkins::params {
   $manage_group = true
   $group        = 'jenkins'
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
-  $default_plugins = [
-    'credentials', # required by puppet_helper.groovy
-  ]
 
   case $::osfamily {
     'Debian': {
