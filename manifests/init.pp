@@ -359,5 +359,18 @@ class jenkins(
       Class['jenkins::firewall'] ->
         Anchor['jenkins::end']
   }
+
+  if $service_provider == 'systemd' {
+    jenkins::systemd { 'jenkins':
+      user   => $user,
+      libdir => $libdir,
+    }
+
+    # jenkins::config manages the jenkins user resource, which is autorequired
+    # by the file resource for the run wrapper.
+    Class['jenkins::config'] ->
+      Jenkins::Systemd['jenkins'] ->
+        Anchor['jenkins::end']
+  }
 }
 # vim: ts=2 et sw=2 autoindent

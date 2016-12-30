@@ -44,25 +44,24 @@ class jenkins::params {
     'RedHat': {
       $libdir           = '/usr/lib/jenkins'
       $package_provider = 'rpm'
-      case $::operatingsystem {
-        'Fedora': {
-          if versioncmp($::operatingsystemrelease, '19') >= 0 or $::operatingsystemrelease == 'Rawhide' {
-            $service_provider = 'redhat'
-          }
-        }
-        /^(RedHat|CentOS|Scientific|OracleLinux)$/: {
-          if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
-            $service_provider = 'redhat'
-          }
-        }
-        default: {
-          $service_provider = undef
-        }
-      }
       $sysconfdir           = '/etc/sysconfig'
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
         'JENKINS_AJP_PORT'     => { value => '-1' },
+      }
+
+      # explicitly use systemd if it is available
+      # XXX only enable explicit systemd support on RedHat at this time due to
+      # the Debian packaging using variable interpolation in
+      # /etc/default/jenkins.
+      # XXX this param exists because of a historical work around to PUP-5353
+      # it is part of the public interface to ::jenkins; it needs to be
+      # maintained until at least a major version bump.  It has been somewhat
+      # repurposed as a flag for specific systemd support.
+      if $::systemd {
+        $service_provider = 'systemd'
+      } else {
+        $service_provider = undef
       }
     }
     default: {
