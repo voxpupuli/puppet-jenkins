@@ -1,6 +1,8 @@
 require 'puppet/provider'
 require 'facter'
 
+require 'json'
+
 require 'puppet_x/jenkins/config'
 require 'puppet_x/jenkins/provider'
 
