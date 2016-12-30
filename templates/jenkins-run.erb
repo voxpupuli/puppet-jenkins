@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # taken from
 # https://github.com/jenkinsci/packaging/blob/master/rpm/build/SOURCES/jenkins.init.in
@@ -52,21 +52,27 @@ done
 
 JAVA_CMD="$JENKINS_JAVA_CMD $JENKINS_JAVA_OPTIONS -DJENKINS_HOME=$JENKINS_HOME -jar $JENKINS_WAR"
 
-PARAMS="--logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war --daemon"
-[ -n "$JENKINS_PORT" ] && PARAMS="$PARAMS --httpPort=$JENKINS_PORT"
-[ -n "$JENKINS_LISTEN_ADDRESS" ] && PARAMS="$PARAMS --httpListenAddress=$JENKINS_LISTEN_ADDRESS"
-[ -n "$JENKINS_HTTPS_PORT" ] && PARAMS="$PARAMS --httpsPort=$JENKINS_HTTPS_PORT"
-[ -n "$JENKINS_HTTPS_KEYSTORE" ] && PARAMS="$PARAMS --httpsKeyStore=$JENKINS_HTTPS_KEYSTORE"
-[ -n "$JENKINS_HTTPS_KEYSTORE_PASSWORD" ] && PARAMS="$PARAMS --httpsKeyStorePassword='$JENKINS_HTTPS_KEYSTORE_PASSWORD'"
-[ -n "$JENKINS_HTTPS_LISTEN_ADDRESS" ] && PARAMS="$PARAMS --httpsListenAddress=$JENKINS_HTTPS_LISTEN_ADDRESS"
-[ -n "$JENKINS_DEBUG_LEVEL" ] && PARAMS="$PARAMS --debug=$JENKINS_DEBUG_LEVEL"
-[ -n "$JENKINS_HANDLER_STARTUP" ] && PARAMS="$PARAMS --handlerCountStartup=$JENKINS_HANDLER_STARTUP"
-[ -n "$JENKINS_HANDLER_MAX" ] && PARAMS="$PARAMS --handlerCountMax=$JENKINS_HANDLER_MAX"
-[ -n "$JENKINS_HANDLER_IDLE" ] && PARAMS="$PARAMS --handlerCountMaxIdle=$JENKINS_HANDLER_IDLE"
-[ -n "$JENKINS_ARGS" ] && PARAMS="$PARAMS $JENKINS_ARGS"
+PARAMS=()
+PARAMS+=("--logfile=/var/log/jenkins/jenkins.log")
+PARAMS+=("--webroot=/var/cache/jenkins/war")
+PARAMS+=("--daemon")
+
+[ -n "$JENKINS_PORT" ] && PARAMS+=("--httpPort=$JENKINS_PORT")
+[ -n "$JENKINS_LISTEN_ADDRESS" ] && PARAMS+=("--httpListenAddress=$JENKINS_LISTEN_ADDRESS")
+[ -n "$JENKINS_HTTPS_PORT" ] && PARAMS+=("--httpsPort=$JENKINS_HTTPS_PORT")
+[ -n "$JENKINS_HTTPS_KEYSTORE" ] && PARAMS+=("--httpsKeyStore=$JENKINS_HTTPS_KEYSTORE")
+[ -n "$JENKINS_HTTPS_KEYSTORE_PASSWORD" ] && PARAMS+=("--httpsKeyStorePassword='$JENKINS_HTTPS_KEYSTORE_PASSWORD'")
+[ -n "$JENKINS_HTTPS_LISTEN_ADDRESS" ] && PARAMS+=("--httpsListenAddress=$JENKINS_HTTPS_LISTEN_ADDRESS")
+[ -n "$JENKINS_DEBUG_LEVEL" ] && PARAMS+=("--debug=$JENKINS_DEBUG_LEVEL")
+[ -n "$JENKINS_HANDLER_STARTUP" ] && PARAMS+=("--handlerCountStartup=$JENKINS_HANDLER_STARTUP")
+[ -n "$JENKINS_HANDLER_MAX" ] && PARAMS+=("--handlerCountMax=$JENKINS_HANDLER_MAX")
+[ -n "$JENKINS_HANDLER_IDLE" ] && PARAMS+=("--handlerCountMaxIdle=$JENKINS_HANDLER_IDLE")
+[ -n "$JENKINS_ARGS" ] && PARAMS+=("$JENKINS_ARGS")
 
 if [ "$JENKINS_ENABLE_ACCESS_LOG" = "yes" ]; then
-    PARAMS="$PARAMS --accessLoggerClassName=winstone.accesslog.SimpleAccessLogger --simpleAccessLogger.format=combined --simpleAccessLogger.file=/var/log/jenkins/access_log"
+  PARAMS+=("--accessLoggerClassName=winstone.accesslog.SimpleAccessLogger")
+  PARAMS+=("--simpleAccessLogger.format=combined")
+  PARAMS+=("--simpleAccessLogger.file=/var/log/jenkins/access_log")
 fi
 
-$JAVA_CMD $PARAMS
+$JAVA_CMD "${PARAMS[@]}"
