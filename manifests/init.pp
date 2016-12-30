@@ -176,6 +176,9 @@
 #
 # group = 'jenkins' (default)
 #
+# default_plugins = [ 'credentials' ] (default)
+#   List of default plugins to manage, overwrite if you manage
+#   all plugins
 #
 class jenkins(
   $version            = $jenkins::params::version,
@@ -214,6 +217,7 @@ class jenkins(
   $user               = $::jenkins::params::user,
   $manage_group       = $::jenkins::params::manage_group,
   $group              = $::jenkins::params::group,
+  $default_plugins    = $::jenkins::params::default_plugins,
 ) inherits jenkins::params {
 
   validate_string($version)
@@ -285,6 +289,10 @@ class jenkins(
 
   if $manage_service {
     include jenkins::service
+    validate_array($default_plugins)
+    if empty($default_plugins){
+      notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($::jenkins::params::default_plugins,',')))
+    }
   }
 
   if defined('::firewall') {
