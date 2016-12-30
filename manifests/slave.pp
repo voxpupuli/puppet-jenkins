@@ -229,37 +229,9 @@ class jenkins::slave (
       $sysv_init        = '/etc/init.d/jenkins-slave'
 
       if $::systemd {
-        include ::systemd
-        file { "${slave_home}/jenkins-slave-run":
-          content => template("${module_name}/jenkins-slave-run.erb"),
-          owner   => $slave_user,
-          mode    => '0700',
-          notify  => Service['jenkins-slave'],
-        }
-        transition { 'stop jenkins-slave service':
-          resource   => Service['jenkins-slave'],
-          attributes => {
-            # lint:ignore:ensure_first_param
-            ensure => stopped
-            # lint:endignore
-          },
-          prior_to   => [
-            File[$sysv_init],
-          ],
-        }
-        # transition can not set a prior_to on
-        # Systemd::Unit_file['jenkins-slave.service'] as it is not a native
-        # type so we must us the sysv init script as a proxy
-        file { $sysv_init:
-          ensure                  => 'absent',
-          # XXX if this is not set, the seluser property will claim is it out
-          # of sync and the transition resource will always fire.  It isn't
-          # clear if this is a bug or a feature of the file resource.
-          selinux_ignore_defaults => true,
-        } ->
-        systemd::unit_file { 'jenkins-slave.service':
-          content => template("${module_name}/jenkins-slave.service.erb"),
-          notify  => Service['jenkins-slave'],
+        jenkins::systemd { 'jenkins-slave':
+          user   => $slave_user,
+          libdir => $slave_home,
         }
       } else {
         file { $sysv_init:
