@@ -1,10 +1,11 @@
 HOSTS:
-  ubuntu-server-12042-x64:
-    roles:
-      - master
-    platform: ubuntu-12.04-amd64
-    box : ubuntu-server-12042-x64-vbox4210-nocm
-    box_url : http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210-nocm.box
-    hypervisor : vagrant
+  centos-7-x64:
+    platform: el-7-x86_64
+    hypervisor : docker
+    docker_preserve_image: true
+    dockerfile: spec/acceptance/nodesets/centos-7-docker.Dockerfile
+    default_apply_opts:
+      disable_warnings: deprecations
 CONFIG:
   type: foss
+  log_level: debug
