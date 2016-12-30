@@ -160,10 +160,12 @@ define jenkins::plugin(
 
     if $digest_string {
       $checksum_verify = true
-      $checksum = $digest_string
+      $checksum        = $digest_string
+      $checksum_type   = $digest_type
     } else {
       $checksum_verify = false
-      $checksum = undef
+      $checksum        = undef
+      $checksum_type   = undef
     }
 
     archive { $plugin:
@@ -171,7 +173,7 @@ define jenkins::plugin(
       path            => "${::jenkins::plugin_dir}/${plugin}",
       checksum_verify => $checksum_verify,
       checksum        => $checksum,
-      checksum_type   => $digest_type,
+      checksum_type   => $checksum_type,
       proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
