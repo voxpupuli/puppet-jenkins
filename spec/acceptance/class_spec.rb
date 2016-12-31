@@ -37,7 +37,26 @@ describe 'jenkins class' do
       it { should be_enabled }
     end
 
-  end
+    if fact('osfamily') == 'RedHat' and fact('systemd')
+      describe file('/etc/systemd/system/jenkins.service') do
+        it { should be_file }
+        it { should contain "ExecStart=#{libdir}/jenkins-run" }
+      end
+      describe file('/etc/init.d/jenkins') do
+        it { should_not exist }
+      end
+      describe service('jenkins') do
+        it { should be_running.under('systemd') }
+      end
+    else
+      describe file('/etc/systemd/system/jenkins.service') do
+        it { should_not exist }
+      end
+      describe file('/etc/init.d/jenkins') do
+        it { should be_file }
+      end
+    end
+  end # default parameters
 
   context 'executors' do
     it 'should work with no errors' do

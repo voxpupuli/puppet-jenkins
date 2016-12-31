@@ -15,5 +15,5 @@ else
 fi
 
 # Run swarm client
-exec $RUNUSER - $JENKINS_SLAVE_USER \
+exec $RUNUSER - "$JENKINS_SLAVE_USER" \
     -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS"
