@@ -27,8 +27,7 @@ describe 'jenkins::plugin' do
         :owner => 'jenkins',
         :group => 'jenkins',
         :mode  => '0644',
-      ).that_requires("Archive[#{title}.hpi]")
-        .that_comes_before('Service[jenkins]')
+      ).that_comes_before('Service[jenkins]')
     end
   end
 
@@ -48,7 +47,7 @@ describe 'jenkins::plugin' do
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
 
     it { should_not contain_archive('myplug.hpi') }
-    it { should_not contain_file("#{pdir}/myplug.hpi")}
+    it { should contain_file("#{pdir}/myplug.hpi")}
   end
 
   describe 'with version and at end of jenkins_plugins fact' do
@@ -56,7 +55,7 @@ describe 'jenkins::plugin' do
     before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3' }
 
     it { should_not contain_archive('myplug.hpi') }
-    it { should_not contain_file("#{pdir}/myplug.hpi")}
+    it { should contain_file("#{pdir}/myplug.hpi")}
   end
 
   describe 'with name and version' do
@@ -97,7 +96,7 @@ describe 'jenkins::plugin' do
       before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
 
       it { should_not contain_archive('myplug.hpi') }
-      it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     end
   end # 'with name and version'
 
@@ -277,6 +276,32 @@ describe 'jenkins::plugin' do
       end
     end
   end # pinned file extension name
+
+  describe 'purge plugins' do
+    context 'true' do
+      let(:pre_condition) do
+        <<-EOS
+          class { jenkins:
+            purge_plugins => true,
+          }
+        EOS
+      end
+
+      it { should contain_file("#{pdir}/#{title}").only_with(:ensure => nil) }
+    end
+
+    context 'false' do
+      let(:pre_condition) do
+        <<-EOS
+          class { jenkins:
+            purge_plugins => false,
+          }
+        EOS
+      end
+
+      it { should_not contain_file("#{pdir}/#{title}") }
+    end
+  end #purge plugins
 
   describe 'deprecated params' do
     [

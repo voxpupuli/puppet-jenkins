@@ -29,6 +29,7 @@ class jenkins::params {
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
   ]
+  $purge_plugins = false
 
   case $::osfamily {
     'Debian': {
