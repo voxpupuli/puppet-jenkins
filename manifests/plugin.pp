@@ -106,6 +106,12 @@ define jenkins::plugin(
     default => strip(split($::jenkins_plugins, ',')),
   }
 
+  # create a file resource for the download + unpacked plugin dir to prevent it
+  # from being recursively deleted
+  if $::jenkins::purge_plugins {
+    file { "${::jenkins::plugin_dir}/${name}": }
+  }
+
   if (empty(grep($installed_plugins, $search))) {
     $enabled_ensure = $enabled ? {
       false   => present,
@@ -180,14 +186,13 @@ define jenkins::plugin(
       require         => File[$::jenkins::plugin_dir],
       notify          => Service['jenkins'],
     }
+  }
 
-    file { "${::jenkins::plugin_dir}/${plugin}" :
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
-      mode    => '0644',
-      require => Archive[$plugin],
-      before  => Service['jenkins'],
-    }
+  file { "${::jenkins::plugin_dir}/${plugin}" :
+    owner  => $::jenkins::user,
+    group  => $::jenkins::group,
+    mode   => '0644',
+    before => Service['jenkins'],
   }
 
   if $manage_config {

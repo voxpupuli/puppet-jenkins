@@ -180,6 +180,12 @@
 #   List of default plugins to manage, overwrite if you manage
 #   all plugins
 #
+# purge_plugins = false (default)
+#   Purge *all* plugins not explicitly managed by this module.  This will
+#   result in plugins manually installed via the UpdateCenter being removed.
+#   Only enable this option if you want to manage all plugins (and plugin
+#   dependencies) explicitly.
+#
 class jenkins(
   $version            = $jenkins::params::version,
   $lts                = $jenkins::params::lts,
@@ -218,6 +224,7 @@ class jenkins(
   $manage_group       = $::jenkins::params::manage_group,
   $group              = $::jenkins::params::group,
   $default_plugins    = $::jenkins::params::default_plugins,
+  $purge_plugins      = $::jenkins::params::purge_plugins,
 ) inherits jenkins::params {
 
   validate_string($version)
@@ -256,6 +263,10 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
+  validate_bool($purge_plugins)
+  if $purge_plugins and ! $manage_datadirs {
+    warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
+  }
 
   $plugin_dir = "${localstatedir}/plugins"
   $job_dir = "${localstatedir}/jobs"

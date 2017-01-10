@@ -337,5 +337,45 @@ describe 'jenkins', :type => :module do
       let (:params) {{ :default_plugins => [] }}
       it { should_not contain_jenkins__plugin 'credentials' }
     end
+
+    describe 'purge_plugins =>' do
+      context 'false' do
+        let(:params) {{ :purge_plugins => false }}
+
+        it do
+          should contain_file('/var/lib/jenkins/plugins')
+            .without('purge')
+            .without('recurse')
+            .without('force')
+        end
+      end
+
+      context 'true' do
+        let(:params) {{ :purge_plugins => true }}
+
+        it do
+          should contain_file('/var/lib/jenkins/plugins').with(
+            :purge   => true,
+            :recurse => true,
+            :force   => true,
+          )
+        end
+      end
+
+      context '(default)' do
+        it do
+          should contain_file('/var/lib/jenkins/plugins')
+            .without('purge')
+            .without('recurse')
+            .without('force')
+        end
+      end
+
+      context 'foo' do
+        let(:params) {{ :purge_plugins => 'foo' }}
+
+        it { should raise_error(Puppet::Error, /is not a boolean/) }
+      end
+    end # purge_plugins
   end
 end
