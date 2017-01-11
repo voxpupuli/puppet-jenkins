@@ -358,7 +358,7 @@ describe 'jenkins', :type => :module do
             :purge   => true,
             :recurse => true,
             :force   => true,
-          )
+          ).that_notifies('Service[jenkins]')
         end
       end
 
@@ -368,6 +368,7 @@ describe 'jenkins', :type => :module do
             .without('purge')
             .without('recurse')
             .without('force')
+            .without('notify')
         end
       end
 

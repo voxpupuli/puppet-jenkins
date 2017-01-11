@@ -45,7 +45,8 @@ class jenkins::config {
     true    => merge($dir_params, {
       purge   => true,
       recurse => true,
-      force   => true
+      force   => true,
+      notify  => Service['jenkins'],
     }),
     default => $dir_params,
   }
