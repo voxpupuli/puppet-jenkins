@@ -29,7 +29,11 @@ describe 'jenkins class' do
 
     describe file("#{$sysconfdir}/jenkins") do
       it { should be_file }
-      it { should contain 'JENKINS_AJP_PORT="-1"' }
+      if fact('osfamily') == 'Debian'
+        it { should contain 'AJP_PORT="-1"' }
+      else
+        it { should contain 'JENKINS_AJP_PORT="-1"' }
+      end
     end
 
     describe service('jenkins') do
