@@ -16,6 +16,7 @@ gem 'rubocop', '< 0.42.0'
 
 gem 'json_pure', '< 2.0.2'
 gem 'net-http-persistent', '<= 2.9.4', :require => false if RUBY_VERSION < '2.0.0'
+gem 'puppet-strings'
 
 group :development do
   gem 'simplecov'
