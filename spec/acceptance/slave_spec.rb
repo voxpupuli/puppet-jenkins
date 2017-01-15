@@ -50,4 +50,29 @@ describe 'jenkins::slave class' do
       it { should be_enabled }
     end
   end # default parameters
+
+  context 'ui_user/ui_pass' do
+    it 'should work with no errors' do
+      pp = <<-EOS
+        # attempt to make the swarm client the only running 'java' process
+        service { jenkins: ensure => 'stopped' }
+
+        class { ::jenkins::slave:
+          ui_user => 'imauser',
+          ui_pass => 'imapass',
+        }
+      EOS
+
+      # Run it twice and test for idempotency
+      apply(pp, :catch_failures => true)
+      apply(pp, :catch_changes => true)
+    end
+
+    describe process('java') do
+      its(:user) { should eq 'jenkins-slave' }
+      its(:args) { should match /-username imauser/ }
+      its(:args) { should match /-passwordEnvVariable JENKINS_PASSWORD/ }
+      its(:args) { should_not match /imapass/ }
+    end
+  end # username/password
 end
