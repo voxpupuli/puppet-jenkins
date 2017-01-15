@@ -1,190 +1,272 @@
-# Parameters:
 #
-# version = 'installed' (Default)
-#   Will NOT update jenkins to the most recent version.
+# This class manages the [Jenkins CI/CD service](https://jenkins.io/index.html).
 #
-# version = 'latest'
-#    Will automatically update the version of jenkins to the current version available via your package manager.
+# Note that if different jenkins listening port(s) are configured via
+# ``jenkins::port``, ``jenkins::config_hash`` and/or a ``jenkins::sysconf``
+# resource, "bad things" are likely to happen.  This is a known implementation
+# problem with this module that can not be fixed without breaking backwards
+# compatibility.
 #
-# lts = false
-#   Use the most up to date version of jenkins
+# @param version
+#   package to install
 #
-# lts = true (Default)
-#   Use LTS verison of jenkins
+#   * ``installed`` (Default)
+#     do NOT update jenkins to the most recent version.
+#   * ``latest``
+#    automatically update the version of jenkins to the current version
+#    available via your package manager.
 #
-# port = 8080 (default)
-#   Sets firewall port to 8080 if puppetlabs-firewall module is installed
+# @param lts
+#   use the upstream jenkins "Long Term Support" repos
 #
-# repo = true (Default)
-#   install the jenkins repo.
+#   * ``false``
+#     Use the most up to date version of jenkins
+#   * ``true`` (Default)
+#     Use LTS version of jenkins
 #
-# repo = 0
-#   Do NOT install a repo. This means you'll manage a repo manually outside
-#   this module.
-#   This is for folks that use a custom repo, or the like.
+# @param repo
+#   configure upstream jenkins package repos
 #
-# package_name = 'jenkins'
+#   ``false`` means do NOT configure the upstream jenkins package repo. This
+#   means you'll manage a repo manually outside this module.  This is for folks
+#   that use a custom repo, or the like.
+#
+# @param package_name
 #   Optionally override the package name
 #
-# direct_download = 'http://...'
-#   Ignore repostory based package installation and download and install
-#   package directly.  Leave as `undef` (the default) to download using your
-#   OS package manager
+# @param direct_download
+#   URL to jenkins package
 #
-# package_cache_dir  = '/var/cache/jenkins_pkgs'
-#   Optionally specify an alternate location to download packages to when using
-#   direct_download
+#   Ignore repository based package installation and download the package
+#   directly.  Leave as `undef` (the default) to download using your OS package
+#   manager
 #
-# manage_service = true (default)
-#   Enable management of Service[jenkins] by the module. When setting to false
-#   please ensure something else defines Service[jenkins] in order for some
-#   module functionality (e.g. jenkins::cli) to work properly
+# @param package_cache_dir
+#   Directory in which to store a ``direct_download`` package
 #
-# service_enable = true (default)
+# @param package_provider
+#   Override the ``package`` resource provider
+#
+#   This *only has effect* when using ``direct_download``.
+#
+# @param manage_service
+#   Enable management of ``Service[jenkins]`` resource
+#
+#   When setting to ``false`` please ensure something else defines
+#   ``Service[jenkins]`` in order for some module functionality (e.g.
+#   ``jenkins::cli``) to work properly
+#
+# @param service_enable
 #   Enable (or not) the jenkins service
 #
-# service_ensure = 'running' (default)
-#   Status of the jenkins service.  running, stopped
+# @param service_ensure
+#   Status of the jenkins service
 #
-# config_hash = undef (Default)
-#   Hash with config options to set in sysconfig/jenkins defaults/jenkins
+#   * ``running`` (default)
+#   * ``stopped``
 #
-# sysconfdir = (/etc/sysconfig/jenkins /etc/default/jenkins)
-#   Controls the path to the "sysconfig" file that stores jenkins service
-#   startup variables
+# @param service_provider
+#   Override ``Service[jenkins]`` resource provider
 #
-# manage_datadirs = true (default)
-#   true if this module should manage the local state dir, plugins dir and jobs dir
+#   Setting this to ``undef`` on platforms with ``systemd`` will force the
+#   usage of package provider sysv init scripts.
 #
-# localstatedir = '/var/lib/jenkins' (default)
-#   base path, in the autoconf sense, for jenkins local data including jobs and
-#   plugins
+# @param config_hash
+#   options to set in sysconfig/jenkins defaults/jenkins
 #
-# executors = undef (Default)
-#   Integer number of executors on the Jenkin's master.
+#   (see jenkins::sysconf)
 #
-# slaveagentport = undef (Default)
-#   Integer number of portnumber for the slave agent.
-#
-# manage_user = true (default)
-#
-# user = 'jenkins' (default)
-#`  system user that owns the jenkins master's files
-#
-# manage_group = true (default)
-#
-# group = 'jenkins' (default)
-#`  system group that owns the jenkins master's files
-#
-# Example use
-#
-# class{ 'jenkins':
-#   config_hash => {
-#     'HTTP_PORT' => { 'value' => '9090' }, 'AJP_PORT' => { 'value' => '9009' }
+# @example Bulk sysconf
+#   class{ 'jenkins':
+#     config_hash => {
+#       'HTTP_PORT' => { 'value' => '9090' },
+#       'AJP_PORT'  => { 'value' => '9009' },
+#     }
 #   }
-# }
 #
-# plugin_hash = undef (Default)
-# Hash with config plugins to install
+# @param plugin_hash
+#   plugins to install
 #
-# Example use
+#   (see jenkins::plugin)
 #
-# class{ 'jenkins::plugins':
-#   plugin_hash => {
-#     'git' => { version => '1.1.1' },
-#     'parameterized-trigger' => {},
-#     'multiple-scms' => {},
-#     'git-client' => {},
-#     'token-macro' => {},
+# @example Bulk plugin installation (code)
+#   class{ 'jenkins::plugins':
+#     plugin_hash => {
+#       'git' => { version => '1.1.1' },
+#       'parameterized-trigger' => {},
+#       'multiple-scms' => {},
+#       'git-client' => {},
+#       'token-macro' => {},
+#     }
 #   }
-# }
 #
-# OR in Hiera
+# @example Bulk plugin installation (hiera)
+#   jenkins::plugin_hash:
+#      git:
+#         version: '1.1.1'
+#      parameterized-trigger: {}
+#      multiple-scms: {}
+#      git-client: {}
+#      token-macro: {}
 #
-# jenkins::plugin_hash:
-#    'git':
-#       version: 1.1.1
-#    'parameterized-trigger': {}
-#    'multiple-scms': {}
-#    'git-client': {}
-#    'token-macro': {}
+# @param job_hash
+#   jobs to install
 #
+#   (see jenkins::job)
 #
-# user_hash = {} (Default)
-# Hash with users to create in jenkins
+# @param user_hash
+#   jenkins users to create
 #
-# Example use
+# @example Bulk user creation (code)
+#   class{ 'jenkins':
+#     user_hash => {
+#       'user1' => {
+#         'password' => 'pass1',
+#          'email'   => 'user1@example.com',
+#       }
+#     }
+#   }
 #
-# class{ 'jenkins':
-#   user_hash => {
-#     'user1' => { 'password' => 'pass1',
-#                     'email' => 'user1@example.com'}
-#
-# Or in Hiera
-#
-# jenkins::user_hash:
-#     'user1':
+# @example Bulk user creation (hiera)
+#   jenkins::user_hash:
+#     user:
 #       password: 'pass1'
 #       email: 'user1@example.com'
 #
-# configure_firewall = false (default)
+# @param configure_firewall
 #   For folks that want to manage the puppetlabs firewall module.
-#    - If it's not present in the catalog, nothing happens.
-#    - If it is, you need to explicitly set this true / false.
-#       - We didn't want you to have a service opened automatically, or unreachable inexplicably.
-#    - This default changed in v1.0 to be undef.
 #
+#    * If it's not present in the catalog, nothing happens.
+#    * If it is, you need to explicitly set this true / false.
+#       * We didn't want you to have a service opened automatically, or
+#       unreachable inexplicably.
+#    * This default changed in v1.0 to be undef.
 #
-# install_java = true (default)
-#   - use puppetlabs-java module to install the correct version of a JDK.
-#   - Jenkins requires a JRE
+# @param install_java
+#   use the ``puppetlabs-java`` module to install a JDK
 #
+#   Jenkins requires a JRE. Setting this to ``false`` means that you are
+#   response for managing a JDK outside of this module.
 #
-# cli = true (default)
-#   - force installation of the jenkins CLI jar to $libdir/cli/jenkins-cli.jar
-#   - the cli is automatically installed when needed by components that use it,
+# @param repo_proxy
+#   proxy to download packages
+#
+#   This parameter is only relevant for ``yum`` repos managed by this module.
+#
+# @param proxy_host
+#   proxy hostname for plugin installation via this module and the UpdateCenter
+#
+# @param proxy_port
+#   proxy port for plugin installation via this module and the UpdateCenter
+#
+# @param no_proxy_list
+#   List of hostname patterns to skip using the proxy.
+#
+#   * Only effective if "proxy_host" and "proxy_port" are set.
+#   * Only applies to plugins installed via the UpdateCenter
+#
+# @param cli
+#   install ``jenkins-cli.jar`` CLI utility
+#
+#   * force installation of the jenkins CLI jar to
+#   ``$libdir/cli/jenkins-cli.jar``
+#   * the cli is automatically installed when needed by components that use it,
 #     such as the user and credentials types, and the security class
-#   - CLI installation (both implicit and explicit) requires the unzip command
+#   * CLI installation (both implicit and explicit) requires the ``unzip``
+#   command
 #
-#
-# cli_ssh_keyfile = undef (default)
+# @param cli_ssh_keyfile
 #   Provides the location of an ssh private key file to make authenticated
 #   connections to the Jenkins CLI.
 #
-#
-# cli_tries = 10 (default)
+# @param cli_tries
 #   Retries until giving up talking to jenkins API
 #
-#
-# cli_try_sleep = 10 (default)
+# @param cli_try_sleep
 #   Seconds between tries to contact jenkins API
 #
-# repo_proxy = undef (default)
-#   If you environment requires a proxy to download packages
+# @param port
+#   Jenkins listening HTTP port
 #
-# proxy_host = undef (default)
-# proxy_port = undef (default)
-#   If your environment requires a proxy host to download plugins it can be configured here
+#   Note that this value is used for CLI communication and firewall
+#   configuration.  It does not configure the port on which the jenkins service
+#   listens. (see config_hash)
+# @param libdir
+#   Path to jenkins core files
 #
+#   * Redhat: ``/usr/lib/jenkins``
+#   * Debian: ``/usr/share/jenkins``
 #
-# no_proxy_list = undef (default)
-#   List of hostname patterns to skip using the proxy.
-#   - Accepts input as array only.
-#   - Only effective if "proxy_host" and "proxy_port" are set.
+# @param sysconfdir
+#   Controls the path to the "sysconfig" file that stores jenkins service
+#   start-up variables
 #
-# user = 'jenkins' (default)
+#   * RedHat: ``/etc/sysconfig/jenkins``
+#   * Debian: ``/etc/default/jenkins``
 #
-# group = 'jenkins' (default)
+# @param manage_datadirs
+#   manage the local state dir, plugins dir and jobs dir
 #
-# default_plugins = [ 'credentials' ] (default)
-#   List of default plugins to manage, overwrite if you manage
-#   all plugins
+# @param localstatedir
+#   base path, in the ``autoconf`` sense, for jenkins local data including jobs
+#   and plugins
 #
-# purge_plugins = false (default)
-#   Purge *all* plugins not explicitly managed by this module.  This will
-#   result in plugins manually installed via the UpdateCenter being removed.
-#   Only enable this option if you want to manage all plugins (and plugin
-#   dependencies) explicitly.
+# @param executors
+#   number of executors on the Jenkins master
+#
+# @param slaveagentport
+#   jenkins slave agent
+#
+# @param manage_user
+#   manage the system jenkins user
+#
+# @param user
+#   system user that owns the jenkins master's files
+#
+# @param manage_group
+#   manage the system jenkins group
+#
+# @param group
+#   system group that owns the jenkins master's files
+#
+# @param default_plugins
+#   List of default plugins installed by this module
+#
+#   The the ``credentials`` plugin is required for this module to properly
+#   function.  No version is specified.  Set to ``[]`` if you want to explicitly
+#   manage all plugins version
+#
+# @example Manage version of ``credentials`` plugin (hiera)
+#   jenkins::default_plugins: []
+#   jenkins::plugin_hash:
+#     credentials:
+#       version: 2.1.5
+#       digest_string: 7db002e7b053f863e2ce96fb58abb98a9c01b09c
+#       digest_type: sha1
+#
+# @param purge_plugins
+#   Purge *all* plugins not explicitly managed by this module
+#
+#   This will result in plugins manually installed via the UpdateCenter being
+#   removed.  Only enable this option if you want to manage all plugins (and
+#   plugin dependencies) explicitly.
+#
+# @example Explicitly manage *all* plugins (hiera)
+#   jenkins::default_plugins: []
+#   jenkins::purge_plugins: true
+#   jenkins::plugin_hash:
+#     credentials:
+#       version: '2.1.10'
+#     support-core:
+#       version: '2.38'
+#     # support-core deps
+#     metrics:
+#       version: '3.1.2.9'
+#     jackson2-api:
+#       version: '2.7.3'
+#     bouncycastle-api:
+#       version: '2.16.0'
+#     # /support-core deps
 #
 class jenkins(
   $version            = $jenkins::params::version,
