@@ -320,7 +320,7 @@ Style/EmptyLiteral:
 Metrics/LineLength:
   Enabled: false
 
-Style/MethodCallParentheses:
+Style/MethodCallWithoutArgsParentheses:
   Enabled: false
 
 Style/MethodDefParentheses:
@@ -661,4 +661,7 @@ Style/SymbolLiteral:
   Enabled: false
 
 Style/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
+Metrics/BlockLength:
   Enabled: false
