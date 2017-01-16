@@ -10,7 +10,7 @@ exclude_paths = [
   'pkg/**/*',
   'vendor/**/*',
   'spec/**/*',
-  'contrib/**/*'
+  'examples/**/*'
 ]
 
 # Make sure we don't have the default rake task floating around
