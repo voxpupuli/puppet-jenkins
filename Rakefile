@@ -1,6 +1,4 @@
 require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-lint/tasks/puppet-lint'
-require 'puppet-syntax/tasks/puppet-syntax'
 require 'rubocop/rake_task'
 require 'puppet-strings/tasks'
 
@@ -45,20 +43,6 @@ namespace :travis do
     end
   end
 end
-
-begin
-  require 'parallel_tests'
-  require 'parallel_tests/cli'
-  desc 'Parallel spec tests'
-  task :parallel_spec do
-    Rake::Task[:spec_prep].invoke
-    ParallelTests::CLI.new.run('--type test -t rspec spec/classes spec/defines spec/unit spec/functions'.split)
-    Rake::Task[:spec_clean].invoke
-  end
-rescue LoadError
-  task :parallel_spec => [:spec]
-end
-
 
 task :default => [
   :rubocop,

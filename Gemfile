@@ -4,7 +4,7 @@ gem 'rake', '>= 10.1.1'
 gem 'rspec-its'
 gem 'puppet-lint', '~> 2.0'
 gem 'rspec-puppet', '~> 2.5.0'
-gem 'puppetlabs_spec_helper',   :require => false
+gem 'puppetlabs_spec_helper', '~> 1.2.2',  :require => false
 gem 'puppet-syntax', '~> 2.0'
 gem 'json'
 gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7'
