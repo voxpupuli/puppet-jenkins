@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'rspec'
 require 'rspec/its'
 require 'puppetlabs_spec_helper/module_spec_helper'
