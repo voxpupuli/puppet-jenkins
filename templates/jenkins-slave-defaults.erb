@@ -19,12 +19,6 @@ JENKINS_SLAVE_USER=<%= @slave_user -%>
 # location of the jenkins war file
 JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
 
-# XXX this variable is only used by the debian init script
-# set this to false if you don't want Hudson to run by itself
-# in this set up, you are expected to provide a servlet container
-# to host jenkins.
-RUN_STANDALONE=true
-
 # log location.  this may be a syslog facility.priority
 JENKINS_SLAVE_LOG=/var/log/jenkins-slave/jenkins-slave.log
 
