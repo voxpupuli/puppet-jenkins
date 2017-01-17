@@ -116,7 +116,7 @@ describe 'jenkins::slave' do
       end
 
       it 'should set swarm_client_args' do
-        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS=" #{args}"$/)
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args}"$/)
       end
     end
 
@@ -130,7 +130,7 @@ describe 'jenkins::slave' do
 
       it 'should convert swarm_client_args to a string' do
         args_as_string = args.join ' '
-        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS=" #{args_as_string}"$/)
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args_as_string}"$/)
       end
     end
 

@@ -114,5 +114,41 @@ describe 'jenkins::slave class' do
         end
       end # false
     end # disable_clients_unique_id
+
+    context 'disable_ssl_verification' do
+      context 'true' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_ssl_verification => true,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-disableSslVerification/ }
+        end
+      end # true
+
+      context 'false' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_ssl_verification => false,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should_not match /-disableSslVerification/ }
+        end
+      end # false
+    end # disable_ssl_verification
   end # parameters
 end

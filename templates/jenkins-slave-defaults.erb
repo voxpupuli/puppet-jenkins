@@ -49,9 +49,11 @@ DESCRIPTION="<%= @description -%>"
 JENKINS_USERNAME=<%= @quoted_ui_user %>
 JENKINS_PASSWORD=<%= @quoted_ui_pass %>
 
-OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%> <%= @_real_swarm_client_args %>"
+OTHER_ARGS="<%= @_real_swarm_client_args %>"
+
 # boolean; any value but 'true' is considered false
 DISABLE_CLIENTS_UNIQUE_ID="<%= 'true' if @disable_clients_unique_id -%>"
+DISABLE_SSL_VERIFICATION="<%= 'true' if @disable_ssl_verification -%>"
 
 if [ -n "$JENKINS_USERNAME" ]; then
   USERNAME_ARG="-username $JENKINS_USERNAME"
@@ -81,6 +83,10 @@ if [ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]; then
   DISABLE_UNIQUE_ARG='-disableClientsUniqueId'
 fi
 
+if [ "$DISABLE_SSL_VERIFICATION=" == 'true']; then
+  DISABLE_SSL_ARG='-disableSslVerification'
+fi
+
 <% if @tool_locations %>
   TOOL_LOCATIONS_ARG=""
   <% @tool_locations.split.each do |tool_location| %>
@@ -96,4 +102,4 @@ if [ -n "$AUTO_DISCOVERY_ADDRESS" ]; then
   AUTO_DISCOVERY_ADDRESS_ARG="-autoDiscoveryAddress '$AUTO_DISCOVERY_ADDRESS'"
 fi
 
-JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $USERNAME_ARG $PASSWORD_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $AUTO_DISCOVERY_ADDRESS_ARG $TOOL_LOCATIONS_ARG $DESCRIPTION_ARG $OTHER_ARGS $DISABLE_UNIQUE_ARG"
+JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $USERNAME_ARG $PASSWORD_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $AUTO_DISCOVERY_ADDRESS_ARG $TOOL_LOCATIONS_ARG $DESCRIPTION_ARG $OTHER_ARGS $DISABLE_UNIQUE_ARG $DISABLE_SSL_ARG"
