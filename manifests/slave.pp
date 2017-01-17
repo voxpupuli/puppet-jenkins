@@ -197,6 +197,14 @@ class jenkins::slave (
     }
   }
 
+  # the "public" API for tool_locations is a space seperated string in the
+  # format "<name>:<path> [<name>:<path> ...]"
+  # XXX a hash would be a more reasonable interface
+  $_real_tool_locations = $tool_locations ? {
+    undef   => undef,
+    default => regsubst($tool_locations, ':', '=', 'G'),
+  }
+
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin

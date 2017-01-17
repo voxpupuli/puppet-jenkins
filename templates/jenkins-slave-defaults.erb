@@ -55,6 +55,9 @@ OTHER_ARGS="<%= @_real_swarm_client_args %>"
 DISABLE_CLIENTS_UNIQUE_ID="<%= 'true' if @disable_clients_unique_id -%>"
 DISABLE_SSL_VERIFICATION="<%= 'true' if @disable_ssl_verification -%>"
 
+# "<name>=<path> [<name>=<path> ...]"
+TOOL_LOCATIONS="<%= @_real_tool_locations %>"
+
 if [ -n "$JENKINS_USERNAME" ]; then
   USERNAME_ARG="-username $JENKINS_USERNAME"
 fi
@@ -83,16 +86,15 @@ if [ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]; then
   DISABLE_UNIQUE_ARG='-disableClientsUniqueId'
 fi
 
-if [ "$DISABLE_SSL_VERIFICATION=" == 'true']; then
+if [ "$DISABLE_SSL_VERIFICATION" == true ]; then
   DISABLE_SSL_ARG='-disableSslVerification'
 fi
 
-<% if @tool_locations %>
-  TOOL_LOCATIONS_ARG=""
-  <% @tool_locations.split.each do |tool_location| %>
-    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>"
-  <% end %>
-<% end %>
+if [ -n "$TOOL_LOCATIONS" ]; then
+  for t in $TOOL_LOCATIONS; do
+    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation $t"
+  done
+fi
 
 if [ -n "$DESCRIPTION" ]; then
   DESCRIPTION_ARG="-description '$DESCRIPTION'"

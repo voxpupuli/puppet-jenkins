@@ -56,8 +56,8 @@ describe 'jenkins::slave' do
       let(:params) { { :tool_locations => 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
       it do
         should contain_file(slave_runtime_file).
-          with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
-          with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/)
+          with_content(/Python-2.7=\/usr\/bin\/python2.7/).
+          with_content(/Java-1.8=\/usr\/bin\/java/)
       end
     end
 

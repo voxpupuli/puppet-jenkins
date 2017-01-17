@@ -150,5 +150,27 @@ describe 'jenkins::slave class' do
         end
       end # false
     end # disable_ssl_verification
+
+    context 'tool_locations' do
+      tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
+
+      context tool_locations do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              tool_locations => '#{tool_locations}',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /--toolLocation Python-2.7=\/usr\/bin\/python2.7/ }
+          its(:args) { should match /--toolLocation Java-1.8=\/usr\/bin\/java/ }
+        end
+      end
+    end # tool_locations
   end # parameters
 end
