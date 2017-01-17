@@ -14,6 +14,11 @@ else
     RUNUSER=su
 fi
 
+# export is required to be inherited by the runuser env
+if [[ -n "${JENKINS_PASSWORD+x}" ]]; then
+    export JENKINS_PASSWORD
+fi
+
 # Run swarm client
-exec $RUNUSER - "$JENKINS_SLAVE_USER" \
+exec $RUNUSER -p "$JENKINS_SLAVE_USER" \
     -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS"
