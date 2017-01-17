@@ -1,8 +1,4 @@
-require 'rubygems'
-require 'rake'
 require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-lint/tasks/puppet-lint'
-require 'puppet-syntax/tasks/puppet-syntax'
 require 'rubocop/rake_task'
 require 'puppet-strings/tasks'
 
@@ -12,7 +8,7 @@ exclude_paths = [
   'pkg/**/*',
   'vendor/**/*',
   'spec/**/*',
-  'contrib/**/*'
+  'examples/**/*'
 ]
 
 # Make sure we don't have the default rake task floating around
@@ -24,11 +20,6 @@ PuppetLint::RakeTask.new(:lint) do |l|
   l.ignore_paths = exclude_paths
   l.fail_on_warnings = true
   l.log_format = '%{path}:%{linenumber}:%{check}:%{KIND}:%{message}'
-end
-
-desc 'Run acceptance tests'
-RSpec::Core::RakeTask.new(:acceptance) do |t|
-  t.pattern = 'spec/acceptance'
 end
 
 PuppetSyntax.exclude_paths = exclude_paths
@@ -48,23 +39,21 @@ namespace :travis do
   end
 end
 
-begin
-  require 'parallel_tests'
-  require 'parallel_tests/cli'
-  desc 'Parallel spec tests'
-  task :parallel_spec do
-    Rake::Task[:spec_prep].invoke
-    ParallelTests::CLI.new.run('--type test -t rspec spec/classes spec/defines spec/unit spec/functions'.split)
-    Rake::Task[:spec_clean].invoke
-  end
-rescue LoadError
-  task :parallel_spec => [:spec]
-end
-
-
-task :default => [
-  :rubocop,
+default_tasks = [
   :lint,
   :validate,
   :parallel_spec,
 ]
+
+# rubocop 0.47.0 blows up with puppet 3.8, mostly likely due to monkey patching
+# shenanigans:
+#   Running RuboCop...
+#   wrong number of arguments (5 for 1..3)
+#  ../puppet-jenkins/.bundle/ruby/2.0.0/gems/puppet-3.8.7/lib/puppet/vendor/safe_yaml/lib/safe_yaml.rb:162:in `safe_load'
+
+require 'puppet'
+if not Puppet.version =~ /^3/
+  default_tasks.unshift :rubocop
+end
+
+task :default => default_tasks

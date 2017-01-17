@@ -26,8 +26,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provi
 
   # ignore #create so we can differentiate in #flush between an update to an
   # existing job and creating a new one
-  def create
-  end
+  def create; end
 
   def flush
     update = false

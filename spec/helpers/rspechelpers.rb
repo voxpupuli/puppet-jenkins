@@ -1,11 +1,9 @@
-require 'rubygems'
 require 'rspec'
 
 
 module Jenkins
   module RSpecHelpers
-    def clear_facts
-    end
+    def clear_facts; end
 
     shared_context 'custom fact example', :type => :fact do
       # Need to make sure we clear out our facts at the start to make sure that

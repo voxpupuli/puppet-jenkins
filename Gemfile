@@ -1,36 +1,31 @@
 source 'https://rubygems.org'
 
-gem 'rake', '>= 10.1.1'
-gem 'rspec-its'
-gem 'puppet-lint', '~> 1.0'
-gem 'rspec-puppet', '~> 2.1.0'
-gem 'puppetlabs_spec_helper',   :require => false
-gem 'puppet-syntax', '>= 1.1.0'
-gem 'json'
-gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7'
-gem 'metadata-json-lint'
-gem 'retries', '~> 0.0.5'
-gem 'travis', '~> 1.8'
-gem 'parallel_tests', :platform => [:mri_20, :mri_21]
-gem 'rubocop', '< 0.42.0'
-
-gem 'json_pure', '< 2.0.2'
-gem 'net-http-persistent', '<= 2.9.4', :require => false if RUBY_VERSION < '2.0.0'
-gem 'puppet-strings'
+gem 'json',                                      :require => false
+gem 'metadata-json-lint',                        :require => false
+gem 'parallel_tests',                            :require => false
+gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7', :require => false
+gem 'puppet-lint', '~> 2.0',                     :require => false
+gem 'puppet-strings',                            :require => false
+gem 'puppet-syntax', '~> 2.0',                   :require => false
+gem 'puppetlabs_spec_helper', '~> 1.2.2',        :require => false
+gem 'rake', '>= 10.1.1',                         :require => false
+gem 'retries', '~> 0.0.5',                       :require => false
+gem 'rspec-its',                                 :require => false
+gem 'rspec-puppet', '~> 2.5.0',                  :require => false
+gem 'rubocop', '~> 0.47.0',                      :require => false
+gem 'travis', '~> 1.8',                          :require => false
 
 group :development do
-  gem 'simplecov'
+  gem 'byebug'
   gem 'ci_reporter'
-  gem 'debugger', :platform => :mri_19
-  gem 'debugger-pry', :platform => :mri_19
-  gem 'byebug', :platform => [:mri_20, :mri_21]
   gem 'pry'
-  gem 'pry-byebug', :platform => [:mri_20, :mri_21]
+  gem 'pry-byebug'
+  gem 'simplecov'
 end
 
 group :system_tests do
-  gem 'beaker-rspec', '~> 5.6.0', :require => false
-  gem 'serverspec',    :require => false
-  gem 'vagrant-wrapper',:require => false
   gem 'beaker-puppet_install_helper', :require => false
+  gem 'beaker-rspec', '~> 6.0.0',     :require => false
+  gem 'serverspec',                   :require => false
+  gem 'vagrant-wrapper',              :require => false
 end
