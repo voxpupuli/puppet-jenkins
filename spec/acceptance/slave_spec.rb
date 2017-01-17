@@ -9,9 +9,7 @@ describe 'jenkins::slave class' do
         include ::jenkins::slave
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_changes => true)
+      apply2(pp)
     end
 
     if fact('systemd')

@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'jenkins class' do
+describe 'jenkins class', :order => :defined do
   $pdir = '/var/lib/jenkins/plugins'
   let(:pdir) { $pdir }
 
@@ -49,9 +49,7 @@ describe 'jenkins class' do
       }
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_failures => true)
+      apply2(pp)
     end
 
     it_behaves_like 'has_git_plugin'
@@ -71,9 +69,7 @@ describe 'jenkins class' do
         }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_failures => true)
+        apply2(pp)
       end
 
       it_behaves_like 'has_git_plugin'
@@ -98,9 +94,7 @@ describe 'jenkins class' do
         }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_failures => true)
+        apply2(pp)
       end
 
       it_behaves_like 'has_git_plugin'

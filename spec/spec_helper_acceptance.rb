@@ -74,3 +74,9 @@ def apply(pp, options = {})
 
   apply_manifest(pp, options)
 end
+
+# Run it twice and test for idempotency
+def apply2(pp)
+  apply(pp, :catch_failures => true)
+  apply(pp, :catch_changes => true)
+end
