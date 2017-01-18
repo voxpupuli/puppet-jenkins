@@ -175,46 +175,55 @@ describe 'jenkins::slave' do
   end
 
   describe 'RedHat' do
-    let(:facts) do
-      {
-        :osfamily                  => 'RedHat',
-        :operatingsystem           => 'CentOS',
-        :operatingsystemrelease    => '6.7',
-        :operatingsystemmajrelease => '6',
-        :kernel                    => 'Linux',
-        :systemd                   => false
-      }
-    end
-    let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
-    let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
-    it_behaves_like 'a jenkins::slave catalog'
-
-    describe 'with slave_name' do
-      let(:params) { { :slave_name => 'jenkins-slave' } }
-      it_behaves_like 'using slave_name'
-    end
-
-    it { should_not contain_package('daemon') }
-
-    context '::jenkins & ::jenkins::slave should co-exist' do
-      let(:pre_condition) do
-        <<-'EOS'
-          include ::jenkins
-          include ::jenkins::slave
-        EOS
+    context 'sysv init' do
+      let(:facts) do
+        {
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'CentOS',
+          :operatingsystemrelease    => '6.7',
+          :operatingsystemmajrelease => '6',
+          :kernel                    => 'Linux',
+          :systemd                   => false
+        }
       end
+      let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
+      let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
+      let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
 
-      it { should_not raise_error }
-    end
+      it_behaves_like 'a jenkins::slave catalog'
 
-    describe 'with proxy_server' do
-      let(:params) { { :proxy_server => 'https://foo' } }
       it do
-        should contain_archive('get_swarm_client').with(
-          :proxy_server => 'https://foo'
-        )
+        should contain_file(slave_startup_script)
+          .that_notifies('Service[jenkins-slave]')
       end
-    end
+
+      describe 'with slave_name' do
+        let(:params) { { :slave_name => 'jenkins-slave' } }
+        it_behaves_like 'using slave_name'
+      end
+
+      it { should_not contain_package('daemon') }
+
+      context '::jenkins & ::jenkins::slave should co-exist' do
+        let(:pre_condition) do
+          <<-'EOS'
+            include ::jenkins
+            include ::jenkins::slave
+          EOS
+        end
+
+        it { should_not raise_error }
+      end
+
+      describe 'with proxy_server' do
+        let(:params) { { :proxy_server => 'https://foo' } }
+        it do
+          should contain_archive('get_swarm_client').with(
+            :proxy_server => 'https://foo'
+          )
+        end
+      end
+    end # sysv init
 
     describe 'with systemd' do
       let(:facts) do
@@ -227,6 +236,7 @@ describe 'jenkins::slave' do
           :systemd                   => true
         }
       end
+      let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
       let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
       let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
       let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }

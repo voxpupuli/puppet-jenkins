@@ -5,12 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-# Note: the jenkins-slave sysconfig/defaults file currently has shell variable
-# expansions and conditional logic in it that is incapability with systemd's
-# concept of an `EnvironmentFile`.  Thus, the sysconfig has to be sourced by
-# the run/wrapper script.  This [sadly] requires that the run script be run as
-# root so that it has the effective permission to read this file.
-#
+User=<%= scope['jenkins::slave::slave_user'] %>
+EnvironmentFile=<%= scope['jenkins::params::sysconfdir'] %>/jenkins-slave
 ExecStart=<%= scope['jenkins::slave::slave_home'] %>/jenkins-slave-run
 Restart=always
 RestartSec=60

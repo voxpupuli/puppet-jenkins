@@ -242,13 +242,20 @@ class jenkins::slave (
           libdir => $slave_home,
         }
       } else {
+        file { "${slave_home}/${service_name}-run":
+          content => template("${module_name}/${service_name}-run.erb"),
+          owner   => $slave_user,
+          mode    => '0755',
+          notify  => Service[$service_name],
+        }
+
         file { $sysv_init:
-          ensure => 'file',
-          mode   => '0755',
-          owner  => 'root',
-          group  => 'root',
-          source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
-          notify => Service['jenkins-slave'],
+          ensure  => 'file',
+          mode    => '0755',
+          owner   => 'root',
+          group   => 'root',
+          content => template("${module_name}/${service_name}.${::osfamily}.erb"),
+          notify  => Service[$service_name],
         }
       }
     }

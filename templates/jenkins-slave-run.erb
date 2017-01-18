@@ -1,24 +1,51 @@
-#!/bin/sh
+#!/bin/bash
 
-# Note: this script generally must be run as root in order to access
-# sysconfig/default files.
-
-JENKINS_CONFIG=<%= scope['jenkins::params::sysconfdir'] %>/jenkins-slave
-
-# Read config
-[ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
-
-if [ -x /sbin/runuser ] ; then
-    RUNUSER=runuser
-else
-    RUNUSER=su
+if [ -n "$JENKINS_USERNAME" ]; then
+  USERNAME_ARG="-username $JENKINS_USERNAME"
 fi
 
-# export is required to be inherited by the runuser env
-if [[ -n "${JENKINS_PASSWORD+x}" ]]; then
-    export JENKINS_PASSWORD
+if [ -n "$JENKINS_PASSWORD" ]; then
+  PASSWORD_ARG="-passwordEnvVariable JENKINS_PASSWORD"
 fi
 
-# Run swarm client
-exec $RUNUSER -p "$JENKINS_SLAVE_USER" \
-    -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS"
+if [ -n "$CLIENT_NAME" ]; then
+  NAME_ARG="-name $CLIENT_NAME"
+fi
+
+if [ -n "$MASTER_URL" ]; then
+  MASTER_URL_ARG="-master $MASTER_URL"
+fi
+
+if [ -n "$LABELS" ]; then
+  LABELS_ARG="-labels '$LABELS'"
+fi
+
+if [ -n "$FSROOT" ]; then
+  FSROOT_ARG="-fsroot '$FSROOT'"
+fi
+
+if [ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]; then
+  DISABLE_UNIQUE_ARG='-disableClientsUniqueId'
+fi
+
+if [ "$DISABLE_SSL_VERIFICATION" == true ]; then
+  DISABLE_SSL_ARG='-disableSslVerification'
+fi
+
+if [ -n "$TOOL_LOCATIONS" ]; then
+  for t in $TOOL_LOCATIONS; do
+    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation $t"
+  done
+fi
+
+if [ -n "$DESCRIPTION" ]; then
+  DESCRIPTION_ARG="-description '$DESCRIPTION'"
+fi
+
+if [ -n "$AUTO_DISCOVERY_ADDRESS" ]; then
+  AUTO_DISCOVERY_ADDRESS_ARG="-autoDiscoveryAddress '$AUTO_DISCOVERY_ADDRESS'"
+fi
+
+JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $USERNAME_ARG $PASSWORD_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $AUTO_DISCOVERY_ADDRESS_ARG $TOOL_LOCATIONS_ARG $DESCRIPTION_ARG $OTHER_ARGS $DISABLE_UNIQUE_ARG $DISABLE_SSL_ARG"
+
+$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS
