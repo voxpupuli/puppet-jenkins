@@ -168,6 +168,26 @@ describe 'jenkins::slave' do
           .with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
       end
     end
+
+    describe 'delete_existing_clients' do
+      context 'true' do
+        let(:params) {{ :delete_existing_clients => true }}
+
+        it do
+          should contain_file(slave_runtime_file)
+            .with_content(/^DELETE_EXISTING_CLIENTS="true"$/)
+        end
+      end
+
+      context 'false' do
+        let(:params) {{ :delete_existing_clients => false }}
+
+        it do
+          should contain_file(slave_runtime_file)
+            .with_content(/^DELETE_EXISTING_CLIENTS=""$/)
+        end
+      end
+    end # delete_existing_clients
   end
 
   shared_examples 'using slave_name' do

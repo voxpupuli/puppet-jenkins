@@ -151,6 +151,42 @@ describe 'jenkins::slave class' do
       end # false
     end # disable_ssl_verification
 
+    context 'delete_existing_clients' do
+      context 'true' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              delete_existing_clients => true,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-deleteExistingClients/ }
+        end
+      end # true
+
+      context 'false' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              delete_existing_clients => false,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should_not match /-deleteExistingClients/ }
+        end
+      end # false
+    end # delete_existing_clients
+
     context 'tool_locations' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
 

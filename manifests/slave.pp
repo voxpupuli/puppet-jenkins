@@ -124,7 +124,7 @@ class jenkins::slave (
   $slave_uid                 = undef,
   $slave_home                = '/home/jenkins-slave',
   $slave_mode                = 'normal',
-  $disable_ssl_verification = false,
+  $disable_ssl_verification  = false,
   $disable_clients_unique_id = false,
   $labels                    = undef,
   $tool_locations            = undef,
@@ -135,7 +135,8 @@ class jenkins::slave (
   $source                    = undef,
   $java_args                 = undef,
   $proxy_server              = undef,
-  $swarm_client_args        = undef,
+  $swarm_client_args         = undef,
+  $delete_existing_clients   = false,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -158,6 +159,7 @@ class jenkins::slave (
   validate_bool($enable)
   validate_string($source)
   validate_string($proxy_server)
+  validate_bool($delete_existing_clients)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {

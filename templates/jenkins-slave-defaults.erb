@@ -54,6 +54,7 @@ OTHER_ARGS="<%= @_real_swarm_client_args %>"
 # boolean; any value but 'true' is considered false
 DISABLE_CLIENTS_UNIQUE_ID="<%= 'true' if @disable_clients_unique_id -%>"
 DISABLE_SSL_VERIFICATION="<%= 'true' if @disable_ssl_verification -%>"
+DELETE_EXISTING_CLIENTS="<%= 'true' if @delete_existing_clients -%>"
 
 # "<name>=<path> [<name>=<path> ...]"
 TOOL_LOCATIONS="<%= @_real_tool_locations %>"

@@ -48,6 +48,9 @@ SLAVE_ARGS+=(-jar $JENKINS_SLAVE_JAR)
 [[ "$DISABLE_SSL_VERIFICATION" == true ]] &&
   SLAVE_ARGS+=(-disableSslVerification)
 
+[[ "$DELETE_EXISTING_CLIENTS" == true ]] &&
+  SLAVE_ARGS+=(-deleteExistingClients)
+
 [[ -n "$DESCRIPTION" ]] &&
  SLAVE_ARGS+=(-description $DESCRIPTION)
 
