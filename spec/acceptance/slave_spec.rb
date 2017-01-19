@@ -12,7 +12,7 @@ describe 'jenkins::slave class' do
       apply2(pp)
     end
 
-    if fact('systemd')
+    if $systemd
       describe file('/etc/systemd/system/jenkins-slave.service') do
         it { should be_file }
         it { should contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
