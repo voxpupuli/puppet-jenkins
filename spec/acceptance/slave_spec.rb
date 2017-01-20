@@ -187,6 +187,59 @@ describe 'jenkins::slave class' do
       end # false
     end # delete_existing_clients
 
+    context 'labels' do
+      context 'single label in string' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              labels => 'foo',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-labels foo/ }
+        end
+      end
+
+      context 'multiple labels in string' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              labels => 'foo bar baz',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-labels foo bar baz/ }
+        end
+      end
+
+      context 'multiple labels in array' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              labels => ['foo', 'bar', 'baz'],
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-labels foo bar baz/ }
+        end
+      end
+    end # labels
+
     context 'tool_locations' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
 
