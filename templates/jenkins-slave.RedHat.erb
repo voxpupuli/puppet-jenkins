@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # /etc/init.d/jenkins-slave
 # init script for Jenkins Slave Swarm Client.
@@ -36,9 +36,15 @@ slave_start() {
   mkdir -p `dirname $JENKINS_SLAVE_LOG` > /dev/null 2>&1 || true
   chown $JENKINS_SLAVE_USER -R `dirname $JENKINS_SLAVE_LOG`
 
+  # export is required for sysconfig values to be inherited by the su/runuser
+  # env
+  export_sysconfig
+
   # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
   # so we let su do so for us now
-  $RUNUSER - $JENKINS_SLAVE_USER -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS >> $JENKINS_SLAVE_LOG 2>&1 &"
+  $RUNUSER $JENKINS_SLAVE_USER -c "<%= scope['jenkins::slave::slave_home'] %>/jenkins-slave-run >> $JENKINS_SLAVE_LOG 2>&1 &"
+  # the shell may take a moment to exec the jvm causing pgrep to come up empty
+  sleep 1
   pgrep -f -u $JENKINS_SLAVE_USER $JENKINS_SLAVE_JAR > $PIDFILE
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch $LOCK_FILE
@@ -72,6 +78,37 @@ slave_status() {
   status -p $PIDFILE
   RETVAL=$?
 }
+
+export_sysconfig() {
+  local sysconfig=(
+    JAVA
+    JAVA_ARGS
+    JENKINS_SLAVE_USER
+    JENKINS_SLAVE_JAR
+    JENKINS_SLAVE_LOG
+    JENKINS_SLAVE_MODE
+    MAXOPENFILES
+    MASTER_URL
+    AUTO_DISCOVERY_ADDRESS
+    LABELS
+    EXECUTORS
+    CLIENT_NAME
+    FSROOT
+    DESCRIPTION
+    JENKINS_USERNAME
+    JENKINS_PASSWORD
+    OTHER_ARGS
+    DISABLE_CLIENTS_UNIQUE_ID
+    DISABLE_SSL_VERIFICATION
+    DELETE_EXISTING_CLIENTS
+    TOOL_LOCATIONS
+  )
+
+  for v in ${sysconfig[*]}; do
+    [[ -n "${v+x}" ]] && export $v
+  done
+}
+
 case "$1" in
   start)
     slave_start

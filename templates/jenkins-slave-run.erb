@@ -1,24 +1,69 @@
-#!/bin/sh
+#!/bin/bash
 
-# Note: this script generally must be run as root in order to access
-# sysconfig/default files.
+set -e
 
-JENKINS_CONFIG=<%= scope['jenkins::params::sysconfdir'] %>/jenkins-slave
+fail() {
+  echo -e "$@"
+  exit 1
+}
 
-# Read config
-[ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
+# mandatory input vars
+[[ -x "$JAVA" ]] || (fail "$JAVA is not executable")
+[[ -f "$JENKINS_SLAVE_JAR" ]] || (fail "$JENKINS_SLAVE_JAR not accessible")
 
-if [ -x /sbin/runuser ] ; then
-    RUNUSER=runuser
-else
-    RUNUSER=su
+SLAVE_ARGS=()
+
+[[ -n "$JAVA_ARGS" ]] &&
+  SLAVE_ARGS+=($JAVA_ARGS)
+
+SLAVE_ARGS+=(-jar $JENKINS_SLAVE_JAR)
+
+[[ -n "$JENKINS_SLAVE_MODE" ]] &&
+  SLAVE_ARGS+=(-mode $JENKINS_SLAVE_MODE)
+
+[[ -n "$EXECUTORS" ]] &&
+  SLAVE_ARGS+=(-executors $EXECUTORS)
+
+[[ -n "$JENKINS_USERNAME" ]] &&
+  SLAVE_ARGS+=(-username $JENKINS_USERNAME)
+
+[[ -n "$JENKINS_PASSWORD" ]] &&
+  SLAVE_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
+
+[[ -n "$CLIENT_NAME" ]] &&
+  SLAVE_ARGS+=(-name $CLIENT_NAME)
+
+[[ -n "$MASTER_URL" ]] &&
+  SLAVE_ARGS+=(-master $MASTER_URL)
+
+[[ -n "$LABELS" ]] &&
+  SLAVE_ARGS+=(-labels $LABELS)
+
+[[ -n "$FSROOT" ]] &&
+  SLAVE_ARGS+=(-fsroot $FSROOT)
+
+[[ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]] &&
+  SLAVE_ARGS+=(-disableClientsUniqueId)
+
+[[ "$DISABLE_SSL_VERIFICATION" == true ]] &&
+  SLAVE_ARGS+=(-disableSslVerification)
+
+[[ "$DELETE_EXISTING_CLIENTS" == true ]] &&
+  SLAVE_ARGS+=(-deleteExistingClients)
+
+[[ -n "$DESCRIPTION" ]] &&
+ SLAVE_ARGS+=(-description $DESCRIPTION)
+
+[[ -n "$AUTO_DISCOVERY_ADDRESS" ]] &&
+  SLAVE_ARGS+=(-autoDiscoveryAddress $AUTO_DISCOVERY_ADDRESS)
+
+if [ -n "$TOOL_LOCATIONS" ]; then
+  for t in $TOOL_LOCATIONS; do
+    SLAVE_ARGS+=(--toolLocation $t)
+  done
 fi
 
-# export is required to be inherited by the runuser env
-if [[ -n "${JENKINS_PASSWORD+x}" ]]; then
-    export JENKINS_PASSWORD
-fi
+[[ -n "$OTHER_ARGS" ]] &&
+  SLAVE_ARGS+=($OTHER_ARGS)
 
-# Run swarm client
-exec $RUNUSER -p "$JENKINS_SLAVE_USER" \
-    -c "$JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS"
+$JAVA "${SLAVE_ARGS[@]}"

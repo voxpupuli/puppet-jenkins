@@ -11,9 +11,7 @@ describe 'jenkins class' do
       }
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_changes => true)
+      apply2(pp)
     end
 
     describe port(8080) do
@@ -41,7 +39,7 @@ describe 'jenkins class' do
       it { should be_enabled }
     end
 
-    if fact('osfamily') == 'RedHat' and fact('systemd')
+    if fact('osfamily') == 'RedHat' and $systemd
       describe file('/etc/systemd/system/jenkins.service') do
         it { should be_file }
         it { should contain "ExecStart=#{libdir}/jenkins-run" }
@@ -70,9 +68,7 @@ describe 'jenkins class' do
       }
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_changes => true)
+      apply2(pp)
     end
 
     describe port(8080) do
@@ -99,9 +95,7 @@ describe 'jenkins class' do
         }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_changes => true)
+        apply2(pp)
       end
 
       describe port(8080) do

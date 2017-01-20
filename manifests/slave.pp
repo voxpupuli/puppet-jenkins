@@ -124,7 +124,7 @@ class jenkins::slave (
   $slave_uid                 = undef,
   $slave_home                = '/home/jenkins-slave',
   $slave_mode                = 'normal',
-  $disable_ssl_verification = false,
+  $disable_ssl_verification  = false,
   $disable_clients_unique_id = false,
   $labels                    = undef,
   $tool_locations            = undef,
@@ -135,7 +135,8 @@ class jenkins::slave (
   $source                    = undef,
   $java_args                 = undef,
   $proxy_server              = undef,
-  $swarm_client_args        = undef,
+  $swarm_client_args         = undef,
+  $delete_existing_clients   = false,
 ) inherits jenkins::params {
   validate_string($slave_name)
   validate_string($description)
@@ -158,6 +159,7 @@ class jenkins::slave (
   validate_bool($enable)
   validate_string($source)
   validate_string($proxy_server)
+  validate_bool($delete_existing_clients)
 
   $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   $client_url = $source ? {
@@ -197,6 +199,14 @@ class jenkins::slave (
     }
   }
 
+  # the "public" API for tool_locations is a space seperated string in the
+  # format "<name>:<path> [<name>:<path> ...]"
+  # XXX a hash would be a more reasonable interface
+  $_real_tool_locations = $tool_locations ? {
+    undef   => undef,
+    default => regsubst($tool_locations, ':', '=', 'G'),
+  }
+
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
@@ -234,13 +244,20 @@ class jenkins::slave (
           libdir => $slave_home,
         }
       } else {
+        file { "${slave_home}/${service_name}-run":
+          content => template("${module_name}/${service_name}-run.erb"),
+          owner   => $slave_user,
+          mode    => '0755',
+          notify  => Service[$service_name],
+        }
+
         file { $sysv_init:
-          ensure => 'file',
-          mode   => '0755',
-          owner  => 'root',
-          group  => 'root',
-          source => "puppet:///modules/${module_name}/jenkins-slave.${::osfamily}",
-          notify => Service['jenkins-slave'],
+          ensure  => 'file',
+          mode    => '0755',
+          owner   => 'root',
+          group   => 'root',
+          content => template("${module_name}/${service_name}.${::osfamily}.erb"),
+          notify  => Service[$service_name],
         }
       }
     }

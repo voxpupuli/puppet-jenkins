@@ -9,12 +9,10 @@ describe 'jenkins::slave class' do
         include ::jenkins::slave
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_changes => true)
+      apply2(pp)
     end
 
-    if fact('systemd')
+    if $systemd
       describe file('/etc/systemd/system/jenkins-slave.service') do
         it { should be_file }
         it { should contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
@@ -51,28 +49,164 @@ describe 'jenkins::slave class' do
     end
   end # default parameters
 
-  context 'ui_user/ui_pass' do
-    it 'should work with no errors' do
+  context 'parameters' do
+    before(:all) do
       pp = <<-EOS
         # attempt to make the swarm client the only running 'java' process
         service { jenkins: ensure => 'stopped' }
-
-        class { ::jenkins::slave:
-          ui_user => 'imauser',
-          ui_pass => 'imapass',
-        }
       EOS
 
-      # Run it twice and test for idempotency
-      apply(pp, :catch_failures => true)
-      apply(pp, :catch_changes => true)
+      apply_manifest(pp)
     end
 
-    describe process('java') do
-      its(:user) { should eq 'jenkins-slave' }
-      its(:args) { should match /-username imauser/ }
-      its(:args) { should match /-passwordEnvVariable JENKINS_PASSWORD/ }
-      its(:args) { should_not match /imapass/ }
-    end
-  end # username/password
+    context 'ui_user/ui_pass' do
+      it 'should work with no errors' do
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            ui_user => 'imauser',
+            ui_pass => 'imapass',
+          }
+        EOS
+
+        apply2(pp)
+      end
+
+      describe process('java') do
+        its(:user) { should eq 'jenkins-slave' }
+        its(:args) { should match /-username imauser/ }
+        its(:args) { should match /-passwordEnvVariable JENKINS_PASSWORD/ }
+        its(:args) { should_not match /imapass/ }
+      end
+    end # username/password
+
+    context 'disable_clients_unique_id' do
+      context 'true' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_clients_unique_id => true,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-disableClientsUniqueId/ }
+        end
+      end # true
+
+      context 'false' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_clients_unique_id => false,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should_not match /-disableClientsUniqueId/ }
+        end
+      end # false
+    end # disable_clients_unique_id
+
+    context 'disable_ssl_verification' do
+      context 'true' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_ssl_verification => true,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-disableSslVerification/ }
+        end
+      end # true
+
+      context 'false' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              disable_ssl_verification => false,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should_not match /-disableSslVerification/ }
+        end
+      end # false
+    end # disable_ssl_verification
+
+    context 'delete_existing_clients' do
+      context 'true' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              delete_existing_clients => true,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-deleteExistingClients/ }
+        end
+      end # true
+
+      context 'false' do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              delete_existing_clients => false,
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should_not match /-deleteExistingClients/ }
+        end
+      end # false
+    end # delete_existing_clients
+
+    context 'tool_locations' do
+      tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
+
+      context tool_locations do
+        it 'should work with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              tool_locations => '#{tool_locations}',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /--toolLocation Python-2.7=\/usr\/bin\/python2.7/ }
+          its(:args) { should match /--toolLocation Java-1.8=\/usr\/bin\/java/ }
+        end
+      end
+    end # tool_locations
+  end # parameters
 end

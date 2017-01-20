@@ -29,9 +29,6 @@ SU=/bin/su
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || (echo "daemon package not installed" && exit 0)
 
-# Exit if not supposed to run standalone
-[ "$RUN_STANDALONE" = "false" ] && echo "Not configured to run standalone" && exit 0
-
 # load environments
 if [ -r /etc/default/locale ]; then
   . /etc/default/locale
@@ -81,9 +78,13 @@ do_start()
         ulimit -n $MAXOPENFILES
     fi
 
+    # export is required for sysconfig values to be inherited by the su/runuser
+    # env
+    export_sysconfig
+
     # --user in daemon doesn't prepare environment variables like HOME, USER, LOGNAME or USERNAME,
     # so we let su do so for us now
-    $SU -l $JENKINS_SLAVE_USER --shell=/bin/bash -c "$DAEMON $DAEMON_ARGS -- $JAVA $JAVA_ARGS -jar $JENKINS_SLAVE_JAR $JENKINS_SLAVE_ARGS" || return 2
+    $SU $JENKINS_SLAVE_USER --shell=/bin/bash -c "$DAEMON $DAEMON_ARGS -- <%= scope['jenkins::slave::slave_home'] %>/jenkins-slave-run" || return 2
 }
 
 
@@ -142,6 +143,36 @@ do_stop()
     # Many daemons don't delete their pidfiles when they exit.
     rm -f $PIDFILE
     return 0
+}
+
+export_sysconfig() {
+  sysconfig=(
+    JAVA
+    JAVA_ARGS
+    JENKINS_SLAVE_USER
+    JENKINS_SLAVE_JAR
+    JENKINS_SLAVE_LOG
+    JENKINS_SLAVE_MODE
+    MAXOPENFILES
+    MASTER_URL
+    AUTO_DISCOVERY_ADDRESS
+    LABELS
+    EXECUTORS
+    CLIENT_NAME
+    FSROOT
+    DESCRIPTION
+    JENKINS_USERNAME
+    JENKINS_PASSWORD
+    OTHER_ARGS
+    DISABLE_CLIENTS_UNIQUE_ID
+    DISABLE_SSL_VERIFICATION
+    DELETE_EXISTING_CLIENTS
+    TOOL_LOCATIONS
+  )
+
+  for v in ${sysconfig[*]}; do
+    [[ -n "${v+x}" ]] && export $v
+  done
 }
 
 case "$1" in

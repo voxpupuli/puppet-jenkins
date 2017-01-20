@@ -19,12 +19,6 @@ JENKINS_SLAVE_USER=<%= @slave_user -%>
 # location of the jenkins war file
 JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
 
-# XXX this variable is only used by the debian init script
-# set this to false if you don't want Hudson to run by itself
-# in this set up, you are expected to provide a servlet container
-# to host jenkins.
-RUN_STANDALONE=true
-
 # log location.  this may be a syslog facility.priority
 JENKINS_SLAVE_LOG=/var/log/jenkins-slave/jenkins-slave.log
 
@@ -55,46 +49,12 @@ DESCRIPTION="<%= @description -%>"
 JENKINS_USERNAME=<%= @quoted_ui_user %>
 JENKINS_PASSWORD=<%= @quoted_ui_pass %>
 
-OTHER_ARGS="<%= '-disableSslVerification' if @disable_ssl_verification -%> <%= @_real_swarm_client_args %>"
-DISABLE_UNIQUE="<%= '-disableClientsUniqueId' if @disable_clients_unique_id -%>"
+OTHER_ARGS="<%= @_real_swarm_client_args %>"
 
-if [ -n "$JENKINS_USERNAME" ]; then
-  USERNAME_ARG="-username $JENKINS_USERNAME"
-fi
+# boolean; any value but 'true' is considered false
+DISABLE_CLIENTS_UNIQUE_ID="<%= 'true' if @disable_clients_unique_id -%>"
+DISABLE_SSL_VERIFICATION="<%= 'true' if @disable_ssl_verification -%>"
+DELETE_EXISTING_CLIENTS="<%= 'true' if @delete_existing_clients -%>"
 
-if [ -n "$JENKINS_PASSWORD" ]; then
-  PASSWORD_ARG="-passwordEnvVariable JENKINS_PASSWORD"
-fi
-
-if [ -n "$CLIENT_NAME" ]; then
-  NAME_ARG="-name $CLIENT_NAME"
-fi
-
-if [ -n "$MASTER_URL" ]; then
-  MASTER_URL_ARG="-master $MASTER_URL"
-fi
-
-if [ -n "$LABELS" ]; then
-  LABELS_ARG="-labels '$LABELS'"
-fi
-
-if [ -n "$FSROOT" ]; then
-  FSROOT_ARG="-fsroot '$FSROOT'"
-fi
-
-<% if @tool_locations %>
-  TOOL_LOCATIONS_ARG=""
-  <% @tool_locations.split.each do |tool_location| %>
-    TOOL_LOCATIONS_ARG="$TOOL_LOCATIONS_ARG --toolLocation <%= tool_location.split(':').first -%>=<%= tool_location.split(':').last -%>"
-  <% end %>
-<% end %>
-
-if [ -n "$DESCRIPTION" ]; then
-  DESCRIPTION_ARG="-description '$DESCRIPTION'"
-fi
-
-if [ -n "$AUTO_DISCOVERY_ADDRESS" ]; then
-  AUTO_DISCOVERY_ADDRESS_ARG="-autoDiscoveryAddress '$AUTO_DISCOVERY_ADDRESS'"
-fi
-
-JENKINS_SLAVE_ARGS="-mode $JENKINS_SLAVE_MODE -executors $EXECUTORS $USERNAME_ARG $PASSWORD_ARG $NAME_ARG $MASTER_URL_ARG $LABELS_ARG $FSROOT_ARG $AUTO_DISCOVERY_ADDRESS_ARG $TOOL_LOCATIONS_ARG $DESCRIPTION_ARG $OTHER_ARGS $DISABLE_UNIQUE"
+# "<name>=<path> [<name>=<path> ...]"
+TOOL_LOCATIONS="<%= @_real_tool_locations %>"

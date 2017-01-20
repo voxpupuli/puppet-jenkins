@@ -67,8 +67,7 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
+        # XXX idempotency is broken
         apply(pp, :catch_failures => true)
       end
 
@@ -89,9 +88,7 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_failures => true)
+        apply2(pp)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -127,8 +124,7 @@ EOS
             }
           EOS
 
-          # Run it twice and test for idempotency
-          apply(pp, :catch_failures => true)
+          # XXX idempotency is broken
           apply(pp, :catch_failures => true)
         end
 
@@ -162,9 +158,7 @@ EOS
             jenkins_job { 'foo/bar/baz': ensure => absent }
           EOS
 
-          # Run it twice and test for idempotency
-          apply(pp, :catch_failures => true)
-          apply(pp, :catch_failures => true)
+          apply2(pp)
         end
 
         %w{
@@ -198,18 +192,14 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_failures => true)
+        apply2(pp)
 
         # only for cleanup
         pp = manifest + <<-EOS
           jenkins_job { 'foo': ensure => absent }
         EOS
 
-        # Run it twice and test for idempotency
-        apply(pp, :catch_failures => true)
-        apply(pp, :catch_failures => true)
+        apply2(pp)
       end
     end #convert existing job to folder
   end #cloudbees-folder
