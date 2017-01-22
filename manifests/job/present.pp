@@ -30,8 +30,8 @@ define jenkins::job::present(
   validate_string($jobname)
   validate_string($difftool)
 
-  include jenkins::cli
-  include jenkins::cli::reload
+  include ::jenkins::cli
+  include ::jenkins::cli::reload
 
   if $config_file and $config {
     fail('You cannot set both $config_file AND $config param, only one is required')

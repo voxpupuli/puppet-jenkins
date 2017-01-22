@@ -20,7 +20,7 @@ class jenkins::proxy {
       content => template('jenkins/proxy.xml.erb'),
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
-      mode    => '0644'
+      mode    => '0644',
     }
 
     Package['jenkins'] ->

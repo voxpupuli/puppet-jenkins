@@ -1,5 +1,5 @@
 node default {
-    include jenkins
+    include ::jenkins
 
     jenkins::plugin {
         'ansicolor' :

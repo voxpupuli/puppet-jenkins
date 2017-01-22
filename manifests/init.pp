@@ -367,21 +367,21 @@ class jenkins(
     $jenkins_package_class = 'jenkins::package'
     if $repo {
       $repo_ = true
-      include jenkins::repo
+      include ::jenkins::repo
     } else {
       $repo_ = false
     }
   }
   include $jenkins_package_class
 
-  include jenkins::config
-  include jenkins::plugins
-  include jenkins::jobs
-  include jenkins::users
-  include jenkins::proxy
+  include ::jenkins::config
+  include ::jenkins::plugins
+  include ::jenkins::jobs
+  include ::jenkins::users
+  include ::jenkins::proxy
 
   if $manage_service {
-    include jenkins::service
+    include ::jenkins::service
     validate_array($default_plugins)
     if empty($default_plugins){
       notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($::jenkins::params::default_plugins,','))) # lint:ignore:140chars
@@ -392,19 +392,19 @@ class jenkins(
     if $configure_firewall == undef {
       fail('The firewall module is included in your manifests, please configure $configure_firewall in the jenkins module')
     } elsif $configure_firewall {
-      include jenkins::firewall
+      include ::jenkins::firewall
     }
   }
 
   if $cli {
-    include jenkins::cli
-    include jenkins::cli_helper
+    include ::jenkins::cli
+    include ::jenkins::cli_helper
   }
 
   if $executors {
     jenkins::cli::exec { 'set_num_executors':
       command => ['set_num_executors', $executors],
-      unless  => "[ \$(\$HELPER_CMD get_num_executors) -eq ${executors} ]"
+      unless  => "[ \$(\$HELPER_CMD get_num_executors) -eq ${executors} ]",
     }
 
     Class['jenkins::cli'] ->
@@ -415,7 +415,7 @@ class jenkins(
   if ($slaveagentport != undef) {
     jenkins::cli::exec { 'set_slaveagent_port':
       command => ['set_slaveagent_port', $slaveagentport],
-      unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]"
+      unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]",
     }
 
     Class['jenkins::cli'] ->

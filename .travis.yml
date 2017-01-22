@@ -1,6 +1,6 @@
 sudo: false
 language: ruby
-before_install: gem install bundler -v '~> 1.13' --no-ri --no-rdoc
+before_install: gem install bundler -v '~> 1.13' -v '< 1.14' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
 rvm:
   - '2.0'
