@@ -27,7 +27,7 @@ define jenkins::systemd(
     resource   => Service[$service],
     attributes => {
       # lint:ignore:ensure_first_param
-      ensure => stopped
+      ensure => stopped,
       # lint:endignore
     },
     prior_to   => [
