@@ -25,7 +25,7 @@ class jenkins::params {
   $user         = 'jenkins'
   $manage_group = true
   $group        = 'jenkins'
-  $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
+  $_default_java_args = ['-Djava.awt.headless=true','-Djenkins.install.runSetupWizard=false']
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
   ]
@@ -37,19 +37,13 @@ class jenkins::params {
       $package_provider = 'dpkg'
       $service_provider = undef
       $sysconfdir       = '/etc/default'
-      $config_hash_defaults = {
-        'JAVA_ARGS' => { value => $_java_args },
-        'AJP_PORT'  => { value => '-1' },
-      }
+      $config_prefix = ''
     }
     'RedHat': {
       $libdir           = '/usr/lib/jenkins'
       $package_provider = 'rpm'
       $sysconfdir           = '/etc/sysconfig'
-      $config_hash_defaults = {
-        'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
-        'JENKINS_AJP_PORT'     => { value => '-1' },
-      }
+      $config_prefix = 'JENKINS_'
 
       # explicitly use systemd if it is available
       # XXX only enable explicit systemd support on RedHat at this time due to
@@ -70,10 +64,7 @@ class jenkins::params {
       $package_provider     = undef
       $service_provider     = undef
       $sysconfdir           = '/etc/sysconfig'
-      $config_hash_defaults = {
-        'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
-        'JENKINS_AJP_PORT'     => { value => '-1' },
-      }
+      $config_prefix = 'JENKINS_'
     }
   }
 }

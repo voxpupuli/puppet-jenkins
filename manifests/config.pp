@@ -8,8 +8,22 @@ class jenkins::config {
 
   ensure_resource('jenkins::plugin', $::jenkins::default_plugins)
 
+  $java_args = concat(
+    $::jenkins::params::_default_java_args,
+    $::jenkins::java_args
+  )
+
+  $config_defaults = {
+    "${::jenkins::params::config_prefix}JAVA_ARGS" => {
+      value => join($java_args, ' ')
+    },
+    "${::jenkins::params::config_prefix}AJP_PORT" => {
+      value => '-1'
+    }
+  }
+
   $config_hash = merge(
-    $::jenkins::params::config_hash_defaults,
+    $config_defaults,
     $::jenkins::config_hash
   )
   create_resources('jenkins::sysconfig', $config_hash)
