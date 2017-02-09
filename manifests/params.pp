@@ -10,7 +10,7 @@ class jenkins::params {
   $service_ensure        = 'running'
   $install_java          = true
   $swarm_version         = '2.2'
-  $default_plugins_host  = 'https://updates.jenkins-ci.org'
+  $default_plugins_host  = 'https://updates.jenkins.io'
   $port                  = 8080
   $prefix                = ''
   $cli_tries             = 10
