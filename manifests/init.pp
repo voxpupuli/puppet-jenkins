@@ -239,7 +239,7 @@
 # @param default_plugins_host
 #   Provide a way to override plugins host for all plugins
 #
-#   https://issues.jenkins-ci.org/browse/INFRA-1060  
+#   https://issues.jenkins-ci.org/browse/INFRA-1060
 #
 # @example Manage version of ``credentials`` plugin (hiera)
 #   jenkins::default_plugins: []
@@ -351,6 +351,7 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
+  validate_string($default_plugins_host)
   validate_bool($purge_plugins)
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
