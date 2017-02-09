@@ -239,8 +239,6 @@
 # @param default_plugins_host
 #   Provide a way to override plugins host for all plugins
 #
-#   https://issues.jenkins-ci.org/browse/INFRA-1060
-#
 # @example Manage version of ``credentials`` plugin (hiera)
 #   jenkins::default_plugins: []
 #   jenkins::plugin_hash:

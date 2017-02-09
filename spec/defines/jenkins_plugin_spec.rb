@@ -11,11 +11,12 @@ describe 'jenkins::plugin' do
     }
   end
   let(:pdir) { '/var/lib/jenkins/plugins' }
+  let(:plugin_host) { 'https://updates.jenkins.io' }
 
   describe 'without version' do
     it do
       should contain_archive("#{title}.hpi").with(
-        :source  =>  'https://updates.jenkins-ci.org/latest/myplug.hpi',
+        :source  => "#{plugin_host}/latest/myplug.hpi",
         :path    => "#{pdir}/#{title}.hpi",
         :cleanup => false,
         :extract => false,
@@ -36,7 +37,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        :source  =>  'https://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
+        :source => "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi",
       )
     end
     it { should contain_file("#{pdir}/myplug.hpi")}
@@ -178,7 +179,7 @@ describe 'jenkins::plugin' do
         let(:version) { '1.3.3.7' }
         let(:params) { {:version => version} }
         let(:expected_url) do
-          "https://updates.jenkins-ci.org/download/plugins/#{title}/#{version}/#{title}.hpi"
+          "#{plugin_host}/download/plugins/#{title}/#{version}/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
@@ -186,7 +187,7 @@ describe 'jenkins::plugin' do
 
       context 'without a version' do
         let(:expected_url) do
-          "https://updates.jenkins-ci.org/latest/#{title}.hpi"
+          "#{plugin_host}/latest/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
