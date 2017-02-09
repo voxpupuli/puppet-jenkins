@@ -145,6 +145,23 @@ describe 'jenkins::plugin' do
     end
   end
 
+  describe 'with custom default_plugins_host' do
+    let(:pre_condition) do
+      <<-EOS
+        class { jenkins:
+          default_plugins_host => "https://update.jenkins.custom",
+        }
+      EOS
+    end
+
+    it do
+      should contain_archive('myplug.hpi').with(
+        :source => 'https://update.jenkins.custom/latest/myplug.hpi',
+      )
+    end
+  end
+
+
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'should retrieve the plugin' do

@@ -236,6 +236,11 @@
 #   function.  No version is specified.  Set to ``[]`` if you want to explicitly
 #   manage all plugins version
 #
+# @param default_plugins_host
+#   Provide a way to override plugins host for all plugins
+#
+#   https://issues.jenkins-ci.org/browse/INFRA-1060
+#
 # @example Manage version of ``credentials`` plugin (hiera)
 #   jenkins::default_plugins: []
 #   jenkins::plugin_hash:
@@ -269,44 +274,45 @@
 #     # /support-core deps
 #
 class jenkins(
-  $version            = $jenkins::params::version,
-  $lts                = $jenkins::params::lts,
-  $repo               = $jenkins::params::repo,
-  $package_name       = $jenkins::params::package_name,
-  $direct_download    = $::jenkins::params::direct_download,
-  $package_cache_dir  = $jenkins::params::package_cache_dir,
-  $package_provider   = $jenkins::params::package_provider,
-  $manage_service     = true,
-  $service_enable     = $jenkins::params::service_enable,
-  $service_ensure     = $jenkins::params::service_ensure,
-  $service_provider   = $jenkins::params::service_provider,
-  $config_hash        = {},
-  $plugin_hash        = {},
-  $job_hash           = {},
-  $user_hash          = {},
-  $configure_firewall = false,
-  $install_java       = $jenkins::params::install_java,
-  $repo_proxy         = undef,
-  $proxy_host         = undef,
-  $proxy_port         = undef,
-  $no_proxy_list      = undef,
-  $cli                = true,
-  $cli_ssh_keyfile    = undef,
-  $cli_tries          = $jenkins::params::cli_tries,
-  $cli_try_sleep      = $jenkins::params::cli_try_sleep,
-  $port               = $jenkins::params::port,
-  $libdir             = $jenkins::params::libdir,
-  $sysconfdir         = $jenkins::params::sysconfdir,
-  $manage_datadirs    = $jenkins::params::manage_datadirs,
-  $localstatedir      = $::jenkins::params::localstatedir,
-  $executors          = undef,
-  $slaveagentport     = undef,
-  $manage_user        = $::jenkins::params::manage_user,
-  $user               = $::jenkins::params::user,
-  $manage_group       = $::jenkins::params::manage_group,
-  $group              = $::jenkins::params::group,
-  $default_plugins    = $::jenkins::params::default_plugins,
-  $purge_plugins      = $::jenkins::params::purge_plugins,
+  $version              = $jenkins::params::version,
+  $lts                  = $jenkins::params::lts,
+  $repo                 = $jenkins::params::repo,
+  $package_name         = $jenkins::params::package_name,
+  $direct_download      = $::jenkins::params::direct_download,
+  $package_cache_dir    = $jenkins::params::package_cache_dir,
+  $package_provider     = $jenkins::params::package_provider,
+  $manage_service       = true,
+  $service_enable       = $jenkins::params::service_enable,
+  $service_ensure       = $jenkins::params::service_ensure,
+  $service_provider     = $jenkins::params::service_provider,
+  $config_hash          = {},
+  $plugin_hash          = {},
+  $job_hash             = {},
+  $user_hash            = {},
+  $configure_firewall   = false,
+  $install_java         = $jenkins::params::install_java,
+  $repo_proxy           = undef,
+  $proxy_host           = undef,
+  $proxy_port           = undef,
+  $no_proxy_list        = undef,
+  $cli                  = true,
+  $cli_ssh_keyfile      = undef,
+  $cli_tries            = $jenkins::params::cli_tries,
+  $cli_try_sleep        = $jenkins::params::cli_try_sleep,
+  $port                 = $jenkins::params::port,
+  $libdir               = $jenkins::params::libdir,
+  $sysconfdir           = $jenkins::params::sysconfdir,
+  $manage_datadirs      = $jenkins::params::manage_datadirs,
+  $localstatedir        = $::jenkins::params::localstatedir,
+  $executors            = undef,
+  $slaveagentport       = undef,
+  $manage_user          = $::jenkins::params::manage_user,
+  $user                 = $::jenkins::params::user,
+  $manage_group         = $::jenkins::params::manage_group,
+  $group                = $::jenkins::params::group,
+  $default_plugins      = $::jenkins::params::default_plugins,
+  $default_plugins_host = $::jenkins::params::default_plugins_host,
+  $purge_plugins        = $::jenkins::params::purge_plugins,
 ) inherits jenkins::params {
 
   validate_string($version)
@@ -345,6 +351,7 @@ class jenkins(
   validate_string($user)
   validate_bool($manage_group)
   validate_string($group)
+  validate_string($default_plugins_host)
   validate_bool($purge_plugins)
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
