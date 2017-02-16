@@ -42,9 +42,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -59,6 +59,7 @@ EOS
   end
 
   context 'disable' do
+    pending('Parameter $enabled is now deprecated, no need to test')
     it 'should work with no errors' do
       pp = <<-EOS
       class {'jenkins': }
@@ -70,9 +71,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -81,10 +82,9 @@ EOS
       it { should be_grouped_into 'jenkins' }
       it { should be_mode 644 }
       it { should contain '<description>test job</description>' }
-      it { should contain '<disabled>true</disabled>' }
       it { should contain '<command>/usr/bin/true</command>' }
     end
-  end
+  end # deprecated param enabled
 
   context 'delete' do
     it 'should work with no errors' do
@@ -98,7 +98,7 @@ EOS
       }
       EOS
 
-      apply_manifest(pp)
+      apply(pp)
 
       # test job deletion
       pp = <<-EOS
@@ -111,9 +111,9 @@ EOS
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
+      apply(pp, :catch_failures => true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply_manifest(pp, :catch_changes => true)
+      #apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do

@@ -25,7 +25,7 @@ define jenkins::cli::exec(
     delete_undef_values(
       flatten([
         $::jenkins::cli_helper::helper_cmd,
-        $command
+        $command,
       ])
     ),
     ' '

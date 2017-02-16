@@ -26,11 +26,6 @@ describe 'jenkins::slave' do
       it { should contain_user('jenkins-slave_user').with_uid(nil) }
     end
 
-    describe 'with ssl verification disabled' do
-      let(:params) { { :disable_ssl_verification => true } }
-      it { should contain_file(slave_runtime_file).with_content(/-disableSslVerification/) }
-    end
-
     describe 'with auto discovery address' do
       let(:params) { { :autodiscoveryaddress => '255.255.255.0' } }
       it { should contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
@@ -39,6 +34,11 @@ describe 'jenkins::slave' do
     describe 'slave_uid' do
       let(:params) { { :slave_uid => '123' } }
       it { should contain_user('jenkins-slave_user').with_uid(123) }
+    end
+
+    describe 'slave_groups' do
+      let(:params) { { :slave_groups => 'docker' } }
+      it { should contain_user('jenkins-slave_user').with_groups('docker') }
     end
 
     describe 'with a non-default $slave_home' do
@@ -56,8 +56,8 @@ describe 'jenkins::slave' do
       let(:params) { { :tool_locations => 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
       it do
         should contain_file(slave_runtime_file).
-          with_content(/--toolLocation Python-2.7=\/usr\/bin\/python2.7/).
-          with_content(/--toolLocation Java-1.8=\/usr\/bin\/java/)
+          with_content(/Python-2.7=\/usr\/bin\/python2.7/).
+          with_content(/Java-1.8=\/usr\/bin\/java/)
       end
     end
 
@@ -80,7 +80,7 @@ describe 'jenkins::slave' do
       end
     end
 
-    describe 'with java_args' do
+    describe 'with java_args as a string' do
       let(:args) { '-Xmx2g' }
       let(:params) do
         {
@@ -90,6 +90,47 @@ describe 'jenkins::slave' do
 
       it 'should set java_args' do
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
+      end
+    end
+
+    describe 'with java_args as an array' do
+      let(:args) { ['-Xmx2g', '-Xms128m' ] }
+      let(:params) do
+        {
+          :java_args => args
+        }
+      end
+
+      it 'should convert java_args to a string' do
+        args_as_string = args.join ' '
+        should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
+      end
+    end
+
+    describe 'with swarm_client_args as a string' do
+      let(:args) { '-disableSslVerification -disableClientsUniqueId' }
+      let(:params) do
+        {
+          :swarm_client_args => args
+        }
+      end
+
+      it 'should set swarm_client_args' do
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args}"$/)
+      end
+    end
+
+    describe 'with swarm_client_args as an array' do
+      let(:args) { ['-disableSslVerification', '-disableClientsUniqueId' ] }
+      let(:params) do
+        {
+          :swarm_client_args => args
+        }
+      end
+
+      it 'should convert swarm_client_args to a string' do
+        args_as_string = args.join ' '
+        should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args_as_string}"$/)
       end
     end
 
@@ -116,6 +157,37 @@ describe 'jenkins::slave' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
       end
     end
+    describe 'disable unique client id' do
+      let(:params) do
+        {
+          :disable_clients_unique_id => true
+        }
+      end
+      it 'should have disable variable' do
+        should contain_file(slave_runtime_file)
+          .with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
+      end
+    end
+
+    describe 'delete_existing_clients' do
+      context 'true' do
+        let(:params) {{ :delete_existing_clients => true }}
+
+        it do
+          should contain_file(slave_runtime_file)
+            .with_content(/^DELETE_EXISTING_CLIENTS="true"$/)
+        end
+      end
+
+      context 'false' do
+        let(:params) {{ :delete_existing_clients => false }}
+
+        it do
+          should contain_file(slave_runtime_file)
+            .with_content(/^DELETE_EXISTING_CLIENTS=""$/)
+        end
+      end
+    end # delete_existing_clients
   end
 
   shared_examples 'using slave_name' do
@@ -123,36 +195,100 @@ describe 'jenkins::slave' do
   end
 
   describe 'RedHat' do
-    let(:facts) do
-      {
-        :osfamily                  => 'RedHat',
-        :operatingsystem           => 'CentOS',
-        :operatingsystemrelease    => '6.7',
-        :operatingsystemmajrelease => '6',
-        :kernel                    => 'Linux',
+    context 'sysv init' do
+      let(:facts) do
+        {
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'CentOS',
+          :operatingsystemrelease    => '6.7',
+          :operatingsystemmajrelease => '6',
+          :kernel                    => 'Linux',
+          :systemd                   => false
+        }
+      end
+      let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
+      let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
+      let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
 
-      }
-    end
-    let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
-    let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
-    it_behaves_like 'a jenkins::slave catalog'
+      it_behaves_like 'a jenkins::slave catalog'
 
-    describe 'with slave_name' do
-      let(:params) { { :slave_name => 'jenkins-slave' } }
-      it_behaves_like 'using slave_name'
-    end
-
-    it { should_not contain_package('daemon') }
-
-    context '::jenkins & ::jenkins::slave should co-exist' do
-      let(:pre_condition) do
-        <<-'EOS'
-          include ::jenkins
-          include ::jenkins::slave
-        EOS
+      it do
+        should contain_file(slave_startup_script)
+          .that_notifies('Service[jenkins-slave]')
       end
 
-      it { should_not raise_error }
+      describe 'with slave_name' do
+        let(:params) { { :slave_name => 'jenkins-slave' } }
+        it_behaves_like 'using slave_name'
+      end
+
+      it { should_not contain_package('daemon') }
+
+      context '::jenkins & ::jenkins::slave should co-exist' do
+        let(:pre_condition) do
+          <<-'EOS'
+            include ::jenkins
+            include ::jenkins::slave
+          EOS
+        end
+
+        it { should_not raise_error }
+      end
+
+      describe 'with proxy_server' do
+        let(:params) { { :proxy_server => 'https://foo' } }
+        it do
+          should contain_archive('get_swarm_client').with(
+            :proxy_server => 'https://foo'
+          )
+        end
+      end
+    end # sysv init
+
+    describe 'with systemd' do
+      let(:facts) do
+        {
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'CentOS',
+          :operatingsystemrelease    => '7.2',
+          :operatingsystemmajrelease => '7',
+          :kernel                    => 'Linux',
+          :systemd                   => true
+        }
+      end
+      let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
+      let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
+      let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
+      let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
+
+      it_behaves_like 'a jenkins::slave catalog'
+      it do
+        should contain_file(slave_startup_script)
+          .that_notifies('Service[jenkins-slave]')
+      end
+      # XXX the prior_to args check fails under puppet 3.8.7 for unknown
+      # reasons...
+      if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
+        it do
+          should contain_transition('stop jenkins-slave service').with(
+            :prior_to => [ "File[#{slave_sysv_file}]" ],
+          )
+        end
+      else
+        it { should contain_transition('stop jenkins-slave service') }
+      end
+      it do
+        should contain_file(slave_sysv_file)
+          .with(
+            :ensure => 'absent',
+            :selinux_ignore_defaults => true,
+          )
+          .that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
+      end
+      it do
+        should contain_systemd__unit_file('jenkins-slave.service')
+          .that_notifies('Service[jenkins-slave]')
+      end
     end
   end
 
@@ -178,8 +314,7 @@ describe 'jenkins::slave' do
     let(:facts) {
       {:osfamily => 'Darwin',
        :operatingsystem => 'Darwin',
-       :kernel => 'Darwin'
-      }
+       :kernel => 'Darwin'}
     }
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }

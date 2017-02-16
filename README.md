@@ -6,11 +6,6 @@ This is intended to be a re-usable
 [Puppet](http://www.puppetlabs.com/puppet/introduction/) module that you can
 include in your own tree.
 
-# Jenkins 2
-
-This module does not presently support Jenkins 2.x due to incompatible changes
-with 1.x.  Support is planned for a future release.
-
 # Experimental Types and Providers
 
 _The experimental types/providers are **not for the faint of heart**. If you are
@@ -102,8 +97,7 @@ By default, the resource will install the latest plugin, i.e.:
 
 If you specify `version => 'latest'` in current releases of the module, the
 plugin will be downloaded and installed with *every* run of Puppet. This is a
-known issue and will be addressed in future releases. For now it is recommended
-that you pin plugin versions when using the `jenkins::plugin` type.
+known issue and will be addressed in future releases.
 
 #### By version
 If you need to peg a specific version, simply specify that as a string, i.e.:
@@ -180,6 +174,7 @@ The dependencies for this module currently are:
 * [java module](http://github.com/puppetlabs/puppetlabs-java)
 * [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
 * [archive module](https://forge.puppetlabs.com/puppet/archive)
+* [firewall module](https://forge.puppet.com/puppetlabs/firewall)
 
 ### Depending on Jenkins
 
@@ -195,7 +190,7 @@ the following `require` statement:
 
 ### Advanced features
 1. Plugin Hash - jenkins::plugins
-2. Config Hash - jennkins::config
+2. Config Hash - jenkins::config
 3. Configure Firewall - jenkins (init.pp)
 4. Outbound Jenkins Proxy Config - jenkins (init.pp)
 5. [CLI Helper](#cli-helper)

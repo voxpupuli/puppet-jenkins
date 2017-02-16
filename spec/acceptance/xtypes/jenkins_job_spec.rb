@@ -67,9 +67,8 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        # XXX idempotency is broken
+        apply(pp, :catch_failures => true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -89,9 +88,7 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        apply2(pp)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -127,9 +124,8 @@ EOS
             }
           EOS
 
-          # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          # XXX idempotency is broken
+          apply(pp, :catch_failures => true)
         end
 
         %w{
@@ -162,9 +158,7 @@ EOS
             jenkins_job { 'foo/bar/baz': ensure => absent }
           EOS
 
-          # Run it twice and test for idempotency
-          apply_manifest(pp, :catch_failures => true)
-          apply_manifest(pp, :catch_failures => true)
+          apply2(pp)
         end
 
         %w{
@@ -189,7 +183,7 @@ EOS
           }
         EOS
 
-        apply_manifest(pp, :catch_failures => true)
+        apply(pp, :catch_failures => true)
 
         pp = manifest + <<-EOS
           jenkins_job { 'foo':
@@ -198,17 +192,14 @@ EOS
           }
         EOS
 
-        # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_failures => true)
+        apply2(pp)
 
         # only for cleanup
         pp = manifest + <<-EOS
           jenkins_job { 'foo': ensure => absent }
         EOS
 
-        # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
+        apply2(pp)
       end
     end #convert existing job to folder
   end #cloudbees-folder

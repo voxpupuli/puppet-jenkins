@@ -25,7 +25,7 @@ define jenkins::plugin(
   $source          = undef,
   $digest_string   = undef,
   $digest_type     = 'sha1',
-  $pin             = true,
+  $pin             = false,
   # no worky
   $timeout         = undef,
   # deprecated
@@ -85,7 +85,7 @@ define jenkins::plugin(
       default => $update_url,
     }
     $base_url = "${plugins_host}/latest/"
-    $search   = "${name} "
+    $search   = "^${name} "
   }
 
   # if $source is specified, it overrides any other URL construction
@@ -104,6 +104,12 @@ define jenkins::plugin(
   $installed_plugins = $::jenkins_plugins ? {
     undef   => [],
     default => strip(split($::jenkins_plugins, ',')),
+  }
+
+  # create a file resource for the download + unpacked plugin dir to prevent it
+  # from being recursively deleted
+  if $::jenkins::purge_plugins {
+    file { "${::jenkins::plugin_dir}/${name}": }
   }
 
   if (empty(grep($installed_plugins, $search))) {
@@ -160,10 +166,12 @@ define jenkins::plugin(
 
     if $digest_string {
       $checksum_verify = true
-      $checksum = $digest_string
+      $checksum        = $digest_string
+      $checksum_type   = $digest_type
     } else {
       $checksum_verify = false
-      $checksum = undef
+      $checksum        = undef
+      $checksum_type   = undef
     }
 
     archive { $plugin:
@@ -171,21 +179,20 @@ define jenkins::plugin(
       path            => "${::jenkins::plugin_dir}/${plugin}",
       checksum_verify => $checksum_verify,
       checksum        => $checksum,
-      checksum_type   => $digest_type,
-      proxy_server    => $::jenkins::proxy_server,
+      checksum_type   => $checksum_type,
+      proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
       require         => File[$::jenkins::plugin_dir],
       notify          => Service['jenkins'],
     }
+  }
 
-    file { "${::jenkins::plugin_dir}/${plugin}" :
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
-      mode    => '0644',
-      require => Archive[$plugin],
-      before  => Service['jenkins'],
-    }
+  file { "${::jenkins::plugin_dir}/${plugin}" :
+    owner  => $::jenkins::user,
+    group  => $::jenkins::group,
+    mode   => '0644',
+    before => Service['jenkins'],
   }
 
   if $manage_config {
@@ -199,7 +206,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
-      notify  => Service['jenkins']
+      notify  => Service['jenkins'],
     }
   }
 }

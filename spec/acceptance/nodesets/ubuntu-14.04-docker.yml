@@ -6,6 +6,8 @@ HOSTS:
     image: electrical/ubuntu:14.04
     docker_preserve_image: true
     docker_cmd: '["/sbin/init"]'
+    default_apply_opts:
+      disable_warnings: deprecations
 CONFIG:
   type: foss
   log_level: debug

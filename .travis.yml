@@ -1,38 +1,36 @@
 sudo: false
 language: ruby
-before_install: gem install bundler -v '~> 1.6.0' --no-ri --no-rdoc
+before_install: gem install bundler -v '~> 1.13' -v '< 1.14' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
 rvm:
-  - 1.9.3
-  - 2.1.0
+  - '2.0'
+  - '2.1'
+  - '2.2'
 script:
-  - "bundle exec rake lint"
-  - "bundle exec rake parallel_spec SPEC_OPTS='--format documentation --order random'"
+  - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
 env:
   - PUPPET_VERSION="~> 3.8.0"
-  - PUPPET_VERSION="~> 4.1.0"
-  - PUPPET_VERSION="~> 4.2.0"
-  - PUPPET_VERSION="~> 4.3.0"
-  - PUPPET_VERSION="~> 4.4.0"
+  - PUPPET_VERSION="~> 4.7.0"
+  - PUPPET_VERSION="~> 4.8.0"
 matrix:
   include:
-    - rvm: '2.1'
-      sudo: required
-      services: docker
-      env: BEAKER_set="centos-6-docker"
-      script: bundle exec rake acceptance
-      bundler_args: --without development
-    - rvm: '2.1'
+    - rvm: '2.2'
       sudo: required
       services: docker
       env: BEAKER_set="centos-7-docker"
-      script: bundle exec rake acceptance
+      script: travis_retry bundle exec rake beaker
       bundler_args: --without development
-    - rvm: '2.1'
+    - rvm: '2.2'
       sudo: required
       services: docker
       env: BEAKER_set="ubuntu-14.04-docker"
-      script: bundle exec rake acceptance
+      script: bundle exec rake beaker
       bundler_args: --without development
+  exclude:
+    - rvm: '2.2'
+      env: PUPPET_VERSION="~> 3.8.0"
+  allow_failures:
+    # jenkins 2.x support is currently broken with debian packaging
+    - env: BEAKER_set="ubuntu-14.04-docker"
 notifications:
   email: false

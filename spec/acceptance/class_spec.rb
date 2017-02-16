@@ -11,9 +11,7 @@ describe 'jenkins class' do
       }
       EOS
 
-      # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply2(pp)
     end
 
     describe port(8080) do
@@ -27,12 +25,40 @@ describe 'jenkins class' do
       it { should be_file }
     end
 
+    describe file("#{$sysconfdir}/jenkins") do
+      it { should be_file }
+      if fact('osfamily') == 'Debian'
+        it { should contain 'AJP_PORT="-1"' }
+      else
+        it { should contain 'JENKINS_AJP_PORT="-1"' }
+      end
+    end
+
     describe service('jenkins') do
       it { should be_running }
       it { should be_enabled }
     end
 
-  end
+    if fact('osfamily') == 'RedHat' and $systemd
+      describe file('/etc/systemd/system/jenkins.service') do
+        it { should be_file }
+        it { should contain "ExecStart=#{libdir}/jenkins-run" }
+      end
+      describe file('/etc/init.d/jenkins') do
+        it { should_not exist }
+      end
+      describe service('jenkins') do
+        it { should be_running.under('systemd') }
+      end
+    else
+      describe file('/etc/systemd/system/jenkins.service') do
+        it { should_not exist }
+      end
+      describe file('/etc/init.d/jenkins') do
+        it { should be_file }
+      end
+    end
+  end # default parameters
 
   context 'executors' do
     it 'should work with no errors' do
@@ -42,9 +68,7 @@ describe 'jenkins class' do
       }
       EOS
 
-      # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      apply2(pp)
     end
 
     describe port(8080) do
@@ -71,9 +95,7 @@ describe 'jenkins class' do
         }
         EOS
 
-        # Run it twice and test for idempotency
-        apply_manifest(pp, :catch_failures => true)
-        apply_manifest(pp, :catch_changes => true)
+        apply2(pp)
       end
 
       describe port(8080) do

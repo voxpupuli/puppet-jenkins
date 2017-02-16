@@ -7,6 +7,8 @@ HOSTS:
     docker_cmd: '["/sbin/init"]'
     docker_image_commands:
       - 'yum install -y crontabs tar wget'
+    default_apply_opts:
+      disable_warnings: deprecations
 CONFIG:
   type: foss
   log_level: debug

@@ -283,9 +283,6 @@ Style/Documentation:
 Style/DefWithParentheses:
   Enabled: false
 
-Style/DeprecatedHashMethods:
-  Enabled: false
-
 Style/DotPosition:
   Enabled: false
 
@@ -323,7 +320,7 @@ Style/EmptyLiteral:
 Metrics/LineLength:
   Enabled: false
 
-Style/MethodCallParentheses:
+Style/MethodCallWithoutArgsParentheses:
   Enabled: false
 
 Style/MethodDefParentheses:
@@ -663,3 +660,8 @@ Style/StructInheritance:
 Style/SymbolLiteral:
   Enabled: false
 
+Style/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false

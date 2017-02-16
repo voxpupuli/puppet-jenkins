@@ -1,0 +1,15 @@
+[Unit]
+Description=Jenkins master service
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+User=<%= scope['jenkins::user'] %>
+Group=<%= scope['jenkins::group'] %>
+EnvironmentFile=<%= scope['jenkins::sysconfdir'] %>/jenkins
+ExecStart=<%= scope['jenkins::libdir'] %>/jenkins-run
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

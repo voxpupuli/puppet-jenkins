@@ -12,5 +12,7 @@ HOSTS:
     aws_access_key_id: ENV['AWS_ACCESS_KEY_ID']
     aws_secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
     hypervisor : fog
+    default_apply_opts:
+      disable_warnings: deprecations
 CONFIG:
   type: git
