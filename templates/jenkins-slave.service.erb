@@ -1,0 +1,17 @@
+[Unit]
+Description=Jenkins slave service
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=<%= scope['jenkins::slave::slave_user'] %>
+EnvironmentFile=<%= scope['jenkins::params::sysconfdir'] %>/jenkins-slave
+ExecStart=<%= scope['jenkins::slave::slave_home'] %>/jenkins-slave-run
+Restart=always
+RestartSec=60
+StartLimitInterval=0
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

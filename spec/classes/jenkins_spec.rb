@@ -21,7 +21,7 @@ describe 'jenkins', :type => :module do
       it { should contain_class 'jenkins::plugins' }
       it { should contain_class 'jenkins::service' }
       it { should_not contain_class 'jenkins::firewall' }
-      it { should_not contain_class 'jenkins::proxy' }
+      it { should contain_class 'jenkins::proxy' }
       it { should contain_class 'jenkins::repo' }
       it { should contain_class 'jenkins::repo::el' }
       it { should_not contain_class 'jenkins::repo::debian' }
@@ -40,12 +40,12 @@ describe 'jenkins', :type => :module do
 
     describe 'with only proxy host' do
       let(:params) { { :proxy_host => '1.2.3.4' } }
-      it { should_not contain_class('jenkins::proxy') }
+      it { should contain_class('jenkins::proxy') }
     end
 
     describe 'with only proxy_port' do
       let(:params) { { :proxy_port => 1234 } }
-      it { should_not contain_class('jenkins::proxy') }
+      it { should contain_class('jenkins::proxy') }
     end
 
     describe 'with proxy_host and proxy_port' do
@@ -68,6 +68,28 @@ describe 'jenkins', :type => :module do
     describe 'with firewall, configure_firewall unset' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
       it { expect { should raise_error(Puppet::Error) } }
+    end
+
+    describe 'sysconfdir =>' do
+      context '/foo/bar' do
+        let(:params) {{ :sysconfdir => '/foo/bar' }}
+        it do
+          should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
+            .with_path('/foo/bar/jenkins')
+        end
+      end
+
+      context '../bar' do
+        let(:params) {{ :sysconfdir => '../bar' }}
+        it { should raise_error(Puppet::Error, /is not an absolute path/) }
+      end
+
+      context '(default)' do
+        it do
+          should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
+            .with_path('/etc/sysconfig/jenkins')
+        end
+      end
     end
 
     describe 'manage_datadirs =>' do
@@ -183,6 +205,23 @@ describe 'jenkins', :type => :module do
       end
     end # manage_user =>
 
+
+    describe 'manage_service =>' do
+      context '(default)' do
+        it { should contain_class 'jenkins::service' }
+      end
+
+      context 'false' do
+        let(:params) do
+          {
+            :manage_service => false,
+          }
+        end
+        it { should_not contain_class 'jenkins::service' }
+        it { should_not contain_service 'jenkins' }
+      end
+    end # manage_service =>
+
     describe 'user =>' do
       context '(default)' do
         it do
@@ -289,5 +328,55 @@ describe 'jenkins', :type => :module do
         end
       end
     end # manages state dirs
+
+    describe 'with default plugins' do
+      it { should contain_jenkins__plugin 'credentials' }
+    end
+
+    describe 'with default plugins override' do
+      let (:params) {{ :default_plugins => [] }}
+      it { should_not contain_jenkins__plugin 'credentials' }
+    end
+
+    describe 'purge_plugins =>' do
+      context 'false' do
+        let(:params) {{ :purge_plugins => false }}
+
+        it do
+          should contain_file('/var/lib/jenkins/plugins')
+            .without('purge')
+            .without('recurse')
+            .without('force')
+        end
+      end
+
+      context 'true' do
+        let(:params) {{ :purge_plugins => true }}
+
+        it do
+          should contain_file('/var/lib/jenkins/plugins').with(
+            :purge   => true,
+            :recurse => true,
+            :force   => true,
+          ).that_notifies('Service[jenkins]')
+        end
+      end
+
+      context '(default)' do
+        it do
+          should contain_file('/var/lib/jenkins/plugins')
+            .without('purge')
+            .without('recurse')
+            .without('force')
+            .without('notify')
+        end
+      end
+
+      context 'foo' do
+        let(:params) {{ :purge_plugins => 'foo' }}
+
+        it { should raise_error(Puppet::Error, /is not a boolean/) }
+      end
+    end # purge_plugins
   end
 end

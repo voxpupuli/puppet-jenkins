@@ -11,11 +11,12 @@ describe 'jenkins::plugin' do
     }
   end
   let(:pdir) { '/var/lib/jenkins/plugins' }
+  let(:plugin_host) { 'https://updates.jenkins.io' }
 
   describe 'without version' do
     it do
       should contain_archive("#{title}.hpi").with(
-        :source  =>  'https://updates.jenkins-ci.org/latest/myplug.hpi',
+        :source  => "#{plugin_host}/latest/myplug.hpi",
         :path    => "#{pdir}/#{title}.hpi",
         :cleanup => false,
         :extract => false,
@@ -27,8 +28,7 @@ describe 'jenkins::plugin' do
         :owner => 'jenkins',
         :group => 'jenkins',
         :mode  => '0644',
-      ).that_requires("Archive[#{title}.hpi]")
-        .that_comes_before('Service[jenkins]')
+      ).that_comes_before('Service[jenkins]')
     end
   end
 
@@ -37,7 +37,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        :source  =>  'https://updates.jenkins-ci.org/download/plugins/myplug/1.2.3/myplug.hpi',
+        :source => "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi",
       )
     end
     it { should contain_file("#{pdir}/myplug.hpi")}
@@ -48,7 +48,7 @@ describe 'jenkins::plugin' do
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
 
     it { should_not contain_archive('myplug.hpi') }
-    it { should_not contain_file("#{pdir}/myplug.hpi")}
+    it { should contain_file("#{pdir}/myplug.hpi")}
   end
 
   describe 'with version and at end of jenkins_plugins fact' do
@@ -56,7 +56,7 @@ describe 'jenkins::plugin' do
     before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3' }
 
     it { should_not contain_archive('myplug.hpi') }
-    it { should_not contain_file("#{pdir}/myplug.hpi")}
+    it { should contain_file("#{pdir}/myplug.hpi")}
   end
 
   describe 'with name and version' do
@@ -97,7 +97,7 @@ describe 'jenkins::plugin' do
       before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
 
       it { should_not contain_archive('myplug.hpi') }
-      it { should_not contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
+      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi')}
     end
   end # 'with name and version'
 
@@ -146,6 +146,23 @@ describe 'jenkins::plugin' do
     end
   end
 
+  describe 'with custom default_plugins_host' do
+    let(:pre_condition) do
+      <<-EOS
+        class { jenkins:
+          default_plugins_host => "https://update.jenkins.custom",
+        }
+      EOS
+    end
+
+    it do
+      should contain_archive('myplug.hpi').with(
+        :source => 'https://update.jenkins.custom/latest/myplug.hpi',
+      )
+    end
+  end
+
+
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'should retrieve the plugin' do
@@ -162,7 +179,7 @@ describe 'jenkins::plugin' do
         let(:version) { '1.3.3.7' }
         let(:params) { {:version => version} }
         let(:expected_url) do
-          "https://updates.jenkins-ci.org/download/plugins/#{title}/#{version}/#{title}.hpi"
+          "#{plugin_host}/download/plugins/#{title}/#{version}/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
@@ -170,7 +187,7 @@ describe 'jenkins::plugin' do
 
       context 'without a version' do
         let(:expected_url) do
-          "https://updates.jenkins-ci.org/latest/#{title}.hpi"
+          "#{plugin_host}/latest/#{title}.hpi"
         end
 
         include_examples 'execute the right fetch command'
@@ -249,40 +266,60 @@ describe 'jenkins::plugin' do
   context 'pinned file' do
     let(:title) { 'foo' }
 
-    context 'default params' do
-      it do
-        should contain_file("#{pdir}/foo.hpi.pinned").with(
-          :ensure => 'file',
-          :owner  => 'jenkins',
-          :group  => 'jenkins',
-        )
-          .that_requires('Archive[foo.hpi]')
-          .that_notifies('Service[jenkins]')
-      end
-    end
-
     context 'with source param' do
       let(:params) {{ :source => 'foo.jpi' }}
 
-      it { should contain_file("#{pdir}/foo.jpi.pinned").with_ensure('file') }
+      it { should contain_file("#{pdir}/foo.jpi.pinned").without_ensure }
     end
 
     describe 'pin parameter' do
       context 'with pin => true' do
         let(:params) {{ :pin => true } }
-        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it do
+          should contain_file("#{pdir}/foo.hpi.pinned").with(
+            :ensure => 'file',
+            :owner  => 'jenkins',
+            :group  => 'jenkins',
+          )
+            .that_requires('Archive[foo.hpi]')
+            .that_notifies('Service[jenkins]')
+        end
       end
       context 'with pin => false' do
         let(:params) {{ :pin => false } }
-        it do
-          should contain_file("#{pdir}/foo.hpi.pinned").without_ensure
-        end
+        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
       context 'with default pin param' do
-        it { should contain_file("#{pdir}/foo.hpi.pinned").with_ensure('file') }
+        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
     end
   end # pinned file extension name
+
+  describe 'purge plugins' do
+    context 'true' do
+      let(:pre_condition) do
+        <<-EOS
+          class { jenkins:
+            purge_plugins => true,
+          }
+        EOS
+      end
+
+      it { should contain_file("#{pdir}/#{title}").only_with(:ensure => nil) }
+    end
+
+    context 'false' do
+      let(:pre_condition) do
+        <<-EOS
+          class { jenkins:
+            purge_plugins => false,
+          }
+        EOS
+      end
+
+      it { should_not contain_file("#{pdir}/#{title}") }
+    end
+  end #purge plugins
 
   describe 'deprecated params' do
     [

@@ -8,15 +8,22 @@ require 'puppet_x/jenkins/provider/cli'
 
 describe PuppetX::Jenkins::Provider::Cli do
   AuthError = PuppetX::Jenkins::Provider::Cli::AuthError
+  NetError = PuppetX::Jenkins::Provider::Cli::NetError
   UnknownError = PuppetX::Jenkins::Provider::Cli::UnknownError
 
-  CLI_AUTH_ERRORS =  [<<-EOS, <<-EOS, <<-EOS]
+  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS]
     anonymous is missing the Overall/Read permission
   EOS
     You must authenticate to access this Jenkins.
     Use --username/--password/--password-file parameters or login command.
   EOS
     anonymous is missing the Overall/RunScripts permission
+  EOS
+
+  CLI_NET_ERRORS = [<<-EOS, <<-EOS]
+    SEVERE: I/O error in channel CLI connection
+  EOS
+    java.net.SocketException: Connection reset
   EOS
 
   shared_context 'facts' do
@@ -517,6 +524,28 @@ describe PuppetX::Jenkins::Provider::Cli do
         end
       end # with ssh_private_key
     end # auth failure
+
+    context 'network failure' do
+      context 'without ssh_private_key' do
+        CLI_NET_ERRORS.each do |error|
+          it 'should not retry cli on AuthError exception' do
+            expect(described_class.superclass).to receive(:execute).with(
+              [
+                'java',
+                '-jar', '/usr/lib/jenkins/jenkins-cli.jar',
+                '-s', 'http://localhost:8080',
+                'foo'
+              ],
+              { :failonfail => true, :combine => true }
+            ).exactly(30).times.and_raise(NetError, error)
+
+            expect { described_class.cli('foo') }.
+              to raise_error(NetError)
+          end
+        end
+      end
+      # without ssh_private_key
+    end # network failure
 
     context 'when UnknownError exception' do
       let(:catalog) { Puppet::Resource::Catalog.new }

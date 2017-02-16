@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# taken from
+# https://github.com/jenkinsci/packaging/blob/master/rpm/build/SOURCES/jenkins.init.in
+# and modified for usage under systemd
+
+#
+#     SUSE system statup script for Jenkins
+#     Copyright (C) 2007  Pascal Bleser
+#
+#     This library is free software; you can redistribute it and/or modify it
+#     under the terms of the GNU Lesser General Public License as published by
+#     the Free Software Foundation; either version 2.1 of the License, or (at
+#     your option) any later version.
+#
+#     This library is distributed in the hope that it will be useful, but
+#     WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#     Lesser General Public License for more details.
+#
+#     You should have received a copy of the GNU Lesser General Public
+#     License along with this library; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+#     USA.
+#
+
+# Check for missing binaries (stale symlinks should not happen)
+# XXX JENKINS_WAR is currently in the Debian sysconf but not on RedHat
+# fix this upstream
+JENKINS_WAR=${JENKINS_WAR:-<%= scope['jenkins::libdir'] %>/jenkins.war}
+test -r "$JENKINS_WAR" || { echo "$JENKINS_WAR not installed"; exit 5; }
+
+# Set up environment accordingly to the configuration settings
+[ -n "$JENKINS_HOME" ] || { echo "JENKINS_HOME not configured "; exit 6; }
+[ -d "$JENKINS_HOME" ] || { echo "JENKINS_HOME directory does not exist: $JENKINS_HOME"; exit 1; }
+
+# this should work for both RedHat and Debian
+# Search usable Java as /usr/bin/java might not point to minimal version required by Jenkins.
+candidates="
+/etc/alternatives/java
+/usr/lib/jvm/java-1.8.0/bin/java
+/usr/lib/jvm/jre-1.8.0/bin/java
+/usr/lib/jvm/java-1.7.0/bin/java
+/usr/lib/jvm/jre-1.7.0/bin/java
+/usr/bin/java
+"
+for candidate in $candidates
+do
+  [ -x "$JENKINS_JAVA_CMD" ] && break
+  JENKINS_JAVA_CMD="$candidate"
+done
+
+JAVA_CMD="$JENKINS_JAVA_CMD $JENKINS_JAVA_OPTIONS -DJENKINS_HOME=$JENKINS_HOME -jar $JENKINS_WAR"
+
+PARAMS=()
+PARAMS+=("--logfile=/var/log/jenkins/jenkins.log")
+PARAMS+=("--webroot=/var/cache/jenkins/war")
+PARAMS+=("--daemon")
+
+[ -n "$JENKINS_PORT" ] && PARAMS+=("--httpPort=$JENKINS_PORT")
+[ -n "$JENKINS_LISTEN_ADDRESS" ] && PARAMS+=("--httpListenAddress=$JENKINS_LISTEN_ADDRESS")
+[ -n "$JENKINS_HTTPS_PORT" ] && PARAMS+=("--httpsPort=$JENKINS_HTTPS_PORT")
+[ -n "$JENKINS_HTTPS_KEYSTORE" ] && PARAMS+=("--httpsKeyStore=$JENKINS_HTTPS_KEYSTORE")
+[ -n "$JENKINS_HTTPS_KEYSTORE_PASSWORD" ] && PARAMS+=("--httpsKeyStorePassword='$JENKINS_HTTPS_KEYSTORE_PASSWORD'")
+[ -n "$JENKINS_HTTPS_LISTEN_ADDRESS" ] && PARAMS+=("--httpsListenAddress=$JENKINS_HTTPS_LISTEN_ADDRESS")
+[ -n "$JENKINS_DEBUG_LEVEL" ] && PARAMS+=("--debug=$JENKINS_DEBUG_LEVEL")
+[ -n "$JENKINS_HANDLER_STARTUP" ] && PARAMS+=("--handlerCountStartup=$JENKINS_HANDLER_STARTUP")
+[ -n "$JENKINS_HANDLER_MAX" ] && PARAMS+=("--handlerCountMax=$JENKINS_HANDLER_MAX")
+[ -n "$JENKINS_HANDLER_IDLE" ] && PARAMS+=("--handlerCountMaxIdle=$JENKINS_HANDLER_IDLE")
+[ -n "$JENKINS_ARGS" ] && PARAMS+=("$JENKINS_ARGS")
+
+if [ "$JENKINS_ENABLE_ACCESS_LOG" = "yes" ]; then
+  PARAMS+=("--accessLoggerClassName=winstone.accesslog.SimpleAccessLogger")
+  PARAMS+=("--simpleAccessLogger.format=combined")
+  PARAMS+=("--simpleAccessLogger.file=/var/log/jenkins/access_log")
+fi
+
+$JAVA_CMD "${PARAMS[@]}"

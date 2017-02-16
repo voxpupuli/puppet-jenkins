@@ -6,8 +6,8 @@ class jenkins::repo::debian
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  include stdlib
-  include apt
+  include ::stdlib
+  include ::apt
 
   if $::jenkins::lts  {
     apt::source { 'jenkins':

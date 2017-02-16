@@ -1,6 +1,8 @@
 require 'puppet_x/jenkins/util'
 require 'puppet_x/jenkins/provider/cli'
 
+require 'json'
+
 Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => PuppetX::Jenkins::Provider::Cli) do
 
   mk_resource_methods

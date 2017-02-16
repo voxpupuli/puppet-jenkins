@@ -18,14 +18,6 @@ describe 'jenkins', :type => :module do
         it { should_not contain_class('jenkins::repo::debian') }
       end
 
-      describe 'Linux' do
-        let(:facts) { { :osfamily => 'Linux' } }
-        let(:params) { { :install_java => false } }
-        it { should contain_class('jenkins::repo::el') }
-        it { should_not contain_class('jenkins::repo::suse') }
-        it { should_not contain_class('jenkins::repo::debian') }
-      end
-
       describe 'Suse' do
         let(:facts) { { :osfamily => 'Suse', :operatingsystem => 'OpenSuSE' } }
         it { should contain_class('jenkins::repo::suse') }
