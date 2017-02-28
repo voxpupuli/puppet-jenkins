@@ -174,6 +174,9 @@ define jenkins::plugin(
       $checksum_type   = undef
     }
 
+    exec{"force ${plugin}-${version}":
+      command => "/bin/rm -rf ${::jenkins::plugin_dir}/${plugin}"
+    }->
     archive { $plugin:
       source          => $download_url,
       path            => "${::jenkins::plugin_dir}/${plugin}",
