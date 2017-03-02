@@ -62,9 +62,6 @@
 #   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified
 #   as 'toolName:location'.
 #
-# [*java_version*]
-#   Specified which version of java will be used.
-#
 # [*description*]
 #   Not required.  Description which will appear on the jenkins master UI.
 #
