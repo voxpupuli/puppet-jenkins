@@ -240,6 +240,7 @@ jenkins_credentials { '<id>':
 * `UsernamePasswordCredentialsImpl`
 * `BasicSSHUserPrivateKey`
 * `FileCredentialsImpl`
+* `ConduitCredentialsImpl`
 
 XXX This type has properties for other credentials classes that are not currently supported.
 
@@ -288,6 +289,18 @@ jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
   secret      => '42',
 }
 ```
+
+### `ConduitCredentialsImpl`
+
+```
+jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
+  ensure      => 'present',
+  description => 'phabricator-jenkins-conduit',
+  domain      => undef,
+  impl        => 'ConduitCredentialsImpl',
+  token       => '{PRIVATE TOKEN}',
+  url         => 'https://my-phabricator-repo.com',
+}
 
 ### `jenkins_job`
 
