@@ -60,6 +60,8 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => PuppetX::Jenkin
       [:description, :file_name, :content].each {|k| copy_key(params, info, k)}
     when 'CertificateCredentialsImpl'
       [:description, :password, :key_store_implementation].each {|k| copy_key(params, info, k)}
+    when 'ConduitCredentialsImpl'
+      [:description, :token, :url].each {|k| copy_key(params, info, k)}
 
       ksi = info['key_store_impl']
       params['key_store_impl'] = ksi
