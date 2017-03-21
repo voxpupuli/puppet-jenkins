@@ -13,4 +13,11 @@ class jenkins::package {
   package { $::jenkins::package_name:
     ensure => $::jenkins::version,
   }
+
+  if $jenkins::repo == false {
+    file {
+      '/etc/yum.repos.d/jenkins.repo' :
+        ensure => absent;
+    }
+  }
 }
