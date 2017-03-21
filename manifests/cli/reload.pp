@@ -8,12 +8,28 @@ class jenkins::cli::reload {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  if $::jenkins::cli_helper::ssh_keyfile {
+    $auth_arg = "-i $::jenkins::cli_helper::ssh_keyfile" 
+  } else {
+    $auth_arg = undef
+  }
+
+  $run = join(
+    delete_undef_values(
+      flatten([
+        $::jenkins::cli::cmd,
+        $auth_arg,
+        "reload-configuration"
+      ])
+    ),
+    ' '
+  )
+
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
-    command     => "${::jenkins::cli::cmd} reload-configuration",
-    path        => ['/bin', '/usr/bin'],
-    tries       => 10,
-    try_sleep   => 2,
-    refreshonly => true,
+    command     => $run,
+    tries       => $::jenkins::cli_tries,
+    try_sleep   => $::jenkins::cli_try_sleep,
+    refreshonly => true
   }
 }
