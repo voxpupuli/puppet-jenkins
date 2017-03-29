@@ -4,13 +4,9 @@
 # CLI.
 #
 define jenkins::cli::exec(
-  $command = $title,
-  $unless  = undef,
+  Optional[String] $unless        = undef,
+  Variant[String, Array] $command = $title,
 ) {
-  if !(is_string($command) or is_array($command)) {
-    fail('$command is not a string or an Array.')
-  }
-  validate_string($unless)
 
   include ::jenkins
   include ::jenkins::cli_helper
