@@ -10,12 +10,10 @@
 #   directly
 #
 class jenkins::cli_helper (
-  $ssh_keyfile = $::jenkins::cli_ssh_keyfile,
+  Optional[Stdlib::Absolutepath] $ssh_keyfile = $::jenkins::cli_ssh_keyfile,
 ) {
   include ::jenkins
   include ::jenkins::cli
-
-  if $ssh_keyfile { validate_absolute_path($ssh_keyfile) }
 
   Class['jenkins::cli']
     -> Class['jenkins::cli_helper']
