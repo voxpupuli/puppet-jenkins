@@ -272,82 +272,47 @@
 #     # /support-core deps
 #
 class jenkins(
-  $version                                = $jenkins::params::version,
-  $lts                                    = $jenkins::params::lts,
-  $repo                                   = $jenkins::params::repo,
-  $package_name                           = $jenkins::params::package_name,
-  String $direct_download                 = $::jenkins::params::direct_download,
-  Stdlib::Absolutepath $package_cache_dir = $jenkins::params::package_cache_dir,
-  String $package_provider                = $jenkins::params::package_provider,
-  $manage_service                         = true,
-  $service_enable                         = $jenkins::params::service_enable,
-  $service_ensure                         = $jenkins::params::service_ensure,
-  $service_provider                       = $jenkins::params::service_provider,
-  $config_hash                            = {},
-  $plugin_hash                            = {},
-  $job_hash                               = {},
-  $user_hash                              = {},
-  $configure_firewall                     = false,
-  $install_java                           = $jenkins::params::install_java,
-  $repo_proxy                             = undef,
-  $proxy_host                             = undef,
-  $proxy_port                             = undef,
-  $no_proxy_list                          = undef,
-  $cli                                    = true,
-  $cli_ssh_keyfile                        = undef,
-  $cli_tries                              = $jenkins::params::cli_tries,
-  $cli_try_sleep                          = $jenkins::params::cli_try_sleep,
-  $port                                   = $jenkins::params::port,
-  $libdir                                 = $jenkins::params::libdir,
-  $sysconfdir                             = $jenkins::params::sysconfdir,
-  $manage_datadirs                        = $jenkins::params::manage_datadirs,
-  $localstatedir                          = $::jenkins::params::localstatedir,
-  $executors                              = undef,
-  $slaveagentport                         = undef,
-  $manage_user                            = $::jenkins::params::manage_user,
-  $user                                   = $::jenkins::params::user,
-  $manage_group                           = $::jenkins::params::manage_group,
-  $group                                  = $::jenkins::params::group,
-  $default_plugins                        = $::jenkins::params::default_plugins,
-  $default_plugins_host                   = $::jenkins::params::default_plugins_host,
-  $purge_plugins                          = $::jenkins::params::purge_plugins,
+  String $version                                 = $jenkins::params::version,
+  Boolean $lts                                    = $jenkins::params::lts,
+  Boolean $repo                                   = $jenkins::params::repo,
+  String $package_name                            = $jenkins::params::package_name,
+  Optional[String] $direct_download               = $jenkins::params::direct_download,
+  Stdlib::Absolutepath $package_cache_dir         = $jenkins::params::package_cache_dir,
+  Optional[String] $package_provider              = $jenkins::params::package_provider,
+  Boolean $manage_service                         = true,
+  Boolean $service_enable                         = $jenkins::params::service_enable,
+  Enum['running', 'stopped'] $service_ensure      = $jenkins::params::service_ensure,
+  Optional[String] $service_provider              = $jenkins::params::service_provider,
+  Hash $config_hash                               = {},
+  Hash $plugin_hash                               = {},
+  Hash $job_hash                                  = {},
+  Hash $user_hash                                 = {},
+  Boolean $configure_firewall                     = false,
+  Boolean $install_java                           = $jenkins::params::install_java,
+  Optional[String] $repo_proxy                    = undef,
+  Optional[String] $proxy_host                    = undef,
+  Optional[Integer] $proxy_port                   = undef,
+  Optional[Array] $no_proxy_list                  = undef,
+  Boolean $cli                                    = true,
+  Optional[Stdlib::Absolutepath] $cli_ssh_keyfile = undef,
+  Integer $cli_tries                              = $jenkins::params::cli_tries,
+  Integer $cli_try_sleep                          = $jenkins::params::cli_try_sleep,
+  Integer $port                                   = $jenkins::params::port,
+  Stdlib::Absolutepath $libdir                    = $jenkins::params::libdir,
+  Stdlib::Absolutepath $sysconfdir                = $jenkins::params::sysconfdir,
+  Boolean $manage_datadirs                        = $jenkins::params::manage_datadirs,
+  Stdlib::Absolutepath $localstatedir             = $::jenkins::params::localstatedir,
+  Optional[Integer] $executors                    = undef,
+  Optional[Integer] $slaveagentport               = undef,
+  Boolean $manage_user                            = $::jenkins::params::manage_user,
+  String $user                                    = $::jenkins::params::user,
+  Boolean $manage_group                           = $::jenkins::params::manage_group,
+  String $group                                   = $::jenkins::params::group,
+  Array $default_plugins                          = $::jenkins::params::default_plugins,
+  String $default_plugins_host                    = $::jenkins::params::default_plugins_host,
+  Boolean $purge_plugins                          = $::jenkins::params::purge_plugins,
 ) inherits jenkins::params {
 
-  validate_string($version)
-  validate_bool($lts)
-  validate_bool($repo)
-  validate_string($package_name)
-  validate_bool($manage_service)
-  validate_bool($service_enable)
-  validate_re($service_ensure, '^running$|^stopped$')
-  validate_string($service_provider)
-  validate_hash($config_hash)
-  validate_hash($plugin_hash)
-  validate_hash($job_hash)
-  validate_hash($user_hash)
-  validate_bool($configure_firewall)
-  validate_bool($install_java)
-  validate_string($repo_proxy)
-  validate_string($proxy_host)
-  if $proxy_port { validate_integer($proxy_port) }
-  if $no_proxy_list { validate_array($no_proxy_list) }
-  validate_bool($cli)
-  if $cli_ssh_keyfile { validate_absolute_path($cli_ssh_keyfile) }
-  validate_integer($cli_tries)
-  validate_integer($cli_try_sleep)
-  validate_integer($port)
-  validate_absolute_path($libdir)
-  validate_absolute_path($sysconfdir)
-  validate_bool($manage_datadirs)
-  validate_absolute_path($localstatedir)
-  if $executors { validate_integer($executors) }
-  if $slaveagentport { validate_integer($slaveagentport) }
-  validate_bool($manage_user)
-  validate_string($user)
-  validate_bool($manage_group)
-  validate_string($group)
-  validate_string($default_plugins_host)
-  validate_bool($purge_plugins)
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
   }
@@ -384,7 +349,6 @@ class jenkins(
 
   if $manage_service {
     include ::jenkins::service
-    validate_array($default_plugins)
     if empty($default_plugins){
       notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($::jenkins::params::default_plugins,','))) # lint:ignore:140chars
     }
