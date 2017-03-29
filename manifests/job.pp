@@ -28,23 +28,17 @@
 #     Provide a command to execute to compare Jenkins job files
 #
 define jenkins::job(
-  $config,
-  $source   = undef,
-  $template = undef,
-  $jobname  = $title,
-  $enabled  = undef,
-  $ensure   = 'present',
-  $difftool = '/usr/bin/diff -b -q',
+  String $config,
+  Optional[Stdlib::Absolutepath] $source    = undef,
+  Optional[Stdlib::Absolutepath] $template  = undef,
+  String $jobname                           = $title,
+  $enabled                                  = undef,
+  Enum['present', 'absent'] $ensure         = 'present',
+  String $difftool                          = '/usr/bin/diff -b -q',
 ){
-  validate_string($config)
-  if $source { validate_absolute_path($source) }
-  if $template { validate_absolute_path($template) }
-  validate_string($jobname)
   if $enabled != undef {
     warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
-  validate_re($ensure, '^present$|^absent$')
-  validate_string($difftool)
 
   include ::jenkins::cli
 
