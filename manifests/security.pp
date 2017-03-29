@@ -17,10 +17,8 @@
 # Jenkins security configuration
 #
 class jenkins::security (
-  $security_model = undef,
+  String $security_model,
 ){
-  validate_string($security_model)
-
   include ::jenkins::cli_helper
 
   Class['jenkins::cli_helper']
