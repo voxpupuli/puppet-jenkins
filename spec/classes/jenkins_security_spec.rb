@@ -10,6 +10,12 @@ describe 'jenkins::security', :type => :class do
     }
   end
 
+  let :params do
+    {
+      security_model: 'test'
+    }
+  end
+
   describe 'relationships' do
     it do
       should contain_class('jenkins::security').
@@ -18,6 +24,10 @@ describe 'jenkins::security', :type => :class do
     it do
       should contain_class('jenkins::security').
         that_comes_before('Anchor[jenkins::end]')
+    end
+
+    it do
+      should compile
     end
   end
 end

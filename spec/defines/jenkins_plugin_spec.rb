@@ -252,14 +252,6 @@ describe 'jenkins::plugin' do
 
         it { should_not raise_error }
       end
-
-      context 'array' do
-        let(:params) {{ :source => [] }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /is not a string/)
-        end
-      end
     end # validate_string
   end # source
 
