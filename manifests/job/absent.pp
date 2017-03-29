@@ -13,9 +13,8 @@
 #     the name of the jenkins job
 #
 define jenkins::job::absent(
-  $jobname = $title,
+  String $jobname = $title,
 ){
-  validate_string($jobname)
 
   include ::jenkins::cli
 
