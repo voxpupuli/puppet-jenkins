@@ -32,7 +32,7 @@ describe 'jenkins::slave' do
     end
 
     describe 'slave_uid' do
-      let(:params) { { :slave_uid => '123' } }
+      let(:params) { { :slave_uid => 123 } }
       it { should contain_user('jenkins-slave_user').with_uid(123) }
     end
 
