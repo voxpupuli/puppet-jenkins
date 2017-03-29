@@ -29,7 +29,7 @@
 #
 define jenkins::job(
   String $config,
-  Optional[Stdlib::Absolutepath] $source    = undef,
+  Optional[String] $source                  = undef,
   Optional[Stdlib::Absolutepath] $template  = undef,
   String $jobname                           = $title,
   $enabled                                  = undef,
