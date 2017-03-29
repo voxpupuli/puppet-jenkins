@@ -16,34 +16,24 @@
 #   https://example.org/myplugin.hpi
 #
 define jenkins::plugin(
-  $version         = undef,
-  $manage_config   = false,
-  $config_filename = undef,
-  $config_content  = undef,
-  $update_url      = undef,
-  $enabled         = true,
-  $source          = undef,
-  $digest_string   = undef,
-  $digest_type     = 'sha1',
-  $pin             = false,
+  Optional[String] $version         = undef,
+  Optional[String] $config_filename = undef,
+  Optional[String] $config_content  = undef,
+  Optional[String] $update_url      = undef,
+  Optional[String] $source          = undef,
+  Optional[String] $digest_string   = undef,
+  Boolean $manage_config            = false,
+  Boolean $enabled                  = true,
+  String $digest_type               = 'sha1',
+  Boolean $pin                      = false,
   # no worky
-  $timeout         = undef,
+  $timeout                          = undef,
   # deprecated
-  $plugin_dir      = undef,
-  $username        = undef,
-  $group           = undef,
-  $create_user     = undef,
+  $plugin_dir                       = undef,
+  $username                         = undef,
+  $group                            = undef,
+  $create_user                      = undef,
 ) {
-  validate_string($version)
-  validate_bool($manage_config)
-  validate_string($config_filename)
-  validate_string($config_content)
-  validate_string($update_url)
-  validate_bool($enabled)
-  validate_string($source)
-  validate_string($digest_string)
-  validate_string($digest_type)
-  validate_bool($pin)
 
   if $timeout {
     warning('jenkins::plugin::timeout presently has effect')
