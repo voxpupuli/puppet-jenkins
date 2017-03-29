@@ -26,5 +26,12 @@
     { "name": "puppet/archive", "version_requirement": ">= 0.4.8 < 2.0.0" },
     { "name": "camptocamp/systemd", "version_requirement": ">= 0.3.0 < 1.0.0" },
     { "name": "puppetlabs/transition", "version_requirement": ">= 0.1.0 < 1.0.0" }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.6.1 < 5.0.0"
+    }
   ]
+
 }
