@@ -1,4 +1,4 @@
-require 'puppet_x/jenkins/type/cli'
+require_relative '../../puppet_x/jenkins/type/cli'
 
 PuppetX::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   @doc = "Manage Jenkins' authorization strategy"
