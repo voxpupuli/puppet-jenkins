@@ -31,7 +31,7 @@ class jenkins::cli {
 
   exec { 'jenkins-cli' :
     command => "${extract_jar} && ${move_jar} && ${remove_dir}",
-    path    => ['/bin', '/usr/bin'],
+    path    => ['/bin', '/usr/bin', '/usr/local/bin'],
     cwd     => '/tmp',
     creates => $jar,
     require => Service['jenkins'],

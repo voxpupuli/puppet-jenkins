@@ -27,6 +27,9 @@ class jenkins::repo {
           Anchor['jenkins::repo::end']
       }
 
+      'FreeBSD': {
+      }
+
       'Suse' : {
         class { '::jenkins::repo::suse': }
         Anchor['jenkins::repo::begin'] ->

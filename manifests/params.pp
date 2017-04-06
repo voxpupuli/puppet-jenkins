@@ -42,6 +42,16 @@ class jenkins::params {
         'AJP_PORT'  => { value => '-1' },
       }
     }
+    'FreeBSD': {
+      $libdir           = '/usr/local/share/jenkins'
+      $package_provider = 'pkgng'
+      $service_provider = undef
+      $sysconfdir       = '/usr/local/etc/default'
+      $config_hash_defaults = {
+        'JAVA_ARGS' => { value => $_java_args },
+        'AJP_PORT'  => { value => '-1' },
+      }
+    }
     'RedHat': {
       $libdir           = '/usr/lib/jenkins'
       $package_provider = 'rpm'
