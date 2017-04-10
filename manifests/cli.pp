@@ -39,6 +39,7 @@ class jenkins::cli {
 
   file { $jar:
     ensure  => file,
+    mode    => '0644',
     require => Exec['jenkins-cli'],
   }
 
