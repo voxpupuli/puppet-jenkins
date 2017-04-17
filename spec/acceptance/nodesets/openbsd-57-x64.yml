@@ -1,0 +1,10 @@
+HOSTS:
+  openbsd-57-x64:
+    roles:
+      - master
+    platform: openbsd-57-x64
+    box: petems/openbsd-5.7-x_included-amd64
+    hypervisor : vagrant
+CONFIG:
+  type: git
+  log_level: verbose
