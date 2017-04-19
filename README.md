@@ -125,6 +125,21 @@ can specify a checksum. You can also define a checksum type with
   }
 ```
 
+#### JPI Plugins
+
+When installing jpi plugins, you must make sure that puppet knows the
+extension of the module, otherwise this jenkins module will cleanup 
+and install the plugin on each puppet run. 
+
+```puppet
+  jenkins::plugin { 'cvs':
+    version       => '2.12',
+    digest_string => 'df67d314144bf35366ba9ad29a4bbd38f5b7c4ed',
+    digest_type   => 'sha1',
+    plugin_ext    => 'jpi'
+  }
+```
+
 #### Direct URL
 
 Direct URL from which to download plugin without modification.  This is
