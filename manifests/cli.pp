@@ -48,7 +48,7 @@ class jenkins::cli {
 
   # Provide the -i flag if specified by the user.
   if $::jenkins::cli_ssh_keyfile {
-    $auth_arg = "-i ${::jenkins::cli_ssh_keyfile}"
+    $auth_arg = "-remoting -i ${::jenkins::cli_ssh_keyfile}"
   } else {
     $auth_arg = undef
   }

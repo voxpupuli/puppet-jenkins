@@ -163,7 +163,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
 
     auth_cmd = nil
     unless ssh_private_key.nil?
-      auth_cmd = base_cmd + ['-i', ssh_private_key] + [command]
+      auth_cmd = base_cmd + ['-remoting -i', ssh_private_key] + [command]
       auth_cmd.flatten!
     end
 
