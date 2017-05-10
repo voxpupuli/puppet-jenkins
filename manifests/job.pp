@@ -27,6 +27,9 @@
 #   difftool = '/usr/bin/diff -b-q'
 #     Provide a command to execute to compare Jenkins job files
 #
+#   replace = 'true'
+#     Wether or not to replace the job if it already exists.
+#
 define jenkins::job(
   String $config,
   Optional[String] $source                  = undef,
@@ -35,6 +38,7 @@ define jenkins::job(
   Any $enabled                              = undef,
   Enum['present', 'absent'] $ensure         = 'present',
   String $difftool                          = '/usr/bin/diff -b -q',
+  Boolean $replace                          = true
 ){
 
   if $enabled {
@@ -67,6 +71,7 @@ define jenkins::job(
       jobname  => $jobname,
       enabled  => $enabled,
       difftool => $difftool,
+      replace  => $replace,
     }
   }
 
