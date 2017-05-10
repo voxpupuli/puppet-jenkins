@@ -3,7 +3,6 @@ language: ruby
 before_install: gem install bundler -v '~> 1.13' -v '< 1.14' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
 rvm:
-  - '2.0'
   - '2.1'
   - '2.2'
 script:
