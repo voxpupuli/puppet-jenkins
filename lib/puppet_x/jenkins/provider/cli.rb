@@ -3,8 +3,9 @@ require 'facter'
 
 require 'json'
 
-require 'puppet_x/jenkins/config'
-require 'puppet_x/jenkins/provider'
+PUPPET_X = File.join(File.dirname(__FILE__), '../../..', 'puppet_x')
+require File.join(PUPPET_X, 'jenkins/config')
+require File.join(PUPPET_X, 'jenkins/provider')
 
 class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
   # stdout/stderr indicates an authentication failure

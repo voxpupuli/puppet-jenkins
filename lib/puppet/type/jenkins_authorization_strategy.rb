@@ -1,4 +1,5 @@
-require 'puppet_x/jenkins/type/cli'
+PUPPET_X = File.join(File.dirname(__FILE__), '../..', 'puppet_x')
+require File.join(PUPPET_X, 'jenkins/type/cli')
 
 PuppetX::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   @doc = "Manage Jenkins' authorization strategy"

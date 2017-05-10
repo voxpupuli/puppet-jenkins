@@ -1,5 +1,9 @@
-require 'puppet_x/jenkins/type'
-require 'puppet_x/jenkins/config'
+PUPPET_X = File.join(File.dirname(__FILE__), '../../..', 'puppet_x')
+require File.join(PUPPET_X, 'jenkins/type')
+require File.join(PUPPET_X, 'jenkins/config')
+
+#require 'puppet_x/jenkins/type'
+#require 'puppet_x/jenkins/config'
 
 module PuppetX::Jenkins::Type::Cli
   def self.newtype(*args, &block)

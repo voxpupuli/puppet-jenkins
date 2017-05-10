@@ -1,6 +1,8 @@
 require 'facter'
 
-require 'puppet_x/jenkins'
+PUPPET_X = File.join(File.dirname(__FILE__), '../..', 'puppet_x')
+require File.join(PUPPET_X, 'jenkins')
+
 require 'puppet/util/warnings'
 
 # This class is used to lookup common configuration values by first looking for
