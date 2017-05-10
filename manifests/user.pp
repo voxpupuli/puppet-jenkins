@@ -27,9 +27,9 @@ define jenkins::user (
 
   include ::jenkins::cli_helper
 
-  Class['jenkins::cli_helper'] ->
-    Jenkins::User[$title] ->
-      Anchor['jenkins::end']
+  Class['jenkins::cli_helper']
+    -> Jenkins::User[$title]
+      -> Anchor['jenkins::end']
 
   case $ensure {
     'present': {
