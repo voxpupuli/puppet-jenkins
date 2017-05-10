@@ -48,9 +48,9 @@ define jenkins::job(
 
   include ::jenkins::cli
 
-  Class['jenkins::cli'] ->
-    Jenkins::Job[$title] ->
-      Anchor['jenkins::end']
+  Class['jenkins::cli']
+    -> Jenkins::Job[$title]
+      -> Anchor['jenkins::end']
 
   if ($ensure == 'absent') {
     jenkins::job::absent { $title:
