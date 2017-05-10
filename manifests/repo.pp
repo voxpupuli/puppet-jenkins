@@ -15,23 +15,23 @@ class jenkins::repo {
 
       'RedHat', 'Linux': {
         class { '::jenkins::repo::el': }
-        Anchor['jenkins::repo::begin'] ->
-          Class['jenkins::repo::el'] ->
-          Anchor['jenkins::repo::end']
+        Anchor['jenkins::repo::begin']
+          -> Class['jenkins::repo::el']
+          -> Anchor['jenkins::repo::end']
       }
 
       'Debian': {
         class { '::jenkins::repo::debian': }
-        Anchor['jenkins::repo::begin'] ->
-          Class['jenkins::repo::debian'] ->
-          Anchor['jenkins::repo::end']
+        Anchor['jenkins::repo::begin']
+          -> Class['jenkins::repo::debian']
+          -> Anchor['jenkins::repo::end']
       }
 
       'Suse' : {
         class { '::jenkins::repo::suse': }
-        Anchor['jenkins::repo::begin'] ->
-          Class['jenkins::repo::suse'] ->
-          Anchor['jenkins::repo::end']
+        Anchor['jenkins::repo::begin']
+          -> Class['jenkins::repo::suse']
+          -> Anchor['jenkins::repo::end']
       }
 
       default: {

@@ -278,14 +278,14 @@ class jenkins::slave (
         mode    => '0644',
         owner   => 'root',
         group   => 'wheel',
-      } ->
-      Service['jenkins-slave']
+      }
+      -> Service['jenkins-slave']
 
       file { '/var/log/jenkins':
         ensure => 'directory',
         owner  => $slave_user,
-      } ->
-      Service['jenkins-slave']
+      }
+      -> Service['jenkins-slave']
 
       if $manage_slave_user {
         # osx doesn't have managehome support, so create directory
@@ -330,8 +330,8 @@ class jenkins::slave (
       proxy_server => $proxy_server,
       cleanup      => false,
       extract      => false,
-    } ->
-    Service['jenkins-slave']
+    }
+    -> Service['jenkins-slave']
   }
 
   service { 'jenkins-slave':
@@ -343,7 +343,7 @@ class jenkins::slave (
   }
 
   if $manage_slave_user and $manage_client_jar {
-    User['jenkins-slave_user']->
-      Archive['get_swarm_client']
+    User['jenkins-slave_user']
+      -> Archive['get_swarm_client']
   }
 }

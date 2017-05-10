@@ -23,9 +23,9 @@ class jenkins::proxy {
       mode    => '0644',
     }
 
-    Package['jenkins'] ->
-    File[$proxy_xml] ~>
-    Service['jenkins']
+    Package['jenkins']
+    -> File[$proxy_xml]
+    ~> Service['jenkins']
 
   } else {
     $url = undef
