@@ -30,7 +30,7 @@ class jenkins::repo::debian
     }
   }
 
-  anchor { 'jenkins::repo::debian::begin': } ->
-    Apt::Source['jenkins'] ->
-    anchor { 'jenkins::repo::debian::end': }
+  anchor { 'jenkins::repo::debian::begin': }
+    -> Apt::Source['jenkins']
+      -> anchor { 'jenkins::repo::debian::end': }
 }
