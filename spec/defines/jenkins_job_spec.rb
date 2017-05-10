@@ -47,6 +47,14 @@ describe 'jenkins::job' do
     it { should contain_exec('jenkins delete-job myjob') }
   end
 
+  describe 'with replace false' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :ensure => 'present', :config => quotes, :replace => false, }}
+    it { should contain_exec('jenkins create-job myjob') }
+    it { should_not contain_exec('jenkins update-job myjob') }
+    it { should_not contain_exec('jenkins delete-job myjob') }
+  end
+
   describe 'with an invalid $difftool' do
     let(:params) do
       {
