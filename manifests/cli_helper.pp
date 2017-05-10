@@ -17,9 +17,9 @@ class jenkins::cli_helper (
 
   if $ssh_keyfile { validate_absolute_path($ssh_keyfile) }
 
-  Class['jenkins::cli'] ->
-    Class['jenkins::cli_helper'] ->
-      Anchor['jenkins::end']
+  Class['jenkins::cli']
+    -> Class['jenkins::cli_helper']
+      -> Anchor['jenkins::end']
 
   $libdir = $::jenkins::libdir
   $cli_jar = $::jenkins::cli::jar

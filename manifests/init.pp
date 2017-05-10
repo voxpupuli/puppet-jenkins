@@ -412,9 +412,9 @@ class jenkins(
       unless  => "[ \$(\$HELPER_CMD get_num_executors) -eq ${executors} ]",
     }
 
-    Class['jenkins::cli'] ->
-      Jenkins::Cli::Exec['set_num_executors'] ->
-        Class['jenkins::jobs']
+    Class['jenkins::cli']
+      -> Jenkins::Cli::Exec['set_num_executors']
+        -> Class['jenkins::jobs']
   }
 
   if ($slaveagentport != undef) {
@@ -423,39 +423,39 @@ class jenkins(
       unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]",
     }
 
-    Class['jenkins::cli'] ->
-      Jenkins::Cli::Exec['set_slaveagent_port'] ->
-        Class['jenkins::jobs']
+    Class['jenkins::cli']
+      -> Jenkins::Cli::Exec['set_slaveagent_port']
+        -> Class['jenkins::jobs']
   }
 
   if $manage_service {
-    Anchor['jenkins::begin'] ->
-      Class[$jenkins_package_class] ->
-        Class['jenkins::config'] ->
-          Class['jenkins::plugins'] ~>
-            Class['jenkins::service'] ->
-              Class['jenkins::jobs'] ->
-                Anchor['jenkins::end']
+    Anchor['jenkins::begin']
+      -> Class[$jenkins_package_class]
+        -> Class['jenkins::config']
+          -> Class['jenkins::plugins']
+            ~> Class['jenkins::service']
+              -> Class['jenkins::jobs']
+                -> Anchor['jenkins::end']
   }
 
   if $install_java {
-    Anchor['jenkins::begin'] ->
-      Class['java'] ->
-        Class[$jenkins_package_class] ->
-          Anchor['jenkins::end']
+    Anchor['jenkins::begin']
+      -> Class['java']
+        -> Class[$jenkins_package_class]
+          -> Anchor['jenkins::end']
   }
 
   if $repo_ {
-    Anchor['jenkins::begin'] ->
-      Class['jenkins::repo'] ->
-        Class['jenkins::package'] ->
-          Anchor['jenkins::end']
+    Anchor['jenkins::begin']
+      -> Class['jenkins::repo']
+        -> Class['jenkins::package']
+          -> Anchor['jenkins::end']
   }
 
   if ($configure_firewall and $manage_service) {
-    Class['jenkins::service'] ->
-      Class['jenkins::firewall'] ->
-        Anchor['jenkins::end']
+    Class['jenkins::service']
+      -> Class['jenkins::firewall']
+        -> Anchor['jenkins::end']
   }
 
   if $service_provider == 'systemd' {
@@ -466,9 +466,9 @@ class jenkins(
 
     # jenkins::config manages the jenkins user resource, which is autorequired
     # by the file resource for the run wrapper.
-    Class['jenkins::config'] ->
-      Jenkins::Systemd['jenkins'] ->
-        Anchor['jenkins::end']
+    Class['jenkins::config']
+      -> Jenkins::Systemd['jenkins']
+        -> Anchor['jenkins::end']
   }
 }
 # vim: ts=2 et sw=2 autoindent
