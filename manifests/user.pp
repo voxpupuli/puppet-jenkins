@@ -22,6 +22,7 @@ define jenkins::user (
   String $full_name                 = 'Managed by Puppet',
   String $public_key                = '',
   Enum['present', 'absent'] $ensure = 'present',
+  Boolean $bootstrapping            = false,
 ){
 
   include ::jenkins::cli_helper
