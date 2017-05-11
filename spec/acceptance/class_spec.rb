@@ -90,30 +90,71 @@ describe 'jenkins class' do
   end # executors
 
   context 'slaveagentport' do
-      it 'should work with no errors' do
-        pp = <<-EOS
-        class {'jenkins':
-          slaveagentport    => 7777,
-          cli_remoting_free => true,
-        }
-        EOS
+    it 'should work with no errors' do
+      pp = <<-EOS
+      class {'jenkins':
+        slaveagentport    => 7777,
+        cli_remoting_free => true,
+      }
+      EOS
 
-        apply2(pp)
-      end
+      apply2(pp)
+    end
 
-      describe port(8080) do
-        # jenkins should already have been running so we shouldn't have to
-        # sleep
-        it { should be_listening }
-      end
+    describe port(8080) do
+      # jenkins should already have been running so we shouldn't have to
+      # sleep
+      it { should be_listening }
+    end
 
-      describe service('jenkins') do
-        it { should be_running }
-        it { should be_enabled }
-      end
+    describe service('jenkins') do
+      it { should be_running }
+      it { should be_enabled }
+    end
 
-      describe file('/var/lib/jenkins/config.xml') do
-        it { should contain '  <slaveAgentPort>7777</slaveAgentPort>' }
-      end
-    end # slaveagentport
+    describe file('/var/lib/jenkins/config.xml') do
+      it { should contain '  <slaveAgentPort>7777</slaveAgentPort>' }
+    end
+  end # slaveagentport
+
+  context 'security mode with username / password cli auth' do
+    it 'should work with no errors' do
+      pp = <<-EOS
+      class {'jenkins':
+        cli_remoting_free  => true,
+        cli                => true,
+        cli_username       => 'puppet',
+        cli_password       => 'test123',
+        bootstrapuser_hash => {
+          'puppet' => {
+            ensure    => present,
+            email     => 'user@host.com',
+            password  => 'test123',
+            full_name => 'Puppet bootstrapping user, do not remove',
+          }
+        },
+      }
+      class { 'jenkins::security':
+        security_model => full_control,
+      }
+      EOS
+
+      apply2(pp)
+
+      pp = <<-EOS
+      class {'jenkins':
+        cli_remoting_free  => true,
+        cli                => true,
+        cli_username       => 'puppet',
+        cli_password       => 'test123',
+      }
+      class { 'jenkins::security':
+        security_model => unsecured,
+      }
+      EOS
+      apply2(pp)
+      
+    end
+  end # security mode with username / password
+
 end

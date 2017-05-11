@@ -22,6 +22,7 @@ define jenkins::user (
   $full_name = 'Managed by Puppet',
   $public_key = '',
   $ensure = 'present',
+  $bootstrapping = false,
 ){
   validate_re($ensure, '^present$|^absent$')
 

@@ -1,0 +1,92 @@
+#!groovy
+/*
+
+  !! Managed by Puppet !!
+  Setup initial bootstrapping user for puppet
+
+*/
+
+import jenkins.model.*
+import hudson.security.*
+import com.cloudbees.plugins.credentials.*
+import hudson.plugins.active_directory.*
+import hudson.security.HudsonPrivateSecurityRealm.Details
+
+// Code
+def instance = Jenkins.getInstance()
+def currentRealm = instance.getSecurityRealm().getClass().getName()
+
+// bootstrap users
+def bootstrapUsers = [
+<% @_bootstrap_users.each do |username,userconfig| -%>
+  [
+    username : '<%= username %>',
+    password : '<%= userconfig['password'] %>',
+    email : '<%= userconfig['email'] %>',
+    full_name : '<%= userconfig['full_name'] %>',
+    ssh_key : '<%= userconfig['public_key'] %>',
+  ],
+<% end -%>
+]
+
+if (currentRealm == 'hudson.security.HudsonPrivateSecurityRealm') {
+  println "--> Jenkins Local Security Realm already configured (HudsonPrivateSecurityRealm)"
+} else {
+  println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm)"
+  def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+  instance.setSecurityRealm(hudsonRealm)
+  println "--> Done configuring Jenkins Local Security Realm"
+}
+
+
+bootstrapUsers.each { user ->
+
+  // User config
+  def username = user['username']
+  def password = user['password']
+  def email = user['email']
+  def full_name = user['full_name']
+  def ssh_key = user['ssh_key']
+
+  println "--> Configuring Jenkins Automation User (${username} with ssh_key ${ssh_key})"
+
+
+  // Get user and create if not exists
+  def userObject = hudson.model.User.get(username,false)
+  if (userObject == null) {
+    println "--> creating new user '${username}'"
+    userObject = instance.getSecurityRealm().createAccount(username,password)
+  } else {
+    println "--> using existing user '${username}'"
+  }
+
+
+  // set full name
+  userObject.setFullName(full_name)
+
+
+  // password
+  userObject.addProperty(Details.fromPlainPassword(password))
+
+  // set email
+  def email_param = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty').newInstance(email)
+  userObject.addProperty(email_param)
+
+
+  // set ssh_key
+  if ( ssh_key != '' ) {
+    def keys_param = new org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl(ssh_key)
+    userObject.addProperty(keys_param)
+  }
+
+  // save the user
+  userObject.save()
+
+
+}
+
+
+
+println "--> Saving Config"
+instance.save()
+println "--> Done Saving Config"

@@ -32,12 +32,12 @@ See [NATIVE_TYPES_AND_PROVIDERS.md](NATIVE_TYPES_AND_PROVIDERS.md)
 ## Remoting Free CLI
 
 Jenkins refactored the CLI in 2.54 and 2.46.2 in response to several security
-incidents (See [JENKINS-41745](https://issues.jenkins-ci.org/browse/JENKINS-41745). This module has been adjusted to support the new CLI. However you
+incidents (See [JENKINS-41745](https://issues.jenkins-ci.org/browse/JENKINS-41745)). This module has been adjusted to support the new CLI. However you
 need to tell the module if the new remoting free cli is in place. Please set
-```$::jenkins::cli_remoting_free``` to true for latest Jenkins servers.
+```$::jenkins::cli_remoting_free``` to ```true``` for latest Jenkins servers.
 
-Note: This is not the default to support backward compatibility. This may become
-a default once this module is released in a new version.
+Note: Setting this to ```true``` is not the default, to support backward compatibility. 
+This may become a default once this module is released in a new version.
 
 Also note that the module tries to do heuristics for this setting if not specified.
 You can always set this parameter to enforce usage of old or new CLI interface.
@@ -55,17 +55,119 @@ Heuristics:
 
 ## Username and Password Auth
 
-The new CLI also supports proper authentication with username and password. This
-has not been supported in this module for a long time, but is a requirement for
+The new CLI also supports proper authentication with username/password or password_file.
+This has not been supported in this module for a long time, but is a requirement for
 supporting AD and OpenID authentications (there is no ssh key there). You can now
-also supply ```$::jenkins::cli_username``` and ```$::jenkins::cli_password``` to
-use username / password based authentication. Then the puppet automation user can
-also reside in A.D
+also supply ```$::jenkins::cli_username``` and ```$::jenkins::cli_password``` or 
+```$::jenkins::cli_password_file``` to use username / password based authentication. 
+Then the puppet automation user can also reside in ActiveDirectory.
 
 Note: latest jenkins (2.54++ and 2.46.2++) require a ssh username, so you must also
 provide ```$::jenkins::cli_username``` for ssh. If you specify both username/password
 and ssh key file, SSH authentication is preferred.
 
+If you specify a ```$::jenkins::cli_password_file```, the file must be created by you. It
+is recommended to use a password_file, as username and password are passed through with
+-auth USERNAME:PASSWORD, which is visible in the process listing. With cli_password_file
+the password is not visible.
+
+# Jenkins 2.0 bootstrapping
+
+Jenkins 2.0 comes with "secure by default" settings. This means if you
+deploy a jenkins server, it is automatically set to "full_control" authz
+strategy, which in turn means, this puppet module can not use the CLI 
+to configure Jenkins, as there are no credentials yet. 
+
+To support "provisioning on first run" with this module, we use the 
+init.groovy.d approach described in [Configuring Jenkins upon start up](https://wiki.jenkins-ci.org/display/JENKINS/Configuring+Jenkins+upon+start+up)
+to setup an initial bootstrapping user that can then be used as automation user.
+
+**Note:** If you use SSH credentials, we do **not generate** or manage the ssh private 
+key file for you, this module adds the SSH public key to the jenkins user, however the
+ssh key file (```$::jenkins::cli_ssh_keyfile```) must be created by you or your
+puppet code prior to calling the jenkins class.
+
+## Usage examples: 
+
+### Jenkins prior to 2.54 or 2.46.2 (LTS) with SSH Key:
+
+Note: you must manage / create /root/ssh_for_jenkins.
+
+```puppet
+class { jenkins:
+  lts                => true,
+  cli_ssh_keyfile    => '/root/ssh_for_jenkins',
+  bootstrapuser_hash => {
+    'puppet' => {
+      ensure => present,
+      email => 'user@host.com',
+      full_name => 'Puppet bootstrapping user, do not remove',
+      public_key => 'ssh-rsa AAAA.... puppet automation user',
+    }
+  }
+}
+
+class { jenkins::security:
+  security_model => full_control,
+}
+
+```
+
+### Jenkins >= 2.54 and 2.46.2 (LTS) with SSH Key: 
+
+Note: you must manage / create /root/ssh_for_jenkins.
+
+```puppet
+class { jenkins:
+  lts               => true,
+  cli_remoting_free => true,
+  cli_ssh_keyfile   => '/root/ssh_for_jenkins',
+  cli_username      => 'puppet',
+  jenkins_sshd_port => 0,
+  bootstrapuser_hash => {
+    'puppet' => {
+      ensure     => present,
+      email      => 'user@host.com',
+      full_name  => 'Puppet bootstrapping user, do not remove',
+      public_key => 'ssh-rsa AAAA.... puppet automation user',
+    }
+  }
+}
+
+class { jenkins::security:
+  security_model => full_control,
+}
+```
+
+### Jenkins prior to 2.54 or 2.46.2 (LTS) with username / password:
+
+Note: This is not supported, due to serveral bugs (See [JENKINS-12543](https://issues.jenkins-ci.org/browse/JENKINS-12543))
+
+### Jenkins >= 2.54 and 2.46.2 (LTS) with username / password: 
+
+```puppet
+class { jenkins:
+  lts               => true,
+  cli_remoting_free => true,
+  cli_username      => 'puppet',
+  cli_password      => 'ThisIsMyPassword',
+  bootstrapuser_hash => {
+    'puppet' => {
+      ensure     => present,
+      email      => 'user@host.com',
+      password   => 'ThisIsMyPassword',
+      full_name  => 'Puppet bootstrapping user, do not remove',
+    }
+  }
+}
+
+class { jenkins::security:
+  security_model => full_control,
+}
+
+```
+
+Note: Bootstrapping support can be disabled by setting ```$::jenkins::manage_bootstrapping``` to false.
 
 # Using puppet-jenkins
 

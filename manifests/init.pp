@@ -133,6 +133,25 @@
 #       password: 'pass1'
 #       email: 'user1@example.com'
 #
+# @param bootstrapuser_hash
+#   jenkins bootstrap users to create (needed since Jenkins 2.0)
+# 
+# @example bootstrapuser_hash
+#   class { 'jenkins':
+#     cli_ssh_keyfile    => '/root/ssh_for_jenkins',
+#     bootstrapuser_hash => {
+#       'puppet' => {
+#         ensure => present,
+#         email => 'user@host.com',
+#         full_name => 'Puppet bootstrapping user, do not remove',
+#         public_key => 'ssh-rsa AAAA.... puppet automation user',
+#       }
+#     }
+#   }
+#   class { jenkins::security:
+#     security_model => full_control,
+#   }
+#
 # @param configure_firewall
 #   For folks that want to manage the puppetlabs firewall module.
 #
@@ -289,6 +308,18 @@
 #       version: '2.16.0'
 #     # /support-core deps
 #
+# @param jenkins_home
+#   Set the JENKINS_HOME
+#
+# @param manage_bootstrapping
+#   Manage init.groovy.d directory and it's content
+#   See https://wiki.jenkins-ci.org/display/JENKINS/Configuring+Jenkins+upon+start+up
+#   Note: This is needed for Jenkins 2.0 (secure by default)
+#         to create initial automation user
+#
+# @param purge_bootstrapping
+#   Cleanup the bootstrapping dir if manage_bootstrapping is true
+#
 class jenkins(
   $version              = $jenkins::params::version,
   $lts                  = $jenkins::params::lts,
@@ -305,6 +336,7 @@ class jenkins(
   $plugin_hash          = {},
   $job_hash             = {},
   $user_hash            = {},
+  $bootstrapuser_hash   = {},
   $configure_firewall   = false,
   $install_java         = $jenkins::params::install_java,
   $repo_proxy           = undef,
@@ -333,6 +365,10 @@ class jenkins(
   $default_plugins      = $::jenkins::params::default_plugins,
   $default_plugins_host = $::jenkins::params::default_plugins_host,
   $purge_plugins        = $::jenkins::params::purge_plugins,
+  $jenkins_home         = $::jenkins::params::jenkins_home,
+  $manage_bootstrapping = $::jenkins::params::manage_bootstrapping,
+  $purge_bootstrapping  = $::jenkins::params::purge_bootstrapping,
+  $jenkins_sshd_port    = $::jenkins::params::jenkins_sshd_port,
 ) inherits jenkins::params {
 
   validate_string($version)
@@ -350,6 +386,7 @@ class jenkins(
   validate_hash($plugin_hash)
   validate_hash($job_hash)
   validate_hash($user_hash)
+  validate_hash($bootstrapuser_hash)
   validate_bool($configure_firewall)
   validate_bool($install_java)
   validate_string($repo_proxy)
@@ -377,6 +414,9 @@ class jenkins(
   validate_string($group)
   validate_string($default_plugins_host)
   validate_bool($purge_plugins)
+  validate_bool($manage_bootstrapping)
+  validate_bool($purge_bootstrapping)
+  if $jenkins_sshd_port { validate_numeric($jenkins_sshd_port) }
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
   }
