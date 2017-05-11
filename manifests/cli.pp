@@ -29,13 +29,21 @@ class jenkins::cli {
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
 
-  exec { 'jenkins-cli' :
-    command => "${extract_jar} && ${move_jar} && ${remove_dir}",
-    path    => ['/bin', '/usr/bin'],
-    cwd     => '/tmp',
+  # make sure we always call Exec[jenlins-cli] in case
+  # the binary does not exist
+  exec { 'check-jenkins-cli':
+    command => '/bin/true',
     creates => $jar,
-    require => Service['jenkins'],
   }
+  ~> exec { 'jenkins-cli' :
+    command     => "${extract_jar} && ${move_jar} && ${remove_dir}",
+    path        => ['/bin', '/usr/bin'],
+    cwd         => '/tmp',
+    refreshonly => true,
+    require     => Service['jenkins'],
+  }
+  # Extract latest CLI in case package is updated / downgraded
+  Package[$::jenkins::package_name] ~> Exec['jenkins-cli']
 
   file { $jar:
     ensure  => file,
@@ -45,20 +53,13 @@ class jenkins::cli {
   $port = jenkins_port()
   $prefix = jenkins_prefix()
 
-  # Provide the -i flag if specified by the user.
-  if $::jenkins::cli_ssh_keyfile {
-    $auth_arg = "-i ${::jenkins::cli_ssh_keyfile}"
-  } else {
-    $auth_arg = undef
-  }
-
   # The jenkins cli command with required parameter(s)
   $cmd = join(
     delete_undef_values([
       'java',
       "-jar ${::jenkins::cli::jar}",
       "-s http://localhost:${port}${prefix}",
-      $auth_arg,
+      $::jenkins::_cli_auth_arg,
     ]),
     ' '
   )

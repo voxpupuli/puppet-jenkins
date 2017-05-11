@@ -13,6 +13,10 @@ class jenkins::cli::config(
   $puppet_helper           = undef,
   $cli_tries               = undef,
   $cli_try_sleep           = undef,
+  $cli_username            = undef,
+  $cli_password            = undef,
+  $cli_password_file       = '/tmp/jenkins_credentials_for_puppet',
+  $cli_remoting_free       = undef,
   $ssh_private_key_content = undef,
 ) {
   if $cli_jar { validate_absolute_path($cli_jar) }
@@ -21,6 +25,10 @@ class jenkins::cli::config(
   if $puppet_helper { validate_absolute_path($puppet_helper) }
   if $cli_tries { validate_integer($cli_tries) }
   if $cli_try_sleep { validate_numeric($cli_try_sleep) }
+  if $cli_username { validate_string($cli_username) }
+  if $cli_password { validate_string($cli_password) }
+  if $cli_password_file { validate_absolute_path($cli_password_file) }
+  if $cli_remoting_free != undef { validate_bool($cli_remoting_free) }
   validate_string($ssh_private_key_content)
 
   if str2bool($::is_pe) {
@@ -61,4 +69,25 @@ class jenkins::cli::config(
       }
     }
   }
+
+  if $cli_username and $cli_password {
+    file { $cli_password_file:
+      ensure  => 'file',
+      mode    => '0400',
+      backup  => false,
+      content => "${cli_username}:${cli_password}",
+    }
+
+    # allow this class to be included when not running as root
+    if $::id == 'root' {
+      File[$cli_password_file] {
+        # the owner/group should probably be set externally and retrieved if
+        # present in the manfiest. At present, there is no authoritative place
+        # to retrive this information from.
+        owner => 'jenkins',
+        group => 'jenkins',
+      }
+    }
+  }
+
 }

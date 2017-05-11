@@ -7,7 +7,8 @@ describe 'jenkins class' do
     it 'should work with no errors' do
       pp = <<-EOS
       class {'jenkins':
-        cli => true,
+        cli_remoting_free => true,
+        cli               => true,
       }
       EOS
 
@@ -64,7 +65,8 @@ describe 'jenkins class' do
     it 'should work with no errors' do
       pp = <<-EOS
       class {'jenkins':
-        executors => 42,
+        executors         => 42,
+        cli_remoting_free => true,
       }
       EOS
 
@@ -91,7 +93,8 @@ describe 'jenkins class' do
       it 'should work with no errors' do
         pp = <<-EOS
         class {'jenkins':
-          slaveagentport => 7777,
+          slaveagentport    => 7777,
+          cli_remoting_free => true,
         }
         EOS
 

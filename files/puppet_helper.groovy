@@ -251,11 +251,11 @@ class Actions {
   /////////////////////////
   // create or update user from JSON
   /////////////////////////
-  void user_update() { // or create
+  void user_update(String jsonfile) { // or create
     // parse JSON doc from stdin
     def slurper = new groovy.json.JsonSlurper()
-    def text = bindings.stdin.text
-    def conf = slurper.parseText(text)
+    def conf = slurper.parse(new File(jsonfile))
+
 
     // a user id is required
     def id = conf['id']
@@ -507,7 +507,7 @@ class Actions {
           info['description'] = cred.description
           info['username'] = cred.username
           info['private_key'] = cred.privateKey
-          info['passphrase'] = cred.passphrase.plainText
+          if (cred.passphrase) { info['passphrase'] = cred.passphrase.plainText } else { info['passphrase'] = '' }
           break
         case 'com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl':
           info['apiToken'] = cred.apiToken.plainText
@@ -559,13 +559,12 @@ class Actions {
    * modify an existing credentials specified by a JSON document passed via
    * the stdin
   */
-  void credentials_update_json() {
+  void credentials_update_json(String jsonfile) {
     def j = Jenkins.getInstance()
 
     // parse JSON doc from stdin
     def slurper = new groovy.json.JsonSlurper()
-    def text = bindings.stdin.text
-    def conf = slurper.parseText(text)
+    def conf = slurper.parse(new File(jsonfile))
 
     def cred = null
     switch (conf['impl']) {
@@ -844,7 +843,7 @@ class Actions {
   ////////////////////////
   // set_jenkins_instance
   ////////////////////////
-  void set_jenkins_instance() {
+  void set_jenkins_instance(String jsonfile) {
     def j = Jenkins.getInstance()
 
     def setup = { info ->
@@ -864,8 +863,7 @@ class Actions {
 
     // parse JSON doc from stdin
     def slurper = new groovy.json.JsonSlurper()
-    def text = bindings.stdin.text
-    def conf = slurper.parseText(text)
+    def conf = slurper.parse(new File(jsonfile))
 
     // each key in the hash is a method on the Jenkins singleton.  The key's
     // value is an object to instantiate and pass to the method.  (currently,

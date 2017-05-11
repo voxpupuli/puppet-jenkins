@@ -35,24 +35,20 @@ class jenkins::cli_helper (
     require => Class['jenkins::cli'],
   }
 
-  # Provide the -i flag if specified by the user.
-  if $ssh_keyfile {
-    $auth_arg = "-i ${ssh_keyfile}"
-  } else {
-    $auth_arg = undef
-  }
-
   if $ssh_keyfile != $::jenkins::cli_ssh_keyfile {
     info("Using jenkins::cli_helper(${ssh_keyfile}) is deprecated and will be removed in the next major version of this module")
   }
 
   $helper_cmd = join(
     delete_undef_values([
+      '/bin/cat',
+      $helper_groovy,
+      '|',
       '/usr/bin/java',
       "-jar ${::jenkins::cli::jar}",
       "-s http://127.0.0.1:${port}${prefix}",
-      $auth_arg,
-      "groovy ${helper_groovy}",
+      $::jenkins::_cli_auth_arg,
+      'groovy ='
     ]),
     ' '
   )

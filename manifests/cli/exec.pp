@@ -32,7 +32,7 @@ define jenkins::cli::exec(
   )
 
   if $unless {
-    $environment_run = [ "HELPER_CMD=${::jenkins::cli_helper::helper_cmd}" ]
+    $environment_run = [ "HELPER_CMD=eval ${::jenkins::cli_helper::helper_cmd}" ]
   } else {
     $environment_run = undef
   }
