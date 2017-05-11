@@ -88,27 +88,70 @@ describe 'jenkins class' do
   end # executors
 
   context 'slaveagentport' do
-    pp = <<-EOS
+    it 'should work with no errors' do
+      pp = <<-EOS
       class {'jenkins':
         slaveagentport => 7777,
       }
       EOS
 
-    apply2(pp)
+      apply2(pp)
+    end
 
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to
       # sleep
-      it { is_expected.to be_listening }
+      it { should be_listening }
     end
 
     describe service('jenkins') do
-      it { is_expected.to be_running }
-      it { is_expected.to be_enabled }
+      it { should be_running }
+      it { should be_enabled }
     end
 
     describe file('/var/lib/jenkins/config.xml') do
-      it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
+      it { should contain '  <slaveAgentPort>7777</slaveAgentPort>' }
     end
   end # slaveagentport
+
+  context 'security mode with username / password cli auth' do
+    it 'should work with no errors' do
+      pp = <<-EOS
+      class {'jenkins':
+        cli_remoting_free  => true,
+        cli                => true,
+        cli_username       => 'puppet',
+        cli_password       => 'test123',
+        bootstrapuser_hash => {
+          'puppet' => {
+            ensure    => present,
+            email     => 'user@host.com',
+            password  => 'test123',
+            full_name => 'Puppet bootstrapping user, do not remove',
+          }
+        },
+      }
+      class { 'jenkins::security':
+        security_model => full_control,
+      }
+      EOS
+
+      apply2(pp)
+
+      pp = <<-EOS
+      class {'jenkins':
+        cli_remoting_free  => true,
+        cli                => true,
+        cli_username       => 'puppet',
+        cli_password       => 'test123',
+      }
+      class { 'jenkins::security':
+        security_model => unsecured,
+      }
+      EOS
+      apply2(pp)
+      
+    end
+  end # security mode with username / password
+
 end

@@ -205,8 +205,6 @@ describe 'jenkins_credentials' do
               'workflow-scm-step',
               'git',
               'git-client',
-              'mailer',
-              'display-url-api',
               'scm-api',
               'ssh-credentials',
               'apache-httpcomponents-client-4-api',

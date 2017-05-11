@@ -133,6 +133,25 @@
 #       password: 'pass1'
 #       email: 'user1@example.com'
 #
+# @param bootstrapuser_hash
+#   jenkins bootstrap users to create (needed since Jenkins 2.0)
+#
+# @example bootstrapuser_hash
+#   class { 'jenkins':
+#     cli_ssh_keyfile    => '/root/ssh_for_jenkins',
+#     bootstrapuser_hash => {
+#       'puppet' => {
+#         ensure => present,
+#         email => 'user@host.com',
+#         full_name => 'Puppet bootstrapping user, do not remove',
+#         public_key => 'ssh-rsa AAAA.... puppet automation user',
+#       }
+#     }
+#   }
+#   class { jenkins::security:
+#     security_model => full_control,
+#   }
+#
 # @param configure_firewall
 #   For folks that want to manage the puppetlabs firewall module.
 #
@@ -287,6 +306,21 @@
 # @param systemd_type
 #   Define a systemd unit type
 #
+# @param jenkins_home
+#   Set the JENKINS_HOME
+#
+# @param manage_bootstrapping
+#   Manage init.groovy.d directory and it's content
+#   See https://wiki.jenkins-ci.org/display/JENKINS/Configuring+Jenkins+upon+start+up
+#   Note: This is needed for Jenkins 2.0 (secure by default)
+#         to create initial automation user
+#
+# @param purge_bootstrapping
+#   Cleanup the bootstrapping dir if manage_bootstrapping is true
+#
+# @param jenkins_sshd_port
+#   Change the default jenkins sshd port
+#
 class jenkins (
   String $version                                 = $jenkins::params::version,
   Boolean $lts                                    = $jenkins::params::lts,
@@ -303,6 +337,7 @@ class jenkins (
   Hash $plugin_hash                               = {},
   Hash $job_hash                                  = {},
   Hash $user_hash                                 = {},
+  Hash $bootstrapuser_hash                        = {},
   Boolean $configure_firewall                     = false,
   Boolean $install_java                           = $jenkins::params::install_java,
   Optional[String] $repo_proxy                    = undef,
@@ -323,14 +358,18 @@ class jenkins (
   Stdlib::Absolutepath $localstatedir             = $jenkins::params::localstatedir,
   Optional[Integer] $executors                    = undef,
   Optional[Integer] $slaveagentport               = undef,
-  Boolean $manage_user                            = $jenkins::params::manage_user,
-  String $user                                    = $jenkins::params::user,
-  Boolean $manage_group                           = $jenkins::params::manage_group,
-  String $group                                   = $jenkins::params::group,
-  Array $default_plugins                          = $jenkins::params::default_plugins,
-  String $default_plugins_host                    = $jenkins::params::default_plugins_host,
-  Boolean $purge_plugins                          = $jenkins::params::purge_plugins,
-  Enum['simple', 'forking'] $systemd_type         = $jenkins::params::systemd_type,
+  Boolean $manage_user                            = $::jenkins::params::manage_user,
+  String $user                                    = $::jenkins::params::user,
+  Boolean $manage_group                           = $::jenkins::params::manage_group,
+  String $group                                   = $::jenkins::params::group,
+  Array $default_plugins                          = $::jenkins::params::default_plugins,
+  String $default_plugins_host                    = $::jenkins::params::default_plugins_host,
+  Boolean $purge_plugins                          = $::jenkins::params::purge_plugins,
+  Enum['simple', 'forking'] $systemd_type         = $::jenkins::params::systemd_type,
+  Stdlib::Absolutepath $jenkins_home              = $::jenkins::params::jenkins_home,
+  Boolean $manage_bootstrapping                   = $::jenkins::params::manage_bootstrapping,
+  Boolean $purge_bootstrapping                    = $::jenkins::params::purge_bootstrapping,
+  Optional[Integer] $jenkins_sshd_port            = $::jenkins::params::jenkins_sshd_port,
 ) inherits jenkins::params {
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')

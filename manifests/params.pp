@@ -15,6 +15,9 @@ class jenkins::params {
   $cli_try_sleep         = 10
   $package_cache_dir     = '/var/cache/jenkins_pkgs'
   $package_name          = 'jenkins'
+  $manage_bootstrapping  = true
+  $purge_bootstrapping   = false
+  $jenkins_sshd_port     = undef
 
   $manage_datadirs = true
   $localstatedir   = '/var/lib/jenkins'
@@ -27,8 +30,11 @@ class jenkins::params {
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
     'structs', # required by credentials plugin
+    'mailer', # ssh credentials
+    'display-url-api', # dependency of mailer
   ]
   $purge_plugins = false
+  $jenkins_home = $localstatedir
 
   if versioncmp(pick($facts['jenkins_version'], '2.313'), '2.313') >= 0 {
     $systemd_type = 'simple'
@@ -44,8 +50,9 @@ class jenkins::params {
       $service_provider     = undef
       $sysconfdir           = '/etc/default'
       $config_hash_defaults = {
-        'JAVA_ARGS' => { value => $_java_args },
-        'AJP_PORT'  => { value => '-1' },
+        'JAVA_ARGS'    => { value => $_java_args },
+        'AJP_PORT'     => { value => '-1' },
+        'JENKINS_HOME' => { value => $jenkins_home },
       }
     }
     'RedHat': {
@@ -56,6 +63,7 @@ class jenkins::params {
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
         'JENKINS_AJP_PORT'     => { value => '-1' },
+        'JENKINS_HOME'         => { value => $jenkins_home },
       }
 
       # explicitly use systemd if it is available
@@ -94,6 +102,7 @@ class jenkins::params {
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
         'JENKINS_AJP_PORT'     => { value => '-1' },
+        'JENKINS_HOME'         => { value => $jenkins_home },
       }
     }
   }

@@ -1,0 +1,24 @@
+#!groovy
+/*
+
+  !! Managed by Puppet !!
+  Setup SSHD (as now disabled by default)
+
+*/
+
+import jenkins.model.*
+
+<% if @_jenkins_sshd_port.to_s != '' -%>
+// manage built in sshd
+// See https://github.com/jenkinsci/sshd-module/blob/master/src/main/java/org/jenkinsci/main/modules/sshd/SSHD.java#L67
+// -1 to disable this, 0 to run with a random port, otherwise the port number.
+def inst = Jenkins.getInstance()
+def sshDesc = inst.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
+println "--> Setting SSHD port to <%= @_jenkins_sshd_port %>"
+sshDesc.setPort(<%= @_jenkins_sshd_port %>)
+sshDesc.save()
+
+<% else -%>
+println "--> Not configuring SSHD Port"
+<% end -%>
+
