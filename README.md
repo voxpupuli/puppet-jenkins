@@ -46,7 +46,7 @@ Then the service should be running at [http://hostname.example.com:8080/](http:/
 #### Master Executor Threads
 
 ```puppet
-class { 'jenkins':
+class { 'jenkins::slave':
   executors => 0,
 }
 ```
