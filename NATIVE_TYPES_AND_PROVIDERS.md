@@ -301,6 +301,7 @@ jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
   token       => '{PRIVATE TOKEN}',
   url         => 'https://my-phabricator-repo.com',
 }
+```
 
 ### `jenkins_job`
 
