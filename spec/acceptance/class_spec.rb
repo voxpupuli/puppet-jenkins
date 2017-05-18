@@ -23,6 +23,10 @@ describe 'jenkins class' do
 
     describe file("#{$libdir}/jenkins-cli.jar") do
       it { should be_file }
+      it { should be_readable.by('owner') }
+      it { should be_writable.by('owner') }
+      it { should be_readable.by('group') }
+      it { should be_readable.by('others') }
     end
 
     describe file("#{$sysconfdir}/jenkins") do
