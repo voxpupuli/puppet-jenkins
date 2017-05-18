@@ -507,7 +507,7 @@ class Actions {
           info['description'] = cred.description
           info['username'] = cred.username
           info['private_key'] = cred.privateKey
-          info['passphrase'] = cred.passphrase.plainText
+          info['passphrase'] = cred.passphrase?.plainText
           break
         case 'com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl':
           info['apiToken'] = cred.apiToken.plainText
