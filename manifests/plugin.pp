@@ -192,6 +192,7 @@ define jenkins::plugin(
     owner  => $::jenkins::user,
     group  => $::jenkins::group,
     mode   => '0644',
+    require => Archive[$plugin],
     before => Service['jenkins'],
   }
 
