@@ -24,7 +24,7 @@ describe Puppet::Type.type(:jenkins_job) do
     end
 
     describe 'replace' do
-      it_behaves_like 'boolean property', :replace, true
+      it_behaves_like 'boolean parameter', :replace, true
     end
 
     describe 'config' do
