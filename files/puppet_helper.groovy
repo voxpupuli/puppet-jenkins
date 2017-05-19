@@ -28,6 +28,7 @@ import jenkins.model.*
 import jenkins.security.*
 import org.apache.commons.io.IOUtils
 import org.jenkinsci.plugins.*
+import hudson.slaves.*
 
 class InvalidAuthenticationStrategy extends Exception{}
 @InheritConstructors
@@ -404,8 +405,13 @@ class Actions {
     }
 
     // Create or update the credentials in the Jenkins instance
-    def existing_credentials = util.credentials_for_username(username)
-
+    def existing_credentials = null
+    if (id == null) {
+      existing_credentials = util.credentials_for_username(username)
+    }
+    else { 
+      existing_credentials = util.findCredentialsById(id)  
+    }
     if(existing_credentials != null) {
       credentials_store.updateCredentials(
         global_domain,
@@ -439,8 +445,14 @@ class Actions {
   ////////////////////////
   // current credentials
   ////////////////////////
-  void credential_info(String username) {
-    def credentials = util.credentials_for_username(username)
+  void credential_info(String uuid = null, String username) {
+    def credentials = null 
+    if(uuid == null) {
+      credentials = util.credentials_for_username(username)
+    }
+    else  {
+     credentials = util.findCredentialsById(uuid)
+    }
 
     if(credentials == null) {
       return null
@@ -460,7 +472,7 @@ class Actions {
     }
 
     def builder = new groovy.json.JsonBuilder(current_credentials)
-    out.println(builder)
+    out.println(builder.toPrettyString())
   }
 
   ////////////////////////
@@ -997,6 +1009,56 @@ class Actions {
 
     def builder = new groovy.json.JsonBuilder(allInfo)
     out.println(builder.toPrettyString())
+  }
+
+  ////////////////////////
+  // Add Global variables
+  ///////////////////////
+  void create_global_variables(String env_key, String env_value) {
+    def instance = Jenkins.getInstance()
+    def props = instance.globalNodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    if(props.empty) {
+      def entry = new EnvironmentVariablesNodeProperty.Entry(env_key, env_value)
+      def evnp = new EnvironmentVariablesNodeProperty(entry)
+      instance.globalNodeProperties.add(evnp)
+    } else {
+      for (prop in props) {
+      prop.envVars.put(env_key, env_value)
+      }
+    }
+    instance.save() //This is needed in order to persist the change
+  }
+
+  ////////////////////////
+  // Get Global variables
+  ///////////////////////
+  void get_global_variables(String key) {
+    def hudson = hudson.model.Hudson.instance
+    def globalProps = hudson.globalNodeProperties
+    def props = globalProps.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    def val = ''
+    for (prop in props) {
+        out.println(prop.envVars.get(key))
+    }
+  }
+
+  ////////////////////////////
+  // Set URL & Sysadmin email
+  ///////////////////////////
+  void set_url_email(String url, String admin_email) {
+    def jlc = jenkins.model.JenkinsLocationConfiguration.get()
+    jlc.setUrl(url)
+    jlc.setAdminAddress(admin_email)
+    jlc.save()
+  }
+
+  ///////////////////////
+  // Get System Config
+  //////////////////////
+  void get_location_config() {
+    def jenkinsLocationConfiguration = JenkinsLocationConfiguration.get()
+    out.println("URL: " + jenkinsLocationConfiguration.url)
+    out.println("Admin email:" + jenkinsLocationConfiguration.adminAddress)
   }
 
 } // class Actions

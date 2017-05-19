@@ -49,7 +49,12 @@ class jenkins::cli {
   # Provide the -i flag if specified by the user.
   if $::jenkins::cli_ssh_keyfile {
     $auth_arg = "-i ${::jenkins::cli_ssh_keyfile}"
-  } else {
+  }
+  # If username and password are provided
+  elsif ($::jenkins::cli_username) and ($::jenkins::cli_password) {
+    $auth_arg = "--username ${::jenkins::cli_username} --password ${::jenkins::cli_password}"
+  } 
+  else {
     $auth_arg = undef
   }
 
@@ -59,14 +64,13 @@ class jenkins::cli {
       'java',
       "-jar ${::jenkins::cli::jar}",
       "-s http://localhost:${port}${prefix}",
-      $auth_arg,
     ]),
     ' '
   )
 
   # Do a safe restart of Jenkins (only when notified)
   exec { 'safe-restart-jenkins':
-    command     => "${cmd} safe-restart && /bin/sleep 10",
+    command     => "${cmd} safe-restart ${auth_arg} && /bin/sleep 10",
     path        => ['/bin', '/usr/bin'],
     tries       => 10,
     try_sleep   => 2,

@@ -10,7 +10,7 @@ class jenkins::cli::reload {
 
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
-    command     => "${::jenkins::cli::cmd} reload-configuration",
+    command     => "${::jenkins::cli::cmd} reload-configuration ${::jenkins::cli::auth_arg}",
     path        => ['/bin', '/usr/bin'],
     tries       => 10,
     try_sleep   => 2,

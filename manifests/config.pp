@@ -25,6 +25,13 @@ class jenkins::config {
   # manifests that were able to external declare resources due to the
   # old conditional behavior of jenkins::plugin
   if $::jenkins::manage_user {
+
+    transition { 'stop-jenkins':
+      resource   => Service['jenkins'],
+      attributes => { ensure => stopped },
+      prior_to   => user[$::jenkins::user],
+    }
+
     ensure_resource('user', $::jenkins::user, {
       ensure     => present,
       gid        => $::jenkins::group,
