@@ -29,7 +29,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
       elsif newvalue == :absent
         'removed'
       else
-        if Puppet[:show_diff] && resource[:show_diff]
+        if @resource[:replace] == false
+          return 'left unchanged'
+        end
+        if Puppet[:show_diff] and resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
           Tempfile.open('puppet-file') do |d1|
@@ -61,6 +64,11 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
   newproperty(:enable, boolean: true, parent: Puppet::Property::Boolean) do
     desc 'enable/disable job'
+    defaultto true
+  end
+
+  newparam(:replace, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+    desc 'replace existing job'
     defaultto true
   end
 
