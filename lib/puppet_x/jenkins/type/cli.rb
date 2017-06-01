@@ -1,5 +1,5 @@
-require 'puppet_x/jenkins/type'
-require 'puppet_x/jenkins/config'
+require_relative '../../jenkins/type'
+require_relative '../../jenkins/config'
 
 module PuppetX::Jenkins::Type::Cli
   def self.newtype(*args, &block)

@@ -1,6 +1,7 @@
 require 'facter'
 
-require 'puppet_x/jenkins'
+require_relative '../jenkins'
+
 require 'puppet/util/warnings'
 
 # This class is used to lookup common configuration values by first looking for
