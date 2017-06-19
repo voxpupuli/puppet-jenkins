@@ -4,7 +4,7 @@ ENV container docker
 
 # beaker default behavior
 RUN yum clean all
-RUN yum install -y sudo openssh-server openssh-clients curl ntpdate
+RUN yum install -y sudo openssh-server openssh-clients curl ntpdate unzip
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN mkdir -p /var/run/sshd
