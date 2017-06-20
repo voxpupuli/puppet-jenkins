@@ -5,7 +5,7 @@ require 'puppet/util/checksums'
 require 'pathname'
 require 'tempfile'
 
-require 'puppet_x/jenkins/type/cli'
+require_relative '../../puppet_x/jenkins/type/cli'
 
 PuppetX::Jenkins::Type::Cli.newtype(:jenkins_job) do
   @doc = "Manage Jenkins' jobs"

@@ -2,8 +2,8 @@ require 'puppet/util/warnings'
 
 require 'json'
 
-require 'puppet_x/jenkins/util'
-require 'puppet_x/jenkins/provider/cli'
+require_relative '../../../puppet_x/jenkins/util'
+require File.join(File.dirname(__FILE__), '../../..', 'puppet_x/jenkins/provider/cli')
 
 Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => PuppetX::Jenkins::Provider::Cli) do
 

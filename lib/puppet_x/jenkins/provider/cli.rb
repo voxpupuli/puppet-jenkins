@@ -3,8 +3,8 @@ require 'facter'
 
 require 'json'
 
-require 'puppet_x/jenkins/config'
-require 'puppet_x/jenkins/provider'
+require_relative '../../jenkins/config'
+require_relative '../../jenkins/provider'
 
 class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
   # stdout/stderr indicates an authentication failure
