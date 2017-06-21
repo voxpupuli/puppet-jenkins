@@ -27,12 +27,12 @@ define jenkins::plugin(
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
   # no worky
-  $timeout                          = undef,
+  Any $timeout                      = undef,
   # deprecated
-  $plugin_dir                       = undef,
-  $username                         = undef,
-  $group                            = undef,
-  $create_user                      = undef,
+  Any $plugin_dir                   = undef,
+  Any $username                     = undef,
+  Any $group                        = undef,
+  Any $create_user                  = undef,
 ) {
 
   if $timeout {
