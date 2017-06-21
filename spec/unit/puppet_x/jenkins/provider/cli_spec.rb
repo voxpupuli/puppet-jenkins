@@ -489,7 +489,7 @@ describe PuppetX::Jenkins::Provider::Cli do
                 'java',
                 '-jar', '/usr/lib/jenkins/jenkins-cli.jar',
                 '-s', 'http://localhost:8080',
-                '-i', 'cat.id_rsa',
+                '-remoting -i', 'cat.id_rsa',
                 'foo'
               ],
               { :failonfail => true, :combine => true }
@@ -513,7 +513,7 @@ describe PuppetX::Jenkins::Provider::Cli do
                 'java',
                 '-jar', '/usr/lib/jenkins/jenkins-cli.jar',
                 '-s', 'http://localhost:8080',
-                '-i', 'cat.id_rsa',
+                '-remoting -i', 'cat.id_rsa',
                 'foo'
               ],
               { :failonfail => true, :combine => true }
