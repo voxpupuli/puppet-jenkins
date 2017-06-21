@@ -29,14 +29,15 @@
 #
 define jenkins::job(
   String $config,
-  Optional[Stdlib::Absolutepath] $source    = undef,
+  String $source                            = undef,
   Optional[Stdlib::Absolutepath] $template  = undef,
   String $jobname                           = $title,
-  $enabled                                  = undef,
+  Any $enabled                              = undef,
   Enum['present', 'absent'] $ensure         = 'present',
   String $difftool                          = '/usr/bin/diff -b -q',
 ){
-  if $enabled != undef {
+
+  if $enabled {
     warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
 

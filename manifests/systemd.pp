@@ -4,8 +4,8 @@
 # the transition from a sysv -> systemd service without leaving zombie services
 # running.
 define jenkins::systemd(
-  $user,
-  $libdir,
+  Any $user,
+  Any $libdir,
 ) {
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")

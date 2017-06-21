@@ -126,13 +126,13 @@ class jenkins::slave (
   Enum['normal', 'exclusive'] $slave_mode = 'normal',
   Boolean $disable_ssl_verification       = false,
   Boolean $disable_clients_unique_id      = false,
-  $labels                                 = undef,
-  $install_java                           = $jenkins::params::install_java,
+  Any $labels                             = undef,
+  Any $install_java                       = $jenkins::params::install_java,
   Boolean $manage_client_jar              = true,
   Enum['running', 'stopped'] $ensure      = 'running',
   Boolean $enable                         = true,
-  $java_args                              = undef,
-  $swarm_client_args                      = undef,
+  Any $java_args                          = undef,
+  Any $swarm_client_args                  = undef,
   Boolean $delete_existing_clients        = false,
 ) inherits jenkins::params {
 

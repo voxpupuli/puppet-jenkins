@@ -22,7 +22,7 @@ define jenkins::job::present(
   Optional[String] $config      = undef,
   Optional[String] $config_file = undef,
   String $jobname               = $title,
-  $enabled                      = undef,
+  Any $enabled                  = undef,
   String $difftool              = '/usr/bin/diff -b -q',
 ){
 
