@@ -209,6 +209,7 @@
 #   Note that this value is used for CLI communication and firewall
 #   configuration.  It does not configure the port on which the jenkins service
 #   listens. (see config_hash)
+#
 # @param libdir
 #   Path to jenkins core files
 #
