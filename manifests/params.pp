@@ -66,6 +66,16 @@ class jenkins::params {
         $service_provider = undef
       }
     }
+    'Archlinux': {
+      $libdir               = '/usr/share/java/jenkins/'
+      $package_provider     = 'pacman'
+      $service_provider     = undef
+      $sysconfdir           = '/etc/conf.d'
+      $config_hash_defaults = {
+        'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
+        'JENKINS_AJP_PORT'     => { value => '-1' },
+      }
+    }
     default: {
       $libdir               = '/usr/lib/jenkins'
       $package_provider     = undef
