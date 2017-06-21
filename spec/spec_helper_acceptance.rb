@@ -45,12 +45,16 @@ shared_context 'jenkins' do
               '/usr/lib/jenkins'
             when 'Debian'
               '/usr/share/jenkins'
+            when 'Archlinux'
+              '/usr/share/java/jenkins/'
             end
   $sysconfdir = case fact 'osfamily'
                 when 'RedHat'
                   '/etc/sysconfig'
                 when 'Debian'
                   '/etc/default'
+                when 'Archlinux'
+                  '/etc/conf.d'
                 end
 
   let(:libdir) { $libdir }
