@@ -10,16 +10,16 @@ class jenkins::repo::suse
   if $::jenkins::lts {
     zypprepo {'jenkins':
       descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/opensuse-stable/',
+      baseurl  => 'http://pkg.jenkins.io/opensuse-stable/',
       gpgcheck => 1,
-      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
+      gpgkey   => 'http://pkg.jenkins.io/redhat/jenkins.io.key',
     }
   } else {
     zypprepo {'jenkins':
       descr    => 'Jenkins',
-      baseurl  => 'http://pkg.jenkins-ci.org/opensuse/',
+      baseurl  => 'http://pkg.jenkins.io/opensuse/',
       gpgcheck => 1,
-      gpgkey   => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
+      gpgkey   => 'http://pkg.jenkins.io/redhat/jenkins.io.key',
     }
   }
 }
