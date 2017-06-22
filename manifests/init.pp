@@ -179,6 +179,11 @@
 #   Provides the location of an ssh private key file to make authenticated
 #   connections to the Jenkins CLI.
 #
+# @param cli_auth
+#   Specify a username and token to be passed to the -auth parameter
+#
+#   eg. cli_auth => join([$username,$api_token], ':')
+#
 # @param cli_tries
 #   Retries until giving up talking to jenkins API
 #
@@ -295,6 +300,7 @@ class jenkins(
   $no_proxy_list        = undef,
   $cli                  = true,
   $cli_ssh_keyfile      = undef,
+  $cli_auth             = undef,
   $cli_tries            = $jenkins::params::cli_tries,
   $cli_try_sleep        = $jenkins::params::cli_try_sleep,
   $port                 = $jenkins::params::port,
@@ -336,6 +342,7 @@ class jenkins(
   if $no_proxy_list { validate_array($no_proxy_list) }
   validate_bool($cli)
   if $cli_ssh_keyfile { validate_absolute_path($cli_ssh_keyfile) }
+  if $cli_auth { validate_string($cli_auth) }
   validate_integer($cli_tries)
   validate_integer($cli_try_sleep)
   validate_integer($port)

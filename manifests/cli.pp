@@ -46,11 +46,14 @@ class jenkins::cli {
   $port = jenkins_port()
   $prefix = jenkins_prefix()
 
-  # Provide the -i flag if specified by the user.
+  # set authentication option
+  if $::jenkins::cli_ssh_keyfile and $::jenkins::cli_auth {
+    fail('Must specify only one of cli_ssh_keyfile and cli_auth')
+  }
   if $::jenkins::cli_ssh_keyfile {
     $auth_arg = "-remoting -i ${::jenkins::cli_ssh_keyfile}"
-  } else {
-    $auth_arg = undef
+  } elsif $::jenkins::cli_auth {
+    $auth_arg = "-auth ${::jenkins::cli_auth}"
   }
 
   # The jenkins cli command with required parameter(s)
