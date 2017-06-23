@@ -54,6 +54,8 @@ class jenkins::cli {
     $auth_arg = "-remoting -i ${::jenkins::cli_ssh_keyfile}"
   } elsif $::jenkins::cli_auth {
     $auth_arg = "-auth ${::jenkins::cli_auth}"
+  } else {
+    $auth_arg = undef
   }
 
   # The jenkins cli command with required parameter(s)
