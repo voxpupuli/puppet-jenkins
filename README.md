@@ -231,6 +231,16 @@ by passing the keyfile path as a class parameter:
 
     jenkins::cli_ssh_keyfile: "/path/to/id_rsa"
 
+You can also configure `jenkins::cli_helper` to use a jenkins user and API token:
+
+```puppet
+  class {'jenkins':
+    cli_auth => "${jenkins_user}:${api_token}",
+  }
+```
+
+`cli_ssh_keyfile` and `cli_auth` are mutually exclusive, ie. they can not both be specified.
+
 __Direct including of the `jenkins::cli_helper` class into the manifest is deprecated.__
 
 There's an open bug in Jenkins (JENKINS-22346) that causes authentication to
