@@ -4,7 +4,6 @@
 class jenkins::params {
   $version               = 'installed'
   $lts                   = true
-  $repo                  = true
   $direct_download       = undef
   $service_enable        = true
   $service_ensure        = 'running'
@@ -34,18 +33,20 @@ class jenkins::params {
 
   case $::osfamily {
     'Debian': {
-      $libdir           = '/usr/share/jenkins'
-      $package_provider = 'dpkg'
-      $service_provider = undef
-      $sysconfdir       = '/etc/default'
+      $repo                 = true
+      $libdir               = '/usr/share/jenkins'
+      $package_provider     = 'dpkg'
+      $service_provider     = undef
+      $sysconfdir           = '/etc/default'
       $config_hash_defaults = {
         'JAVA_ARGS' => { value => $_java_args },
         'AJP_PORT'  => { value => '-1' },
       }
     }
     'RedHat': {
-      $libdir           = '/usr/lib/jenkins'
-      $package_provider = 'rpm'
+      $repo                 = true
+      $libdir               = '/usr/lib/jenkins'
+      $package_provider     = 'rpm'
       $sysconfdir           = '/etc/sysconfig'
       $config_hash_defaults = {
         'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
@@ -67,6 +68,7 @@ class jenkins::params {
       }
     }
     'Archlinux': {
+      $repo                 = false
       $libdir               = '/usr/share/java/jenkins/'
       $package_provider     = 'pacman'
       $service_provider     = undef
@@ -77,6 +79,7 @@ class jenkins::params {
       }
     }
     default: {
+      $repo                 = true
       $libdir               = '/usr/lib/jenkins'
       $package_provider     = undef
       $service_provider     = undef
