@@ -52,14 +52,6 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe 'with plugin param wrong type' do
-    let (:params) {{:config_filename => 'foo.xml', :changes => [], :plugin => ['foo','bar'] }}
-    it do
-      is_expected.to raise_error(Puppet::Error, /must be bool or string/i)
-    end
-  end
-
-
   #-------------------------------------------------------------------------------
   #      |              o                             o
   # ,---.|    .   .,---..,---.   .    ,,---.,---.,---..,---.,---.    ,---.,---.,---.,---.,-.-.
@@ -147,18 +139,6 @@ describe 'jenkins::augeas' do
     end
   end
 
-  describe 'with param onlyif set and its a boolean' do
-    let (:params) {{
-      :plugin          => false,
-      :config_filename => 'foo.xml',
-      :changes         => ['set foo bar'],
-      :onlyif          => false,
-    }}
-    it do
-      is_expected.to raise_error(Puppet::Error, /must be string or array/i)
-    end
-  end
-
   #-------------------------------------------------------------------------------
   #      |
   # ,---.|---.,---.,---.,---.,---.,---.    ,---.,---.,---.,---.,-.-.
@@ -179,15 +159,6 @@ describe 'jenkins::augeas' do
         )
       end
     end
-  end
-
-  describe 'with param changes is a number' do
-    let (:params) {{
-      :plugin          => false,
-      :config_filename => 'foo.xml',
-      :changes         => 13,
-    }}
-    it { is_expected.to raise_error(Puppet::Error, /must be string or array/i) }
   end
 
 
@@ -211,15 +182,4 @@ describe 'jenkins::augeas' do
       it { is_expected.to contain_augeas('jenkins::augeas: myplug').that_notifies("Exec[#{expected}]") }
     end
   end
-
-  describe 'with param restart set to an invalid value' do
-    let (:params) {{
-        :plugin => false,
-        :config_filename => 'foo.xml',
-        :changes => [],
-        :restart => 'not-a-boolean-thats-sure',
-    }}
-    it { is_expected.to raise_error(Puppet::Error, /is not a boolean/i) }
-  end
-
 end

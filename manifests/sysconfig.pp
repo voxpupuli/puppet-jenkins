@@ -1,9 +1,8 @@
 # Class: jenkins::sysconfig
 #
 define jenkins::sysconfig(
-  $value,
+  String $value,
 ) {
-  validate_string($value)
 
   if ($value =~ /\$/) {
     warning("Jenkins::Sysconfig[${name}]: detected \'\$\' in value -- be advised the variable interpolation will not work under systemd")

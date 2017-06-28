@@ -94,27 +94,6 @@ describe 'jenkins::cli::exec', :type => :define do
         )
       end
     end
-
-    context "['bar', undef, 'baz']" do
-      let(:params) {{ :command => ['bar', Undef.new, 'baz'] }}
-
-      it 'should remove the undef' do
-        should contain_exec('foo').with(
-          :command   => "#{helper_cmd} bar baz",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
-        )
-      end
-    end
-
-    context '{}' do
-      let(:params) {{ :command => {} }}
-
-      it 'should fail' do
-        should raise_error(Puppet::Error, /is not a string or an Array./)
-      end
-    end
   end # command =>
 
   describe 'unless =>' do
@@ -129,14 +108,6 @@ describe 'jenkins::cli::exec', :type => :define do
           :tries       => 10,
           :try_sleep   => 10,
         )
-      end
-    end
-
-    context '{}' do
-      let(:params) {{ :unless => {} }}
-
-      it 'should fail' do
-        should raise_error(Puppet::Error, /is not a string./)
       end
     end
   end # unless_cli_helper =>

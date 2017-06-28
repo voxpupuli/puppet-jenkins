@@ -34,28 +34,14 @@
 #
 #
 define jenkins::augeas (
-  $config_filename,
-  $changes,
-  $onlyif           = undef,
-  $context          = '/',
-  $plugin_version   = undef,
-  $plugin           = false,
-  $restart          = false,
+  String $config_filename,
+  Variant[Array[String], String] $changes,
+  Optional[Variant[Array[String], String]] $onlyif = undef,
+  Optional[String] $plugin_version                 = undef,
+  String $context                                  = '/',
+  Optional[Variant[Boolean,String]] $plugin        = false,
+  Boolean $restart                                 = false,
 ) {
-  validate_string($config_filename)
-  if ! is_string($changes) and ! is_array($changes) {
-    fail('$changes must be string or array.')
-  }
-  if ! is_string($onlyif) and ! is_array($onlyif) {
-    fail('$onlyif must be string or array.')
-  }
-  validate_string($context)
-  validate_string($plugin_version)
-  if ! is_bool($plugin) and ! is_string($plugin) {
-    fail('$plugin must be bool or string.')
-  }
-  validate_bool($restart)
-
   include ::jenkins
   include ::jenkins::cli
 

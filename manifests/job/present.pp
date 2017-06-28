@@ -19,16 +19,12 @@
 #     deprecated parameter (will have no effect if set)
 #
 define jenkins::job::present(
-  $config      = undef,
-  $config_file = undef,
-  $jobname  = $title,
-  $enabled  = undef,
-  $difftool = '/usr/bin/diff -b -q',
+  Optional[String] $config      = undef,
+  Optional[String] $config_file = undef,
+  String $jobname               = $title,
+  Any $enabled                  = undef,
+  String $difftool              = '/usr/bin/diff -b -q',
 ){
-  validate_string($config)
-  validate_string($config_file)
-  validate_string($jobname)
-  validate_string($difftool)
 
   include ::jenkins::cli
   include ::jenkins::cli::reload

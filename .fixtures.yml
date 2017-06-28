@@ -5,7 +5,7 @@ fixtures:
       ref: "2.1.0"
     stdlib:
       repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
-      ref: "4.6.0"
+      ref: "4.13.1"
     java: "https://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "https://github.com/deadpoint/puppet-zypprepo.git"
     archive: "https://github.com/voxpupuli/puppet-archive.git"
