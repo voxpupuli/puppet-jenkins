@@ -31,5 +31,7 @@ matrix:
   allow_failures:
     # jenkins 2.x support is currently broken with debian packaging
     - env: BEAKER_set="ubuntu-14.04-docker"
+    # Puppet 4 specific code in master
+    - env: PUPPET_VERSION="~> 3.8.0"
 notifications:
   email: false

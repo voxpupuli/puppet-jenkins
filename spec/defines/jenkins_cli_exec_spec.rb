@@ -12,7 +12,7 @@ describe 'jenkins::cli::exec', :type => :define do
     }
   end
 
-  let(:helper_cmd) { '/usr/bin/java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://127.0.0.1:8080 groovy /usr/lib/jenkins/puppet_helper.groovy' }
+  let(:helper_cmd) { '/bin/cat /usr/lib/jenkins/puppet_helper.groovy | /usr/bin/java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://127.0.0.1:8080 groovy =' }
 
   describe 'relationships' do
     it do
@@ -124,7 +124,7 @@ describe 'jenkins::cli::exec', :type => :define do
       it do
         should contain_exec('foo').with(
           :command     => "#{helper_cmd} foo",
-          :environment => [ "HELPER_CMD=#{helper_cmd}" ],
+          :environment => [ "HELPER_CMD=eval #{helper_cmd}" ],
           :unless      => 'bar',
           :tries       => 10,
           :try_sleep   => 10,

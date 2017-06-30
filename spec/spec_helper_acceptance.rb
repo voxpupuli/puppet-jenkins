@@ -57,11 +57,14 @@ shared_context 'jenkins' do
 
   let(:base_manifest) do
     <<-EOS
-      include ::jenkins
+      class { '::jenkins':
+        cli_remoting_free => true,
+      }
 
       class { '::jenkins::cli::config':
-        cli_jar       => '#{libdir}/jenkins-cli.jar',
-        puppet_helper => '#{libdir}/puppet_helper.groovy',
+        cli_jar           => '#{libdir}/jenkins-cli.jar',
+        puppet_helper     => '#{libdir}/puppet_helper.groovy',
+        cli_remoting_free => true,
       }
     EOS
   end

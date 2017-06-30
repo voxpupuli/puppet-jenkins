@@ -41,7 +41,9 @@ describe 'jenkins class', :order => :defined do
   context 'default parameters' do
     it 'should work with no errors' do
       pp = <<-EOS
-      include jenkins
+      class {'jenkins':
+        cli_remoting_free => true,
+      }
 
       jenkins::plugin {'git-plugin':
         name    => 'git',
@@ -61,7 +63,10 @@ describe 'jenkins class', :order => :defined do
 
       it 'should work with no errors' do
         pp = <<-EOS
-        class { 'jenkins': purge_plugins => true, }
+        class {'jenkins':
+          cli_remoting_free => true,
+          purge_plugins     => true,
+        }
 
         jenkins::plugin {'git-plugin':
           name    => 'git',
@@ -86,7 +91,10 @@ describe 'jenkins class', :order => :defined do
 
       it 'should work with no errors' do
         pp = <<-EOS
-        class { 'jenkins': purge_plugins => false, }
+        class {'jenkins':
+          cli_remoting_free => true,
+          purge_plugins     => false,
+        }
 
         jenkins::plugin {'git-plugin':
           name    => 'git',

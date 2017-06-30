@@ -32,7 +32,9 @@ EOS
   context 'create' do
     it 'should work with no errors' do
       pp = <<-EOS
-      class {'jenkins': }
+      class {'jenkins':
+        cli_remoting_free => true,
+      }
 
       # the historical assumption is that this will work without cli => true
       # set on the jenkins class
@@ -62,7 +64,9 @@ EOS
     pending('Parameter $enabled is now deprecated, no need to test')
     it 'should work with no errors' do
       pp = <<-EOS
-      class {'jenkins': }
+      class {'jenkins':
+        cli_remoting_free => true,
+      }
 
       jenkins::job { 'test-build-job':
         config  => \'#{test_build_job}\',
@@ -91,7 +95,9 @@ EOS
       # create a test job so it can be deleted; job creation is not what
       # we're intending to be testing here
       pp = <<-EOS
-      class {'jenkins': }
+      class {'jenkins':
+        cli_remoting_free => true,
+      }
 
       jenkins::job { 'test-build-job':
         config => \'#{test_build_job}\',
@@ -102,7 +108,9 @@ EOS
 
       # test job deletion
       pp = <<-EOS
-      class {'jenkins': }
+      class {'jenkins':
+        cli_remoting_free => true,
+      }
 
       jenkins::job { 'test-build-job':
         ensure => 'absent',

@@ -27,6 +27,46 @@ the module.**
 
 See [NATIVE_TYPES_AND_PROVIDERS.md](NATIVE_TYPES_AND_PROVIDERS.md)
 
+# Jenkins 2.54 and 2.46.2 remoting free CLI and username / password CLI auth
+
+## Remoting Free CLI
+
+Jenkins refactored the CLI in 2.54 and 2.46.2 in response to several security
+incidents (See [JENKINS-41745](https://issues.jenkins-ci.org/browse/JENKINS-41745). This module has been adjusted to support the new CLI. However you
+need to tell the module if the new remoting free cli is in place. Please set
+```$::jenkins::cli_remoting_free``` to true for latest Jenkins servers.
+
+Note: This is not the default to support backward compatibility. This may become
+a default once this module is released in a new version.
+
+Also note that the module tries to do heuristics for this setting if not specified.
+You can always set this parameter to enforce usage of old or new CLI interface.
+
+Heuristics:
+
+  * LTS:
+    * If manage_repo and repo == lts and version = latest -> true
+    * If manage_repo and repo == lts and version >= 2.46.2 -> true
+    * else false
+  * Non-LTS:
+    * If manage_repo and repo != lts and version = latest -> true
+    * If manage_repo and repo != lts and version >= 2.54 -> true
+    * else false
+
+## Username and Password Auth
+
+The new CLI also supports proper authentication with username and password. This
+has not been supported in this module for a long time, but is a requirement for
+supporting AD and OpenID authentications (there is no ssh key there). You can now
+also supply ```$::jenkins::cli_username``` and ```$::jenkins::cli_password``` to
+use username / password based authentication. Then the puppet automation user can
+also reside in A.D
+
+Note: latest jenkins (2.54++ and 2.46.2++) require a ssh username, so you must also
+provide ```$::jenkins::cli_username``` for ssh. If you specify both username/password
+and ssh key file, SSH authentication is preferred.
+
+
 # Using puppet-jenkins
 
 ## Getting Started
