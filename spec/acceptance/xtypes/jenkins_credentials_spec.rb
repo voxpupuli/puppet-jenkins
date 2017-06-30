@@ -68,7 +68,7 @@ describe 'jenkins_credentials' do
               description => 'bar',
               domain      => undef,
               impl        => 'BasicSSHUserPrivateKey',
-              passphrase  => '',
+              passphrase  => undef,
               private_key => '-----BEGIN RSA PRIVATE KEY----- ...',
               scope       => 'SYSTEM',
               username    => 'robin',
