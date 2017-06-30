@@ -36,9 +36,44 @@ setup.  The parameters used to override default values are:
 * `puppet_helper`
 * `cli_tries`
 * `cli_try_sleep`
+* `cli_username`
+* `cli_password`
+* `cli_password_file`
+* `cli_password_file_exists`
+* `cli_remoting_free`
+
+An example for a secured jenkins (e.g. ad connected) for LTS version
+newer then 2.46.2 (e.g. 2.60.1)
+
+```
+class { 'jenkins::cli::config':
+  cli_username      => 'puppet',
+  cli_password_file => 'thisisanactivedirectorypassword',
+  cli_remoting_free => true,
+  cli_tries         => 3,
+  cli_try_sleep     => 1,
+}
+```
+
+An example for a secured jenkins (e.g. ad connected) for LTS version
+newer then 2.46.2 (e.g. 2.60.1) using an existing credentials file.
+Note: The file /root/password_file_for_puppet with content
+      username:password must already exist or be created via puppet.
+
+```
+class { 'jenkins::cli::config':
+  cli_username             => 'puppet',
+  cli_password_file        => '/root/password_file_for_puppet',
+  cli_remoting_free        => true,
+  cli_password_file_exists => true,
+  cli_tries                => 3,
+  cli_try_sleep            => 1,
+}
+```
 
 An example of setting a non-default path to the ssh key used to authenticate the
-`cli` with jenkins are reducing the number of retry attempts.
+`cli` with jenkins are reducing the number of retry attempts. Note: This only works
+for OLD versions of jenkins.
 
 ```
 class { 'jenkins::cli::config':
