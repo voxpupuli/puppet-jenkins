@@ -166,15 +166,16 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
     options.merge!({ :combine => true })
 
     config = PuppetX::Jenkins::Config.new(catalog)
-    cli_jar           = config[:cli_jar]
-    url               = config[:url]
-    ssh_private_key   = config[:ssh_private_key]
-    cli_tries         = config[:cli_tries]
-    cli_try_sleep     = config[:cli_try_sleep]
-    cli_username      = config[:cli_username]
-    cli_password      = config[:cli_password]
-    cli_password_file = config[:cli_password_file]
-    cli_remoting_free = config[:cli_remoting_free]
+    cli_jar                  = config[:cli_jar]
+    url                      = config[:url]
+    ssh_private_key          = config[:ssh_private_key]
+    cli_tries                = config[:cli_tries]
+    cli_try_sleep            = config[:cli_try_sleep]
+    cli_username             = config[:cli_username]
+    cli_password             = config[:cli_password]
+    cli_password_file        = config[:cli_password_file]
+    cli_password_file_exists = config[:cli_password_file_exists]
+    cli_remoting_free        = config[:cli_remoting_free]
 
     base_cmd = cli_pre_cmd + [
       command(:java),
@@ -186,12 +187,24 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
     cli_cmd.flatten!
 
     auth_cmd = nil
+    # If we have a ssh cli key file, we use that in old and new syntax
     if !ssh_private_key.nil?
       if cli_remoting_free
         auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
       else
         auth_cmd = base_cmd + ['-i', ssh_private_key] + [command]
       end
+    # we have a prepared username:password file, just use it
+    elsif cli_password_file_exists
+      if cli_remoting_free
+        auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
+      else
+        # For legacy jenkins, we can only read the provided password file
+        # parse it and assume Jenkins 2.46.2++ content
+        (user,pass) = File.open(cli_password_file).read.split("\n").reject{ |x| x !~ /(^\S+:\S+$)/}[0].split(":")
+        auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
+      end
+    # we have username and password, then we create the password file and use it
     elsif !cli_username.nil? and !cli_password.nil?
       if cli_remoting_free
         auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]

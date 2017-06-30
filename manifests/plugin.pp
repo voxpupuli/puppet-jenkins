@@ -186,13 +186,17 @@ define jenkins::plugin(
       require         => File[$::jenkins::plugin_dir],
       notify          => Service['jenkins'],
     }
+    $archive_require = Archive[$plugin]
+  } else {
+    $archive_require = undef
   }
 
   file { "${::jenkins::plugin_dir}/${plugin}" :
-    owner  => $::jenkins::user,
-    group  => $::jenkins::group,
-    mode   => '0644',
-    before => Service['jenkins'],
+    owner   => $::jenkins::user,
+    group   => $::jenkins::group,
+    mode    => '0644',
+    require => $archive_require,
+    before  => Service['jenkins'],
   }
 
   if $manage_config {

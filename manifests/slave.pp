@@ -158,7 +158,12 @@ class jenkins::slave (
   validate_string($proxy_server)
   validate_bool($delete_existing_clients)
 
-  $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
+  if versioncmp($version, '3.0') < 0 {
+    $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
+  } else {
+    $client_jar = "swarm-client-${version}.jar"
+  }
+
   $client_url = $source ? {
     undef   => "https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
     default => $source,
