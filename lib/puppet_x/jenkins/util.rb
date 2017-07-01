@@ -1,4 +1,4 @@
-require 'puppet_x/jenkins'
+require_relative '../jenkins'
 
 module PuppetX::Jenkins::Util
   def unundef(data)

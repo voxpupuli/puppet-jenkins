@@ -32,8 +32,9 @@ class jenkins::params {
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
-    'mailer', # ssh credentials
+    'mailer', # ssh credentials with email
     'display-url-api', # dependency of mailer
+    'structs', # required by credentials plugin
   ]
   $purge_plugins = false
   $jenkins_home = $localstatedir

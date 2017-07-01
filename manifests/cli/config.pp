@@ -7,17 +7,18 @@
 # PuppetX::Jenkins::Provider::Clihelper class for compatiblity with the puppet
 # resource face.  No defaults should be set in this classes definition.
 class jenkins::cli::config(
-  $cli_jar                 = undef,
-  $url                     = undef,
-  $ssh_private_key         = undef,
-  $puppet_helper           = undef,
-  $cli_tries               = undef,
-  $cli_try_sleep           = undef,
-  $cli_username            = undef,
-  $cli_password            = undef,
-  $cli_password_file       = '/tmp/jenkins_credentials_for_puppet',
-  $cli_remoting_free       = undef,
-  $ssh_private_key_content = undef,
+  $cli_jar                  = undef,
+  $url                      = undef,
+  $ssh_private_key          = undef,
+  $puppet_helper            = undef,
+  $cli_tries                = undef,
+  $cli_try_sleep            = undef,
+  $cli_username             = undef,
+  $cli_password             = undef,
+  $cli_password_file        = '/tmp/jenkins_credentials_for_puppet',
+  $cli_password_file_exists = false,
+  $cli_remoting_free        = undef,
+  $ssh_private_key_content  = undef,
 ) {
   if $cli_jar { validate_absolute_path($cli_jar) }
   validate_string($url)
@@ -28,6 +29,7 @@ class jenkins::cli::config(
   if $cli_username { validate_string($cli_username) }
   if $cli_password { validate_string($cli_password) }
   if $cli_password_file { validate_absolute_path($cli_password_file) }
+  validate_bool($cli_password_file_exists)
   if $cli_remoting_free != undef { validate_bool($cli_remoting_free) }
   validate_string($ssh_private_key_content)
 
@@ -70,7 +72,10 @@ class jenkins::cli::config(
     }
   }
 
-  if $cli_username and $cli_password {
+  # We manage the password file, to avoid printing username/password in the 
+  # ps ax output.
+  # If file exists, we assume the user manages permissions and content
+  if $cli_username and $cli_password and !$cli_password_file_exists {
     file { $cli_password_file:
       ensure  => 'file',
       mode    => '0400',

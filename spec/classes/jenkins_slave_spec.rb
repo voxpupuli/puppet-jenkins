@@ -134,6 +134,28 @@ describe 'jenkins::slave' do
       end
     end
 
+    describe 'with different swarm versions' do
+      let(:source) { 'http://rspec.example.com' }
+      context 'a version lower than 3.0' do
+        let(:params) do
+          {
+            :version => '2.0',
+            :source => source,
+          }
+        end
+        it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-2.0-jar-with-dependencies.jar") }
+      end
+      context 'a version higher than 3.0' do
+        let(:params) do
+          {
+            :version => '3.1',
+            :source => source,
+          }
+        end
+        it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-3.1.jar") }
+      end
+    end
+
     describe 'with LABELS as an array' do
       let(:params) do
         {
