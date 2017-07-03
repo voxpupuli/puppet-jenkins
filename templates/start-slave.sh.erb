@@ -1,4 +1,68 @@
 #!/usr/bin/env bash
 
-source <%= @defaults_location %>/jenkins-slave 
-java -jar <%= @slave_home %>/<%= @client_jar %> $JENKINS_SLAVE_ARGS
+source <%= @defaults_location %>/jenkins-slave
+
+# mandatory input vars
+[[ -x "$JAVA" ]] || (fail "$JAVA is not executable")
+[[ -f "$JENKINS_SLAVE_JAR" ]] || (fail "$JENKINS_SLAVE_JAR not accessible")
+
+SLAVE_ARGS=()
+
+[[ -n "$JAVA_ARGS" ]] &&
+  SLAVE_ARGS+=("$JAVA_ARGS")
+
+SLAVE_ARGS+=(-jar "$JENKINS_SLAVE_JAR")
+
+[[ -n "$JENKINS_SLAVE_MODE" ]] &&
+  SLAVE_ARGS+=(-mode "$JENKINS_SLAVE_MODE")
+
+[[ -n "$EXECUTORS" ]] &&
+  SLAVE_ARGS+=(-executors "$EXECUTORS")
+
+[[ -n "$JENKINS_USERNAME" ]] &&
+  SLAVE_ARGS+=(-username "$JENKINS_USERNAME")
+
+[[ -n "$JENKINS_PASSWORD" ]] &&
+  export JENKINS_PASSWORD &&
+  SLAVE_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
+
+[[ -n "$CLIENT_NAME" ]] &&
+  SLAVE_ARGS+=(-name "$CLIENT_NAME")
+
+[[ -n "$MASTER_URL" ]] &&
+  SLAVE_ARGS+=(-master "$MASTER_URL")
+
+if [ -n "$LABELS" ]; then
+  for l in $LABELS; do
+    SLAVE_ARGS+=(-labels "$l")
+  done
+fi
+
+[[ -n "$FSROOT" ]] &&
+  SLAVE_ARGS+=(-fsroot "$FSROOT")
+
+[[ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]] &&
+  SLAVE_ARGS+=(-disableClientsUniqueId)
+
+[[ "$DISABLE_SSL_VERIFICATION" == true ]] &&
+  SLAVE_ARGS+=(-disableSslVerification)
+
+[[ "$DELETE_EXISTING_CLIENTS" == true ]] &&
+  SLAVE_ARGS+=(-deleteExistingClients)
+
+[[ -n "$DESCRIPTION" ]] &&
+ SLAVE_ARGS+=(-description "$DESCRIPTION")
+
+[[ -n "$AUTO_DISCOVERY_ADDRESS" ]] &&
+  SLAVE_ARGS+=(-autoDiscoveryAddress "$AUTO_DISCOVERY_ADDRESS")
+
+if [ -n "$TOOL_LOCATIONS" ]; then
+  for t in $TOOL_LOCATIONS; do
+    SLAVE_ARGS+=(--toolLocation "$t")
+  done
+fi
+
+[[ -n "$OTHER_ARGS" ]] &&
+  SLAVE_ARGS+=("$OTHER_ARGS")
+
+$JAVA "${SLAVE_ARGS[@]}"

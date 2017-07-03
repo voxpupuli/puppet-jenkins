@@ -275,6 +275,7 @@ class jenkins::slave (
         mode    => '0755',
         owner   => 'root',
         group   => 'wheel',
+        notify  => Service['jenkins-slave'],
       }
 
       file { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist':
