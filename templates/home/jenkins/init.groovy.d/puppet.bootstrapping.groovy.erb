@@ -24,7 +24,11 @@ def bootstrapUsers = [
     password : '<%= userconfig['password'] %>',
     email : '<%= userconfig['email'] %>',
     full_name : '<%= userconfig['full_name'] %>',
+<% if userconfig['public_key_file'] -%>
+    ssh_key_file: '<%= userconfig['public_key_file'] %>',
+<% else -%>
     ssh_key : '<%= userconfig['public_key'] %>',
+<% end -%>
   ],
 <% end -%>
 ]
@@ -46,7 +50,13 @@ bootstrapUsers.each { user ->
   def password = user['password']
   def email = user['email']
   def full_name = user['full_name']
-  def ssh_key = user['ssh_key']
+  def ssh_key = null
+  if (user.containsKey('ssh_key_file')) {
+    ssh_key = new File(user['ssh_key_file']).getText('UTF-8')
+  }
+  else {
+    ssh_key = user['ssh_key']
+  }
 
   println "--> Configuring Jenkins Automation User (${username} with ssh_key ${ssh_key})"
 
