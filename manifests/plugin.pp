@@ -24,6 +24,8 @@ define jenkins::plugin(
   $enabled         = true,
   $source          = undef,
   $digest_string   = undef,
+  $extract         = false,
+  $extract_dir     = "${::jenkins::plugin_dir}/${name}",
   $digest_type     = 'sha1',
   $pin             = false,
   # no worky
@@ -182,12 +184,15 @@ define jenkins::plugin(
       checksum_type   => $checksum_type,
       proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
-      extract         => false,
+      extract         => $extract,
+      extract_path    => $extract_dir,
       require         => File[$::jenkins::plugin_dir],
       notify          => Service['jenkins'],
     }
+    # Doesn't seem to be in use anywhere
     $archive_require = Archive[$plugin]
   } else {
+    # Doesn't seem to be in use anywhere
     $archive_require = undef
   }
 
