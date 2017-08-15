@@ -74,8 +74,10 @@ class jenkins::params {
       $service_provider     = undef
       $sysconfdir           = '/etc/conf.d'
       $config_hash_defaults = {
-        'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
-        'JENKINS_AJP_PORT'     => { value => '-1' },
+        # Archlinux's jenkins package uses it's own variables
+        # which are not compatible with these.
+        #'JENKINS_JAVA_OPTIONS' => { value => $_java_args },
+        #'JENKINS_AJP_PORT'     => { value => '-1' },
       }
     }
     default: {
