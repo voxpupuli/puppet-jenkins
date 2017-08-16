@@ -4,6 +4,7 @@ before_install: gem install bundler -v '~> 1.13' -v '< 1.14' --no-ri --no-rdoc
 bundler_args: "--without development system_tests"
 rvm:
   - '2.2'
+  - '2.4'
 script:
   - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
 env:
