@@ -7,7 +7,6 @@ rvm:
 script:
   - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
 env:
-  - PUPPET_VERSION="~> 3.8.0"
   - PUPPET_VERSION="~> 4.9.0"
   - PUPPET_VERSION="~> 4.10.0"
 matrix:
@@ -24,13 +23,8 @@ matrix:
       env: BEAKER_set="ubuntu-14.04-docker"
       script: bundle exec rake beaker
       bundler_args: --without development
-  exclude:
-    - rvm: '2.2'
-      env: PUPPET_VERSION="~> 3.8.0"
   allow_failures:
     # jenkins 2.x support is currently broken with debian packaging
     - env: BEAKER_set="ubuntu-14.04-docker"
-    # Puppet 4 specific code in master
-    - env: PUPPET_VERSION="~> 3.8.0"
 notifications:
   email: false
