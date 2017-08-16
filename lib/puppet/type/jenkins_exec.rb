@@ -1,7 +1,7 @@
 require 'puppet_x/jenkins/type/cli'
 
 PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
-  @doc = "Execute groovy script on jenkins master"
+  @doc = 'Execute groovy script on jenkins master'
 
   newparam(:script) do
     desc 'script name'
@@ -22,7 +22,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
       :executed_script
     end
 
-    defaultto "0"
+    defaultto '0'
 
     attr_reader :output
     desc "The expected exit code(s).  An error will be returned if the
@@ -49,7 +49,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
 
     # Make output a bit prettier
     def change_to_s(currentvalue, newvalue)
-      "executed successfully"
+      'executed successfully'
     end
 
     # First verify that all of our checks pass.
@@ -59,7 +59,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
       # value, which causes us to be treated as in_sync?, which means we
       # don't actually execute anything.  I think. --daniel 2011-03-10
       #if @resource.check_all_attributes
-        return :notrun
+      return :notrun
       #else
       #  return self.should
       #end
@@ -84,7 +84,7 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
           end
         end
       rescue Timeout::Error
-        self.fail Puppet::Error, "Script exceeded timeout", $!
+        self.fail Puppet::Error, 'Script exceeded timeout', $!
       end
 
       if log = @resource[:logoutput]
@@ -135,11 +135,11 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
     munge do |value|
       if value.is_a?(String)
         unless value =~ /^[\d]+$/
-          raise ArgumentError, "Tries must be an integer"
+          raise ArgumentError, 'Tries must be an integer'
         end
         value = Integer(value)
       end
-      raise ArgumentError, "Tries must be an integer >= 1" if value < 1
+      raise ArgumentError, 'Tries must be an integer >= 1' if value < 1
       value
     end
 
@@ -147,16 +147,16 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_exec) do
   end
 
   newparam(:try_sleep) do
-    desc "The time to sleep in seconds between 'tries'."
+    desc 'The time to sleep in seconds between \'tries\'.'
 
     munge do |value|
       if value.is_a?(String)
         unless value =~ /^[-\d.]+$/
-          raise ArgumentError, "try_sleep must be a number"
+          raise ArgumentError, 'try_sleep must be a number'
         end
         value = Float(value)
       end
-      raise ArgumentError, "try_sleep cannot be a negative number" if value < 0
+      raise ArgumentError, 'try_sleep cannot be a negative number' if value < 0
       value
     end
 
