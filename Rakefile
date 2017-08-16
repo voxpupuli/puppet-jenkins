@@ -39,6 +39,19 @@ namespace :travis do
   end
 end
 
+sh_scripts = %w(
+  templates/jenkins-slave-run.erb
+)
+desc 'Syntax check shellscripts'
+task :shellcheck do
+  sh "shellcheck #{sh_scripts.join(' ')}" do |ok, res|
+    unless ok
+      # exit without verbose rake error message
+      exit res.exitstatus
+    end
+  end
+end
+
 default_tasks = [
   :lint,
   :validate,
