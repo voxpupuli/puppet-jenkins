@@ -456,7 +456,7 @@ class Actions {
     current_credentials['password'] = credentials.password.plainText
     } else {
       current_credentials['private_key'] = credentials.privateKey
-      current_credentials['passphrase'] = credentials.passphrase.plainText
+      current_credentials['passphrase'] = credentials.passphrase?.plainText
     }
 
     def builder = new groovy.json.JsonBuilder(current_credentials)
