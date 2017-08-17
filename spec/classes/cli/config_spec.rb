@@ -6,13 +6,6 @@ describe 'jenkins::cli::config', :type => :class do
       let(:params) {{ param => '/dne' }}
       it { should_not raise_error }
     end
-
-    context 'relative path' do
-      let(:params) {{ param => '../dne' }}
-      it 'should fail' do
-        should raise_error(Puppet::Error, /is not an absolute path/)
-      end
-    end
   end # validate_absolute_path
 
   shared_examples 'validate_integer' do |param|
@@ -20,14 +13,6 @@ describe 'jenkins::cli::config', :type => :class do
       let(:params) {{ param => 42 }}
 
       it { should_not raise_error }
-    end
-
-    context 'string' do
-      let(:params) {{ param => 'foo' }}
-
-      it 'should fail' do
-        should raise_error(Puppet::Error, /to be an Integer/)
-      end
     end
   end # validate_integer
 
@@ -43,14 +28,6 @@ describe 'jenkins::cli::config', :type => :class do
 
       it { should_not raise_error }
     end
-
-    context 'string' do
-      let(:params) {{ param => 'foo' }}
-
-      it 'should fail' do
-        should raise_error(Puppet::Error, /to be a Numeric/)
-      end
-    end
   end # validate_numeric
 
   shared_examples 'validate_string' do |param|
@@ -58,14 +35,6 @@ describe 'jenkins::cli::config', :type => :class do
       let(:params) {{ param => 'foo' }}
 
       it { should_not raise_error }
-    end
-
-    context 'array' do
-      let(:params) {{ param => [] }}
-
-      it 'should fail' do
-        should raise_error(Puppet::Error, /is not a string/)
-      end
     end
   end # validate_string
 

@@ -107,56 +107,34 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
-  $slave_name                = undef,
-  $description               = undef,
-  $masterurl                 = undef,
-  $autodiscoveryaddress      = undef,
-  $ui_user                   = undef,
-  $ui_pass                   = undef,
-  $version                   = $jenkins::params::swarm_version,
-  $executors                 = 2,
-  $manage_slave_user         = true,
-  $slave_user                = 'jenkins-slave',
-  $slave_groups              = undef,
-  $slave_uid                 = undef,
-  $slave_home                = '/home/jenkins-slave',
-  $slave_mode                = 'normal',
-  $disable_ssl_verification  = false,
-  $disable_clients_unique_id = false,
-  $labels                    = undef,
-  $tool_locations            = undef,
-  $install_java              = $jenkins::params::install_java,
-  $manage_client_jar         = true,
-  $ensure                    = 'running',
-  $enable                    = true,
-  $source                    = undef,
-  $java_args                 = undef,
-  $proxy_server              = undef,
-  $swarm_client_args         = undef,
-  $delete_existing_clients   = false,
+  Optional[String] $slave_name            = undef,
+  Optional[String] $description           = undef,
+  Optional[String] $masterurl             = undef,
+  Optional[String] $autodiscoveryaddress  = undef,
+  Optional[String] $ui_user               = undef,
+  Optional[String] $ui_pass               = undef,
+  Optional[String] $tool_locations        = undef,
+  Optional[String] $source                = undef,
+  Optional[String] $proxy_server          = undef,
+  String $version                         = $jenkins::params::swarm_version,
+  Integer $executors                      = 2,
+  Boolean $manage_slave_user              = true,
+  String $slave_user                      = 'jenkins-slave',
+  Optional[String] $slave_groups          = undef,
+  Optional[Integer] $slave_uid            = undef,
+  Stdlib::Absolutepath $slave_home        = '/home/jenkins-slave',
+  Enum['normal', 'exclusive'] $slave_mode = 'normal',
+  Boolean $disable_ssl_verification       = false,
+  Boolean $disable_clients_unique_id      = false,
+  Any $labels                             = undef,
+  Any $install_java                       = $jenkins::params::install_java,
+  Boolean $manage_client_jar              = true,
+  Enum['running', 'stopped'] $ensure      = 'running',
+  Boolean $enable                         = true,
+  Any $java_args                          = undef,
+  Any $swarm_client_args                  = undef,
+  Boolean $delete_existing_clients        = false,
 ) inherits jenkins::params {
-  validate_string($slave_name)
-  validate_string($description)
-  validate_string($masterurl)
-  validate_string($autodiscoveryaddress)
-  validate_string($ui_user)
-  validate_string($ui_pass)
-  validate_string($version)
-  validate_integer($executors)
-  validate_bool($manage_slave_user)
-  validate_string($slave_user)
-  if $slave_groups { validate_string($slave_groups) }
-  if $slave_uid { validate_integer($slave_uid) }
-  validate_absolute_path($slave_home)
-  validate_re($slave_mode, '^normal$|^exclusive$')
-  validate_string($tool_locations)
-  validate_bool($install_java)
-  validate_bool($manage_client_jar)
-  validate_re($ensure, '^running$|^stopped$')
-  validate_bool($enable)
-  validate_string($source)
-  validate_string($proxy_server)
-  validate_bool($delete_existing_clients)
 
   if versioncmp($version, '3.0') < 0 {
     $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"

@@ -6,9 +6,6 @@ class jenkins::direct_download {
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
-  validate_string($::jenkins::package_provider)
-  validate_string($::jenkins::direct_download)
-  validate_absolute_path($::jenkins::package_cache_dir)
 
   include ::jenkins::proxy
 
@@ -23,8 +20,6 @@ class jenkins::direct_download {
   # equivalent to basename() - get the filename
   $package_file = regsubst($::jenkins::direct_download, '(.*?)([^/]+)$', '\2')
   $local_file = "${::jenkins::package_cache_dir}/${package_file}"
-
-  validate_absolute_path($local_file)
 
   if $::jenkins::version != 'absent' {
     # make download optional if we are removing...

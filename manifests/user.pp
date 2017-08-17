@@ -17,13 +17,12 @@
 # A Jenkins user account
 #
 define jenkins::user (
-  $email,
-  $password,
-  $full_name = 'Managed by Puppet',
-  $public_key = '',
-  $ensure = 'present',
+  Pattern[/^[^@]+@[^@]+$/] $email,
+  String $password,
+  String $full_name                 = 'Managed by Puppet',
+  String $public_key                = '',
+  Enum['present', 'absent'] $ensure = 'present',
 ){
-  validate_re($ensure, '^present$|^absent$')
 
   include ::jenkins::cli_helper
 
@@ -33,10 +32,6 @@ define jenkins::user (
 
   case $ensure {
     'present': {
-      validate_re($email, '^[^@]+@[^@]+$', "An email address is required, not '${email}'")
-      validate_string($password)
-      validate_string($full_name)
-      validate_string($public_key)
       # XXX not idempotent
       jenkins::cli::exec { "create-jenkins-user-${title}":
         command => [

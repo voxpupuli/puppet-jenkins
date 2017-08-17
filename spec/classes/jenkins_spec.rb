@@ -79,11 +79,6 @@ describe 'jenkins', :type => :module do
         end
       end
 
-      context '../bar' do
-        let(:params) {{ :sysconfdir => '../bar' }}
-        it { should raise_error(Puppet::Error, /is not an absolute path/) }
-      end
-
       context '(default)' do
         it do
           should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
@@ -100,11 +95,6 @@ describe 'jenkins', :type => :module do
         it { should_not contain_file('/var/lib/jenkins/jobs') }
       end
 
-      context '"false"' do
-        let(:params) {{ :manage_datadirs => 'false' }}
-        it { should raise_error(Puppet::Error, /is not a boolean/) }
-      end
-
       context '(default)' do
         it { should contain_file('/var/lib/jenkins') }
       end
@@ -118,11 +108,6 @@ describe 'jenkins', :type => :module do
       context '/dne' do
         let(:params) {{ :localstatedir => '/dne' }}
         it { should contain_file('/dne') }
-      end
-
-      context './tmp' do
-        let(:params) {{ :localstatedir => './tmp' }}
-        it { should raise_error(Puppet::Error, /is not an absolute path/) }
       end
     end
 
@@ -142,14 +127,6 @@ describe 'jenkins', :type => :module do
         end
         it { should contain_jenkins__cli__exec('set_num_executors').that_requires('Class[jenkins::cli]') }
         it { should contain_jenkins__cli__exec('set_num_executors').that_comes_before('Class[jenkins::jobs]') }
-      end
-
-      context '{}' do
-        let(:params) {{ :executors => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /to be an Integer/)
-        end
       end
     end # executors =>
 
@@ -171,14 +148,6 @@ describe 'jenkins', :type => :module do
         it { should contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
         it { should contain_jenkins__cli__exec('set_slaveagent_port').that_comes_before('Class[jenkins::jobs]') }
       end
-
-      context '{}' do
-        let(:params) {{ :slaveagentport => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /to be an Integer/)
-        end
-      end
     end # slaveagentport =>
 
     describe 'manage_user =>' do
@@ -196,13 +165,6 @@ describe 'jenkins', :type => :module do
         it { should_not contain_user('jenkins') }
       end
 
-      context '{}' do
-        let(:params) {{ :manage_user => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /is not a boolean./)
-        end
-      end
     end # manage_user =>
 
 
@@ -248,14 +210,6 @@ describe 'jenkins', :type => :module do
           )
         end
       end
-
-      context '{}' do
-        let(:params) {{ :user => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /is not a string./)
-        end
-      end
     end # user =>
 
     describe 'manage_group =>' do
@@ -271,14 +225,6 @@ describe 'jenkins', :type => :module do
       context 'false' do
         let(:params) {{ :manage_group => false }}
         it { should_not contain_group('jenkins') }
-      end
-
-      context '{}' do
-        let(:params) {{ :manage_group => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /is not a boolean./)
-        end
       end
     end # manage_group =>
 
@@ -300,14 +246,6 @@ describe 'jenkins', :type => :module do
             :ensure => 'present',
             :system => true,
           )
-        end
-      end
-
-      context '{}' do
-        let(:params) {{ :group => {} }}
-
-        it 'should fail' do
-          should raise_error(Puppet::Error, /is not a string./)
         end
       end
     end # group =>
@@ -370,12 +308,6 @@ describe 'jenkins', :type => :module do
             .without('force')
             .without('notify')
         end
-      end
-
-      context 'foo' do
-        let(:params) {{ :purge_plugins => 'foo' }}
-
-        it { should raise_error(Puppet::Error, /is not a boolean/) }
       end
     end # purge_plugins
   end
