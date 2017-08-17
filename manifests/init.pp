@@ -28,8 +28,8 @@
 #   configure upstream jenkins package repos
 #
 #   ``false`` means do NOT configure the upstream jenkins package repo. This
-#   means you'll manage a repo manually outside this module.  This is for folks
-#   that use a custom repo, or the like.
+#   means you'll manage a repo manually outside this module. This can also be
+#   your distribution's repo.
 #
 # @param package_name
 #   Optionally override the package name
@@ -209,6 +209,7 @@
 #   Note that this value is used for CLI communication and firewall
 #   configuration.  It does not configure the port on which the jenkins service
 #   listens. (see config_hash)
+#
 # @param libdir
 #   Path to jenkins core files
 #
