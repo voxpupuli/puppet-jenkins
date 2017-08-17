@@ -18,19 +18,19 @@ describe 'jenkins', :type => :module do
 
     describe 'default' do
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
+      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
     end
 
     describe 'lts = true' do
       let(:params) { { :lts => true } }
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian-stable') }
+      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
     end
 
     describe 'lts = false' do
       let(:params) { { :lts => false } }
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('http://pkg.jenkins-ci.org/debian') }
+      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian') }
     end
   end
 end
