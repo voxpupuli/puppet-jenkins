@@ -54,6 +54,9 @@ SLAVE_ARGS+=(-jar "$JENKINS_SLAVE_JAR")
 [[ -n "$DESCRIPTION" ]] &&
  SLAVE_ARGS+=(-description "$DESCRIPTION")
 
+[[ -n "$TUNNEL" ]] &&
+ SLAVE_ARGS+=(-tunnel "$TUNNEL")
+
 [[ -n "$AUTO_DISCOVERY_ADDRESS" ]] &&
   SLAVE_ARGS+=(-autoDiscoveryAddress "$AUTO_DISCOVERY_ADDRESS")
 
