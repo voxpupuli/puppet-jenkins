@@ -1,6 +1,6 @@
 require_relative '../jenkins'
 
-module PuppetX::Jenkins::Util
+module Puppet::X::Jenkins::Util
   def unundef(data)
     iterate(data) { |x| x == :undef ? nil : x }
   end

@@ -1,7 +1,7 @@
 require_relative '../../jenkins/type'
 require_relative '../../jenkins/config'
 
-module PuppetX::Jenkins::Type::Cli
+module Puppet::X::Jenkins::Type::Cli
   def self.newtype(*args, &block)
     type = Puppet::Type.newtype(*args, &block)
 
@@ -14,7 +14,7 @@ module PuppetX::Jenkins::Type::Cli
     # If a file resource is declared for file path params, make sure that it's
     # converged so we can read it off disk.
     type.autorequire(:file) do
-      config = PuppetX::Jenkins::Config.new(catalog)
+      config = Puppet::X::Jenkins::Config.new(catalog)
 
       autos = []
       %w( ssh_private_key puppet_helper cli_jar ).each do |param|

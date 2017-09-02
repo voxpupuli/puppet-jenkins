@@ -1,15 +1,15 @@
 require 'spec_helper'
-require 'unit/puppet_x/spec_jenkins_providers'
+require 'unit/puppet/x/spec_jenkins_providers'
 
 # we need to make sure retries is always loaded or random test ordering can
 # cause failures when a side effect hasn't yet caused the lib to be loaded
 require 'retries'
-require 'puppet_x/jenkins/provider/cli'
+require 'puppet/x/jenkins/provider/cli'
 
-describe PuppetX::Jenkins::Provider::Cli do
-  AuthError = PuppetX::Jenkins::Provider::Cli::AuthError
-  NetError = PuppetX::Jenkins::Provider::Cli::NetError
-  UnknownError = PuppetX::Jenkins::Provider::Cli::UnknownError
+describe Puppet::X::Jenkins::Provider::Cli do
+  AuthError = Puppet::X::Jenkins::Provider::Cli::AuthError
+  NetError = Puppet::X::Jenkins::Provider::Cli::NetError
+  UnknownError = Puppet::X::Jenkins::Provider::Cli::UnknownError
 
   CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS]
     anonymous is missing the Overall/Read permission

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'unit/puppet_x/spec_jenkins_providers'
+require 'unit/puppet/x/spec_jenkins_providers'
 
 require 'json'
 

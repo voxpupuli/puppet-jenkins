@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'unit/puppet_x/spec_jenkins_types'
+require 'unit/puppet/x/spec_jenkins_types'
 
-require 'puppet_x/jenkins/type/cli'
+require 'puppet/x/jenkins/type/cli'
 
-PuppetX::Jenkins::Type::Cli.newtype(:test) {
+Puppet::X::Jenkins::Type::Cli.newtype(:test) {
   newparam(:foo) { isnamevar }
 }
 

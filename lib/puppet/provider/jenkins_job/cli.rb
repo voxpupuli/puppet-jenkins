@@ -2,10 +2,10 @@ require 'puppet/util/warnings'
 
 require 'json'
 
-require File.join(File.dirname(__FILE__), '../../..', 'puppet_x/jenkins/util')
-require File.join(File.dirname(__FILE__), '../../..', 'puppet_x/jenkins/provider/cli')
+require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/util')
+require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
-Puppet::Type.type(:jenkins_job).provide(:cli, :parent => PuppetX::Jenkins::Provider::Cli) do
+Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
 
   mk_resource_methods
 

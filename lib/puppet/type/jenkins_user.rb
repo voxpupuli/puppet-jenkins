@@ -1,6 +1,6 @@
-require_relative  '../../puppet_x/jenkins/type/cli'
+require_relative  '../../puppet/x/jenkins/type/cli'
 
-PuppetX::Jenkins::Type::Cli.newtype(:jenkins_user) do
+Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_user) do
   @doc = "Manage Jenkins' user account information"
 
   ensurable
@@ -40,4 +40,4 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_user) do
   newproperty(:password) do
     desc 'Password for HudsonPrivateSecurityRealm'
   end
-end # PuppetX::Jenkins::Type::Cli.newtype
+end # Puppet::X::Jenkins::Type::Cli.newtype

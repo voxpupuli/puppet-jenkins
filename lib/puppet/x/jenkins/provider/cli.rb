@@ -6,7 +6,7 @@ require 'json'
 require_relative '../../jenkins/config'
 require_relative '../../jenkins/provider'
 
-class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
+class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # stdout/stderr indicates an authentication failure
   class AuthError < Puppet::ExecutionFailure; end
   # network / jenkins not ready for connections
@@ -98,7 +98,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
 
   def self.clihelper(command, options = {})
     catalog = options.key?(:catalog) ? options[:catalog] : nil
-    config = PuppetX::Jenkins::Config.new(catalog)
+    config = Puppet::X::Jenkins::Config.new(catalog)
 
     puppet_helper = config[:puppet_helper]
     cli_remoting_free = config[:cli_remoting_free]
@@ -170,7 +170,7 @@ class PuppetX::Jenkins::Provider::Cli < Puppet::Provider
     # stderr
     options.merge!({ :combine => true })
 
-    config = PuppetX::Jenkins::Config.new(catalog)
+    config = Puppet::X::Jenkins::Config.new(catalog)
     cli_jar                  = config[:cli_jar]
     url                      = config[:url]
     ssh_private_key          = config[:ssh_private_key]
