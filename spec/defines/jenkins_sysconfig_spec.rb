@@ -31,7 +31,11 @@ describe 'jenkins::sysconfig' do
         :osfamily        => 'Debian',
         :operatingsystem => 'Debian',
         :lsbdistcodename => 'squeeze',
-        :lsbdistid       => 'bebian'
+        :lsbdistid       => 'debian',
+        :os              => {
+          :name    => 'Debian',
+          :release => { :full => '11.04' },
+        },
       }
     end
 

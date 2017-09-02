@@ -205,16 +205,6 @@ It requires the swarm plugin on the master & the class jenkins::slave on the sla
     }
 ```
 
-### Dependencies
-
-The dependencies for this module currently are:
-
-* [stdlib module](http://forge.puppetlabs.com/puppetlabs/stdlib)
-* [apt module](http://forge.puppetlabs.com/puppetlabs/apt) (for Debian/Ubuntu users)
-* [java module](http://github.com/puppetlabs/puppetlabs-java)
-* [zypprepo](https://forge.puppetlabs.com/darin/zypprepo) (for SUSE users)
-* [archive module](https://forge.puppetlabs.com/puppet/archive)
-* [firewall module](https://forge.puppet.com/puppetlabs/firewall)
 
 ### Depending on Jenkins
 
