@@ -26,7 +26,16 @@ describe 'jenkins', :type => :module do
       end
 
       describe 'Debian' do
-        let(:facts) { { :osfamily => 'Debian', :lsbdistid => 'debian', :lsbdistcodename => 'natty', :operatingsystem => 'Debian' } }
+        let(:facts) {{
+          :osfamily        => 'Debian',
+          :lsbdistid       => 'debian',
+          :lsbdistcodename => 'natty',
+          :operatingsystem => 'Debian',
+          :os              => {
+            :name    => 'Debian',
+            :release => { :full => '11.04' },
+          },
+        }}
         it { should contain_class('jenkins::repo::debian') }
         it { should_not contain_class('jenkins::repo::suse') }
         it { should_not contain_class('jenkins::repo::el') }
