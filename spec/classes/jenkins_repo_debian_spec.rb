@@ -4,10 +4,14 @@ describe 'jenkins', :type => :module do
   # Switching OS Family to prevent duplicate declaration
   let(:facts) do
     {
-      :osfamily => 'Debian',
+      :osfamily        => 'Debian',
       :lsbdistcodename => 'precise',
-      :lsbdistid => 'ubuntu',
-      :operatingsystem => 'Debian'
+      :lsbdistid       => 'ubuntu',
+      :operatingsystem => 'Debian',
+      :os              => {
+        :name    => 'Debian',
+        :release => { :full => '11.04' },
+      },
     }
   end
 
