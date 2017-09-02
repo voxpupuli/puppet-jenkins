@@ -2,6 +2,7 @@
 .bundle
 doc/
 Gemfile.lock
+.idea
 log/
 pkg/*
 .project
