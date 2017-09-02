@@ -30,7 +30,7 @@ RSpec.configure do |c|
       on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install puppetlabs-apt'), { :acceptable_exit_codes => [0] }
 
-      on host, puppet('module install darin-zypprepo'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppet-zypprepo'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install puppet-archive'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install camptocamp-systemd'), { :acceptable_exit_codes => [0] }
       on host, puppet('module install puppetlabs-transition'), { :acceptable_exit_codes => [0] }
