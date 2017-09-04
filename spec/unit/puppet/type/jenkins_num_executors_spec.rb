@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'unit/puppet_x/spec_jenkins_types'
+require 'unit/puppet/x/spec_jenkins_types'
 
 describe Puppet::Type.type(:jenkins_num_executors) do
   before(:each) { Facter.clear }

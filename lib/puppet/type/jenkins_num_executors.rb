@@ -1,6 +1,6 @@
-require_relative  '../../puppet_x/jenkins/type/cli'
+require_relative  '../../puppet/x/jenkins/type/cli'
 
-PuppetX::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
+Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
   @doc = "Manage Jenkins' number of executor slots"
 
   # the cli jar does not have an interface for plugin removal so the only
@@ -34,4 +34,4 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
       end
     end
   end
-end # PuppetX::Jenkins::Type::Cli.newtype
+end # Puppet::X::Jenkins::Type::Cli.newtype

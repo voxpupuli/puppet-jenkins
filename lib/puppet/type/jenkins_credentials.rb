@@ -1,6 +1,6 @@
-require_relative  '../../puppet_x/jenkins/type/cli'
+require_relative  '../../puppet/x/jenkins/type/cli'
 
-PuppetX::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
+Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   @doc = <<-EOS
     Manage Jenkins' credentials
 
@@ -97,4 +97,4 @@ PuppetX::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
       end
     end
   end
-end # PuppetX::Jenkins::Type::Cli.newtype
+end # Puppet::X::Jenkins::Type::Cli.newtype

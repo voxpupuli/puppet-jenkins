@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-require 'puppet_x/jenkins/util'
+require 'puppet/x/jenkins/util'
 
-describe PuppetX::Jenkins::Util do
+describe Puppet::X::Jenkins::Util do
   let(:data) do
     {
       :a => :undef,

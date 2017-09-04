@@ -2,10 +2,10 @@ require 'puppet/util/warnings'
 
 require 'json'
 
-require_relative '../../../puppet_x/jenkins/util'
-require File.join(File.dirname(__FILE__), '../../..', 'puppet_x/jenkins/provider/cli')
+require_relative '../../../puppet/x/jenkins/util'
+require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
-Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => PuppetX::Jenkins::Provider::Cli) do
+Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
 
   mk_resource_methods
 
@@ -40,7 +40,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => PuppetX::Jenkin
 
   def self.from_hash(info)
     # map nil -> :undef
-    info = PuppetX::Jenkins::Util.undefize(info)
+    info = Puppet::X::Jenkins::Util.undefize(info)
 
     params = {
       :name   => info['id'],
@@ -96,7 +96,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => PuppetX::Jenkin
     end
 
     # map :undef -> nil
-    PuppetX::Jenkins::Util.unundef(info)
+    Puppet::X::Jenkins::Util.unundef(info)
   end
 
   # array of hashes for multiple "credentials" entries

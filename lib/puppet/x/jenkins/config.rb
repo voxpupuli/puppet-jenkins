@@ -7,7 +7,7 @@ require 'puppet/util/warnings'
 # This class is used to lookup common configuration values by first looking for
 # the desired key as parameter to the config class in the catalog, then
 # checking for a prefixed fact, and falling back to hard coded defaults.
-class PuppetX::Jenkins::Config
+class Puppet::X::Jenkins::Config
   class UnknownConfig < ArgumentError; end
 
   DEFAULTS = {
