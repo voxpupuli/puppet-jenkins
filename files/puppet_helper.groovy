@@ -24,6 +24,8 @@ import groovy.transform.InheritConstructors
 import hudson.model.*
 import hudson.plugins.sshslaves.*
 import hudson.util.*
+import hudson.security.PAMSecurityRealm
+import hudson.security.HudsonPrivateSecurityRealm
 import jenkins.model.*
 import jenkins.security.*
 import org.apache.commons.io.IOUtils
@@ -658,12 +660,14 @@ class Actions {
    * Set up security for the Jenkins instance. This currently supports
    * only a small number of configurations. If authentication is enabled, it
    * uses the internal user database.
+   * Through user_realm your are able to set pam as your user realm.
   */
-  void set_security(String security_model) {
+  void set_security(String security_model, String user_realm) {
     def j = Jenkins.getInstance()
 
     if (security_model == 'disabled') {
       j.disableSecurity()
+      j.save()
       return null
     }
 
@@ -672,15 +676,27 @@ class Actions {
     switch (security_model) {
       case 'full_control':
         strategy = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
+
         break
       case 'unsecured':
         strategy = new hudson.security.AuthorizationStrategy.Unsecured()
-        realm = new hudson.security.HudsonPrivateSecurityRealm(false, false, null)
+
         break
       default:
         throw new InvalidAuthenticationStrategy()
     }
+
+    switch (user_realm) {
+      case ['internal', '']:
+        realm = new HudsonPrivateSecurityRealm(false, false, null)
+        break
+      case 'pam':
+        realm = new PAMSecurityRealm(null)
+        break
+      default:
+        throw new InvalidAuthenticationStrategy()
+    }
+
     j.setAuthorizationStrategy(strategy)
     j.setSecurityRealm(realm)
     j.save()
@@ -782,6 +798,22 @@ class Actions {
       authorizationStrategyName = 'unsecured'
     }
     out.println(authorizationStrategyName)
+  }
+
+  ////////////////////////
+  // get_authorization_realmname
+  ////////////////////////
+  void get_authorization_realmname() {
+
+    def authorizationRealmName = ''
+    def j = Jenkins.getInstance()
+    def realm = j.getSecurityRealm()
+    if ((String)realm.getClass().getName() == 'hudson.security.HudsonPrivateSecurityRealm' ) {
+      authorizationRealmName = 'internal'
+    } else if ((String)realm.getClass().getName() == 'hudson.security.PAMSecurityRealm' ) {
+      authorizationRealmName = 'pam'
+    }
+    out.println(authorizationRealmName)
   }
 
   ////////////////////////

@@ -17,8 +17,10 @@
 # Jenkins security configuration
 #
 class jenkins::security (
-  String $security_model,
+  String $security_model = undef,
+  String $user_realm     = 'internal',
 ){
+
   include ::jenkins::cli_helper
 
   Class['jenkins::cli_helper']
@@ -26,11 +28,13 @@ class jenkins::security (
       -> Anchor['jenkins::end']
 
   # XXX not idempotent
-  jenkins::cli::exec { "jenkins-security-${security_model}":
+  jenkins::cli::exec { "jenkins-security-${security_model}-${user_realm}":
     command => [
       'set_security',
       $security_model,
+      $user_realm,
     ],
-    unless  => "\$HELPER_CMD get_authorization_strategyname | grep -q -e '^${security_model}\$'",
+    unless  => "\$HELPER_CMD get_authorization_strategyname | grep -q -e '^${security_model}\$' \
+                && \$HELPER_CMD get_authorization_realmname | grep -q -e '^${user_realm}\$' ",
   }
 }
