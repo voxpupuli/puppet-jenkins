@@ -51,7 +51,7 @@ class jenkins::cli {
     require => Exec['jenkins-cli'],
   }
 
-  $port = jenkins_port()
+  $port = $::jenkins::port
   $prefix = jenkins_prefix()
 
   # The jenkins cli command with required parameter(s)

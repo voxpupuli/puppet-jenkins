@@ -21,7 +21,7 @@ class jenkins::cli_helper (
 
   $libdir = $::jenkins::libdir
   $cli_jar = $::jenkins::cli::jar
-  $port = jenkins_port()
+  $port = $::jenkins::port
   $prefix = jenkins_prefix()
   $helper_groovy = "${libdir}/puppet_helper.groovy"
 
