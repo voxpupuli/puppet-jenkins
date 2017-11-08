@@ -142,6 +142,31 @@ describe 'jenkins_credentials' do
           it { should contain '<id>95bfe159-8bf0-4605-be20-47e201220e7c</id>' }
         end
       end
+
+      context 'AWSCredentialsImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { ['jackson2-api', 'aws-java-sdk', 'aws-credentials', 'credentials-binding', 'workflow-step-api']: }
+
+            jenkins_credentials { '34d75c64-61ff-4a28-bd40-cac3aafc7e3a':
+              ensure      => 'present',
+              description => 'aws credential',
+              impl        => 'AWSCredentialsImpl',
+              access_key  => 'much access',
+              secret_key  => 'many secret',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>' }
+        end
+      end
     end # 'present' do
 
     context 'absent' do

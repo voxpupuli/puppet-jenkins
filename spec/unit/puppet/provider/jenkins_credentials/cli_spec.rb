@@ -42,6 +42,15 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "description": "baz",
             "file_name": "baz.file",
             "content": "asdf"
+        },
+        {
+            "id": "34d75c64-61ff-4a28-bd40-cac3aafc7e3a",
+            "domain": null,
+            "scope": "GLOBAL",
+            "impl": "AWSCredentialsImpl",
+            "description": "aws credential",
+            "access_key": "much access",
+            "secret_key": "many secret"
         }
     ]
     EOS
@@ -72,7 +81,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'file_name',
         'content',
         'source',
-        'key_store_impl'
+        'key_store_impl',
+        'secret_key',
+        'access_key',
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -103,7 +114,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'file_name',
         'content',
         'source',
-        'key_store_impl'
+        'key_store_impl',
+        'secret_key',
+        'access_key',
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -135,7 +148,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'file_name',
         'content',
         'source',
-        'key_store_impl'
+        'key_store_impl',
+        'secret_key',
+        'access_key',
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -166,12 +181,47 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'private_key',
         'passphrase',
         'source',
-        'key_store_impl'
+        'key_store_impl',
+        'secret_key',
+        'access_key',
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
+
+  shared_examples 'a provider from example hash 5' do
+    it do
+      cred = credentials[4]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      [
+        'domain',
+        'scope',
+        'impl',
+        'description',
+        'secret_key',
+        'access_key',
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      [
+        'username',
+        'password',
+        'private_key',
+        'passphrase',
+        'source',
+        'key_store_impl',
+        'content',
+        'file_name'
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+    end
+  end
+
 
   include_examples 'confines to cli dependencies'
 
@@ -183,7 +233,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it 'should return the correct number of instances' do
-        expect(described_class.instances.size).to eq 4
+        expect(described_class.instances.size).to eq 5
       end
 
       context 'first instance returned' do

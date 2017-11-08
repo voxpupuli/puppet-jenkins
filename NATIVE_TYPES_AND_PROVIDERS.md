@@ -343,6 +343,21 @@ jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
 }
 ```
 
+#### `AWSCredentialsImpl`
+
+Using this credential type requires that the jenkins `aws-credentials` plugin
+has been installed.
+
+```
+jenkins_credentials { '34d75c64-61ff-4a28-bd40-cac3aafc7e3a':
+  ensure      => 'present',
+  description => 'aws credential',
+  impl        => 'AWSCredentialsImpl',
+  access_key  => 'much access',
+  secret_key  => 'many secret',
+}
+```
+
 ### `ConduitCredentialsImpl`
 
 ```

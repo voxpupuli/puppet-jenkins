@@ -522,6 +522,11 @@ class Actions {
           info['file_name'] = cred.getFileName()
           info['content'] = IOUtils.toString(cred.getContent(), "UTF-8")
           break
+        case 'com.cloudbees.jenkins.plugins.awscredentials.AWSCredentialsImpl':
+          info['description'] = cred.description
+          info['access_key'] = cred.getAccessKey()
+          info['secret_key'] = cred.getSecretKey().plainText
+          break
         case 'com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl':
           def keyStoreSource = cred.getKeyStoreSource()
 
@@ -618,6 +623,17 @@ class Actions {
           conf['description'],
           conf['file_name'],
           SecretBytes.fromBytes(conf['content'].getBytes())
+        )
+        break
+      case 'AWSCredentialsImpl':
+        util.requirePlugin('aws-credentials')
+
+        cred = this.class.classLoader.loadClass('com.cloudbees.jenkins.plugins.awscredentials.AWSCredentialsImpl').newInstance(
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['access_key'],
+          conf['secret_key'],
+          conf['description'],
         )
         break
       default:
