@@ -33,6 +33,15 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "impl": "StringCredentialsImpl",
             "description": "baz",
             "secret": "fluffy bunny"
+        },
+        {
+            "id": "08f8006e-371d-4daa-961b-f6e616f7a061",
+            "domain": null,
+            "scope": "GLOBAL",
+            "impl": "FileCredentialsImpl",
+            "description": "baz",
+            "file_name": "baz.file",
+            "content": "asdf"
         }
     ]
     EOS
@@ -130,7 +139,37 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
+    end
+  end
 
+  shared_examples 'a provider from example hash 4' do
+    it do
+      cred = credentials[3]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      [
+        'domain',
+        'scope',
+        'impl',
+        'description',
+        'secret',
+        'file_name',
+        'content',
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      [
+        'username',
+        'password',
+        'private_key',
+        'passphrase',
+        'source',
+        'key_store_impl'
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
     end
   end
 
@@ -144,7 +183,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it 'should return the correct number of instances' do
-        expect(described_class.instances.size).to eq 3
+        expect(described_class.instances.size).to eq 4
       end
 
       context 'first instance returned' do

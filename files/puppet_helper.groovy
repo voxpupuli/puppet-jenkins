@@ -609,6 +609,17 @@ class Actions {
           new Secret(conf['secret'])
         )
         break
+      case 'FileCredentialsImpl':
+        util.requirePlugin('plain-credentials')
+
+        cred = this.class.classLoader.loadClass('org.jenkinsci.plugins.plaincredentials.impl.FileCredentialsImpl').newInstance(
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          conf['file_name'],
+          SecretBytes.fromBytes(conf['content'].getBytes())
+        )
+        break
       default:
         throw new UnsupportedCredentialsClass("unsupported " + conf['impl'])
     }

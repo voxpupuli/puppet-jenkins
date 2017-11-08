@@ -274,6 +274,7 @@ jenkins_credentials { '<id>':
 
 * `UsernamePasswordCredentialsImpl`
 * `BasicSSHUserPrivateKey`
+* `StringCredentialsImpl`
 * `FileCredentialsImpl`
 * `ConduitCredentialsImpl`
 
@@ -309,7 +310,7 @@ jenkins_credentials { 'a0469025-1202-4007-983d-0c62f230f1a7':
 }
 ```
 
-#### `FileCredentialsImpl`
+#### `StringCredentialsImpl`
 
 Using this credential type requires that the jenkins `plain-credentials` plugin
 has been installed.
@@ -322,6 +323,23 @@ jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
   impl        => 'StringCredentialsImpl',
   scope       => 'SYSTEM',
   secret      => '42',
+}
+```
+
+#### `FileCredentialsImpl`
+
+Using this credential type requires that the jenkins `plain-credentials` plugin
+has been installed.
+
+```
+jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
+  ensure      => 'present',
+  description => 'secret file with very secret data',
+  domain      => undef,
+  impl        => 'FileCredentialsImpl',
+  scope       => 'GLOBAL',
+  file_name   => 'foo.bar',
+  content     => 'secret data on 1st line\nsecret data on 2nd line'
 }
 ```
 
