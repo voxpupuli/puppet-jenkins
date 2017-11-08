@@ -142,7 +142,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
   end
 
-  shared_examples "a provider from example hash 4" do
+  shared_examples 'a provider from example hash 4' do
     it do
       cred = credentials[3]
 

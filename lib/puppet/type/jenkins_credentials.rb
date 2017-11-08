@@ -34,8 +34,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
               :BasicSSHUserPrivateKey,
               :ConduitCredentialsImpl,
               :StringCredentialsImpl,
-              :FileCredentialsImpl
-            )
+              :FileCredentialsImpl)
   end
 
   newproperty(:description) do
