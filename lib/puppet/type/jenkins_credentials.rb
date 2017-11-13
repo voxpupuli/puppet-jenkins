@@ -35,7 +35,9 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
               :ConduitCredentialsImpl,
               :StringCredentialsImpl,
               :FileCredentialsImpl,
-              :AWSCredentialsImpl)
+              :AWSCredentialsImpl,
+              :GitLabApiTokenImpl,
+            )
   end
 
   newproperty(:description) do
@@ -89,6 +91,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:token) do
     desc 'conduit token - ConduitCredentialsImpl'
+  end
+
+  newproperty(:api_token) do
+    desc 'API token - GitLabApiTokenImpl'
   end
 
   newproperty(:url) do

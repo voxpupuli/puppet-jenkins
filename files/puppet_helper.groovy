@@ -510,7 +510,7 @@ class Actions {
           info['passphrase'] = cred.passphrase?.plainText
           break
         case 'com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl':
-          info['apiToken'] = cred.apiToken.plainText
+          info['api_token'] = cred.apiToken.plainText
           info['description'] = cred.description
           break
         case 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl':
@@ -634,6 +634,16 @@ class Actions {
           conf['access_key'],
           conf['secret_key'],
           conf['description'],
+        )
+        break
+      case 'GitLabApiTokenImpl':
+        util.requirePlugin('gitlab-plugin')
+
+        cred = this.class.classLoader.loadClass('com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl').newInstance(
+          CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          new Secret(conf['api_token']),
         )
         break
       default:

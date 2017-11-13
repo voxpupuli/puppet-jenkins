@@ -276,7 +276,9 @@ jenkins_credentials { '<id>':
 * `BasicSSHUserPrivateKey`
 * `StringCredentialsImpl`
 * `FileCredentialsImpl`
+* `AWSCredentialsImpl`
 * `ConduitCredentialsImpl`
+* `GitLabApiTokenImpl`
 
 XXX This type has properties for other credentials classes that are not currently supported.
 
@@ -368,6 +370,17 @@ jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
   impl        => 'ConduitCredentialsImpl',
   token       => '{PRIVATE TOKEN}',
   url         => 'https://my-phabricator-repo.com',
+}
+```
+
+### `GitLabApiTokenImpl`
+
+```
+jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
+  ensure      => 'present',
+  description => 'GitLab API token',
+  impl        => 'GitLabApiTokenImpl',
+  api_token   => 'tokens for days',
 }
 ```
 

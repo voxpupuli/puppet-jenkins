@@ -51,6 +51,14 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "description": "aws credential",
             "access_key": "much access",
             "secret_key": "many secret"
+        },
+        {
+            "id": "7e86e9fb-a8af-480f-b596-7191dc02bf38",
+            "domain": null,
+            "scope": "GLOBAL",
+            "impl": "GitLabApiTokenImpl",
+            "description": "GitLab API token",
+            "api_token": "tokens for days"
         }
     ]
     EOS
@@ -222,6 +230,38 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
   end
 
+  shared_examples 'a provider from example hash 6' do
+    it do
+      cred = credentials[5]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      [
+        'domain',
+        'scope',
+        'impl',
+        'description',
+        'api_token',
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      [
+        'username',
+        'password',
+        'private_key',
+        'passphrase',
+        'source',
+        'key_store_impl',
+        'content',
+        'file_name',
+        'secret_key',
+        'access_key',
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+    end
+  end
 
   include_examples 'confines to cli dependencies'
 
@@ -233,7 +273,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it 'should return the correct number of instances' do
-        expect(described_class.instances.size).to eq 5
+        expect(described_class.instances.size).to eq 6
       end
 
       context 'first instance returned' do
