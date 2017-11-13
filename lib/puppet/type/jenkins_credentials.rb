@@ -36,8 +36,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
               :StringCredentialsImpl,
               :FileCredentialsImpl,
               :AWSCredentialsImpl,
-              :GitLabApiTokenImpl,
-            )
+              :GitLabApiTokenImpl)
   end
 
   newproperty(:description) do
