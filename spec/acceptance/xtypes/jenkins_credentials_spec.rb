@@ -113,6 +113,108 @@ describe 'jenkins_credentials' do
           it { should contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
         end
       end
+
+      context 'FileCredentialsImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { 'plain-credentials':
+              pin => true,
+            }
+
+            jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
+              ensure      => 'present',
+              description => 'secret file with very secret data',
+              domain      => undef,
+              impl        => 'FileCredentialsImpl',
+              scope       => 'GLOBAL',
+              file_name   => 'foo.bar',
+              content     => 'secret data on 1st line\nsecret data on 2nd line'
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should contain '<id>95bfe159-8bf0-4605-be20-47e201220e7c</id>' }
+        end
+      end
+
+      context 'AWSCredentialsImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { [
+              'jackson2-api',
+              'aws-java-sdk',
+              'credentials-binding',
+              'workflow-step-api',
+              'ssh-credentials',
+              'aws-credentials',
+              'plain-credentials',
+            ]: }
+
+            jenkins_credentials { '34d75c64-61ff-4a28-bd40-cac3aafc7e3a':
+              ensure      => 'present',
+              description => 'aws credential',
+              impl        => 'AWSCredentialsImpl',
+              access_key  => 'much access',
+              secret_key  => 'many secret',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>' }
+        end
+      end
+
+      context 'GitLabApiTokenImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            package { 'git': }
+            jenkins::plugin { [
+              'matrix-project',
+              'junit',
+              'script-security',
+              'workflow-step-api',
+              'workflow-scm-step',
+              'git',
+              'git-client',
+              'mailer',
+              'display-url-api',
+              'scm-api',
+              'ssh-credentials',
+              'apache-httpcomponents-client-4-api',
+              'jsch',
+              'gitlab-plugin',
+            ]: }
+
+            jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
+              ensure      => 'present',
+              description => 'GitLab API token',
+              impl        => 'GitLabApiTokenImpl',
+              api_token   => 'tokens for days',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>' }
+        end
+      end
     end # 'present' do
 
     context 'absent' do
@@ -139,6 +241,35 @@ describe 'jenkins_credentials' do
           # trying to match anything other than the id this way might match other
           # credentails
           it { should_not contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+        end
+      end
+
+      context 'FileCredentialsImpl' do
+        it 'should work with no errors' do
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { 'plain-credentials':
+              pin => true,
+            }
+
+            jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
+              ensure      => 'absent',
+              description => 'secret file with very secret data',
+              domain      => undef,
+              impl        => 'FileCredentialsImpl',
+              scope       => 'GLOBAL',
+              file_name   => 'foo.bar',
+              content     => 'secret data on 1st line\nsecret data on 2nd line'
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it { should_not contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
         end
       end
     end # 'absent' do

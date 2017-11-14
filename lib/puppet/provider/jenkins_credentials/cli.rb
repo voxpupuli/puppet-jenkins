@@ -60,6 +60,10 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenk
       [:description, :file_name, :content].each {|k| copy_key(params, info, k)}
     when 'CertificateCredentialsImpl'
       [:description, :password, :key_store_implementation].each {|k| copy_key(params, info, k)}
+    when 'AWSCredentialsImpl'
+      [:description, :secret_key, :access_key].each {|k| copy_key(params, info, k)}
+    when 'GitLabApiTokenImpl'
+      [:description, :api_token].each {|k| copy_key(params, info, k)}
     when 'ConduitCredentialsImpl'
       [:description, :token, :url].each {|k| copy_key(params, info, k)}
 

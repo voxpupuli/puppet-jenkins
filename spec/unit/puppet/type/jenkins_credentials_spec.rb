@@ -30,6 +30,9 @@ describe Puppet::Type.type(:jenkins_credentials) do
           :UsernamePasswordCredentialsImpl,
           :BasicSSHUserPrivateKey,
           :StringCredentialsImpl,
+          :FileCredentialsImpl,
+          :AWSCredentialsImpl,
+          :GitLabApiTokenImpl
         ]
     end
 
@@ -44,7 +47,10 @@ describe Puppet::Type.type(:jenkins_credentials) do
       :file_name,
       :content,
       :source,
-      :key_store_impl
+      :key_store_impl,
+      :secret_key,
+      :access_key,
+      :api_token
     ].each do |property|
       describe "#{property}" do
         context 'attrtype' do

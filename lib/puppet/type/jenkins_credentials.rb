@@ -33,7 +33,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     newvalues(:UsernamePasswordCredentialsImpl,
               :BasicSSHUserPrivateKey,
               :ConduitCredentialsImpl,
-              :StringCredentialsImpl)
+              :StringCredentialsImpl,
+              :FileCredentialsImpl,
+              :AWSCredentialsImpl,
+              :GitLabApiTokenImpl)
   end
 
   newproperty(:description) do
@@ -51,6 +54,14 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:private_key) do
     desc 'ssh private key string - BasicSSHUserPrivateKey'
+  end
+
+  newproperty(:access_key) do
+    desc 'AWS access key - AWSCredentialsImpl'
+  end
+
+  newproperty(:secret_key) do
+    desc 'AWS secret key - AWSCredentialsImpl'
   end
 
   newproperty(:passphrase) do
@@ -79,6 +90,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:token) do
     desc 'conduit token - ConduitCredentialsImpl'
+  end
+
+  newproperty(:api_token) do
+    desc 'API token - GitLabApiTokenImpl'
   end
 
   newproperty(:url) do
