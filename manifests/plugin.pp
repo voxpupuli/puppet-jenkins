@@ -26,6 +26,7 @@ define jenkins::plugin(
   Boolean $enabled                  = true,
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
+  Hash $archive_options             = {},
   # no worky
   Any $timeout                      = undef,
   # deprecated
@@ -173,11 +174,11 @@ define jenkins::plugin(
       checksum_verify => $checksum_verify,
       checksum        => $checksum,
       checksum_type   => $checksum_type,
-      proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
       require         => File[$::jenkins::plugin_dir],
       notify          => Service['jenkins'],
+      *               => $archive_options,
     }
     $archive_require = Archive[$plugin]
   } else {

@@ -136,6 +136,11 @@ describe 'jenkins::plugin' do
           proxy_host => "proxy.company.com",
           proxy_port => 8080,
         }
+        Jenkins::Plugin {
+          archive_options => {
+            proxy_server => 'http://proxy.company.com:8080',
+          }
+        }
       EOS
     end
 
