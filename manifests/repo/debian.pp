@@ -26,6 +26,7 @@ class jenkins::repo::debian
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
       require  => Package['apt-transport-https'],
+      notify   => Exec['apt_update'],
     }
   }
   else {
@@ -41,6 +42,7 @@ class jenkins::repo::debian
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
       require  => Package['apt-transport-https'],
+      notify   => Exec['apt_update'],
     }
   }
 
