@@ -184,6 +184,7 @@ describe 'jenkins_credentials' do
               'matrix-project',
               'junit',
               'script-security',
+              'workflow-api',
               'workflow-step-api',
               'workflow-scm-step',
               'git',
