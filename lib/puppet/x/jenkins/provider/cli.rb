@@ -278,6 +278,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
                         'You must authenticate to access this Jenkins.',
                         'anonymous is missing the Overall/Read permission',
                         'anonymous is missing the Overall/RunScripts permission',
+                        'java.io.IOException: Server returned HTTP response code: 503 for URL',
                       ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
