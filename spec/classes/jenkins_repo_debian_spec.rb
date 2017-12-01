@@ -18,6 +18,7 @@ describe 'jenkins', :type => :module do
   context 'repo::debian' do
     shared_examples 'an apt catalog' do
       it { should contain_class('apt') }
+      it { should contain_apt__source('jenkins').that_notifies('Exec[apt_update]') }
     end
 
     describe 'default' do
