@@ -181,7 +181,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['user_update'],
-        { :stdinjson => mutable_user_info },
+        { stdinjson: mutable_user_info },
       )
 
       provider.send :user_update

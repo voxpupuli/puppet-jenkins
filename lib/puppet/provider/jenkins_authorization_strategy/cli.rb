@@ -3,8 +3,7 @@ require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider
 
 require 'json'
 
-Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
-
+Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
   mk_resource_methods
 
   def self.instances(catalog = nil)
@@ -39,9 +38,9 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Pupp
     ctor_args = info[method_name][class_name]
 
     args = {
-      :name      => class_name,
-      :ensure    => :present,
-      :arguments => ctor_args,
+      name: class_name,
+      ensure: :present,
+      arguments: ctor_args,
     }
 
     # map nil -> :undef
@@ -67,7 +66,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Pupp
 
   # jenkins only supports a single configured security realm at a time
   def self.get_authorization_strategy(catalog = nil)
-    raw = clihelper(['get_authorization_strategy'], :catalog => catalog)
+    raw = clihelper(['get_authorization_strategy'], catalog: catalog)
 
     begin
       JSON.parse(raw)
@@ -80,7 +79,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, :parent => Pupp
   def set_jenkins_instance(input = nil)
     input ||= to_hash
 
-    clihelper(['set_jenkins_instance'], :stdinjson => input)
+    clihelper(['set_jenkins_instance'], stdinjson: input)
   end
 
   def set_strategy_unsecured

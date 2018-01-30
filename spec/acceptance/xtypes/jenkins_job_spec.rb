@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 # a fixed order is required in order to cleanup created jobs -- we are relying
 # on existing state as a performance optimization.
-describe 'jenkins_job', :order => :defined do
+describe 'jenkins_job', order: :defined do
   let(:test_build_job) {
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
@@ -68,7 +68,7 @@ EOS
         EOS
 
         # XXX idempotency is broken
-        apply(pp, :catch_failures => true)
+        apply(pp, catch_failures: true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -125,7 +125,7 @@ EOS
           EOS
 
           # XXX idempotency is broken
-          apply(pp, :catch_failures => true)
+          apply(pp, catch_failures: true)
         end
 
         %w{
@@ -183,7 +183,7 @@ EOS
           }
         EOS
 
-        apply(pp, :catch_failures => true)
+        apply(pp, catch_failures: true)
 
         pp = manifest + <<-EOS
           jenkins_job { 'foo':

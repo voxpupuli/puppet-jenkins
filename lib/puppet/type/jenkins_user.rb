@@ -33,7 +33,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_user) do
     desc 'Literal public API token.  read-only property.'
   end
 
-  newproperty(:public_keys, :array_matching => :all) do
+  newproperty(:public_keys, array_matching: :all) do
     desc 'Array of ssh public key strings'
   end
 

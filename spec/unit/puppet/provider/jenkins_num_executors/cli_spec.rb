@@ -58,7 +58,7 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
   describe '::get_num_executors' do
     it do
       expect(described_class).to receive(:clihelper).
-        with(['get_num_executors'], :catalog => nil) { 42 }
+        with(['get_num_executors'], catalog: nil) { 42 }
 
       n = described_class.send :get_num_executors
       expect(n).to eq 42
@@ -67,12 +67,11 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
 
   describe '#set_jenkins_instance' do
     it do
-      provider = described_class.new(:name => 42)
+      provider = described_class.new(name: 42)
 
       expect(described_class).to receive(:clihelper).with(['set_num_executors', 42])
 
       provider.send :set_num_executors
     end
   end # #set_jenkins_instance
-
 end

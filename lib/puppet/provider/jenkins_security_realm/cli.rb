@@ -3,8 +3,7 @@ require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider
 
 require 'json'
 
-Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
-
+Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
   mk_resource_methods
 
   def self.instances(catalog = nil)
@@ -39,9 +38,9 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => Puppet::X::J
     ctor_args = info[method_name][class_name]
 
     args = {
-      :name      => class_name,
-      :ensure    => :present,
-      :arguments => ctor_args,
+      name: class_name,
+      ensure: :present,
+      arguments: ctor_args,
     }
 
     # map nil -> :undef
@@ -68,7 +67,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => Puppet::X::J
 
   # jenkins only supports a single configured security realm at a time
   def self.get_security_realm(catalog = nil)
-    raw = clihelper(['get_security_realm'], :catalog => catalog)
+    raw = clihelper(['get_security_realm'], catalog: catalog)
 
     begin
       JSON.parse(raw)
@@ -81,7 +80,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, :parent => Puppet::X::J
   def set_jenkins_instance(input = nil)
     input ||= to_hash
 
-    clihelper(['set_jenkins_instance'], :stdinjson => input)
+    clihelper(['set_jenkins_instance'], stdinjson: input)
   end
 
   def set_security_none

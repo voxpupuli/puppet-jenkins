@@ -43,10 +43,10 @@ class jenkins::config {
 
   $plugin_dir_params = $::jenkins::purge_plugins ? {
     true    => merge($dir_params, {
-      purge   => true,
-      recurse => true,
-      force   => true,
-      notify  => Service['jenkins'],
+      'purge'   => true,
+      'recurse' => true,
+      'force'   => true,
+      'notify'  => Service['jenkins'],
     }),
     default => $dir_params,
   }
