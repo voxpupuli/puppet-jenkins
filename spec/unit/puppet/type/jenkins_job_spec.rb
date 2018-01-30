@@ -54,7 +54,6 @@ describe Puppet::Type.type(:jenkins_job) do
       end
 
       describe 'change_to_s change string' do
-
         context 'created' do
           it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
         end

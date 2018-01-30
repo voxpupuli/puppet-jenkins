@@ -45,5 +45,4 @@ describe 'jenkins', type: :class do
       it { should contain_file('/var/lib/jenkins/proxy.xml').with(content: /<noProxyHost>example\.com\ntest\.host\.net<\/noProxyHost>/) }
     end
   end
-
 end

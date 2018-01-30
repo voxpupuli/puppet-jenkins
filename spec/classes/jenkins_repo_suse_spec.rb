@@ -19,5 +19,4 @@ describe 'jenkins', type: :class do
       it { should contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse/') }
     end
   end
-
 end

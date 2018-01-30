@@ -61,5 +61,4 @@ describe 'jenkins::credentials', type: :define do
       unless: "for i in \$(seq 1 10); do \$HELPER_CMD credential_info #{title} && break || sleep 10; done | grep #{title}",
     })}
   end
-
 end

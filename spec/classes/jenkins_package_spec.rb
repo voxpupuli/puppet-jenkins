@@ -20,5 +20,4 @@ describe 'jenkins', type: :class do
       it { should contain_package('jenkins').with_ensure('1.2.3') }
     end
   end
-
 end

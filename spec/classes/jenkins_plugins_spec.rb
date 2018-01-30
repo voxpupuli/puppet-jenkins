@@ -21,5 +21,4 @@ describe 'jenkins', type: :class do
       it { should contain_jenkins__plugin('git').with_version('1.1.1') }
     end
   end
-
 end

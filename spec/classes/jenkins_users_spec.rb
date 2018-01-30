@@ -23,7 +23,5 @@ describe 'jenkins', type: :class do
       } } } }
       it { should contain_jenkins__user('user').with_email('user@example.com').with_password('test') }
     end
-
   end
-
 end

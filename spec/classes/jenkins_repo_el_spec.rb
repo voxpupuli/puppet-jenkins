@@ -34,5 +34,4 @@ describe 'jenkins', type: :class do
       it { should contain_yumrepo('jenkins').with_proxy('http://proxy:8080/') }
     end
   end
-
 end

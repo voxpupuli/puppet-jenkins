@@ -32,7 +32,5 @@ describe 'jenkins', type: :class do
         expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
       end
     end
-
   end
-
 end

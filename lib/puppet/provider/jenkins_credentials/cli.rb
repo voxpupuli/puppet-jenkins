@@ -6,7 +6,6 @@ require_relative '../../../puppet/x/jenkins/util'
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
 Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
-
   mk_resource_methods
 
   def self.instances(catalog = nil)

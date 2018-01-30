@@ -164,7 +164,6 @@ describe 'jenkins', type: :class do
         let(:params) {{ manage_user: false }}
         it { should_not contain_user('jenkins') }
       end
-
     end # manage_user =>
 
 

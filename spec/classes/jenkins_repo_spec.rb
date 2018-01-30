@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'jenkins', type: :class do
-
   describe 'repo' do
     describe 'default' do
       describe 'RedHat' do

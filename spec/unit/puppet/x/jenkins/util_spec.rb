@@ -65,7 +65,6 @@ describe Puppet::X::Jenkins::Util do
   end # undefize
 
   describe '::iterate' do
-
     it 'should not transform without block' do
       expect(described_class.iterate(data)).to eq(data)
     end

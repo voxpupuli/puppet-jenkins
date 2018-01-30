@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'jenkins::slave' do
-
   shared_context 'a jenkins::slave catalog' do
     it do
       should contain_archive('get_swarm_client').with(

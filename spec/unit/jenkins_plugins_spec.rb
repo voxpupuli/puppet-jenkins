@@ -156,7 +156,6 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       it { should have_key('AdaptivePlugin')}
       its (:size) { should eql 1 }
     end
-
   end
 
   let(:git_plugin) do

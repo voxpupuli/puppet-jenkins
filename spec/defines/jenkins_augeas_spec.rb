@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'jenkins::augeas' do
-
   let(:title) { 'myplug' }
   let(:facts) do
     {
@@ -32,7 +31,6 @@ describe 'jenkins::augeas' do
         )
         is_expected.to_not contain_jenkins__plugin('myplug')
       end
-
     end
   end
 

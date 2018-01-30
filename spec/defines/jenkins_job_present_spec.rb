@@ -32,5 +32,4 @@ describe 'jenkins::job::present' do
     it { should contain_exec('jenkins update-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }
   end
-
 end

@@ -5,7 +5,6 @@ require 'spec_helper'
 #
 # https://github.com/rodjek/rspec-puppet/issues/282
 describe 'jenkins_port', if: Puppet.version.to_f < 4.0 do
-
   let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat' } }
   let(:pre_condition) { 'include ::jenkins' }
   # Lazily loaded function call to be used in examples. Not overwriting

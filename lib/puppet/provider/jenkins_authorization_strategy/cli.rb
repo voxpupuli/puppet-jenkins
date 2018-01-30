@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider
 require 'json'
 
 Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
-
   mk_resource_methods
 
   def self.instances(catalog = nil)

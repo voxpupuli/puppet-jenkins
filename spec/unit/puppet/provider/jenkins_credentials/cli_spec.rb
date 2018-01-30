@@ -128,7 +128,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
-
     end
   end
 

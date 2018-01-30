@@ -74,5 +74,4 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
       provider.send :set_num_executors
     end
   end # #set_jenkins_instance
-
 end

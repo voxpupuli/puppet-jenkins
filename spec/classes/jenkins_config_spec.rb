@@ -28,5 +28,4 @@ describe 'jenkins', type: :class do
       it { should contain_jenkins__sysconfig('AJP_PORT').with_value('1234') }
     end
   end
-
 end

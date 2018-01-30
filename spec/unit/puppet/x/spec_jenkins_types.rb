@@ -353,7 +353,6 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].source).to eq helper_resource
     expect(req[0].target).to eq resource
   end
-
 end # when autorequiring resources
 
 shared_examples 'autorequires all jenkins_user resources' do

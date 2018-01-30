@@ -74,5 +74,4 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
       provider.send :set_slaveagent_port
     end
   end # #set_jenkins_instance
-
 end

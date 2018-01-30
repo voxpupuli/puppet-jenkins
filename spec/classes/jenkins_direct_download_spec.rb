@@ -12,7 +12,6 @@ describe 'jenkins', type: :class do
   let(:params) { { direct_download: 'http://local.space/jenkins.rpm' } }
 
   describe 'direct_download' do
-
     context 'default' do
       it { should contain_package('jenkins').with_installed }
       it { should_not contain_class('jenkins::package') }
@@ -52,5 +51,4 @@ describe 'jenkins', type: :class do
       end
     end
   end
-
 end
