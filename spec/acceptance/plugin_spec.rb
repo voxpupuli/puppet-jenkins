@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'jenkins class', :order => :defined do
+describe 'jenkins class', order: :defined do
   $pdir = '/var/lib/jenkins/plugins'
   let(:pdir) { $pdir }
 

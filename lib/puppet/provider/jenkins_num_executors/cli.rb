@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/util')
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
-Puppet::Type.type(:jenkins_num_executors).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
+Puppet::Type.type(:jenkins_num_executors).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
 
   mk_resource_methods
 
@@ -11,7 +11,7 @@ Puppet::Type.type(:jenkins_num_executors).provide(:cli, :parent => Puppet::X::Je
     # there can be only one value
     Puppet.debug("#{sname} instances: #{n}")
 
-    [new(:name => n, :ensure => :prsent)]
+    [new(name: n, ensure: :prsent)]
   end
 
   def flush
@@ -26,7 +26,7 @@ Puppet::Type.type(:jenkins_num_executors).provide(:cli, :parent => Puppet::X::Je
   private
 
   def self.get_num_executors(catalog = nil)
-    clihelper(['get_num_executors'], :catalog => catalog).to_i
+    clihelper(['get_num_executors'], catalog: catalog).to_i
   end
   private_class_method :get_num_executors
 

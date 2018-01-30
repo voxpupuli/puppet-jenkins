@@ -24,7 +24,7 @@ describe Puppet::Type.type(:jenkins_job) do
     end
 
     describe 'config' do
-      let(:resource) { described_class.new(:name => 'foo', :config => 'bar') }
+      let(:resource) { described_class.new(name: 'foo', config: 'bar') }
       let(:property) { resource.property(:config) }
 
       it { expect(described_class.attrtype(:config)).to eq :property }
@@ -80,11 +80,11 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'folders' do
       it 'should autorequire parent folder resource' do
         folder = described_class.new(
-          :name => 'foo',
+          name: 'foo',
         )
 
         job = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar',
         )
 
         folder[:ensure] = :present
@@ -102,15 +102,15 @@ describe Puppet::Type.type(:jenkins_job) do
 
       it 'should autorequire multiple nested parent folder resources' do
         folder1 = described_class.new(
-          :name => 'foo',
+          name: 'foo',
         )
 
         folder2 = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar',
         )
 
         job = described_class.new(
-          :name => 'foo/bar/baz',
+          name: 'foo/bar/baz',
         )
 
         folder1[:ensure] = :present
@@ -131,17 +131,17 @@ describe Puppet::Type.type(:jenkins_job) do
       end
 
       it 'should autobefore multiple nested parent folder resources',
-          :unless => Puppet.version.to_f < 4.0 do
+          unless: Puppet.version.to_f < 4.0 do
         folder1 = described_class.new(
-          :name => 'foo',
+          name: 'foo',
         )
 
         folder2 = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar',
         )
 
         job = described_class.new(
-          :name => 'foo/bar/baz',
+          name: 'foo/bar/baz',
         )
 
         folder1[:ensure] = :absent

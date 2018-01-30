@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :class do
+describe 'jenkins', type: :class do
   let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat',
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat',
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6',
     }
   end
 
@@ -17,7 +17,7 @@ describe 'jenkins', :type => :class do
 
     context 'with testuser' do
       let(:params) {
-        { :user_hash => { 'user' => {
+        { user_hash: { 'user' => {
           'email' => 'user@example.com',
           'password' => 'test'
       } } } }

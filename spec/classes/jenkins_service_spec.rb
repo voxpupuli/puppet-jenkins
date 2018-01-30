@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :class do
+describe 'jenkins', type: :class do
   let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat',
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat',
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6',
     }
   end
 
@@ -14,8 +14,8 @@ describe 'jenkins', :type => :class do
     context 'default' do
       it do
         should contain_service('jenkins').with(
-          :ensure => 'running',
-          :enable => true,
+          ensure: 'running',
+          enable: true,
         )
       end
     end
@@ -23,17 +23,17 @@ describe 'jenkins', :type => :class do
     context 'EL 7' do
       let(:facts) do
         super().merge(
-          :operatingsystemrelease    => '7.1.1503',
-          :operatingsystemmajrelease => '7',
-          :systemd                   => true,
+          operatingsystemrelease: '7.1.1503',
+          operatingsystemmajrelease: '7',
+          systemd: true,
         )
       end
 
       it do
         should contain_service('jenkins').with(
-          :ensure   => 'running',
-          :enable   => true,
-          :provider => 'systemd',
+          ensure: 'running',
+          enable: true,
+          provider: 'systemd',
         )
       end
 
@@ -50,7 +50,7 @@ describe 'jenkins', :type => :class do
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
         it do
           should contain_transition('stop jenkins service').with(
-            :prior_to => [ "File[#{sysv_file}]" ],
+            prior_to: [ "File[#{sysv_file}]" ],
           )
         end
       else
@@ -59,8 +59,8 @@ describe 'jenkins', :type => :class do
       it do
         should contain_file(sysv_file)
           .with(
-            :ensure => 'absent',
-            :selinux_ignore_defaults => true,
+            ensure: 'absent',
+            selinux_ignore_defaults: true,
           )
           .that_comes_before('Systemd::Unit_file[jenkins.service]')
       end
@@ -73,28 +73,28 @@ describe 'jenkins', :type => :class do
     context 'EL 6' do
       let(:facts) do
         super().merge(
-          :operatingsystemrelease    => '6.6',
-          :operatingsystemmajrelease => '6',
-          :systemd                   => false,
+          operatingsystemrelease: '6.6',
+          operatingsystemmajrelease: '6',
+          systemd: false,
         )
       end
 
       it do
         should contain_service('jenkins').with(
-          :ensure   => 'running',
-          :enable   => true,
-          :provider => nil,
+          ensure: 'running',
+          enable: true,
+          provider: nil,
         )
       end
     end
 
     context 'managing service' do
-      let(:params) {{ :service_ensure => 'stopped', :service_enable => false }}
+      let(:params) {{ service_ensure: 'stopped', service_enable: false }}
       it do
         should contain_service('jenkins').with(
-          :ensure => 'stopped',
-          :enable => false,
-          :provider => nil,
+          ensure: 'stopped',
+          enable: false,
+          provider: nil,
         )
       end
     end

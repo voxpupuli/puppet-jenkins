@@ -58,7 +58,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
   describe '::get_slaveagent_port' do
     it do
       expect(described_class).to receive(:clihelper).
-        with(['get_slaveagent_port'], :catalog => nil) { 42 }
+        with(['get_slaveagent_port'], catalog: nil) { 42 }
 
       n = described_class.send :get_slaveagent_port
       expect(n).to eq 42
@@ -67,7 +67,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
 
   describe '#set_jenkins_instance' do
     it do
-      provider = described_class.new(:name => 42)
+      provider = described_class.new(name: 42)
 
       expect(described_class).to receive(:clihelper).with(['set_slaveagent_port', 42])
 

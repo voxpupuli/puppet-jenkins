@@ -54,12 +54,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
     end
   end
 
-  newparam(:show_diff, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+  newparam(:show_diff, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc 'enable/disable displaying configuration diff'
     defaultto true
   end
 
-  newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
+  newproperty(:enable, boolean: true, parent: Puppet::Property::Boolean) do
     desc 'enable/disable job'
     defaultto true
   end

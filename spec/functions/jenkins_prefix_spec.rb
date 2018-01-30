@@ -4,9 +4,9 @@ require 'spec_helper'
 # 2.1.0.
 #
 # https://github.com/rodjek/rspec-puppet/issues/282
-describe 'jenkins_prefix', :if => Puppet.version.to_f < 4.0 do
+describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
 
-  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+  let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat' } }
   let(:pre_condition) { 'include ::jenkins' }
   # Lazily loaded function call to be used in examples. Not overwriting
   # `subject` since rspec-puppet is already defining that to return the

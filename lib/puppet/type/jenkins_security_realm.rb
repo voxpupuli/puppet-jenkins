@@ -10,7 +10,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_security_realm) do
     isnamevar
   end
 
-  newproperty(:arguments, :array_matching => :all) do
+  newproperty(:arguments, array_matching: :all) do
     desc 'List of arguments to security realm class constructor'
   end
 

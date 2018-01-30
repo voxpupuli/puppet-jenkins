@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :class do
+describe 'jenkins', type: :class do
   let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat',
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat',
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6',
     }
   end
 
@@ -16,7 +16,7 @@ describe 'jenkins', :type => :class do
     end
 
     context 'with version' do
-      let(:params) { { :version => '1.2.3' } }
+      let(:params) { { version: '1.2.3' } }
       it { should contain_package('jenkins').with_ensure('1.2.3') }
     end
   end

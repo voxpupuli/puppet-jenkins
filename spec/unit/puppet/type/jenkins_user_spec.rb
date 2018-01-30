@@ -30,8 +30,8 @@ describe Puppet::Type.type(:jenkins_user) do
         value = '51a8b1dd95bc76b1a2869356c043e8b9'
         expect {
           described_class.new(
-            :name => 'nobody',
-            :api_token_plain => value
+            name: 'nobody',
+            api_token_plain: value
           )
         }
           .to_not raise_error
@@ -42,8 +42,8 @@ describe Puppet::Type.type(:jenkins_user) do
         it 'should reject hexstrings of invalid length' do
           expect {
             described_class.new(
-              :name => 'nobody',
-              :api_token_plain => value,
+              name: 'nobody',
+              api_token_plain: value,
             )
           }
             .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
@@ -56,13 +56,13 @@ describe Puppet::Type.type(:jenkins_user) do
 
       it 'should support single string' do
         value = 'ssh-rsa blah comment'
-        user = described_class.new(:name => 'nobody', :public_keys => value)
+        user = described_class.new(name: 'nobody', public_keys: value)
         expect(user[:public_keys]).to eq [value]
       end
 
       it 'should support array of string' do
         value = ['ssh-rsa blah comment', 'ssh-rsa foo comment']
-        user = described_class.new(:name => 'nobody', :public_keys => value)
+        user = described_class.new(name: 'nobody', public_keys: value)
         expect(user[:public_keys]).to eq value
       end
     end #public_keys

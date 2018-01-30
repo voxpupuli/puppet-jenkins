@@ -26,8 +26,8 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # we must invoke ::initvars to setup variables needed by ::commands
   self.initvars
 
-  commands :java => 'java'
-  confine :feature => :retries
+  commands java: 'java'
+  confine feature: :retries
 
   # subclasses should inherit this value once it has been determined that
   # jenkins requires authorization, it shortens the run time be elemating the
@@ -165,10 +165,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     catalog = options.delete(:catalog)
 
-    options.merge!({ :failonfail => true })
+    options.merge!({ failonfail: true })
     # without combine, an execution exception message will not include the
     # stderr
-    options.merge!({ :combine => true })
+    options.merge!({ combine: true })
 
     config = Puppet::X::Jenkins::Config.new(catalog)
     cli_jar                  = config[:cli_jar]
@@ -226,11 +226,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       Puppet.debug("#{sname} caught #{exception.class.to_s.match(/::([^:]+)$/)[1]}; retry attempt #{attempt_number}; #{total_delay.round(3)} seconds have passed")
     end
     with_retries(
-      :max_tries          => cli_tries,
-      :base_sleep_seconds => 1,
-      :max_sleep_seconds  => cli_try_sleep,
-      :rescue             => [UnknownError, NetError],
-      :handler            => handler,
+      max_tries: cli_tries,
+      base_sleep_seconds: 1,
+      max_sleep_seconds: cli_try_sleep,
+      rescue: [UnknownError, NetError],
+      handler: handler,
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
       unless result == ''

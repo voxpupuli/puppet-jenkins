@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'jenkins::security', :type => :class do
+describe 'jenkins::security', type: :class do
   let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat',
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat',
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6',
     }
   end
 

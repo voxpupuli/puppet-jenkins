@@ -24,16 +24,16 @@ RSpec.configure do |c|
   c.before :suite do
     # Install module and dependencies
     hosts.each do |host|
-      copy_module_to(host, :source => proj_root, :module_name => 'jenkins')
+      copy_module_to(host, source: proj_root, module_name: 'jenkins')
 
-      on host, puppet('module install puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-apt'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-stdlib'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppetlabs-java'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppetlabs-apt'), { acceptable_exit_codes: [0] }
 
-      on host, puppet('module install puppet-zypprepo'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppet-archive'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install camptocamp-systemd'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-transition'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppet-zypprepo'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppet-archive'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install camptocamp-systemd'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppetlabs-transition'), { acceptable_exit_codes: [0] }
     end
   end
 end
@@ -84,8 +84,8 @@ end
 
 # Run it twice and test for idempotency
 def apply2(pp)
-  apply(pp, :catch_failures => true)
-  apply(pp, :catch_changes => true)
+  apply(pp, catch_failures: true)
+  apply(pp, catch_changes: true)
 end
 
 # probe stolen from:
