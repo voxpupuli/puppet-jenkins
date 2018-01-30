@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :module do
+describe 'jenkins', :type => :class do
 
   describe 'repo' do
     describe 'default' do

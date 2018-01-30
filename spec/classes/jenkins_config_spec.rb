@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :module do
+describe 'jenkins', :type => :class do
   let(:facts) do
     {
       :osfamily                  => 'RedHat',

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # Note, rspec-puppet determines the class name from the top level describe
 # string.
-describe 'jenkins', :type => :module do
+describe 'jenkins', :type => :class do
   describe 'on RedHat' do
     let(:facts) do
       {
