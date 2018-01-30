@@ -1,11 +1,7 @@
 fixtures:
   repositories:
-    apt:
-      repo: "https://github.com/puppetlabs/puppetlabs-apt"
-      ref: "4.1.0"
-    stdlib:
-      repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
-      ref: "4.18.0"
+    apt: "https://github.com/puppetlabs/puppetlabs-apt"
+    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib"
     java: "https://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "https://github.com/voxpupuli/puppet-zypprepo.git"
     archive: "https://github.com/voxpupuli/puppet-archive.git"
