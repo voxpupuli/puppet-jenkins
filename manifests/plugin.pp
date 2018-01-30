@@ -165,7 +165,7 @@ define jenkins::plugin(
     }
 
     exec{"force ${plugin}-${version}":
-      command => "/bin/rm -rf ${::jenkins::plugin_dir}/${plugin}"
+      command => "/bin/rm -rf ${::jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
       source          => $download_url,

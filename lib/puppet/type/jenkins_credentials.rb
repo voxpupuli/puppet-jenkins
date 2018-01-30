@@ -1,4 +1,4 @@
-require_relative  '../../puppet/x/jenkins/type/cli'
+require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   @doc = <<-EOS
@@ -104,10 +104,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   [
     :jenkins_user,
     :jenkins_security_realm,
-    :jenkins_authorization_strategy,
+    :jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
-      catalog.resources.find_all do |r|
+      catalog.resources.select do |r|
         r.is_a?(Puppet::Type.type(type))
       end
     end

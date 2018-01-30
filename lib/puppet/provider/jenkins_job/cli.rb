@@ -5,21 +5,20 @@ require 'json'
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/util')
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
-Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
-
+Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
   mk_resource_methods
 
   def self.instances(catalog = nil)
     jobs = job_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{jobs.collect {|i| i['name']}}")
+    Puppet.debug("#{sname} instances: #{jobs.map { |i| i['name'] }}")
 
-    jobs.collect do |job|
+    jobs.map do |job|
       new(
-        :name   => job['name'],
-        :ensure => :present,
-        :config => job['config'],
-        :enable => job['enabled'],
+        name: job['name'],
+        ensure: :present,
+        config: job['config'],
+        enable: job['enabled']
       )
     end
   end
@@ -30,13 +29,9 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Pro
 
   def flush
     update = false
-    if exists?
-      update = true
-    end
+    update = true if exists?
 
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     # XXX the enable property is being ignored on flush because this modifies
     # the configuration string and breaks idempotent.  Should the property be
@@ -51,7 +46,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Pro
     when :absent
       delete_job
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise("invalid :ensure value: #{self.ensure}")
     end
   end
 
@@ -59,40 +54,40 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Pro
 
   # currently unused
   def self.list_jobs(catalog = nil)
-    cli(['list-jobs'], :catalog => catalog).split
+    cli(['list-jobs'], catalog: catalog).split
   end
   private_class_method :list_jobs
 
   def self.job_list_json(catalog = nil)
-    raw = clihelper(['job_list_json'], :catalog => catalog)
+    raw = clihelper(['job_list_json'], catalog: catalog)
 
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise("unable to parse as JSON: #{raw}")
     end
   end
   private_class_method :job_list_json
 
   # currently unused
   def self.get_job(job, catalog = nil)
-    cli(['get-job', job], :catalog => catalog)
+    cli(['get-job', job], catalog: catalog)
   end
   private_class_method :get_job
 
   # currently unused
   def self.job_enabled(job, catalog = nil)
-    raw = clihelper(['job_enabled', job], :catalog => catalog)
-    !!(raw =~ /true/)
+    raw = clihelper(['job_enabled', job], catalog: catalog)
+    !!(raw =~ %r{true})
   end
   private_class_method :job_enabled
 
   def create_job
-    cli(['create-job', name], :stdin => config)
+    cli(['create-job', name], stdin: config)
   end
 
   def update_job
-    cli(['update-job', name], :stdin => config)
+    cli(['update-job', name], stdin: config)
   end
 
   def delete_job

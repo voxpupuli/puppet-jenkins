@@ -1,0 +1,8 @@
+---
+.travis.yml:
+  docker_sets:
+    - set: docker/ubuntu-14.04
+    - set: docker/ubuntu-16.04
+    - set: docker/centos-7
+    - set: docker/debian-8
+  secret: "aK+OTui4FSdOHWCqeJ1Ck7/v53SiH3dP3CXNKolgCtQswxOfNVRXyhJPXQ+rc6dP+f6AcJmNYZThF5e0pOqEkVOwgPkjlmVgRK8bc1Z1+nrSOkM+rkWgbzvVI8phE50TfAZ69XoZOCzqLGgsRuSgnNtjNyik4oZDtN8SQdF5i9A="

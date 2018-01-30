@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
 describe Puppet::Type.type(:jenkins_job) do
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   describe 'parameters' do
     describe 'name' do
@@ -12,7 +12,7 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'show_diff' do
       it_behaves_like 'boolean parameter', :show_diff, true
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -24,7 +24,7 @@ describe Puppet::Type.type(:jenkins_job) do
     end
 
     describe 'config' do
-      let(:resource) { described_class.new(:name => 'foo', :config => 'bar') }
+      let(:resource) { described_class.new(name: 'foo', config: 'bar') }
       let(:property) { resource.property(:config) }
 
       it { expect(described_class.attrtype(:config)).to eq :property }
@@ -37,16 +37,16 @@ describe Puppet::Type.type(:jenkins_job) do
             resource[:loglevel] = 'debug'
           end
 
-          if cfg and param
-            it 'should display a diff' do
+          if cfg && param
+            it 'displays a diff' do
               property.stub(:diff).and_return('foo')
               expect(property).to receive(:diff).once
               property.change_to_s('foo', 'bar')
             end
           else
-            it 'should not display a diff' do
+            it 'does not display a diff' do
               property.stub(:diff)
-              expect(property).not_to receive (:diff)
+              expect(property).not_to receive :diff
               property.change_to_s('foo', 'bar')
             end
           end
@@ -54,7 +54,6 @@ describe Puppet::Type.type(:jenkins_job) do
       end
 
       describe 'change_to_s change string' do
-
         context 'created' do
           it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
         end
@@ -63,13 +62,13 @@ describe Puppet::Type.type(:jenkins_job) do
         end
         context 'changed' do
           it do
-            expect(property.change_to_s('foo', 'bar'))
-              .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
+            expect(property.change_to_s('foo', 'bar')).
+              to match(%r{content changed '{md5}\w+' to '{md5}\w+'})
           end
         end
-      end #change_to_s change string
-    end #config
-  end #properties
+      end # change_to_s change string
+    end # config
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
@@ -78,13 +77,13 @@ describe Puppet::Type.type(:jenkins_job) do
     it_behaves_like 'autorequires jenkins_authorization_strategy resource'
 
     describe 'folders' do
-      it 'should autorequire parent folder resource' do
+      it 'autorequires parent folder resource' do
         folder = described_class.new(
-          :name => 'foo',
+          name: 'foo'
         )
 
         job = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar'
         )
 
         folder[:ensure] = :present
@@ -100,17 +99,17 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[0].target).to eq job
       end
 
-      it 'should autorequire multiple nested parent folder resources' do
+      it 'autorequires multiple nested parent folder resources' do
         folder1 = described_class.new(
-          :name => 'foo',
+          name: 'foo'
         )
 
         folder2 = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar'
         )
 
         job = described_class.new(
-          :name => 'foo/bar/baz',
+          name: 'foo/bar/baz'
         )
 
         folder1[:ensure] = :present
@@ -130,18 +129,18 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[1].target).to eq job
       end
 
-      it 'should autobefore multiple nested parent folder resources',
-          :unless => Puppet.version.to_f < 4.0 do
+      it 'autobefores multiple nested parent folder resources',
+         unless: Puppet.version.to_f < 4.0 do
         folder1 = described_class.new(
-          :name => 'foo',
+          name: 'foo'
         )
 
         folder2 = described_class.new(
-          :name => 'foo/bar',
+          name: 'foo/bar'
         )
 
         job = described_class.new(
-          :name => 'foo/bar/baz',
+          name: 'foo/bar/baz'
         )
 
         folder1[:ensure] = :absent

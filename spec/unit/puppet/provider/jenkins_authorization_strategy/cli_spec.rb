@@ -54,7 +54,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
           with(nil) { strategy_oauth }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 1
       end
 
@@ -67,7 +67,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::get_authorization_strategy' do
+      it 'passes it on ::get_authorization_strategy' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:get_authorization_strategy).
@@ -79,7 +79,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
   end # ::instanes
 
   describe '#flush' do
-    it 'should call set_jenkins_instance' do
+    it 'calls set_jenkins_instance' do
       provider = described_class.new
       provider.create
 
@@ -87,7 +87,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       provider.flush
     end
 
-    it 'should call set_strategy_unsecured' do
+    it 'calls set_strategy_unsecured' do
       provider = described_class.new
       provider.destroy
 
@@ -95,7 +95,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       provider.flush
     end
 
-    it 'should call set_strategy_unsecured' do
+    it 'calls set_strategy_unsecured' do
       provider = described_class.new
 
       expect(provider).to receive(:set_strategy_unsecured)
@@ -133,7 +133,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['get_authorization_strategy'],
-        {:catalog => nil},
+        catalog: nil
       ) { strategy_oauth_json }
 
       raw = described_class.send :get_authorization_strategy
@@ -147,7 +147,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
-        { :stdinjson => strategy_oauth },
+        stdinjson: strategy_oauth
       )
 
       provider.send :set_jenkins_instance
@@ -156,11 +156,11 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
 
   describe '#set_strategy_unsecured' do
     it do
-      provider = described_class.new(:name => 'test')
+      provider = described_class.new(name: 'test')
 
       expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
-        { :stdinjson => strategy_unsecured },
+        stdinjson: strategy_unsecured
       )
 
       provider.send :set_strategy_unsecured

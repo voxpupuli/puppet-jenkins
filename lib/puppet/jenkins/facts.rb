@@ -13,12 +13,12 @@ module Puppet
       # @return [NilClass]
       def self.install
         Facter.add(:jenkins_plugins) do
-          confine :kernel => 'Linux'
+          confine kernel: 'Linux'
           setcode do
             Puppet::Jenkins::Facts.plugins_str
           end
         end
-        return nil
+        nil
       end
 
       # Return a list of plugins and their versions, e.g.:
@@ -33,7 +33,7 @@ module Puppet
           manifest = plugins[plugin]
           buffer << "#{plugin} #{manifest[:plugin_version]}"
         end
-        return buffer.join(', ')
+        buffer.join(', ')
       end
     end
   end

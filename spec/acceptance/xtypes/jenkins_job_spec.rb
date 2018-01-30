@@ -2,8 +2,8 @@ require 'spec_helper_acceptance'
 
 # a fixed order is required in order to cleanup created jobs -- we are relying
 # on existing state as a performance optimization.
-describe 'jenkins_job', :order => :defined do
-  let(:test_build_job) {
+describe 'jenkins_job', order: :defined do
+  let(:test_build_job) do
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
@@ -29,7 +29,7 @@ describe 'jenkins_job', :order => :defined do
 EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
-  }
+  end
 
   let(:test_folder_job) do
     example = <<'EOS'
@@ -59,7 +59,7 @@ EOS
 
   context 'ensure =>' do
     context 'present' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => present,
@@ -68,20 +68,20 @@ EOS
         EOS
 
         # XXX idempotency is broken
-        apply(pp, :catch_failures => true)
+        apply(pp, catch_failures: true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
-        it { should be_file }
-        it { should be_owned_by 'jenkins' }
-        it { should be_grouped_into 'jenkins' }
-        it { should be_mode 644 }
-        it { should contain '<description>test job</description>' }
+        it { is_expected.to be_file }
+        it { is_expected.to be_owned_by 'jenkins' }
+        it { is_expected.to be_grouped_into 'jenkins' }
+        it { is_expected.to be_mode 644 }
+        it { is_expected.to contain '<description>test job</description>' }
       end
     end # 'present' do
 
     context 'absent' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => absent,
@@ -92,7 +92,7 @@ EOS
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
-        it { should_not exist }
+        it { is_expected.not_to exist }
       end
     end # 'absent' do
   end # 'ensure =>' do
@@ -106,7 +106,7 @@ EOS
 
     context 'nested folders' do
       context 'create' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo':
               ensure => present,
@@ -125,33 +125,33 @@ EOS
           EOS
 
           # XXX idempotency is broken
-          apply(pp, :catch_failures => true)
+          apply(pp, catch_failures: true)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
-        }.each do |config|
+        ].each do |config|
           describe file(config) do
-            it { should be_file }
-            it { should be_owned_by 'jenkins' }
-            it { should be_grouped_into 'jenkins' }
-            it { should be_mode 644 }
-            it { should contain 'cloudbees-folder' }
+            it { is_expected.to be_file }
+            it { is_expected.to be_owned_by 'jenkins' }
+            it { is_expected.to be_grouped_into 'jenkins' }
+            it { is_expected.to be_mode 644 }
+            it { is_expected.to contain 'cloudbees-folder' }
           end
         end
 
         describe file('/var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml') do
-          it { should be_file }
-          it { should be_owned_by 'jenkins' }
-          it { should be_grouped_into 'jenkins' }
-          it { should be_mode 644 }
-          it { should contain '<description>test job</description>' }
+          it { is_expected.to be_file }
+          it { is_expected.to be_owned_by 'jenkins' }
+          it { is_expected.to be_grouped_into 'jenkins' }
+          it { is_expected.to be_mode 644 }
+          it { is_expected.to contain '<description>test job</description>' }
         end
-      end #create
+      end # create
 
       context 'delete' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo': ensure => absent }
             jenkins_job { 'foo/bar': ensure => absent }
@@ -161,18 +161,18 @@ EOS
           apply2(pp)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml
-        }.each do |config|
-          describe file(config) { it { should_not exist } }
+        ].each do |config|
+          describe file(config) { it { is_expected.not_to exist } }
         end
-      end #delete
-    end #nested folders
+      end # delete
+    end # nested folders
 
     context 'convert existing job to folder' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         skip # travis is running the beaker tests really slow...
         pending('CLI update-job command is unable to handle the conversion')
 
@@ -183,7 +183,7 @@ EOS
           }
         EOS
 
-        apply(pp, :catch_failures => true)
+        apply(pp, catch_failures: true)
 
         pp = manifest + <<-EOS
           jenkins_job { 'foo':
@@ -201,6 +201,6 @@ EOS
 
         apply2(pp)
       end
-    end #convert existing job to folder
-  end #cloudbees-folder
-end #jenkins_job
+    end # convert existing job to folder
+  end # cloudbees-folder
+end # jenkins_job

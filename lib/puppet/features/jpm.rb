@@ -3,4 +3,4 @@
 #
 # Based on: <http://alcy.github.io/2012/11/21/handling-gem-dependencies-in-custom-puppet-providers/>
 
-Puppet.features.add(:jpm, :libs => ['jpm'])
+Puppet.features.add(:jpm, libs: ['jpm'])

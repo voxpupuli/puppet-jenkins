@@ -11,20 +11,20 @@ class Puppet::X::Jenkins::Config
   class UnknownConfig < ArgumentError; end
 
   DEFAULTS = {
-    :cli_jar                  => '/usr/lib/jenkins/jenkins-cli.jar',
-    :url                      => 'http://localhost:8080',
-    :ssh_private_key          => nil,
-    :puppet_helper            => '/usr/lib/jenkins/puppet_helper.groovy',
-    :cli_tries                => 30,
-    :cli_try_sleep            => 2,
-    :cli_username             => nil,
-    :cli_password             => nil,
-    :cli_password_file        => '/tmp/jenkins_credentials_for_puppet',
-    :cli_password_file_exists => false,
-    :cli_remoting_free        => false,
-  }
-  CONFIG_CLASS = 'jenkins::cli::config'
-  FACT_PREFIX = 'jenkins_'
+    cli_jar: '/usr/lib/jenkins/jenkins-cli.jar',
+    url: 'http://localhost:8080',
+    ssh_private_key: nil,
+    puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',
+    cli_tries: 30,
+    cli_try_sleep: 2,
+    cli_username: nil,
+    cli_password: nil,
+    cli_password_file: '/tmp/jenkins_credentials_for_puppet',
+    cli_password_file_exists: false,
+    cli_remoting_free: false
+  }.freeze
+  CONFIG_CLASS = 'jenkins::cli::config'.freeze
+  FACT_PREFIX = 'jenkins_'.freeze
 
   def initialize(catalog = nil)
     @catalog = catalog
@@ -41,7 +41,7 @@ class Puppet::X::Jenkins::Config
 
     # handle puppet 3.x passing in all values as strings and convert back to
     # Integer/Fixnum
-    if Puppet.version =~ /^3/
+    if Puppet.version =~ %r{^3}
       default_type_integer?(key) ? value.to_i : value
     else
       value

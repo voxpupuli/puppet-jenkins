@@ -10,14 +10,14 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
     isnamevar
   end
 
-  newproperty(:arguments, :array_matching => :all) do
+  newproperty(:arguments, array_matching: :all) do
     desc 'List of arguments to security realm class constructor'
   end
 
   # require all instances of jenkins_user as the authorization strategy being
   # converged might require one of those accounts for administrative control
   autorequire(:jenkins_user) do
-    catalog.resources.find_all do |r|
+    catalog.resources.select do |r|
       r.is_a?(Puppet::Type.type(:jenkins_user))
     end
   end
@@ -26,7 +26,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
   # configured but the security realm is none
   autorequire(:jenkins_security_realm) do
     if self[:ensure] == :present
-      catalog.resources.find_all do |r|
+      catalog.resources.select do |r|
         r.is_a?(Puppet::Type.type(:jenkins_security_realm))
       end
     end

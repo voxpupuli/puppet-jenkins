@@ -2,13 +2,13 @@ require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
 describe Puppet::Type.type(:jenkins_credentials) do
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   describe 'parameters' do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -25,15 +25,15 @@ describe Puppet::Type.type(:jenkins_credentials) do
 
     describe 'impl' do
       it_behaves_like 'validated property', :impl,
-        :UsernamePasswordCredentialsImpl,
-        [
-          :UsernamePasswordCredentialsImpl,
-          :BasicSSHUserPrivateKey,
-          :StringCredentialsImpl,
-          :FileCredentialsImpl,
-          :AWSCredentialsImpl,
-          :GitLabApiTokenImpl
-        ]
+                      :UsernamePasswordCredentialsImpl,
+                      [
+                        :UsernamePasswordCredentialsImpl,
+                        :BasicSSHUserPrivateKey,
+                        :StringCredentialsImpl,
+                        :FileCredentialsImpl,
+                        :AWSCredentialsImpl,
+                        :GitLabApiTokenImpl
+                      ]
     end
 
     # unvalidated properties
@@ -52,13 +52,13 @@ describe Puppet::Type.type(:jenkins_credentials) do
       :access_key,
       :api_token
     ].each do |property|
-      describe "#{property}" do
+      describe property.to_s do
         context 'attrtype' do
           it { expect(described_class.attrtype(property)).to eq :property }
         end
       end
     end
-  end #properties
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'

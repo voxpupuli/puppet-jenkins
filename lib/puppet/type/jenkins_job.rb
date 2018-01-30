@@ -25,11 +25,11 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
     def change_to_s(currentvalue, newvalue)
       if currentvalue == :absent
-        return 'created'
+        'created'
       elsif newvalue == :absent
-        return 'removed'
+        'removed'
       else
-        if Puppet[:show_diff] and resource[:show_diff]
+        if Puppet[:show_diff] && resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
           Tempfile.open('puppet-file') do |d1|
@@ -49,17 +49,17 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
           end
 
         end
-        return "content changed '{md5}#{md5(currentvalue)}' to '{md5}#{md5(newvalue)}'"
+        "content changed '{md5}#{md5(currentvalue)}' to '{md5}#{md5(newvalue)}'"
       end
     end
   end
 
-  newparam(:show_diff, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+  newparam(:show_diff, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc 'enable/disable displaying configuration diff'
     defaultto true
   end
 
-  newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
+  newproperty(:enable, boolean: true, parent: Puppet::Property::Boolean) do
     desc 'enable/disable job'
     defaultto true
   end
@@ -68,10 +68,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
   [
     :jenkins_user,
     :jenkins_security_realm,
-    :jenkins_authorization_strategy,
+    :jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
-      catalog.resources.find_all do |r|
+      catalog.resources.select do |r|
         r.is_a?(Puppet::Type.type(type))
       end
     end

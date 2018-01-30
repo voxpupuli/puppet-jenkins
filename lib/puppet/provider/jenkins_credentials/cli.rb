@@ -5,22 +5,19 @@ require 'json'
 require_relative '../../../puppet/x/jenkins/util'
 require File.join(File.dirname(__FILE__), '../../..', 'puppet/x/jenkins/provider/cli')
 
-Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenkins::Provider::Cli) do
-
+Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins::Provider::Cli) do
   mk_resource_methods
 
   def self.instances(catalog = nil)
     all = credentials_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.collect {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map { |i| i['id'] }}")
 
-    all.collect {|info| from_hash(info) }
+    all.map { |info| from_hash(info) }
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present
@@ -28,11 +25,12 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenk
     when :absent
       credentials_delete_id
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise("invalid :ensure value: #{self.ensure}")
     end
   end
 
   private
+
   def self.copy_key(dst, src, key)
     dst[key.to_sym] = src[key.to_s]
   end
@@ -43,29 +41,29 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenk
     info = Puppet::X::Jenkins::Util.undefize(info)
 
     params = {
-      :name   => info['id'],
-      :ensure => :present,
+      name: info['id'],
+      ensure: :present
     }
 
-    [:impl, :domain, :scope].each {|k| copy_key(params, info, k)}
+    [:impl, :domain, :scope].each { |k| copy_key(params, info, k) }
 
     case info['impl']
     when 'UsernamePasswordCredentialsImpl'
-      [:description, :username, :password].each {|k| copy_key(params, info, k)}
+      [:description, :username, :password].each { |k| copy_key(params, info, k) }
     when 'BasicSSHUserPrivateKey'
-      [:description, :username, :private_key, :passphrase].each {|k| copy_key(params, info, k)}
+      [:description, :username, :private_key, :passphrase].each { |k| copy_key(params, info, k) }
     when 'StringCredentialsImpl'
-      [:description, :secret].each {|k| copy_key(params, info, k)}
+      [:description, :secret].each { |k| copy_key(params, info, k) }
     when 'FileCredentialsImpl'
-      [:description, :file_name, :content].each {|k| copy_key(params, info, k)}
+      [:description, :file_name, :content].each { |k| copy_key(params, info, k) }
     when 'CertificateCredentialsImpl'
-      [:description, :password, :key_store_implementation].each {|k| copy_key(params, info, k)}
+      [:description, :password, :key_store_implementation].each { |k| copy_key(params, info, k) }
     when 'AWSCredentialsImpl'
-      [:description, :secret_key, :access_key].each {|k| copy_key(params, info, k)}
+      [:description, :secret_key, :access_key].each { |k| copy_key(params, info, k) }
     when 'GitLabApiTokenImpl'
-      [:description, :api_token].each {|k| copy_key(params, info, k)}
+      [:description, :api_token].each { |k| copy_key(params, info, k) }
     when 'ConduitCredentialsImpl'
-      [:description, :token, :url].each {|k| copy_key(params, info, k)}
+      [:description, :token, :url].each { |k| copy_key(params, info, k) }
 
       ksi = info['key_store_impl']
       params['key_store_impl'] = ksi
@@ -90,13 +88,11 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenk
     info = { 'id' => name }
 
     properties = self.class.resource_type.validproperties
-    properties.reject! {|x| x == :ensure }
+    properties.reject! { |x| x == :ensure }
 
     properties.each do |prop|
       value = @property_hash[prop]
-      unless value.nil?
-        info[prop.to_s] = value
-      end
+      info[prop.to_s] = value unless value.nil?
     end
 
     # map :undef -> nil
@@ -105,18 +101,18 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, :parent => Puppet::X::Jenk
 
   # array of hashes for multiple "credentials" entries
   def self.credentials_list_json(catalog = nil)
-    raw = clihelper(['credentials_list_json'], :catalog => catalog)
+    raw = clihelper(['credentials_list_json'], catalog: catalog)
 
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise("unable to parse as JSON: #{raw}")
     end
   end
   private_class_method :credentials_list_json
 
   def credentials_update_json
-    clihelper(['credentials_update_json'], :stdinjson => to_hash)
+    clihelper(['credentials_update_json'], stdinjson: to_hash)
   end
 
   def credentials_delete_id
