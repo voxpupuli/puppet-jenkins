@@ -1,1 +1,2 @@
---color --order random --fail-fast
+--format documentation
+--color
