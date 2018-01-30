@@ -24,10 +24,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   # we must invoke ::initvars to setup variables needed by ::commands
-  self.initvars
+  initvars
 
-  commands :java => 'java'
-  confine :feature => :retries
+  commands java: 'java'
+  confine feature: :retries
 
   # subclasses should inherit this value once it has been determined that
   # jenkins requires authorization, it shortens the run time be elemating the
@@ -39,7 +39,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
   # shorter class name
   def self.sname
-    self.to_s[/.+::(Jenkins.+)/, 1]
+    to_s[%r{.+::(Jenkins.+)}, 1]
   end
 
   def self.prefetch(resources)
@@ -73,7 +73,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
   def clihelper(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -85,7 +85,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def cli(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -105,8 +105,8 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     if cli_remoting_free
       cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
-      cli_cmd = ['groovy', '=' ] + [command]
-      options[:tmpfile_as_param]=true
+      cli_cmd = ['groovy', '='] + [command]
+      options[:tmpfile_as_param] = true
     else
       cli_pre_cmd = []
       cli_cmd = ['groovy', puppet_helper] + [command]
@@ -119,7 +119,6 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def self.cli(command, options = {}, cli_pre_cmd = [])
-
     if options.nil? || !options.key?(:stdinjson) && !options.key?(:stdin)
       return execute_with_retry(command, options, cli_pre_cmd)
     end
@@ -129,15 +128,13 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       input = JSON.pretty_generate(data)
     end
 
-    if options.key?(:stdin)
-      input = options.delete(:stdin)
-    end
+    input = options.delete(:stdin) if options.key?(:stdin)
 
-    if options.key?(:tmpfile_as_param)
-      tmpfile_as_param = options[:tmpfile_as_param]
-    else
-      tmpfile_as_param = false
-    end
+    tmpfile_as_param = if options.key?(:tmpfile_as_param)
+                         options[:tmpfile_as_param]
+                       else
+                         false
+                       end
 
     Puppet.debug("#{sname} stdin:\n#{input}")
 
@@ -148,9 +145,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     options[:stdinfile] = tmp.path
     begin
       Etc.getpwnam('jenkins')
-      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exist?(tmp.path)
     rescue
-      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exist?(tmp.path)
     end
     result = execute_with_retry(command, options, cli_pre_cmd)
     tmp.close
@@ -165,10 +162,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     catalog = options.delete(:catalog)
 
-    options.merge!({ :failonfail => true })
+    options[:failonfail] = true
     # without combine, an execution exception message will not include the
     # stderr
-    options.merge!({ :combine => true })
+    options[:combine] = true
 
     config = Puppet::X::Jenkins::Config.new(catalog)
     cli_jar                  = config[:cli_jar]
@@ -185,7 +182,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = cli_pre_cmd + [
       command(:java),
       '-jar', cli_jar,
-      '-s', url,
+      '-s', url
     ]
 
     cli_cmd = base_cmd + [command]
@@ -194,11 +191,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     auth_cmd = nil
     # If we have a ssh cli key file, we use that in old and new syntax
     if !ssh_private_key.nil?
-      if cli_remoting_free
-        auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
-      else
-        auth_cmd = base_cmd + ['-i', ssh_private_key] + [command]
-      end
+      auth_cmd = if cli_remoting_free
+                   base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
+                 else
+                   base_cmd + ['-i', ssh_private_key] + [command]
+                 end
     # we have a prepared username:password file, just use it
     elsif cli_password_file_exists
       if cli_remoting_free
@@ -206,36 +203,34 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       else
         # For legacy jenkins, we can only read the provided password file
         # parse it and assume Jenkins 2.46.2++ content
-        (user,pass) = File.open(cli_password_file).read.split("\n").reject{ |x| x !~ /(^\S+:\S+$)/}[0].split(':')
+        (user, pass) = File.open(cli_password_file).read.split("\n").select { |x| x =~ %r{(^\S+:\S+$)} }[0].split(':')
         auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
       end
     # we have username and password, then we create the password file and use it
-    elsif !cli_username.nil? and !cli_password.nil?
-      if cli_remoting_free
-        auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-      else
-        auth_cmd = base_cmd + ['-username', cli_username, '-password', cli_password] + [command]
-      end
+    elsif !cli_username.nil? && !cli_password.nil?
+      auth_cmd = if cli_remoting_free
+                   base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
+                 else
+                   base_cmd + ['-username', cli_username, '-password', cli_password] + [command]
+                 end
     end
     auth_cmd.flatten! unless auth_cmd.nil?
 
     # retry on "unknown" execution errors but don't catch AuthErrors.  If an
     # AuthError has bubbled up to this level it means either an ssh_private_key
     # is required and we don't have one or that one we have was rejected.
-    handler = Proc.new do |exception, attempt_number, total_delay|
-      Puppet.debug("#{sname} caught #{exception.class.to_s.match(/::([^:]+)$/)[1]}; retry attempt #{attempt_number}; #{total_delay.round(3)} seconds have passed")
+    handler = proc do |exception, attempt_number, total_delay|
+      Puppet.debug("#{sname} caught #{exception.class.to_s.match(%r{::([^:]+)$})[1]}; retry attempt #{attempt_number}; #{total_delay.round(3)} seconds have passed")
     end
     with_retries(
-      :max_tries          => cli_tries,
-      :base_sleep_seconds => 1,
-      :max_sleep_seconds  => cli_try_sleep,
-      :rescue             => [UnknownError, NetError],
-      :handler            => handler,
+      max_tries: cli_tries,
+      base_sleep_seconds: 1,
+      max_sleep_seconds: cli_try_sleep,
+      rescue: [UnknownError, NetError],
+      handler: handler
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
-      unless result == ''
-        Puppet.debug("#{sname} command stdout:\n#{result}")
-      end
+      Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
       return result
     end
   end
@@ -248,9 +243,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     # if no ssh_private_key is defined, the only option is to invoke the cli
     # without auth
-    if auth_cmd.nil?
-      return execute_exceptionify(cli_cmd, options)
-    end
+    return execute_exceptionify(cli_cmd, options) if auth_cmd.nil?
 
     # we already know that auth is required
     if class_variable_get(:@@cli_auth_required)
@@ -275,41 +268,37 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # that the command failure was due to an authication problem
   def self.execute_exceptionify(cmd, options)
     cli_auth_errors = [
-                        'You must authenticate to access this Jenkins.',
-                        'anonymous is missing the Overall/Read permission',
-                        'anonymous is missing the Overall/RunScripts permission',
-                      ]
+      'You must authenticate to access this Jenkins.',
+      'anonymous is missing the Overall/Read permission',
+      'anonymous is missing the Overall/RunScripts permission'
+    ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
     net_errors = [
-                   'SEVERE: I/O error in channel CLI connection',
-                   'java.net.SocketException: Connection reset',
-                   'java.net.ConnectException: Connection refused',
-                   'java.io.IOException: Failed to connect',
-                 ]
+      'SEVERE: I/O error in channel CLI connection',
+      'java.net.SocketException: Connection reset',
+      'java.net.ConnectException: Connection refused',
+      'java.io.IOException: Failed to connect'
+    ]
 
     if options.key?(:tmpfile_as_param)
       tmpfile_as_param = options[:tmpfile_as_param]
     end
 
     begin
-      #return Puppet::Provider.execute(*args)
-      if tmpfile_as_param and options.key?(:stdinfile)
-        return superclass.execute([ cmd, options[:stdinfile] ].flatten().join(' '), options)
+      # return Puppet::Provider.execute(*args)
+      if tmpfile_as_param && options.key?(:stdinfile)
+        return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), options)
       else
-        return superclass.execute([ cmd ].flatten().join(' '), options)
+        return superclass.execute([cmd].flatten.join(' '), options)
       end
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
-        if e.message.match(error)
-          raise AuthError, e.message, e.backtrace
-        end
+        raise AuthError, e.message, e.backtrace if e.message.match(error)
       end
 
       net_errors.each do |error|
-        if e.message.match(error)
-          raise NetError, e.message, e.backtrace
-        end
+        raise NetError, e.message, e.backtrace if e.message.match(error)
       end
 
       raise UnknownError, e.message, e.backtrace

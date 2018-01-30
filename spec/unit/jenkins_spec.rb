@@ -6,21 +6,21 @@ describe Puppet::Jenkins do
     subject(:home_dir) { described_class.home_dir }
 
     context "when a jenkins user doesn't exist" do
-      before :each do
+      before do
         File.should_receive(:expand_path).and_raise(ArgumentError)
       end
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
 
     context 'when a jenkins user does exist' do
       let(:home) { '/rspec/jenkins' }
 
-      before :each do
+      before do
         File.should_receive(:expand_path).and_return(home)
       end
 
-      it { should eql home }
+      it { is_expected.to eql home }
     end
   end
 end

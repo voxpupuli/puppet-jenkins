@@ -4,18 +4,17 @@ require 'spec_helper'
 # 2.1.0.
 #
 # https://github.com/rodjek/rspec-puppet/issues/282
-describe 'jenkins_prefix', :if => Puppet.version.to_f < 4.0 do
-
-  let(:facts) { { :osfamily => 'RedHat', :operatingsystem => 'RedHat' } }
+describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
+  let(:facts) { { osfamily: 'RedHat', operatingsystem: 'RedHat' } }
   let(:pre_condition) { 'include ::jenkins' }
   # Lazily loaded function call to be used in examples. Not overwriting
   # `subject` since rspec-puppet is already defining that to return the
   # function
-  let(:prefix) {
+  let(:prefix) do
     subject.call([])
-  }
+  end
 
-  it 'should default to ""' do
+  it 'defaults to ""' do
     expect(prefix).to eql ''
   end
 
@@ -28,7 +27,7 @@ describe 'jenkins_prefix', :if => Puppet.version.to_f < 4.0 do
       ENDPUPPET
     end
 
-    it 'should be our overwritten prefix' do
+    it 'is our overwritten prefix' do
       expect(prefix).to eql('/test')
     end
   end

@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe 'jenkins::cli::exec', :type => :define do
+describe 'jenkins::cli::exec', type: :define do
   let(:title) { 'foo' }
 
   let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat', # require by puppetlabs/java
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat', # require by puppetlabs/java
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -16,11 +16,11 @@ describe 'jenkins::cli::exec', :type => :define do
 
   describe 'relationships' do
     it do
-      should contain_jenkins__cli__exec('foo').
+      is_expected.to contain_jenkins__cli__exec('foo').
         that_requires('Class[jenkins::cli_helper]')
     end
     it do
-      should contain_jenkins__cli__exec('foo').
+      is_expected.to contain_jenkins__cli__exec('foo').
         that_comes_before('Anchor[jenkins::end]')
     end
   end
@@ -30,67 +30,67 @@ describe 'jenkins::cli::exec', :type => :define do
       # default title...
 
       it do
-        should contain_exec('foo').with(
-          :command   => "#{helper_cmd} foo",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
+        is_expected.to contain_exec('foo').with(
+          command: "#{helper_cmd} foo",
+          tries: 10,
+          try_sleep: 10,
+          unless: nil
         )
       end
-      it { should contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
+      it { is_expected.to contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
     end
 
     context 'bar' do
       let(:title) { 'bar' }
 
       it do
-        should contain_exec('bar').with(
-          :command   => "#{helper_cmd} bar",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
+        is_expected.to contain_exec('bar').with(
+          command: "#{helper_cmd} bar",
+          tries: 10,
+          try_sleep: 10,
+          unless: nil
         )
       end
-      it { should contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
+      it { is_expected.to contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
     end
   end # title =>
 
   describe 'command =>' do
     context 'bar' do
-      let(:params) {{ :command => 'bar' }}
+      let(:params) { { command: 'bar' } }
 
       it do
-        should contain_exec('foo').with(
-          :command   => "#{helper_cmd} bar",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
+        is_expected.to contain_exec('foo').with(
+          command: "#{helper_cmd} bar",
+          tries: 10,
+          try_sleep: 10,
+          unless: nil
         )
       end
     end
 
     context "['bar']" do
-      let(:params) {{ :command => %w{ bar } }}
+      let(:params) { { command: %w[bar] } }
 
       it do
-        should contain_exec('foo').with(
-          :command   => "#{helper_cmd} bar",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
+        is_expected.to contain_exec('foo').with(
+          command: "#{helper_cmd} bar",
+          tries: 10,
+          try_sleep: 10,
+          unless: nil
         )
       end
     end
 
     context "['bar', 'baz']" do
-      let(:params) {{ :command => %w{bar baz} }}
+      let(:params) { { command: %w[bar baz] } }
 
       it do
-        should contain_exec('foo').with(
-          :command   => "#{helper_cmd} bar baz",
-          :tries     => 10,
-          :try_sleep => 10,
-          :unless    => nil,
+        is_expected.to contain_exec('foo').with(
+          command: "#{helper_cmd} bar baz",
+          tries: 10,
+          try_sleep: 10,
+          unless: nil
         )
       end
     end
@@ -98,15 +98,15 @@ describe 'jenkins::cli::exec', :type => :define do
 
   describe 'unless =>' do
     context 'bar' do
-      let(:params) {{ :unless => 'bar' }}
+      let(:params) { { unless: 'bar' } }
 
       it do
-        should contain_exec('foo').with(
-          :command     => "#{helper_cmd} foo",
-          :environment => [ "HELPER_CMD=eval #{helper_cmd}" ],
-          :unless      => 'bar',
-          :tries       => 10,
-          :try_sleep   => 10,
+        is_expected.to contain_exec('foo').with(
+          command: "#{helper_cmd} foo",
+          environment: ["HELPER_CMD=eval #{helper_cmd}"],
+          unless: 'bar',
+          tries: 10,
+          try_sleep: 10
         )
       end
     end

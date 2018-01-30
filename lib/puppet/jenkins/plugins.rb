@@ -9,7 +9,7 @@ module Puppet
       #   string values
       # @return [NilClass] A nil if +manifest_str+ nil or an empty string
       def self.manifest_data(manifest_str)
-        return {} if (manifest_str.nil? || manifest_str.empty?)
+        return {} if manifest_str.nil? || manifest_str.empty?
 
         data = {}
         manifest_str.split("\n").each do |line|
@@ -23,9 +23,9 @@ module Puppet
           next if parts.size < 2
           next if parts.first[0] == ' '
 
-          key = parts.first.downcase.gsub('-', '_').chomp
+          key = parts.first.downcase.tr('-', '_').chomp
           # Skip garbage keys
-          next if (key.nil? || key.empty?)
+          next if key.nil? || key.empty?
 
           # Re-join any colon delimited strings in the value back together,
           # e.g.: "http://wiki.jenkins-ci.org/display/JENKINS/Ant+Plugin"
@@ -34,7 +34,7 @@ module Puppet
           data[key.to_sym] = value
         end
 
-        return data
+        data
       end
 
       # @return [Hash] a +Hash+ containing a mapping of a plugin name to its
@@ -44,8 +44,8 @@ module Puppet
         plugins = {}
         Dir.entries(Puppet::Jenkins.plugins_dir).each do |plugin|
           # Skip useless directories
-          next if (plugin == '..')
-          next if (plugin == '.')
+          next if plugin == '..'
+          next if plugin == '.'
 
           plugin_dir = File.join(Puppet::Jenkins.plugins_dir, plugin)
           # Without an unpacked plugin directory, we can't find a version
@@ -54,15 +54,13 @@ module Puppet
           manifest = File.join(plugin_dir, 'META-INF', 'MANIFEST.MF')
           begin
             manifest = manifest_data(File.read(manifest))
-            if manifest
-              plugins[plugin] = manifest
-            end
+            plugins[plugin] = manifest if manifest
           rescue StandardError
             # Nothing really to do about it, failing means no version which will
             # result in a new plugin if needed
           end
         end
-        return plugins
+        plugins
       end
 
       # Determine whether or not the jenkins plugin directory exists
@@ -72,9 +70,8 @@ module Puppet
         home = Puppet::Jenkins.home_dir
         return false if home.nil?
         return false unless File.directory? Puppet::Jenkins.plugins_dir
-        return true
+        true
       end
-
 
       # Parse the update-center.json file which Jenkins uses to maintain it's
       # internal dependency graph for plugins
@@ -88,27 +85,26 @@ module Puppet
         begin
           # Using Kernel#require to make it easier to test this from RSpec
           ::Kernel.require 'json'
-          parser = Proc.new { |s| JSON.parse(s) }
+          parser = proc { |s| JSON.parse(s) }
         rescue LoadError
           # swallow the exception and embed okjson, see:
           # <https://github.com/jenkinsci/puppet-jenkins/issues/166>
           # <https://github.com/jenkinsci/puppet-jenkins/issues/176>
           ::Kernel.require 'puppet/jenkins/okjson'
-          parser = Proc.new { |s| OkJson.decode(s) }
+          parser = proc { |s| OkJson.decode(s) }
         end
-
 
         File.open(filename, 'r') do |fd|
           buffer = fd.read
-          return {} if (buffer.nil? || buffer.empty?)
+          return {} if buffer.nil? || buffer.empty?
           buffer = buffer.split("\n")
           # Trim off the first and last lines, which are the JSONP gunk
-          buffer = buffer[1 ... -1]
+          buffer = buffer[1...-1]
 
           data = parser.call(buffer.join("\n"))
           return data['plugins'] || {}
         end
-        return {}
+        {}
       end
     end
   end

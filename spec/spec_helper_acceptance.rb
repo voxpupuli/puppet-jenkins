@@ -11,7 +11,7 @@ unless ENV['RS_PROVISION'] == 'no'
   run_puppet_install_helper
 end
 
-UNSUPPORTED_PLATFORMS = ['Suse','windows','AIX','Solaris']
+UNSUPPORTED_PLATFORMS = %w[Suse windows AIX Solaris].freeze
 
 RSpec.configure do |c|
   # Project root
@@ -24,16 +24,16 @@ RSpec.configure do |c|
   c.before :suite do
     # Install module and dependencies
     hosts.each do |host|
-      copy_module_to(host, :source => proj_root, :module_name => 'jenkins')
+      copy_module_to(host, source: proj_root, module_name: 'jenkins')
 
-      on host, puppet('module install puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-java'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-apt'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppetlabs-stdlib'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-java'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-apt'), acceptable_exit_codes: [0]
 
-      on host, puppet('module install puppet-zypprepo'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppet-archive'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install camptocamp-systemd'), { :acceptable_exit_codes => [0] }
-      on host, puppet('module install puppetlabs-transition'), { :acceptable_exit_codes => [0] }
+      on host, puppet('module install puppet-zypprepo'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppet-archive'), acceptable_exit_codes: [0]
+      on host, puppet('module install camptocamp-systemd'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-transition'), acceptable_exit_codes: [0]
     end
   end
 end
@@ -75,17 +75,15 @@ shared_context 'jenkins' do
 end
 
 def apply(pp, options = {})
-  if ENV.key?('PUPPET_DEBUG')
-    options[:debug] = true
-  end
+  options[:debug] = true if ENV.key?('PUPPET_DEBUG')
 
   apply_manifest(pp, options)
 end
 
 # Run it twice and test for idempotency
 def apply2(pp)
-  apply(pp, :catch_failures => true)
-  apply(pp, :catch_changes => true)
+  apply(pp, catch_failures: true)
+  apply(pp, catch_changes: true)
 end
 
 # probe stolen from:
@@ -97,8 +95,8 @@ end
 # https://tickets.puppetlabs.com/browse/BKR-1040
 # https://tickets.puppetlabs.com/browse/BKR-1041
 #
-if shell('ps -p 1 -o comm=').stdout =~ /systemd/
-  $systemd = true
-else
-  $systemd = false
-end
+$systemd = if shell('ps -p 1 -o comm=').stdout =~ %r{systemd}
+             true
+           else
+             false
+           end

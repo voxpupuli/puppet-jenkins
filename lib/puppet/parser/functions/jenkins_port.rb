@@ -1,6 +1,6 @@
 
 module Puppet::Parser::Functions
-  newfunction(:jenkins_port, :type => :rvalue, :doc => <<-'ENDHEREDOC') do |args|
+  newfunction(:jenkins_port, type: :rvalue, doc: <<-'ENDHEREDOC') do |_args|
     Return the configurad Jenkins port value
     (corresponds to /etc/defaults/jenkins -> JENKINS_PORT
 

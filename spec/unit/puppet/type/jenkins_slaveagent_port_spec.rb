@@ -2,13 +2,13 @@ require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
 describe Puppet::Type.type(:jenkins_slaveagent_port) do
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   describe 'parameters' do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
