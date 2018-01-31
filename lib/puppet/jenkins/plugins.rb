@@ -34,7 +34,7 @@ module Puppet
           data[key.to_sym] = value
         end
 
-        return data
+        data
       end
 
       # @return [Hash] a +Hash+ containing a mapping of a plugin name to its
@@ -62,7 +62,7 @@ module Puppet
             # result in a new plugin if needed
           end
         end
-        return plugins
+        plugins
       end
 
       # Determine whether or not the jenkins plugin directory exists
@@ -72,7 +72,7 @@ module Puppet
         home = Puppet::Jenkins.home_dir
         return false if home.nil?
         return false unless File.directory? Puppet::Jenkins.plugins_dir
-        return true
+        true
       end
 
 
@@ -108,7 +108,7 @@ module Puppet
           data = parser.call(buffer.join("\n"))
           return data['plugins'] || {}
         end
-        return {}
+        {}
       end
     end
   end

@@ -25,9 +25,9 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
     def change_to_s(currentvalue, newvalue)
       if currentvalue == :absent
-        return 'created'
+        'created'
       elsif newvalue == :absent
-        return 'removed'
+        'removed'
       else
         if Puppet[:show_diff] and resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
@@ -49,7 +49,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
           end
 
         end
-        return "content changed '{md5}#{md5(currentvalue)}' to '{md5}#{md5(newvalue)}'"
+        "content changed '{md5}#{md5(currentvalue)}' to '{md5}#{md5(newvalue)}'"
       end
     end
   end

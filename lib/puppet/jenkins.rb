@@ -13,7 +13,7 @@ module Puppet
 
     # @return [String] Full path to the Jenkins user's plugin directory
     def self.plugins_dir
-      return File.join(self.home_dir, 'plugins')
+      File.join(self.home_dir, 'plugins')
     end
   end
 end
