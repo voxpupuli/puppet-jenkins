@@ -14,7 +14,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
     isnamevar
 
     munge do |value|
-      if value.is_a?(String) and value =~ /^[0-9]+$/
+      if value.is_a?(String) && value =~ /^[0-9]+$/
         Integer(value)
       else
         value

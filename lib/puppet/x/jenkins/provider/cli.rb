@@ -73,7 +73,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
   def clihelper(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -85,7 +85,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def cli(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -148,9 +148,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     options[:stdinfile] = tmp.path
     begin
       Etc.getpwnam('jenkins')
-      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exists?(tmp.path)
     rescue
-      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exists?(tmp.path)
     end
     result = execute_with_retry(command, options, cli_pre_cmd)
     tmp.close
@@ -210,7 +210,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
         auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
       end
     # we have username and password, then we create the password file and use it
-    elsif !cli_username.nil? and !cli_password.nil?
+    elsif !cli_username.nil? && !cli_password.nil?
       if cli_remoting_free
         auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
       else
@@ -294,7 +294,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     begin
       # return Puppet::Provider.execute(*args)
-      if tmpfile_as_param and options.key?(:stdinfile)
+      if tmpfile_as_param && options.key?(:stdinfile)
         return superclass.execute([ cmd, options[:stdinfile] ].flatten().join(' '), options)
       else
         return superclass.execute([ cmd ].flatten().join(' '), options)
