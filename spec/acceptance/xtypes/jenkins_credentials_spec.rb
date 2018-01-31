@@ -57,7 +57,6 @@ describe 'jenkins_credentials' do
         end
       end
 
-
       context 'BasicSSHUserPrivateKey' do
         it 'works with no errors' do
           pp = base_manifest + <<-EOS

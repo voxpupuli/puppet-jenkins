@@ -50,7 +50,6 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
     end
   end # #flush
 
-
   #
   # private methods
   #

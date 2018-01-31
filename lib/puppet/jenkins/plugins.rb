@@ -73,7 +73,6 @@ module Puppet
         true
       end
 
-
       # Parse the update-center.json file which Jenkins uses to maintain it's
       # internal dependency graph for plugins
       #
@@ -94,7 +93,6 @@ module Puppet
           ::Kernel.require 'puppet/jenkins/okjson'
           parser = Proc.new { |s| OkJson.decode(s) }
         end
-
 
         File.open(filename, 'r') do |fd|
           buffer = fd.read

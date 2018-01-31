@@ -31,7 +31,6 @@ module OkJson
   Upstream = '43'
   extend self
 
-
   # Decodes a json document in string s and
   # returns the corresponding ruby value.
   # String s must be valid UTF-8. If you have
@@ -46,7 +45,6 @@ module OkJson
     raise Error, 'trailing garbage' if ts.length > 0
     v
   end
-
 
   # Encodes x into a json text. It may contain only
   # Array, Hash, String, Numeric, true, false, nil.
@@ -66,7 +64,6 @@ module OkJson
     end
   end
 
-
   def valenc(x)
     case x
     when Hash    then objenc(x)
@@ -81,9 +78,7 @@ module OkJson
     end
   end
 
-
 private
-
 
   # Parses a "json text" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
@@ -101,7 +96,6 @@ private
     end
   end
 
-
   # Parses a "value" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def valparse(ts)
@@ -116,7 +110,6 @@ private
       raise Error, "unexpected #{val.inspect}"
     end
   end
-
 
   # Parses an "object" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
@@ -141,7 +134,6 @@ private
     end
   end
 
-
   # Parses a "member" in the sense of RFC 4627.
   # Returns the parsed values and any trailing tokens.
   def pairparse(ts)
@@ -151,7 +143,6 @@ private
     v, ts = valparse(ts)
     [k, v, ts]
   end
-
 
   # Parses an "array" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
@@ -176,12 +167,10 @@ private
     end
   end
 
-
   def eat(typ, ts)
     raise Error, "expected #{typ} (got #{ts[0].inspect})" if ts[0][0] != typ
     ts[1..-1]
   end
-
 
   # Scans s and returns a list of json tokens,
   # excluding white space (as defined in RFC 4627).
@@ -195,7 +184,6 @@ private
     end
     ts
   end
-
 
   # Scans the first token in s and
   # returns a 3-element list, or nil
@@ -228,11 +216,9 @@ private
     end
   end
 
-
   def nulltok(s);  s[0, 4] == 'null'  ? [:val, 'null',  nil]   : [] end
   def truetok(s);  s[0, 4] == 'true'  ? [:val, 'true',  true]  : [] end
   def falsetok(s); s[0, 5] == 'false' ? [:val, 'false', false] : [] end
-
 
   def numtok(s)
     m = /-?([1-9][0-9]+|[0-9])([.][0-9]+)?([eE][+-]?[0-9]+)?/.match(s)
@@ -249,13 +235,11 @@ private
     end
   end
 
-
   def strtok(s)
     m = /"([^"\\]|\\["\/\\bfnrt]|\\u[0-9a-fA-F]{4})*"/.match(s)
     raise Error, "invalid string literal at #{abbrev(s)}" unless m
     [:str, m[0], unquote(m[0])]
   end
-
 
   def abbrev(s)
     t = s[0, 10]
@@ -264,7 +248,6 @@ private
     t = t + '...' if t.length < s.length
     '`' + t + '`'
   end
-
 
   # Converts a quoted json string literal q into a UTF-8-encoded string.
   # The rules are different than for Ruby, so we cannot use eval.
@@ -335,7 +318,6 @@ private
     a[0, w]
   end
 
-
   # Encodes unicode character u as UTF-8
   # bytes in string a at position i.
   # Returns the number of bytes written.
@@ -361,12 +343,10 @@ private
     end
   end
 
-
   def hexdec4(s)
     raise Error, 'short' if s.length != 4
     (nibble(s[0]) << 12) | (nibble(s[1]) << 8) | (nibble(s[2]) << 4) | nibble(s[3])
   end
-
 
   def subst(u1, u2)
     if Usurr1 <= u1 && u1 < Usurr2 && Usurr2 <= u2 && u2 < Usurr3
@@ -375,11 +355,9 @@ private
     Ucharerr
   end
 
-
   def surrogate?(u)
     Usurr1 <= u && u < Usurr3
   end
-
 
   def nibble(c)
     if ?0 <= c && c <= ?9 then c.ord - ?0.ord
@@ -390,16 +368,13 @@ private
     end
   end
 
-
   def objenc(x)
     '{' + x.map{|k, v| keyenc(k) + ':' + valenc(v)}.join(',') + '}'
   end
 
-
   def arrenc(a)
     '[' + a.map{|x| valenc(x)}.join(',') + ']'
   end
-
 
   def keyenc(k)
     case k
@@ -408,7 +383,6 @@ private
       raise Error, "Hash key is not a string: #{k.inspect}"
     end
   end
-
 
   def strenc(s)
     t = StringIO.new
@@ -450,14 +424,12 @@ private
     t.string
   end
 
-
   def numenc(x)
     if ((x.nan? || x.infinite?) rescue false)
       raise Error, "Numeric cannot be represented: #{x}"
     end
     "#{x}"
   end
-
 
   # Copies the valid UTF-8 bytes of a single character
   # from string s at position i to I/O object t, and
@@ -528,19 +500,15 @@ private
     return 1
   end
 
-
   def rubydoesenc?
     ::String.method_defined?(:force_encoding)
   end
 
-
   class Utf8Error < ::StandardError
   end
 
-
   class Error < ::StandardError
   end
-
 
   Utagx = 0b1000_0000
   Utag2 = 0b1100_0000

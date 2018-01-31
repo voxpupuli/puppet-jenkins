@@ -57,7 +57,6 @@ describe 'jenkins class', order: :defined do
     it_behaves_like 'has_git_plugin'
   end
 
-
   describe 'plugin downgrade' do
     before(:all) do
       pp = <<-EOS

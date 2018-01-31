@@ -1,6 +1,5 @@
 require 'rspec'
 
-
 module Jenkins
   module RSpecHelpers
     def clear_facts; end

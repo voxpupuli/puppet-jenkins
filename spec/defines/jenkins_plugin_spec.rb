@@ -162,7 +162,6 @@ describe 'jenkins::plugin' do
     end
   end
 
-
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'retrieves the plugin' do

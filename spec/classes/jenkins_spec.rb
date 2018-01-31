@@ -166,7 +166,6 @@ describe 'jenkins', type: :class do
       end
     end # manage_user =>
 
-
     describe 'manage_service =>' do
       context '(default)' do
         it { should contain_class 'jenkins::service' }

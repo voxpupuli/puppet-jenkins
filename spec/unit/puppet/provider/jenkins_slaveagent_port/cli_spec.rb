@@ -50,7 +50,6 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
     end
   end # #flush
 
-
   #
   # private methods
   #
