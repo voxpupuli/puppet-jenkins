@@ -106,7 +106,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     if cli_remoting_free
       cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
       cli_cmd = ['groovy', '=' ] + [command]
-      options[:tmpfile_as_param]=true
+      options[:tmpfile_as_param] = true
     else
       cli_pre_cmd = []
       cli_cmd = ['groovy', puppet_helper] + [command]
