@@ -1,4 +1,4 @@
-require_relative  '../../puppet/x/jenkins/type/cli'
+require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_slaveagent_port) do
   @doc = "Manage Jenkins' slave agent listening port"
