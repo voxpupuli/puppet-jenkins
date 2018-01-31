@@ -23,7 +23,7 @@ describe Puppet::X::Jenkins::Config do
     end
   end
 
-  shared_examples 'returns default values' do |param|
+  shared_examples 'returns default values' do |_param|
     it 'should return default values' do
       DEFAULTS.each do |k, v|
         expect(config[k]).to eq v
@@ -31,19 +31,19 @@ describe Puppet::X::Jenkins::Config do
     end
   end # returns default values
 
-  shared_examples 'returns fact values' do |param|
+  shared_examples 'returns fact values' do |_param|
     it 'should return fact values' do
-      DEFAULTS.each do |k, v|
+      DEFAULTS.each do |k, _v|
         expect(config[k]).to eq Facter.value("jenkins_#{k.to_s}".to_sym)
       end
     end
   end # returns fact values
 
-  shared_examples 'returns catalog values' do |param|
+  shared_examples 'returns catalog values' do |_param|
     it 'should return catalog values' do
       config = catalog.resource(:class, 'jenkins::cli::config')
 
-      DEFAULTS.each do |k, v|
+      DEFAULTS.each do |k, _v|
         expect(config[k]).to eq config[k]
       end
     end

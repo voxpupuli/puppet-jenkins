@@ -68,7 +68,7 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 end # validated property
 
-shared_examples 'boolean parameter' do |param, default|
+shared_examples 'boolean parameter' do |param, _default|
   it 'does not allow non-boolean values' do
     expect do
       described_class.new(:name => 'foo', param => 'unknown')
@@ -86,7 +86,7 @@ shared_examples 'boolean property' do |param, default|
   it_behaves_like 'validated property', param, default, [true, false]
 end # boolean property
 
-shared_examples 'array_matching property' do |param|
+shared_examples 'array_matching property' do |_param|
   context 'attrtype' do
     it { expect(described_class.attrtype(:arguments)).to eq :property }
   end
