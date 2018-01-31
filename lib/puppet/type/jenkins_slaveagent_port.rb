@@ -29,7 +29,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_slaveagent_port) do
     :jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
-      catalog.resources.find_all do |r|
+      catalog.resources.select do |r|
         r.is_a?(Puppet::Type.type(type))
       end
     end

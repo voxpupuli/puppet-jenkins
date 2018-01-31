@@ -11,9 +11,9 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
   def self.instances(catalog = nil)
     jobs = job_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{jobs.collect {|i| i['name']}}")
+    Puppet.debug("#{sname} instances: #{jobs.map {|i| i['name']}}")
 
-    jobs.collect do |job|
+    jobs.map do |job|
       new(
         name: job['name'],
         ensure: :present,

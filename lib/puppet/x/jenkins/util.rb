@@ -22,7 +22,7 @@ module Puppet::X::Jenkins::Util
         h[k] = iterate(v, &block)
       end
     when Array
-      data.collect { |v| iterate(v, &block) }
+      data.map { |v| iterate(v, &block) }
     else
       block.call data
     end

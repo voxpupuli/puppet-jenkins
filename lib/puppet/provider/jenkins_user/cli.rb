@@ -9,9 +9,9 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
   def self.instances(catalog = nil)
     all = user_info_all(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.collect {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map {|i| i['id']}}")
 
-    all.collect {|info| from_hash(info) }
+    all.map {|info| from_hash(info) }
   end
 
   def api_token_public=(value)

@@ -11,9 +11,9 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
   def self.instances(catalog = nil)
     all = credentials_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.collect {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map {|i| i['id']}}")
 
-    all.collect {|info| from_hash(info) }
+    all.map {|info| from_hash(info) }
   end
 
   def flush
