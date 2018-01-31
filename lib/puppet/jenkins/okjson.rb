@@ -530,5 +530,5 @@ private
   Usurr3 = 0xe000
 
   Spc = ' '[0]
-  Unesc = {?b => ?\b, ?f => ?\f, ?n => ?\n, ?r => ?\r, ?t => ?\t}
+  Unesc = { ?b => ?\b, ?f => ?\f, ?n => ?\n, ?r => ?\r, ?t => ?\t }
 end

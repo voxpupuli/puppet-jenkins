@@ -42,12 +42,12 @@ describe 'jenkins::slave' do
 
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
-      let(:params) { {slave_home: home } }
+      let(:params) { { slave_home: home } }
       it { should contain_file(slave_runtime_file).with_content(/^FSROOT="#{home}"$/) }
     end
 
     describe 'with service disabled' do
-      let(:params) { {enable: false, ensure: 'stopped' } }
+      let(:params) { { enable: false, ensure: 'stopped' } }
       it { should contain_service('jenkins-slave').with(enable: false, ensure: 'stopped') }
     end
 
@@ -333,9 +333,9 @@ describe 'jenkins::slave' do
 
   describe 'Darwin' do
     let(:facts) do
-      {osfamily: 'Darwin',
-       operatingsystem: 'Darwin',
-       kernel: 'Darwin'}
+      { osfamily: 'Darwin',
+        operatingsystem: 'Darwin',
+        kernel: 'Darwin' }
     end
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }

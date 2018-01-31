@@ -80,7 +80,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       expect(described_class).to receive(:instances).
         with(catalog) { [provider] }
 
-      described_class.prefetch({resource.name => resource})
+      described_class.prefetch({ resource.name => resource })
 
       expect(resource.provider).to eq provider
     end
@@ -95,7 +95,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       expect(described_class).to receive(:instances).
         with(catalog) { [provider] }
 
-      described_class.prefetch({resource.name => resource})
+      described_class.prefetch({ resource.name => resource })
 
       expect(resource.provider).to eq provider
     end
@@ -344,7 +344,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       it 'uses catalog values' do
         expect(described_class.superclass).to receive(:execute).with(
           'java -jar cat.jar -s http://localhost:111 foo',
-          { failonfail: true, combine: true}
+          { failonfail: true, combine: true }
         )
 
         described_class.cli('foo', { catalog: catalog })

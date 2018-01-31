@@ -133,7 +133,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['get_authorization_strategy'],
-        {catalog: nil},
+        { catalog: nil },
       ) { strategy_oauth_json }
 
       raw = described_class.send :get_authorization_strategy

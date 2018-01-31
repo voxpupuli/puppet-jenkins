@@ -131,7 +131,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['get_security_realm'],
-        {catalog: nil}
+        { catalog: nil }
       ) { realm_oauth_json }
 
       raw = described_class.send :get_security_realm

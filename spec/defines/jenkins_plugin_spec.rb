@@ -176,7 +176,7 @@ describe 'jenkins::plugin' do
     context 'by default' do
       context 'with a version' do
         let(:version) { '1.3.3.7' }
-        let(:params) { {version: version} }
+        let(:params) { { version: version } }
         let(:expected_url) do
           "#{plugin_host}/download/plugins/#{title}/#{version}/#{title}.hpi"
         end
@@ -197,7 +197,7 @@ describe 'jenkins::plugin' do
       let(:update_url) { 'http://rspec' }
 
       context 'without a version' do
-        let(:params) { {update_url: update_url} }
+        let(:params) { { update_url: update_url } }
         let(:expected_url) do
           "#{update_url}/latest/#{title}.hpi"
         end
@@ -207,7 +207,7 @@ describe 'jenkins::plugin' do
 
       context 'with a version' do
         let(:version) { '1.2.3' }
-        let(:params) { {update_url: update_url, version: version} }
+        let(:params) { { update_url: update_url, version: version } }
         let(:expected_url) do
           "#{update_url}/download/plugins/#{title}/#{version}/#{title}.hpi"
         end
