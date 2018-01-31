@@ -1,5 +1,8 @@
+---
 sudo: false
 language: ruby
+cache: bundler
+dist: trusty
 env:
   - PUPPET_VERSION="~> 4.10.0"
 matrix:
