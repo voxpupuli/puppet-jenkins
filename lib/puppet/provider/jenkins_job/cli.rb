@@ -29,13 +29,9 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
 
   def flush
     update = false
-    if exists?
-      update = true
-    end
+    update = true if exists?
 
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     # XXX the enable property is being ignored on flush because this modifies
     # the configuration string and breaks idempotent.  Should the property be

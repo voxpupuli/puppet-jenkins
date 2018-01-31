@@ -16,9 +16,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present

@@ -408,9 +408,7 @@ shared_examples 'autorequires jenkins_security_realm resource' do
     resource = described_class.new(
       name: 'test',
     )
-    if described_class.validproperty?(:ensure)
-      resource[:ensure] = :present
-    end
+    resource[:ensure] = :present if described_class.validproperty?(:ensure)
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource required
@@ -431,9 +429,7 @@ shared_examples 'autorequires jenkins_authorization_strategy resource' do
     resource = described_class.new(
       name: 'test',
     )
-    if described_class.validproperty?(:ensure)
-      resource[:ensure] = :present
-    end
+    resource[:ensure] = :present if described_class.validproperty?(:ensure)
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource required

@@ -43,9 +43,7 @@ module OkJson
   def decode(s)
     ts = lex(s)
     v, ts = textparse(ts)
-    if ts.length > 0
-      raise Error, 'trailing garbage'
-    end
+    raise Error, 'trailing garbage' if ts.length > 0
     v
   end
 
@@ -92,9 +90,7 @@ private
   # Note: this is almost the same as valparse,
   # except that it does not accept atomic values.
   def textparse(ts)
-    if ts.length <= 0
-      raise Error, 'empty'
-    end
+    raise Error, 'empty' if ts.length <= 0
 
     typ, _, val = ts[0]
     case typ
@@ -109,9 +105,7 @@ private
   # Parses a "value" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
   def valparse(ts)
-    if ts.length <= 0
-      raise Error, 'empty'
-    end
+    raise Error, 'empty' if ts.length <= 0
 
     typ, _, val = ts[0]
     case typ
@@ -130,16 +124,12 @@ private
     ts = eat('{', ts)
     obj = {}
 
-    if ts[0][0] == '}'
-      return obj, ts[1..-1]
-    end
+    return obj, ts[1..-1] if ts[0][0] == '}'
 
     k, v, ts = pairparse(ts)
     obj[k] = v
 
-    if ts[0][0] == '}'
-      return obj, ts[1..-1]
-    end
+    return obj, ts[1..-1] if ts[0][0] == '}'
 
     loop do
       ts = eat(',', ts)
@@ -147,9 +137,7 @@ private
       k, v, ts = pairparse(ts)
       obj[k] = v
 
-      if ts[0][0] == '}'
-        return obj, ts[1..-1]
-      end
+      return obj, ts[1..-1] if ts[0][0] == '}'
     end
   end
 
@@ -158,9 +146,7 @@ private
   # Returns the parsed values and any trailing tokens.
   def pairparse(ts)
     (typ, _, k), ts = ts[0], ts[1..-1]
-    if typ != :str
-      raise Error, "unexpected #{k.inspect}"
-    end
+    raise Error, "unexpected #{k.inspect}" if typ != :str
     ts = eat(':', ts)
     v, ts = valparse(ts)
     [k, v, ts]
@@ -173,16 +159,12 @@ private
     ts = eat('[', ts)
     arr = []
 
-    if ts[0][0] == ']'
-      return arr, ts[1..-1]
-    end
+    return arr, ts[1..-1] if ts[0][0] == ']'
 
     v, ts = valparse(ts)
     arr << v
 
-    if ts[0][0] == ']'
-      return arr, ts[1..-1]
-    end
+    return arr, ts[1..-1] if ts[0][0] == ']'
 
     loop do
       ts = eat(',', ts)
@@ -190,17 +172,13 @@ private
       v, ts = valparse(ts)
       arr << v
 
-      if ts[0][0] == ']'
-        return arr, ts[1..-1]
-      end
+      return arr, ts[1..-1] if ts[0][0] == ']'
     end
   end
 
 
   def eat(typ, ts)
-    if ts[0][0] != typ
-      raise Error, "expected #{typ} (got #{ts[0].inspect})"
-    end
+    raise Error, "expected #{typ} (got #{ts[0].inspect})" if ts[0][0] != typ
     ts[1..-1]
   end
 
@@ -211,12 +189,8 @@ private
     ts = []
     while s.length > 0
       typ, lexeme, val = tok(s)
-      if typ == nil
-        raise Error, "invalid character at #{s[0, 10].inspect}"
-      end
-      if typ != :space
-        ts << [typ, lexeme, val]
-      end
+      raise Error, "invalid character at #{s[0, 10].inspect}" if typ == nil
+      ts << [typ, lexeme, val] if typ != :space
       s = s[lexeme.length..-1]
     end
     ts
@@ -278,9 +252,7 @@ private
 
   def strtok(s)
     m = /"([^"\\]|\\["\/\\bfnrt]|\\u[0-9a-fA-F]{4})*"/.match(s)
-    unless m
-      raise Error, "invalid string literal at #{abbrev(s)}"
-    end
+    raise Error, "invalid string literal at #{abbrev(s)}" unless m
     [:str, m[0], unquote(m[0])]
   end
 
@@ -301,9 +273,7 @@ private
     q = q[1...-1]
     a = q.dup # allocate a big enough string
     # In ruby >= 1.9, a[w] is a codepoint, not a byte.
-    if rubydoesenc?
-      a.force_encoding('UTF-8')
-    end
+    a.force_encoding('UTF-8') if rubydoesenc?
     r, w = 0, 0
     while r < q.length
       c = q[r]
@@ -393,9 +363,7 @@ private
 
 
   def hexdec4(s)
-    if s.length != 4
-      raise Error, 'short'
-    end
+    raise Error, 'short' if s.length != 4
     (nibble(s[0]) << 12) | (nibble(s[1]) << 8) | (nibble(s[2]) << 4) | nibble(s[3])
   end
 
@@ -462,9 +430,7 @@ private
         if rubydoesenc?
           begin
             # c.ord will raise an error if c is invalid UTF-8
-            if c.ord < Spc.ord
-              c = '\\u%04x' % [c.ord]
-            end
+            c = '\\u%04x' % [c.ord] if c.ord < Spc.ord
             t.write(c)
           rescue
             t.write(Ustrerr)

@@ -17,9 +17,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present
@@ -93,9 +91,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
 
     properties.each do |prop|
       value = @property_hash[prop]
-      unless value.nil?
-        info[prop.to_s] = value
-      end
+      info[prop.to_s] = value unless value.nil?
     end
 
     # map :undef -> nil

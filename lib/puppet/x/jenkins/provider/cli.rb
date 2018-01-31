@@ -129,9 +129,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       input = JSON.pretty_generate(data)
     end
 
-    if options.key?(:stdin)
-      input = options.delete(:stdin)
-    end
+    input = options.delete(:stdin) if options.key?(:stdin)
 
     if options.key?(:tmpfile_as_param)
       tmpfile_as_param = options[:tmpfile_as_param]
@@ -233,9 +231,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       handler: handler,
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
-      unless result == ''
-        Puppet.debug("#{sname} command stdout:\n#{result}")
-      end
+      Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
       return result
     end
   end
@@ -248,9 +244,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     # if no ssh_private_key is defined, the only option is to invoke the cli
     # without auth
-    if auth_cmd.nil?
-      return execute_exceptionify(cli_cmd, options)
-    end
+    return execute_exceptionify(cli_cmd, options) if auth_cmd.nil?
 
     # we already know that auth is required
     if class_variable_get(:@@cli_auth_required)
@@ -301,15 +295,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       end
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
-        if e.message.match(error)
-          raise AuthError, e.message, e.backtrace
-        end
+        raise AuthError, e.message, e.backtrace if e.message.match(error)
       end
 
       net_errors.each do |error|
-        if e.message.match(error)
-          raise NetError, e.message, e.backtrace
-        end
+        raise NetError, e.message, e.backtrace if e.message.match(error)
       end
 
       raise UnknownError, e.message, e.backtrace

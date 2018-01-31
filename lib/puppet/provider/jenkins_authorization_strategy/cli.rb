@@ -16,9 +16,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present

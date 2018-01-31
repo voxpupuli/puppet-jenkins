@@ -75,9 +75,7 @@ shared_context 'jenkins' do
 end
 
 def apply(pp, options = {})
-  if ENV.key?('PUPPET_DEBUG')
-    options[:debug] = true
-  end
+  options[:debug] = true if ENV.key?('PUPPET_DEBUG')
 
   apply_manifest(pp, options)
 end
