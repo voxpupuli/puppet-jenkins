@@ -7,7 +7,7 @@ gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7', :require => false
 gem 'puppet-lint', '~> 2.0',                     :require => false
 gem 'puppet-strings',                            :require => false
 gem 'puppet-syntax', '~> 2.0',                   :require => false
-gem 'puppetlabs_spec_helper', '~> 1.2.2',        :require => false
+gem 'puppetlabs_spec_helper', '~> 2',            :require => false
 gem 'rake', '>= 10.1.1',                         :require => false
 gem 'retries', '~> 0.0.5',                       :require => false
 gem 'rspec-its',                                 :require => false
