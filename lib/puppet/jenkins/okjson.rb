@@ -75,9 +75,9 @@ module OkJson
     when Array   then arrenc(x)
     when String  then strenc(x)
     when Numeric then numenc(x)
-    when true    then "true"
-    when false   then "false"
-    when nil     then "null"
+    when true    then 'true'
+    when false   then 'false'
+    when nil     then 'null'
     else
       raise Error, "cannot encode #{x.class}: #{x.inspect}"
     end
@@ -463,14 +463,14 @@ private
           begin
             # c.ord will raise an error if c is invalid UTF-8
             if c.ord < Spc.ord
-              c = "\\u%04x" % [c.ord]
+              c = '\\u%04x' % [c.ord]
             end
             t.write(c)
           rescue
             t.write(Ustrerr)
           end
         elsif c < Spc
-          t.write("\\u%04x" % c)
+          t.write('\\u%04x' % c)
         elsif Spc <= c && c <= ?~
           t.putc(c)
         else
