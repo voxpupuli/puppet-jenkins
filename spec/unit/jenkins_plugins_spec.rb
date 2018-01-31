@@ -46,7 +46,7 @@ describe Puppet::Jenkins::Plugins do
     end
 
     context 'when plugins exist' do
-      it 'should generate a list of plugins' do
+      it 'generates a list of plugins' do
         pending 'This is too hard to unit test, feh.'
         fail
       end
@@ -64,7 +64,7 @@ Jenkins-Version: 1.456
 '
       end
 
-      it 'should have the properly hyphenated plugin version' do
+      it 'has the properly hyphenated plugin version' do
         expect(data[:plugin_version]).to eql('1.7.2-1')
       end
     end
@@ -94,7 +94,7 @@ Plugin-Developers:
 
       it { should be_instance_of Hash }
 
-      it 'should parse the right plugin version' do
+      it 'parses the right plugin version' do
         expect(data[:plugin_version]).to eql('1.2')
       end
     end
@@ -129,7 +129,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
 
       it { should be_instance_of Hash }
-      it 'should have the right number of keys' do
+      it 'has the right number of keys' do
         expect(data.keys.size).to eql(18)
       end
     end

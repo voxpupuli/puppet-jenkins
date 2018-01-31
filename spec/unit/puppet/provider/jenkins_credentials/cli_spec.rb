@@ -271,7 +271,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           with(nil) { credentials }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 6
       end
 
@@ -301,7 +301,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::credentials_list_json' do
+      it 'passes it on ::credentials_list_json' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:credentials_list_json).
@@ -313,7 +313,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   end # ::instanes
 
   describe '#flush' do
-    it 'should call credentials_update' do
+    it 'calls credentials_update' do
       provider = described_class.new
       provider.create
 
@@ -321,7 +321,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider.flush
     end
 
-    it 'should call credentials_delete_id' do
+    it 'calls credentials_delete_id' do
       provider = described_class.new
       provider.destroy
 
@@ -329,7 +329,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider.flush
     end
 
-    it 'should call credentials_delete_id' do
+    it 'calls credentials_delete_id' do
       provider = described_class.new
 
       expect(provider).to receive(:credentials_delete_id)

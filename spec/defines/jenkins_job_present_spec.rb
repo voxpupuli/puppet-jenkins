@@ -12,7 +12,7 @@ describe 'jenkins::job::present' do
   end
 
   describe 'with defaults' do
-    it 'should fail' do
+    it 'fails' do
       should raise_error(Puppet::Error, /Please set one of/)
     end
   end
@@ -20,7 +20,7 @@ describe 'jenkins::job::present' do
   describe 'with both_config_and_config_file_set' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) {{ config: quotes, config_file: quotes }}
-    it 'should fail' do
+    it 'fails' do
       should raise_error(Puppet::Error, /You cannot set both/)
     end
   end

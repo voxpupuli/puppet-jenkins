@@ -23,7 +23,7 @@ describe Puppet::X::Jenkins::Util do
   end
 
   describe '::unundef' do
-    it 'should convert :undef values to nil' do
+    it 'converts :undef values to nil' do
       expect(described_class.unundef(data)).to eq({
         a: nil,
         b: [
@@ -44,7 +44,7 @@ describe Puppet::X::Jenkins::Util do
   end # unundef
 
   describe '::undefize' do
-    it 'should convert nil values to :undef' do
+    it 'converts nil values to :undef' do
       expect(described_class.undefize(data)).to eq({
         a: :undef,
         b: [
@@ -65,11 +65,11 @@ describe Puppet::X::Jenkins::Util do
   end # undefize
 
   describe '::iterate' do
-    it 'should not transform without block' do
+    it 'does not transform without block' do
       expect(described_class.iterate(data)).to eq(data)
     end
 
-    it 'should not affect hash keys' do
+    it 'does not affect hash keys' do
       expect(described_class.iterate(data) { 5 }).to eq({
         a: 5,
         b: [

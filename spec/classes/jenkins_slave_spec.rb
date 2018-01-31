@@ -70,11 +70,11 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should escape the user' do
+      it 'escapes the user' do
         should contain_file(slave_runtime_file).with_content(/^JENKINS_USERNAME='#{user}'$/)
       end
 
-      it 'should escape the password' do
+      it 'escapes the password' do
         should contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
       end
     end
@@ -87,7 +87,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set java_args' do
+      it 'sets java_args' do
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
       end
     end
@@ -100,7 +100,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should convert java_args to a string' do
+      it 'converts java_args to a string' do
         args_as_string = args.join ' '
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
       end
@@ -114,7 +114,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set swarm_client_args' do
+      it 'sets swarm_client_args' do
         should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args}"$/)
       end
     end
@@ -127,7 +127,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should convert swarm_client_args to a string' do
+      it 'converts swarm_client_args to a string' do
         args_as_string = args.join ' '
         should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args_as_string}"$/)
       end
@@ -162,7 +162,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set LABEL as a string' do
+      it 'sets LABEL as a string' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="hello world"$/)
       end
     end
@@ -174,7 +174,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set LABEL as a string' do
+      it 'sets LABEL as a string' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
       end
     end
@@ -184,7 +184,7 @@ describe 'jenkins::slave' do
           disable_clients_unique_id: true
         }
       end
-      it 'should have disable variable' do
+      it 'has disable variable' do
         should contain_file(slave_runtime_file)
           .with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
       end

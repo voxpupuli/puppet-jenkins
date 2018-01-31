@@ -59,7 +59,7 @@ EOS
 
   context 'ensure =>' do
     context 'present' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => present,
@@ -81,7 +81,7 @@ EOS
     end # 'present' do
 
     context 'absent' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => absent,
@@ -106,7 +106,7 @@ EOS
 
     context 'nested folders' do
       context 'create' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo':
               ensure => present,
@@ -151,7 +151,7 @@ EOS
       end # create
 
       context 'delete' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo': ensure => absent }
             jenkins_job { 'foo/bar': ensure => absent }
@@ -172,7 +172,7 @@ EOS
     end # nested folders
 
     context 'convert existing job to folder' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         skip # travis is running the beaker tests really slow...
         pending('CLI update-job command is unable to handle the conversion')
 

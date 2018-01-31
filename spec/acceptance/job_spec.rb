@@ -30,7 +30,7 @@ EOS
   end
 
   context 'create' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -62,7 +62,7 @@ EOS
 
   context 'disable' do
     pending('Parameter $enabled is now deprecated, no need to test')
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -91,7 +91,7 @@ EOS
   end # deprecated param enabled
 
   context 'delete' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       # create a test job so it can be deleted; job creation is not what
       # we're intending to be testing here
       pp = <<-EOS

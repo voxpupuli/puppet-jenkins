@@ -165,7 +165,7 @@ describe 'jenkins::plugin' do
 
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
-      it 'should retrieve the plugin' do
+      it 'retrieves the plugin' do
         expect(subject).to contain_archive('git.hpi').with({
           source: "#{expected_url}"
         })
@@ -220,7 +220,7 @@ describe 'jenkins::plugin' do
 
   describe 'source' do
     shared_examples 'should download from $source url' do
-      it 'should download from $source url' do
+      it 'downloads from $source url' do
         should contain_archive('myplug.hpi').with(
           source: 'http://e.org/myplug.hpi',
         )

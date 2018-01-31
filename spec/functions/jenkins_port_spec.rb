@@ -14,7 +14,7 @@ describe 'jenkins_port', if: Puppet.version.to_f < 4.0 do
     subject.call([])
   end
 
-  it 'should default to 8080' do
+  it 'defaults to 8080' do
     expect(port).to eql '8080'
   end
 
@@ -27,7 +27,7 @@ describe 'jenkins_port', if: Puppet.version.to_f < 4.0 do
       ENDPUPPET
     end
 
-    it 'should be our overwritten port' do
+    it 'is our overwritten port' do
       expect(port).to eql('1337')
     end
   end

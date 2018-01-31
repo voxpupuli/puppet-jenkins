@@ -14,7 +14,7 @@ describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
     subject.call([])
   end
 
-  it 'should default to ""' do
+  it 'defaults to ""' do
     expect(prefix).to eql ''
   end
 
@@ -27,7 +27,7 @@ describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
       ENDPUPPET
     end
 
-    it 'should be our overwritten prefix' do
+    it 'is our overwritten prefix' do
       expect(prefix).to eql('/test')
     end
   end

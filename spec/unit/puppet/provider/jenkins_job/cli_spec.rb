@@ -60,7 +60,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
           with(nil) { job_list_json_info }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 2
       end
 
@@ -84,7 +84,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::get_job_list' do
+      it 'passes it on ::get_job_list' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:job_list_json).
@@ -96,7 +96,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   end # ::instanes
 
   describe '#create' do
-    it 'should do nothing' do
+    it 'does nothing' do
       provider = described_class.new
       expect(provider.ensure).to eq :absent
       provider.create
@@ -105,7 +105,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   end # #create
 
   describe '#flush' do
-    it 'should call create_job' do
+    it 'calls create_job' do
       provider = described_class.new
       provider.ensure = :present
 
@@ -114,7 +114,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
     end
 
-    it 'should call update_job' do
+    it 'calls update_job' do
       provider = described_class.new
       provider.ensure = :present
 
@@ -123,7 +123,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
     end
 
-    it 'should call delete_job' do
+    it 'calls delete_job' do
       provider = described_class.new
       provider.destroy
 

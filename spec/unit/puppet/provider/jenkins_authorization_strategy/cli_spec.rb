@@ -54,7 +54,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
           with(nil) { strategy_oauth }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 1
       end
 
@@ -67,7 +67,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::get_authorization_strategy' do
+      it 'passes it on ::get_authorization_strategy' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:get_authorization_strategy).
@@ -79,7 +79,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
   end # ::instanes
 
   describe '#flush' do
-    it 'should call set_jenkins_instance' do
+    it 'calls set_jenkins_instance' do
       provider = described_class.new
       provider.create
 
@@ -87,7 +87,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       provider.flush
     end
 
-    it 'should call set_strategy_unsecured' do
+    it 'calls set_strategy_unsecured' do
       provider = described_class.new
       provider.destroy
 
@@ -95,7 +95,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       provider.flush
     end
 
-    it 'should call set_strategy_unsecured' do
+    it 'calls set_strategy_unsecured' do
       provider = described_class.new
 
       expect(provider).to receive(:set_strategy_unsecured)
