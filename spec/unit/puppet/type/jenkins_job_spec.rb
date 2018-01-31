@@ -46,7 +46,7 @@ describe Puppet::Type.type(:jenkins_job) do
           else
             it 'should not display a diff' do
               property.stub(:diff)
-              expect(property).not_to receive (:diff)
+              expect(property).not_to receive :diff
               property.change_to_s('foo', 'bar')
             end
           end
