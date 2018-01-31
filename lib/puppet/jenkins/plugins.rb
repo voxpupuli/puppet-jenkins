@@ -9,7 +9,7 @@ module Puppet
       #   string values
       # @return [NilClass] A nil if +manifest_str+ nil or an empty string
       def self.manifest_data(manifest_str)
-        return {} if (manifest_str.nil? || manifest_str.empty?)
+        return {} if manifest_str.nil? || manifest_str.empty?
 
         data = {}
         manifest_str.split("\n").each do |line|
@@ -25,7 +25,7 @@ module Puppet
 
           key = parts.first.downcase.gsub('-', '_').chomp
           # Skip garbage keys
-          next if (key.nil? || key.empty?)
+          next if key.nil? || key.empty?
 
           # Re-join any colon delimited strings in the value back together,
           # e.g.: "http://wiki.jenkins-ci.org/display/JENKINS/Ant+Plugin"
@@ -44,8 +44,8 @@ module Puppet
         plugins = {}
         Dir.entries(Puppet::Jenkins.plugins_dir).each do |plugin|
           # Skip useless directories
-          next if (plugin == '..')
-          next if (plugin == '.')
+          next if plugin == '..'
+          next if plugin == '.'
 
           plugin_dir = File.join(Puppet::Jenkins.plugins_dir, plugin)
           # Without an unpacked plugin directory, we can't find a version
@@ -100,7 +100,7 @@ module Puppet
 
         File.open(filename, 'r') do |fd|
           buffer = fd.read
-          return {} if (buffer.nil? || buffer.empty?)
+          return {} if buffer.nil? || buffer.empty?
           buffer = buffer.split("\n")
           # Trim off the first and last lines, which are the JSONP gunk
           buffer = buffer[1 ... -1]
