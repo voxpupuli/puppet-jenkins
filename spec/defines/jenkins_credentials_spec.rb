@@ -11,9 +11,9 @@ describe 'jenkins::credentials', type: :define do
     }
   end
   let(:helper_cmd) { '/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy' }
-  let(:pre_condition) {
+  let(:pre_condition) do
     "class jenkins::cli_helper { $helper_cmd = '#{helper_cmd}' }"
-  }
+  end
 
   describe 'relationships' do
     let(:params) {{ password: 'foo' }}
@@ -28,10 +28,10 @@ describe 'jenkins::credentials', type: :define do
   end
 
   describe 'with ensure is present' do
-    let(:params) {{
+    let(:params) do {
       ensure: 'present',
       password: 'mypass'
-    }}
+    } end
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       command: [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "''", "'Managed by Puppet'", "''" ],
@@ -40,21 +40,21 @@ describe 'jenkins::credentials', type: :define do
   end
 
   describe 'with ensure is absent' do
-    let(:params) {{
+    let(:params) do {
       ensure: 'absent',
       password: 'mypass'
-    }}
+    } end
     it { should contain_jenkins__cli__exec('delete-jenkins-credentials-foo').with({
       command: [ 'delete_credentials', "#{title}" ]
     })}
   end
 
   describe 'with uuid set' do
-    let(:params) {{
+    let(:params) do {
       ensure: 'present',
       password: 'mypass',
       uuid: 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'
-    }}
+    } end
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       command: [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],

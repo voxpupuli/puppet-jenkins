@@ -28,24 +28,24 @@ describe Puppet::Type.type(:jenkins_user) do
 
       it 'should support valid hexstrings' do
         value = '51a8b1dd95bc76b1a2869356c043e8b9'
-        expect {
+        expect do
           described_class.new(
             name: 'nobody',
             api_token_plain: value
           )
-        }
+        end
           .to_not raise_error
       end
 
       %w[ 51a8b1dd95bc76b1a2869356c043e8b
           51a8b1dd95bc76b1a2869356c043e8b99 ].each do |value|
         it 'should reject hexstrings of invalid length' do
-          expect {
+          expect do
             described_class.new(
               name: 'nobody',
               api_token_plain: value,
             )
-          }
+          end
             .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
         end
       end

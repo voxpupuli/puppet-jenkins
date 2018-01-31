@@ -58,12 +58,12 @@ describe 'jenkins::augeas' do
   # |              `---'      ---                                    |
 
   describe 'with plugin_version set' do
-    let (:params) {{
+    let (:params) do {
         config_filename: 'foo.xml',
         changes: [],
         plugin_version: '0.1',
         plugin: true
-    }}
+    } end
     it do
       is_expected.to contain_jenkins__plugin('myplug').with(
         version: '0.1',
@@ -80,11 +80,11 @@ describe 'jenkins::augeas' do
   # `---'`---'`   '`---'`---''  ``---'    |---'`---^`    `---^` ' '
   #                                       |
   describe 'without context set' do
-    let (:params) {{
+    let (:params) do {
       plugin: false,
       config_filename: 'foo.xml',
       changes: []
-    }}
+    } end
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
         incl: '/var/lib/jenkins/foo.xml',
@@ -95,12 +95,12 @@ describe 'jenkins::augeas' do
   end
 
   describe 'with context set' do
-    let (:params) {{
+    let (:params) do {
       plugin: false,
       config_filename: 'foo.xml',
       context: '/foo/bar',
       changes: []
-    }}
+    } end
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
         incl: '/var/lib/jenkins/foo.xml',
@@ -120,12 +120,12 @@ describe 'jenkins::augeas' do
 
   [ ['get foo != bar'], 'get foo != bar'].each do |pval|
     describe "with param onlyif set and class is #{pval.class}" do
-      let (:params) {{
+      let (:params) do {
         plugin: false,
         config_filename: 'foo.xml',
         changes: [ 'set foo bar' ],
         onlyif: pval
-      }}
+      } end
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
           incl: '/var/lib/jenkins/foo.xml',
@@ -145,11 +145,11 @@ describe 'jenkins::augeas' do
   #                     `---'              |
   [ ['set foo bar'], 'set foo bar'].each do |pval|
     describe "with param changes set and class is #{pval.class}" do
-      let (:params) {{
+      let (:params) do {
         plugin: false,
         config_filename: 'foo.xml',
         changes: pval
-      }}
+      } end
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
           incl: '/var/lib/jenkins/foo.xml',
@@ -171,12 +171,12 @@ describe 'jenkins::augeas' do
     false   => 'reload-jenkins'
   }.each do |pval, expected|
     describe "with param restart set to '#{pval}' (#{pval.class})" do
-      let (:params) {{
+      let (:params) do {
         plugin: false,
         config_filename: 'foo.xml',
         changes: [],
         restart: pval
-      }}
+      } end
       it { is_expected.to contain_augeas('jenkins::augeas: myplug').that_notifies("Exec[#{expected}]") }
     end
   end

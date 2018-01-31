@@ -332,11 +332,11 @@ describe 'jenkins::slave' do
   end
 
   describe 'Darwin' do
-    let(:facts) {
+    let(:facts) do
       {osfamily: 'Darwin',
        operatingsystem: 'Darwin',
        kernel: 'Darwin'}
-    }
+    end
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }
     let(:slave_service_file) { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist' }

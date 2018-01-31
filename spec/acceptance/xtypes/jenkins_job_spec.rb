@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 # a fixed order is required in order to cleanup created jobs -- we are relying
 # on existing state as a performance optimization.
 describe 'jenkins_job', order: :defined do
-  let(:test_build_job) {
+  let(:test_build_job) do
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
@@ -29,7 +29,7 @@ describe 'jenkins_job', order: :defined do
 EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
-  }
+  end
 
   let(:test_folder_job) do
     example = <<'EOS'

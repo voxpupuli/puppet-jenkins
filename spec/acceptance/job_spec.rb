@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins::job' do
-  let(:test_build_job) {
+  let(:test_build_job) do
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
@@ -27,7 +27,7 @@ describe 'jenkins::job' do
 EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
-  }
+  end
 
   context 'create' do
     it 'should work with no errors' do

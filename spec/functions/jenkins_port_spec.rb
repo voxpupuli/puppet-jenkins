@@ -10,9 +10,9 @@ describe 'jenkins_port', if: Puppet.version.to_f < 4.0 do
   # Lazily loaded function call to be used in examples. Not overwriting
   # `subject` since rspec-puppet is already defining that to return the
   # function
-  let(:port) {
+  let(:port) do
     subject.call([])
-  }
+  end
 
   it 'should default to 8080' do
     expect(port).to eql '8080'
