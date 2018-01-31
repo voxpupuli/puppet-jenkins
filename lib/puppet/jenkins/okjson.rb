@@ -117,7 +117,7 @@ private
     case typ
     when '{' then objparse(ts)
     when '[' then arrparse(ts)
-    when :val,:str then [val, ts[1..-1]]
+    when :val, :str then [val, ts[1..-1]]
     else
       raise Error, "unexpected #{val.inspect}"
     end
@@ -212,7 +212,7 @@ private
     while s.length > 0
       typ, lexeme, val = tok(s)
       if typ == nil
-        raise Error, "invalid character at #{s[0,10].inspect}"
+        raise Error, "invalid character at #{s[0, 10].inspect}"
       end
       if typ != :space
         ts << [typ, lexeme, val]
@@ -238,26 +238,26 @@ private
   # it is the lexeme.
   def tok(s)
     case s[0]
-    when ?{ then ['{', s[0,1], s[0,1]]
-    when ?} then ['}', s[0,1], s[0,1]]
-    when ?: then [':', s[0,1], s[0,1]]
-    when ?, then [',', s[0,1], s[0,1]]
-    when ?[ then ['[', s[0,1], s[0,1]]
-    when ?] then [']', s[0,1], s[0,1]]
+    when ?{ then ['{', s[0, 1], s[0, 1]]
+    when ?} then ['}', s[0, 1], s[0, 1]]
+    when ?: then [':', s[0, 1], s[0, 1]]
+    when ?, then [',', s[0, 1], s[0, 1]]
+    when ?[ then ['[', s[0, 1], s[0, 1]]
+    when ?] then [']', s[0, 1], s[0, 1]]
     when ?n then nulltok(s)
     when ?t then truetok(s)
     when ?f then falsetok(s)
     when ?" then strtok(s)
-    when Spc, ?\t, ?\n, ?\r then [:space, s[0,1], s[0,1]]
+    when Spc, ?\t, ?\n, ?\r then [:space, s[0, 1], s[0, 1]]
     else
       numtok(s)
     end
   end
 
 
-  def nulltok(s);  s[0,4] == 'null'  ? [:val, 'null',  nil]   : [] end
-  def truetok(s);  s[0,4] == 'true'  ? [:val, 'true',  true]  : [] end
-  def falsetok(s); s[0,5] == 'false' ? [:val, 'false', false] : [] end
+  def nulltok(s);  s[0, 4] == 'null'  ? [:val, 'null',  nil]   : [] end
+  def truetok(s);  s[0, 4] == 'true'  ? [:val, 'true',  true]  : [] end
+  def falsetok(s); s[0, 5] == 'false' ? [:val, 'false', false] : [] end
 
 
   def numtok(s)
@@ -286,9 +286,9 @@ private
 
 
   def abbrev(s)
-    t = s[0,10]
+    t = s[0, 10]
     p = t['`']
-    t = t[0,p] if p
+    t = t[0, p] if p
     t = t + '...' if t.length < s.length
     '`' + t + '`'
   end
@@ -314,25 +314,25 @@ private
         end
 
         case q[r]
-        when ?",?\\,?/,?'
+        when ?", ?\\, ?/, ?'
           a[w] = q[r]
           r += 1
           w += 1
-        when ?b,?f,?n,?r,?t
+        when ?b, ?f, ?n, ?r, ?t
           a[w] = Unesc[q[r]]
           r += 1
           w += 1
         when ?u
           r += 1
           uchar = begin
-            hexdec4(q[r,4])
+            hexdec4(q[r, 4])
           rescue RuntimeError => e
-            raise Error, "invalid escape sequence \\u#{q[r,4]}: #{e}"
+            raise Error, "invalid escape sequence \\u#{q[r, 4]}: #{e}"
           end
           r += 4
           if surrogate? uchar
             if q.length >= r + 6
-              uchar1 = hexdec4(q[r + 2,4])
+              uchar1 = hexdec4(q[r + 2, 4])
               uchar = subst(uchar, uchar1)
               if uchar != Ucharerr
                 # A valid pair; consume.
@@ -362,7 +362,7 @@ private
         w += 1
       end
     end
-    a[0,w]
+    a[0, w]
   end
 
 
@@ -424,7 +424,7 @@ private
 
 
   def objenc(x)
-    '{' + x.map{|k,v| keyenc(k) + ':' + valenc(v)}.join(',') + '}'
+    '{' + x.map{|k, v| keyenc(k) + ':' + valenc(v)}.join(',') + '}'
   end
 
 
