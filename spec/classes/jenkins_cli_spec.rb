@@ -6,7 +6,7 @@ describe 'jenkins', type: :class do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -18,10 +18,10 @@ describe 'jenkins', type: :class do
     end
 
     context '$cli => true' do
-      let(:params) {{ cli: true,
-                      cli_ssh_keyfile: '/path/to/key',
-                      config_hash: { 'HTTP_PORT' => { 'value' => '9000' } }}
-      }
+      let(:params) do { cli: true,
+                        cli_ssh_keyfile: '/path/to/key',
+                        config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
+      end
       it { should contain_class('jenkins::cli') }
       it { should contain_exec('jenkins-cli') }
       it { should contain_exec('reload-jenkins').with_command(/http:\/\/localhost:9000/) }
@@ -44,7 +44,7 @@ describe 'jenkins', type: :class do
     end
 
     context '$cli => false' do
-      let(:params) {{ cli: false }}
+      let(:params) { { cli: false } }
 
       it { should_not contain_class('jenkins::cli') }
       it { should_not contain_class('jenkins::cli_helper') }

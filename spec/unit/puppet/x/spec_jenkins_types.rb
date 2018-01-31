@@ -3,7 +3,7 @@ require 'spec_helper'
 shared_examples 'generic namevar' do |name|
   it { expect(described_class.attrtype(name)).to eq :param }
 
-  it 'should be the namevar' do
+  it 'is the namevar' do
     expect(described_class.key_attributes).to eq [name]
   end
 end # generic namevar
@@ -22,7 +22,7 @@ shared_examples 'generic ensurable' do |*allowed|
     end
   end
 
-  it 'should have no default value' do
+  it 'has no default value' do
     user = described_class.new(name: 'nobody')
     expect(user.should(:ensure)).to be_nil
   end
@@ -33,7 +33,7 @@ shared_examples 'generic ensurable' do |*allowed|
     end
   end
 
-  it 'should reject unknown values' do
+  it 'rejects unknown values' do
     expect { described_class.new(name: 'nobody', ensure: :foo) }.to raise_error(Puppet::Error)
   end
 end # generic ensurable
@@ -51,7 +51,7 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 
   if default.nil?
-    it 'should have no default value' do
+    it 'has no default value' do
       resource = described_class.new(name: 'nobody')
       expect(resource.should(param)).to be_nil
     end
@@ -62,31 +62,31 @@ shared_examples 'validated property' do |param, default, allowed|
     end
   end
 
-  it 'should reject unknown values' do
+  it 'rejects unknown values' do
     expect { described_class.new(:name => 'nobody', param => :foo) }.
       to raise_error(Puppet::Error)
   end
 end # validated property
 
-shared_examples 'boolean parameter' do |param, default|
+shared_examples 'boolean parameter' do |param, _default|
   it 'does not allow non-boolean values' do
-    expect {
+    expect do
       described_class.new(:name => 'foo', param => 'unknown')
-    }.to raise_error Puppet::ResourceError, /Valid values are true, false/
+    end.to raise_error Puppet::ResourceError, /Valid values are true, false/
   end
 end # boolean parameter
 
 shared_examples 'boolean property' do |param, default|
   it 'does not allow non-boolean values' do
-    expect {
+    expect do
       described_class.new(:name => 'foo', param => 'unknown')
-    }.to raise_error Puppet::ResourceError, /expected a boolean value/
+    end.to raise_error Puppet::ResourceError, /expected a boolean value/
   end
 
   it_behaves_like 'validated property', param, default, [true, false]
 end # boolean property
 
-shared_examples 'array_matching property' do |param|
+shared_examples 'array_matching property' do |_param|
   context 'attrtype' do
     it { expect(described_class.attrtype(:arguments)).to eq :property }
   end
@@ -97,7 +97,7 @@ shared_examples 'array_matching property' do |param|
     end
   end
 
-  it 'should support an array of mixed types' do
+  it 'supports an array of mixed types' do
     value = [true, 'foo']
     resource = described_class.new(name: 'test', arguments: value)
     expect(resource[:arguments]).to eq value
@@ -107,7 +107,7 @@ end # array_matching property
 shared_examples 'autorequires cli resources' do
   before(:each) { Facter.clear }
 
-  it 'should autorequire service' do
+  it 'autorequires service' do
     service_resource = Puppet::Type.type(:service).new(
       name: 'jenkins',
     )
@@ -125,7 +125,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire ssh_private_key file from catalog' do
+  it 'autorequires ssh_private_key file from catalog' do
     ssh_resource = Puppet::Type.type(:file).new(
       path: '/dne/id_rsa',
     )
@@ -148,7 +148,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire ssh_private_key file from fact' do
+  it 'autorequires ssh_private_key file from fact' do
     ssh_resource = Puppet::Type.type(:file).new(
       path: '/dne/id_rsa',
     )
@@ -167,7 +167,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire ssh_private_key file from catalog instead of fact' do
+  it 'autorequires ssh_private_key file from catalog instead of fact' do
     ssh_resource = Puppet::Type.type(:file).new(
       path: '/dne/catalog',
     )
@@ -191,7 +191,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire puppet_helper file from catalog' do
+  it 'autorequires puppet_helper file from catalog' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/foo.groovy',
     )
@@ -214,7 +214,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire puppet_helper file from fact' do
+  it 'autorequires puppet_helper file from fact' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/foo.groovy',
     )
@@ -233,7 +233,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire puppet_helper file from catalog instead of fact' do
+  it 'autorequires puppet_helper file from catalog instead of fact' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/catalog',
     )
@@ -257,7 +257,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire both ssh_private_key key and puppet_helper from catalog' do
+  it 'autorequires both ssh_private_key key and puppet_helper from catalog' do
     ssh_resource = Puppet::Type.type(:file).new(
       path: '/dne/id_rsa',
     )
@@ -288,7 +288,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[1].target).to eq resource
   end
 
-  it 'should autorequire cli_jar file from catalog' do
+  it 'autorequires cli_jar file from catalog' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/catalog',
     )
@@ -311,7 +311,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire cli_jar file from fact' do
+  it 'autorequires cli_jar file from fact' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/fact',
     )
@@ -330,7 +330,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire cli_jar file from catalog instead of fact' do
+  it 'autorequires cli_jar file from catalog instead of fact' do
     helper_resource = Puppet::Type.type(:file).new(
       path: '/dne/catalog',
     )
@@ -356,7 +356,7 @@ shared_examples 'autorequires cli resources' do
 end # when autorequiring resources
 
 shared_examples 'autorequires all jenkins_user resources' do
-  it 'should autorequire single jenkins_user' do
+  it 'autorequires single jenkins_user' do
     larry = Puppet::Type.type(:jenkins_user).new(
       name: 'larry',
     )
@@ -374,7 +374,7 @@ shared_examples 'autorequires all jenkins_user resources' do
     expect(req[0].target).to eq resource
   end
 
-  it 'should autorequire multiple jenkins_user(s)' do
+  it 'autorequires multiple jenkins_user(s)' do
     larry = Puppet::Type.type(:jenkins_user).new(
       name: 'larry',
     )
@@ -401,16 +401,14 @@ shared_examples 'autorequires all jenkins_user resources' do
 end # autorequires all jenkins_user resources
 
 shared_examples 'autorequires jenkins_security_realm resource' do
-  it 'should autorequire jenkins_security_realm resource' do
+  it 'autorequires jenkins_security_realm resource' do
     required = Puppet::Type.type(:jenkins_security_realm).new(
       name: 'test',
     )
     resource = described_class.new(
       name: 'test',
     )
-    if described_class.validproperty?(:ensure)
-      resource[:ensure] = :present
-    end
+    resource[:ensure] = :present if described_class.validproperty?(:ensure)
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource required
@@ -424,16 +422,14 @@ shared_examples 'autorequires jenkins_security_realm resource' do
 end # autorequires jenkins_security_realm resource
 
 shared_examples 'autorequires jenkins_authorization_strategy resource' do
-  it 'should autorequire jenkins_authorization_strategy resource' do
+  it 'autorequires jenkins_authorization_strategy resource' do
     required = Puppet::Type.type(:jenkins_authorization_strategy).new(
       name: 'test',
     )
     resource = described_class.new(
       name: 'test',
     )
-    if described_class.validproperty?(:ensure)
-      resource[:ensure] = :present
-    end
+    resource[:ensure] = :present if described_class.validproperty?(:ensure)
 
     catalog = Puppet::Resource::Catalog.new
     catalog.add_resource required

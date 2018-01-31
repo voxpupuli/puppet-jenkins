@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins::job' do
-  let(:test_build_job) {
+  let(:test_build_job) do
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
@@ -27,10 +27,10 @@ describe 'jenkins::job' do
 EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
-  }
+  end
 
   context 'create' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -46,7 +46,7 @@ EOS
       # Run it twice and test for idempotency
       apply(pp, catch_failures: true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply(pp, :catch_changes => true)
+      # apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -62,7 +62,7 @@ EOS
 
   context 'disable' do
     pending('Parameter $enabled is now deprecated, no need to test')
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -77,7 +77,7 @@ EOS
       # Run it twice and test for idempotency
       apply(pp, catch_failures: true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply(pp, :catch_changes => true)
+      # apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
@@ -91,7 +91,7 @@ EOS
   end # deprecated param enabled
 
   context 'delete' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       # create a test job so it can be deleted; job creation is not what
       # we're intending to be testing here
       pp = <<-EOS
@@ -121,7 +121,7 @@ EOS
       # Run it twice and test for idempotency
       apply(pp, catch_failures: true)
       # XXX idempotency is broken with at least jenkins 1.613
-      #apply(pp, :catch_changes => true)
+      # apply(pp, :catch_changes => true)
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do

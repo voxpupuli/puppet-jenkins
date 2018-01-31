@@ -6,7 +6,7 @@ describe 'jenkins', type: :class do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -89,7 +89,7 @@ describe 'jenkins', type: :class do
     end
 
     context 'managing service' do
-      let(:params) {{ service_ensure: 'stopped', service_enable: false }}
+      let(:params) { { service_ensure: 'stopped', service_enable: false } }
       it do
         should contain_service('jenkins').with(
           ensure: 'stopped',

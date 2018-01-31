@@ -4,7 +4,7 @@ describe 'jenkins class' do
   include_context 'jenkins'
 
   context 'default parameters' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -44,7 +44,7 @@ describe 'jenkins class' do
       it { should be_enabled }
     end
 
-    if fact('osfamily') == 'RedHat' and $systemd
+    if fact('osfamily') == 'RedHat' && $systemd
       describe file('/etc/systemd/system/jenkins.service') do
         it { should be_file }
         it { should contain "ExecStart=#{libdir}/jenkins-run" }
@@ -66,7 +66,7 @@ describe 'jenkins class' do
   end # default parameters
 
   context 'executors' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         executors         => 42,
@@ -94,7 +94,7 @@ describe 'jenkins class' do
   end # executors
 
   context 'slaveagentport' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = <<-EOS
         class {'jenkins':
           slaveagentport    => 7777,

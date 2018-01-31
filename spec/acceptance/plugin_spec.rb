@@ -11,12 +11,12 @@ describe 'jenkins class', order: :defined do
     "#{$pdir}/c.txt",
     "#{$pdir}/a/foo",
     "#{$pdir}/b/bar",
-    "#{$pdir}/c/baz",
+    "#{$pdir}/c/baz"
   ]
   $dirs = [
     "#{$pdir}/a",
     "#{$pdir}/b",
-    "#{$pdir}/c",
+    "#{$pdir}/c"
   ]
 
   shared_examples 'has_git_plugin' do
@@ -39,7 +39,7 @@ describe 'jenkins class', order: :defined do
   end
 
   context 'default parameters' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class {'jenkins':
         cli_remoting_free => true,
@@ -56,7 +56,6 @@ describe 'jenkins class', order: :defined do
 
     it_behaves_like 'has_git_plugin'
   end
-
 
   describe 'plugin downgrade' do
     before(:all) do
@@ -76,7 +75,7 @@ describe 'jenkins class', order: :defined do
 
     context 'downgrade' do
       git_version =
-      it 'should downgrade git version' do
+      it 'downgrades git version' do
         pp = <<-EOS
         class {'jenkins':
           cli_remoting_free => true,
@@ -101,7 +100,7 @@ describe 'jenkins class', order: :defined do
     context 'true' do
       include_context 'plugin_test_files'
 
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = <<-EOS
         class {'jenkins':
           cli_remoting_free => true,
@@ -129,7 +128,7 @@ describe 'jenkins class', order: :defined do
     context 'false' do
       include_context 'plugin_test_files'
 
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = <<-EOS
         class {'jenkins':
           cli_remoting_free => true,

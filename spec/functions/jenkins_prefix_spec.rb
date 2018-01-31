@@ -10,11 +10,11 @@ describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
   # Lazily loaded function call to be used in examples. Not overwriting
   # `subject` since rspec-puppet is already defining that to return the
   # function
-  let(:prefix) {
+  let(:prefix) do
     subject.call([])
-  }
+  end
 
-  it 'should default to ""' do
+  it 'defaults to ""' do
     expect(prefix).to eql ''
   end
 
@@ -27,7 +27,7 @@ describe 'jenkins_prefix', if: Puppet.version.to_f < 4.0 do
       ENDPUPPET
     end
 
-    it 'should be our overwritten prefix' do
+    it 'is our overwritten prefix' do
       expect(prefix).to eql('/test')
     end
   end

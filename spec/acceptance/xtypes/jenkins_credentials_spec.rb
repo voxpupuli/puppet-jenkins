@@ -6,7 +6,7 @@ describe 'jenkins_credentials' do
   context 'ensure =>' do
     context 'present' do
       context 'UsernamePasswordCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins_credentials { '9b07d668-a87e-4877-9407-ae05056e32ac':
               ensure      => 'present',
@@ -31,7 +31,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'ConduitCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pending('puppet_helper.groovy implementation missing, see https://github.com/jenkinsci/puppet-jenkins/issues/753')
           pp = base_manifest + <<-EOS
             jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
@@ -57,9 +57,8 @@ describe 'jenkins_credentials' do
         end
       end
 
-
       context 'BasicSSHUserPrivateKey' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'ssh-credentials': }
 
@@ -87,7 +86,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'StringCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,
@@ -115,7 +114,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'FileCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,
@@ -144,7 +143,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'AWSCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
               'jackson2-api',
@@ -177,7 +176,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'GitLabApiTokenImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             package { 'git': }
             jenkins::plugin { [
@@ -220,7 +219,7 @@ describe 'jenkins_credentials' do
 
     context 'absent' do
       context 'StringCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials': }
 
@@ -246,7 +245,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'FileCredentialsImpl' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,

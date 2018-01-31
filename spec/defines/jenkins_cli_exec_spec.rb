@@ -8,7 +8,7 @@ describe 'jenkins::cli::exec', type: :define do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat', # require by puppetlabs/java
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -57,7 +57,7 @@ describe 'jenkins::cli::exec', type: :define do
 
   describe 'command =>' do
     context 'bar' do
-      let(:params) {{ command: 'bar' }}
+      let(:params) { { command: 'bar' } }
 
       it do
         should contain_exec('foo').with(
@@ -70,7 +70,7 @@ describe 'jenkins::cli::exec', type: :define do
     end
 
     context "['bar']" do
-      let(:params) {{ command: %w{ bar } }}
+      let(:params) { { command: %w{ bar } } }
 
       it do
         should contain_exec('foo').with(
@@ -83,7 +83,7 @@ describe 'jenkins::cli::exec', type: :define do
     end
 
     context "['bar', 'baz']" do
-      let(:params) {{ command: %w{bar baz} }}
+      let(:params) { { command: %w{bar baz} } }
 
       it do
         should contain_exec('foo').with(
@@ -98,7 +98,7 @@ describe 'jenkins::cli::exec', type: :define do
 
   describe 'unless =>' do
     context 'bar' do
-      let(:params) {{ unless: 'bar' }}
+      let(:params) { { unless: 'bar' } }
 
       it do
         should contain_exec('foo').with(

@@ -4,7 +4,7 @@ describe 'jenkins::slave class' do
   include_context 'jenkins'
 
   context 'default parameters' do
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
         include ::jenkins::slave
       EOS
@@ -60,7 +60,7 @@ describe 'jenkins::slave class' do
     end
 
     context 'ui_user/ui_pass' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = <<-EOS
           class { ::jenkins::slave:
             ui_user => 'imauser',
@@ -81,7 +81,7 @@ describe 'jenkins::slave class' do
 
     context 'disable_clients_unique_id' do
       context 'true' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               disable_clients_unique_id => true,
@@ -98,7 +98,7 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               disable_clients_unique_id => false,
@@ -117,7 +117,7 @@ describe 'jenkins::slave class' do
 
     context 'disable_ssl_verification' do
       context 'true' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               disable_ssl_verification => true,
@@ -134,7 +134,7 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               disable_ssl_verification => false,
@@ -153,7 +153,7 @@ describe 'jenkins::slave class' do
 
     context 'delete_existing_clients' do
       context 'true' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               delete_existing_clients => true,
@@ -170,7 +170,7 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               delete_existing_clients => false,
@@ -189,7 +189,7 @@ describe 'jenkins::slave class' do
 
     context 'labels' do
       context 'single label in string' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               labels => 'foo',
@@ -206,7 +206,7 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in string' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               labels => 'foo bar baz',
@@ -223,7 +223,7 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in array' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               labels => ['foo', 'bar', 'baz'],
@@ -244,7 +244,7 @@ describe 'jenkins::slave class' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
 
       context tool_locations do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = <<-EOS
             class { ::jenkins::slave:
               tool_locations => '#{tool_locations}',

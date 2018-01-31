@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 # a fixed order is required in order to cleanup created jobs -- we are relying
 # on existing state as a performance optimization.
 describe 'jenkins_job', order: :defined do
-  let(:test_build_job) {
+  let(:test_build_job) do
     example = <<'EOS'
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
@@ -29,7 +29,7 @@ describe 'jenkins_job', order: :defined do
 EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
-  }
+  end
 
   let(:test_folder_job) do
     example = <<'EOS'
@@ -59,7 +59,7 @@ EOS
 
   context 'ensure =>' do
     context 'present' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => present,
@@ -81,7 +81,7 @@ EOS
     end # 'present' do
 
     context 'absent' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => absent,
@@ -106,7 +106,7 @@ EOS
 
     context 'nested folders' do
       context 'create' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo':
               ensure => present,
@@ -148,10 +148,10 @@ EOS
           it { should be_mode 644 }
           it { should contain '<description>test job</description>' }
         end
-      end #create
+      end # create
 
       context 'delete' do
-        it 'should work with no errors' do
+        it 'works with no errors' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo': ensure => absent }
             jenkins_job { 'foo/bar': ensure => absent }
@@ -168,11 +168,11 @@ EOS
         }.each do |config|
           describe file(config) { it { should_not exist } }
         end
-      end #delete
-    end #nested folders
+      end # delete
+    end # nested folders
 
     context 'convert existing job to folder' do
-      it 'should work with no errors' do
+      it 'works with no errors' do
         skip # travis is running the beaker tests really slow...
         pending('CLI update-job command is unable to handle the conversion')
 
@@ -201,6 +201,6 @@ EOS
 
         apply2(pp)
       end
-    end #convert existing job to folder
-  end #cloudbees-folder
-end #jenkins_job
+    end # convert existing job to folder
+  end # cloudbees-folder
+end # jenkins_job

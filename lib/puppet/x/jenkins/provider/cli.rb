@@ -73,7 +73,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
   def clihelper(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -85,7 +85,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def cli(command, options = nil)
-    if resource and resource.catalog
+    if resource && resource.catalog
       options ||= {}
       options[:catalog] ||= resource.catalog
     end
@@ -106,7 +106,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     if cli_remoting_free
       cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
       cli_cmd = ['groovy', '=' ] + [command]
-      options[:tmpfile_as_param]=true
+      options[:tmpfile_as_param] = true
     else
       cli_pre_cmd = []
       cli_cmd = ['groovy', puppet_helper] + [command]
@@ -129,9 +129,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       input = JSON.pretty_generate(data)
     end
 
-    if options.key?(:stdin)
-      input = options.delete(:stdin)
-    end
+    input = options.delete(:stdin) if options.key?(:stdin)
 
     if options.key?(:tmpfile_as_param)
       tmpfile_as_param = options[:tmpfile_as_param]
@@ -148,9 +146,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     options[:stdinfile] = tmp.path
     begin
       Etc.getpwnam('jenkins')
-      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exists?(tmp.path)
     rescue
-      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param and File.exists?(tmp.path)
+      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exists?(tmp.path)
     end
     result = execute_with_retry(command, options, cli_pre_cmd)
     tmp.close
@@ -185,7 +183,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = cli_pre_cmd + [
       command(:java),
       '-jar', cli_jar,
-      '-s', url,
+      '-s', url
     ]
 
     cli_cmd = base_cmd + [command]
@@ -206,11 +204,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       else
         # For legacy jenkins, we can only read the provided password file
         # parse it and assume Jenkins 2.46.2++ content
-        (user,pass) = File.open(cli_password_file).read.split("\n").reject{ |x| x !~ /(^\S+:\S+$)/}[0].split(':')
+        (user, pass) = File.open(cli_password_file).read.split("\n").reject{ |x| x !~ /(^\S+:\S+$)/ }[0].split(':')
         auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
       end
     # we have username and password, then we create the password file and use it
-    elsif !cli_username.nil? and !cli_password.nil?
+    elsif !cli_username.nil? && !cli_password.nil?
       if cli_remoting_free
         auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
       else
@@ -233,9 +231,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       handler: handler,
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
-      unless result == ''
-        Puppet.debug("#{sname} command stdout:\n#{result}")
-      end
+      Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
       return result
     end
   end
@@ -248,9 +244,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     # if no ssh_private_key is defined, the only option is to invoke the cli
     # without auth
-    if auth_cmd.nil?
-      return execute_exceptionify(cli_cmd, options)
-    end
+    return execute_exceptionify(cli_cmd, options) if auth_cmd.nil?
 
     # we already know that auth is required
     if class_variable_get(:@@cli_auth_required)
@@ -277,7 +271,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     cli_auth_errors = [
                         'You must authenticate to access this Jenkins.',
                         'anonymous is missing the Overall/Read permission',
-                        'anonymous is missing the Overall/RunScripts permission',
+                        'anonymous is missing the Overall/RunScripts permission'
                       ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
@@ -285,7 +279,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
                    'SEVERE: I/O error in channel CLI connection',
                    'java.net.SocketException: Connection reset',
                    'java.net.ConnectException: Connection refused',
-                   'java.io.IOException: Failed to connect',
+                   'java.io.IOException: Failed to connect'
                  ]
 
     if options.key?(:tmpfile_as_param)
@@ -293,23 +287,19 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     end
 
     begin
-      #return Puppet::Provider.execute(*args)
-      if tmpfile_as_param and options.key?(:stdinfile)
-        return superclass.execute([ cmd, options[:stdinfile] ].flatten().join(' '), options)
+      # return Puppet::Provider.execute(*args)
+      if tmpfile_as_param && options.key?(:stdinfile)
+        return superclass.execute([ cmd, options[:stdinfile] ].flatten.join(' '), options)
       else
-        return superclass.execute([ cmd ].flatten().join(' '), options)
+        return superclass.execute([ cmd ].flatten.join(' '), options)
       end
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
-        if e.message.match(error)
-          raise AuthError, e.message, e.backtrace
-        end
+        raise AuthError, e.message, e.backtrace if e.message.match(error)
       end
 
       net_errors.each do |error|
-        if e.message.match(error)
-          raise NetError, e.message, e.backtrace
-        end
+        raise NetError, e.message, e.backtrace if e.message.match(error)
       end
 
       raise UnknownError, e.message, e.backtrace

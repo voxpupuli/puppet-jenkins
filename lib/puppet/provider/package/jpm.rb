@@ -15,7 +15,7 @@ Puppet::Type.type(:package).provide :jpm, parent: Puppet::Provider::Package do
 
   # These two features are pending the following issues being resolved for jpm:
   #   <https://github.com/rtyler/jpm/issues/8>
-  #has_feature :upgradeable
+  # has_feature :upgradeable
   #   <https://github.com/rtyler/jpm/issues/7>
-  #has_feature :versionable
+  # has_feature :versionable
 end

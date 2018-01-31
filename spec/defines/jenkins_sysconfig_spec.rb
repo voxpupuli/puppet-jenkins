@@ -12,7 +12,7 @@ describe 'jenkins::sysconfig' do
         osfamily: 'RedHat',
         operatingsystem: 'CentOS',
         operatingsystemrelease: '7.2',
-        operatingsystemmajrelease: '7',
+        operatingsystemmajrelease: '7'
       }
     end
 
@@ -34,8 +34,8 @@ describe 'jenkins::sysconfig' do
         lsbdistid: 'debian',
         os: {
           name: 'Debian',
-          release: { full: '11.04' },
-        },
+          release: { full: '11.04' }
+        }
       }
     end
 

@@ -6,7 +6,7 @@ describe 'jenkins', type: :class do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -31,7 +31,7 @@ describe 'jenkins', type: :class do
     end
 
     context 'with "no_proxy_list" proxy config' do
-      let(:params) { { proxy_host: 'myhost', proxy_port: 1234, no_proxy_list: ['example.com','test.host.net'] } }
+      let(:params) { { proxy_host: 'myhost', proxy_port: 1234, no_proxy_list: ['example.com', 'test.host.net'] } }
       it { should create_class('jenkins::proxy') }
       it do
         should contain_file('/var/lib/jenkins/proxy.xml').with(

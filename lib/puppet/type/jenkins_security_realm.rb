@@ -1,4 +1,4 @@
-require_relative  '../../puppet/x/jenkins/type/cli'
+require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_security_realm) do
   @doc = "Manage Jenkins' security realm"
@@ -19,14 +19,14 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_security_realm) do
   # resources is not attempted to be modify between jenkins_security_realm and
   # jenkins_authorization_strategy state changes.
   autorequire(:jenkins_user) do
-    catalog.resources.find_all do |r|
+    catalog.resources.select do |r|
       r.is_a?(Puppet::Type.type(:jenkins_user))
     end
   end
 
   autorequire(:jenkins_authorization_strategy) do
     if self[:ensure] == :absent
-      catalog.resources.find_all do |r|
+      catalog.resources.select do |r|
         r.is_a?(Puppet::Type.type(:jenkins_authorization_strategy))
       end
     end

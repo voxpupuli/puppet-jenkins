@@ -28,7 +28,7 @@ describe Puppet::Jenkins::Plugins do
       end
 
       context 'and the directory does not exist' do
-        it { should be false}
+        it { should be false }
       end
     end
   end
@@ -46,7 +46,7 @@ describe Puppet::Jenkins::Plugins do
     end
 
     context 'when plugins exist' do
-      it 'should generate a list of plugins' do
+      it 'generates a list of plugins' do
         pending 'This is too hard to unit test, feh.'
         fail
       end
@@ -64,7 +64,7 @@ Jenkins-Version: 1.456
 '
       end
 
-      it 'should have the properly hyphenated plugin version' do
+      it 'has the properly hyphenated plugin version' do
         expect(data[:plugin_version]).to eql('1.7.2-1')
       end
     end
@@ -94,7 +94,7 @@ Plugin-Developers:
 
       it { should be_instance_of Hash }
 
-      it 'should parse the right plugin version' do
+      it 'parses the right plugin version' do
         expect(data[:plugin_version]).to eql('1.2')
       end
     end
@@ -129,7 +129,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
 
       it { should be_instance_of Hash }
-      it 'should have the right number of keys' do
+      it 'has the right number of keys' do
         expect(data.keys.size).to eql(18)
       end
     end
@@ -142,7 +142,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
     context 'uses json' do
       it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin')}
+      it { should have_key('AdaptivePlugin') }
       its (:size) { should eql 1 }
     end
 
@@ -153,41 +153,41 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
 
       it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin')}
+      it { should have_key('AdaptivePlugin') }
       its (:size) { should eql 1 }
     end
   end
 
   let(:git_plugin) do
-    {'buildDate'=>'Jan 08, 2014',
-    'dependencies'=>
-      [{'name'=>'promoted-builds', 'optional'=>true, 'version'=>'2.7'},
-      {'name'=>'token-macro', 'optional'=>true, 'version'=>'1.5.1'},
-      {'name'=>'ssh-credentials', 'optional'=>false, 'version'=>'1.5.1'},
-      {'name'=>'scm-api', 'optional'=>false, 'version'=>'0.1'},
-      {'name'=>'credentials', 'optional'=>false, 'version'=>'1.9.3'},
-      {'name'=>'multiple-scms', 'optional'=>true, 'version'=>'0.2'},
-      {'name'=>'parameterized-trigger', 'optional'=>true, 'version'=>'2.4'},
-      {'name'=>'git-client', 'optional'=>false, 'version'=>'1.6.0'}],
-    'developers'=>
-      [{'developerId'=>'kohsuke', 'name'=>'Kohsuke Kawaguchi'},
-      {'developerId'=>'ndeloof',
-        'email'=>'nicolas.deloof@gmail.com',
-        'name'=>'Nicolas De Loof'}],
-    'excerpt'=>
+    { 'buildDate' => 'Jan 08, 2014',
+      'dependencies' =>
+      [{ 'name' => 'promoted-builds', 'optional' => true, 'version' => '2.7' },
+      { 'name' => 'token-macro', 'optional' => true, 'version' => '1.5.1' },
+      { 'name' => 'ssh-credentials', 'optional' => false, 'version' => '1.5.1' },
+      { 'name' => 'scm-api', 'optional' => false, 'version' => '0.1' },
+      { 'name' => 'credentials', 'optional' => false, 'version' => '1.9.3' },
+      { 'name' => 'multiple-scms', 'optional' => true, 'version' => '0.2' },
+      { 'name' => 'parameterized-trigger', 'optional' => true, 'version' => '2.4' },
+      { 'name' => 'git-client', 'optional' => false, 'version' => '1.6.0' }],
+      'developers' =>
+      [{ 'developerId' => 'kohsuke', 'name' => 'Kohsuke Kawaguchi' },
+      { 'developerId' => 'ndeloof',
+        'email' => 'nicolas.deloof@gmail.com',
+        'name' => 'Nicolas De Loof' }],
+      'excerpt' =>
       "This plugin allows use of <a href='http://git-scm.com/'>Git</a> as a build SCM. A recent Git runtime is required (1.7.9 minimum, 1.8.x recommended). Plugin is only tested on official <a href='http://git-scm.com/'>git client</a>. Use exotic installations at your own risks.",
-    'gav'=>'org.jenkins-ci.plugins:git:2.0.1',
-    'labels'=>['scm'],
-    'name'=>'git',
-    'previousTimestamp'=>'2013-10-22T22:00:16.00Z',
-    'previousVersion'=>'2.0',
-    'releaseTimestamp'=>'2014-01-08T21:46:20.00Z',
-    'requiredCore'=>'1.480',
-    'scm'=>'github.com',
-    'sha1'=>'r5bK/IP8soP08D55Xpcx5yWHzdY=',
-    'title'=>'Git Plugin',
-    'url'=>'http://updates.jenkins-ci.org/download/plugins/git/2.0.1/git.hpi',
-    'version'=>'2.0.1',
-    'wiki'=>'https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin'}
+      'gav' => 'org.jenkins-ci.plugins:git:2.0.1',
+      'labels' => ['scm'],
+      'name' => 'git',
+      'previousTimestamp' => '2013-10-22T22:00:16.00Z',
+      'previousVersion' => '2.0',
+      'releaseTimestamp' => '2014-01-08T21:46:20.00Z',
+      'requiredCore' => '1.480',
+      'scm' => 'github.com',
+      'sha1' => 'r5bK/IP8soP08D55Xpcx5yWHzdY=',
+      'title' => 'Git Plugin',
+      'url' => 'http://updates.jenkins-ci.org/download/plugins/git/2.0.1/git.hpi',
+      'version' => '2.0.1',
+      'wiki' => 'https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin' }
   end
 end

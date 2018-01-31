@@ -9,9 +9,9 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
   def self.instances(catalog = nil)
     all = user_info_all(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.collect {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map { |i| i['id'] }}")
 
-    all.collect {|info| from_hash(info) }
+    all.map { |info| from_hash(info) }
   end
 
   def api_token_public=(value)
@@ -19,9 +19,7 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present
@@ -47,7 +45,7 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
       api_token_plain: info['api_token_plain'],
       api_token_public: info['api_token_public'],
       public_keys: info['public_keys'],
-      password: info['password'],
+      password: info['password']
     })
   end
   private_class_method :from_hash
@@ -56,14 +54,12 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     info = { 'id' => name }
 
     properties = self.class.resource_type.validproperties
-    properties.reject! {|x| x == :ensure }
-    properties.reject! {|x| x == :api_token_public}
+    properties.reject! { |x| x == :ensure }
+    properties.reject! { |x| x == :api_token_public }
 
     properties.each do |prop|
       value = @property_hash[prop]
-      unless value.nil?
-        info[prop.to_s] = value
-      end
+      info[prop.to_s] = value unless value.nil?
     end
 
     # map :undef -> nil

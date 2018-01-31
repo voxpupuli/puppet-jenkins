@@ -77,7 +77,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'impl',
         'description',
         'username',
-        'password',
+        'password'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -91,7 +91,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -111,7 +111,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'description',
         'username',
         'private_key',
-        'passphrase',
+        'passphrase'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -124,7 +124,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -142,7 +142,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'scope',
         'impl',
         'description',
-        'secret',
+        'secret'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -157,7 +157,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -177,7 +177,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'description',
         'secret',
         'file_name',
-        'content',
+        'content'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -190,7 +190,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -209,7 +209,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'impl',
         'description',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -240,7 +240,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'scope',
         'impl',
         'description',
-        'api_token',
+        'api_token'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -255,7 +255,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'content',
         'file_name',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -271,7 +271,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           with(nil) { credentials }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 6
       end
 
@@ -301,7 +301,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::credentials_list_json' do
+      it 'passes it on ::credentials_list_json' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:credentials_list_json).
@@ -313,7 +313,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   end # ::instanes
 
   describe '#flush' do
-    it 'should call credentials_update' do
+    it 'calls credentials_update' do
       provider = described_class.new
       provider.create
 
@@ -321,7 +321,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider.flush
     end
 
-    it 'should call credentials_delete_id' do
+    it 'calls credentials_delete_id' do
       provider = described_class.new
       provider.destroy
 
@@ -329,7 +329,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider.flush
     end
 
-    it 'should call credentials_delete_id' do
+    it 'calls credentials_delete_id' do
       provider = described_class.new
 
       expect(provider).to receive(:credentials_delete_id)
@@ -376,7 +376,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['credentials_list_json'],
-        {catalog: nil}
+        { catalog: nil }
       ) { JSON.pretty_generate(credentials[0]) }
 
       raw = described_class.send :credentials_list_json
@@ -394,7 +394,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['credentials_update_json'],
-        {stdinjson: credentials[0]},
+        { stdinjson: credentials[0] },
       )
 
       provider.send :credentials_update_json

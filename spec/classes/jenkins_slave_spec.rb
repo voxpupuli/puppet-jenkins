@@ -42,12 +42,12 @@ describe 'jenkins::slave' do
 
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
-      let(:params) { {slave_home: home } }
+      let(:params) { { slave_home: home } }
       it { should contain_file(slave_runtime_file).with_content(/^FSROOT="#{home}"$/) }
     end
 
     describe 'with service disabled' do
-      let(:params) { {enable: false, ensure: 'stopped' } }
+      let(:params) { { enable: false, ensure: 'stopped' } }
       it { should contain_service('jenkins-slave').with(enable: false, ensure: 'stopped') }
     end
 
@@ -66,15 +66,15 @@ describe 'jenkins::slave' do
       let(:params) do
         {
           ui_user: user,
-          ui_pass: password,
+          ui_pass: password
         }
       end
 
-      it 'should escape the user' do
+      it 'escapes the user' do
         should contain_file(slave_runtime_file).with_content(/^JENKINS_USERNAME='#{user}'$/)
       end
 
-      it 'should escape the password' do
+      it 'escapes the password' do
         should contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
       end
     end
@@ -87,7 +87,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set java_args' do
+      it 'sets java_args' do
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
       end
     end
@@ -100,7 +100,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should convert java_args to a string' do
+      it 'converts java_args to a string' do
         args_as_string = args.join ' '
         should contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
       end
@@ -114,7 +114,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set swarm_client_args' do
+      it 'sets swarm_client_args' do
         should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args}"$/)
       end
     end
@@ -127,7 +127,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should convert swarm_client_args to a string' do
+      it 'converts swarm_client_args to a string' do
         args_as_string = args.join ' '
         should contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args_as_string}"$/)
       end
@@ -139,7 +139,7 @@ describe 'jenkins::slave' do
         let(:params) do
           {
             version: '2.0',
-            source: source,
+            source: source
           }
         end
         it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-2.0-jar-with-dependencies.jar") }
@@ -148,7 +148,7 @@ describe 'jenkins::slave' do
         let(:params) do
           {
             version: '3.1',
-            source: source,
+            source: source
           }
         end
         it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-3.1.jar") }
@@ -162,7 +162,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set LABEL as a string' do
+      it 'sets LABEL as a string' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="hello world"$/)
       end
     end
@@ -174,7 +174,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it 'should set LABEL as a string' do
+      it 'sets LABEL as a string' do
         should contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
       end
     end
@@ -184,7 +184,7 @@ describe 'jenkins::slave' do
           disable_clients_unique_id: true
         }
       end
-      it 'should have disable variable' do
+      it 'has disable variable' do
         should contain_file(slave_runtime_file)
           .with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
       end
@@ -192,7 +192,7 @@ describe 'jenkins::slave' do
 
     describe 'delete_existing_clients' do
       context 'true' do
-        let(:params) {{ delete_existing_clients: true }}
+        let(:params) { { delete_existing_clients: true } }
 
         it do
           should contain_file(slave_runtime_file)
@@ -201,7 +201,7 @@ describe 'jenkins::slave' do
       end
 
       context 'false' do
-        let(:params) {{ delete_existing_clients: false }}
+        let(:params) { { delete_existing_clients: false } }
 
         it do
           should contain_file(slave_runtime_file)
@@ -332,11 +332,11 @@ describe 'jenkins::slave' do
   end
 
   describe 'Darwin' do
-    let(:facts) {
-      {osfamily: 'Darwin',
-       operatingsystem: 'Darwin',
-       kernel: 'Darwin'}
-    }
+    let(:facts) do
+      { osfamily: 'Darwin',
+        operatingsystem: 'Darwin',
+        kernel: 'Darwin' }
+    end
     let(:home) { '/home/jenkins-slave' }
     let(:slave_runtime_file) { "#{home}/jenkins-slave" }
     let(:slave_service_file) { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist' }

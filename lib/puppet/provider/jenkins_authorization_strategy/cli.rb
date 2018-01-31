@@ -16,9 +16,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
   end
 
   def flush
-    unless resource.nil?
-      @property_hash = resource.to_hash
-    end
+    @property_hash = resource.to_hash unless resource.nil?
 
     case self.ensure
     when :present
@@ -40,7 +38,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
     args = {
       name: class_name,
       ensure: :present,
-      arguments: ctor_args,
+      arguments: ctor_args
     }
 
     # map nil -> :undef
@@ -85,8 +83,8 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
   def set_strategy_unsecured
     input = {
       'setAuthorizationStrategy' => {
-        'hudson.security.AuthorizationStrategy$Unsecured' => [],
-      },
+        'hudson.security.AuthorizationStrategy$Unsecured' => []
+      }
     }
     set_jenkins_instance(input)
   end

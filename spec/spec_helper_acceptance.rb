@@ -11,7 +11,7 @@ unless ENV['RS_PROVISION'] == 'no'
   run_puppet_install_helper
 end
 
-UNSUPPORTED_PLATFORMS = ['Suse','windows','AIX','Solaris']
+UNSUPPORTED_PLATFORMS = ['Suse', 'windows', 'AIX', 'Solaris']
 
 RSpec.configure do |c|
   # Project root
@@ -75,9 +75,7 @@ shared_context 'jenkins' do
 end
 
 def apply(pp, options = {})
-  if ENV.key?('PUPPET_DEBUG')
-    options[:debug] = true
-  end
+  options[:debug] = true if ENV.key?('PUPPET_DEBUG')
 
   apply_manifest(pp, options)
 end

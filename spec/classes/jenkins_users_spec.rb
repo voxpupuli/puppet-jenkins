@@ -6,7 +6,7 @@ describe 'jenkins', type: :class do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -16,11 +16,11 @@ describe 'jenkins', type: :class do
     end
 
     context 'with testuser' do
-      let(:params) {
+      let(:params) do
         { user_hash: { 'user' => {
           'email' => 'user@example.com',
           'password' => 'test'
-      } } } }
+      } } } end
       it { should contain_jenkins__user('user').with_email('user@example.com').with_password('test') }
     end
   end

@@ -9,7 +9,7 @@ describe 'jenkins', type: :class do
             osfamily: 'RedHat',
             operatingsystem: 'CentOs',
             operatingsystemrelease: '6.7',
-            operatingsystemmajrelease: '6',
+            operatingsystemmajrelease: '6'
           }
         end
         it { should contain_class('jenkins::repo::el') }
@@ -25,16 +25,16 @@ describe 'jenkins', type: :class do
       end
 
       describe 'Debian' do
-        let(:facts) {{
+        let(:facts) do {
           osfamily: 'Debian',
           lsbdistid: 'debian',
           lsbdistcodename: 'natty',
           operatingsystem: 'Debian',
           os: {
             name: 'Debian',
-            release: { full: '11.04' },
-          },
-        }}
+            release: { full: '11.04' }
+          }
+        } end
         it { should contain_class('jenkins::repo::debian') }
         it { should_not contain_class('jenkins::repo::suse') }
         it { should_not contain_class('jenkins::repo::el') }
@@ -52,7 +52,7 @@ describe 'jenkins', type: :class do
           osfamily: 'RedHat',
           operatingsystem: 'CentOs',
           operatingsystemrelease: '6.7',
-          operatingsystemmajrelease: '6',
+          operatingsystemmajrelease: '6'
         }
       end
       let(:params) { { repo: false } }

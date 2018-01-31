@@ -8,7 +8,7 @@ describe Puppet::Type.type(:jenkins_user) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -26,47 +26,47 @@ describe Puppet::Type.type(:jenkins_user) do
     describe 'api_token_plain' do
       it { expect(described_class.attrtype(:api_token_plain)).to eq :property }
 
-      it 'should support valid hexstrings' do
+      it 'supports valid hexstrings' do
         value = '51a8b1dd95bc76b1a2869356c043e8b9'
-        expect {
+        expect do
           described_class.new(
             name: 'nobody',
             api_token_plain: value
           )
-        }
+        end
           .to_not raise_error
       end
 
       %w[ 51a8b1dd95bc76b1a2869356c043e8b
           51a8b1dd95bc76b1a2869356c043e8b99 ].each do |value|
-        it 'should reject hexstrings of invalid length' do
-          expect {
+        it 'rejects hexstrings of invalid length' do
+          expect do
             described_class.new(
               name: 'nobody',
               api_token_plain: value,
             )
-          }
+          end
             .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
         end
       end
-    end #api_token_plain
+    end # api_token_plain
 
     describe 'public_keys' do
       it { expect(described_class.attrtype(:public_keys)).to eq :property }
 
-      it 'should support single string' do
+      it 'supports single string' do
         value = 'ssh-rsa blah comment'
         user = described_class.new(name: 'nobody', public_keys: value)
         expect(user[:public_keys]).to eq [value]
       end
 
-      it 'should support array of string' do
+      it 'supports array of string' do
         value = ['ssh-rsa blah comment', 'ssh-rsa foo comment']
         user = described_class.new(name: 'nobody', public_keys: value)
         expect(user[:public_keys]).to eq value
       end
-    end #public_keys
-  end #properties
+    end # public_keys
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'

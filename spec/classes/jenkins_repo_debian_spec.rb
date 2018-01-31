@@ -10,8 +10,8 @@ describe 'jenkins', type: :class do
       operatingsystem: 'Debian',
       os: {
         name: 'Debian',
-        release: { full: '11.04' },
-      },
+        release: { full: '11.04' }
+      }
     }
   end
 

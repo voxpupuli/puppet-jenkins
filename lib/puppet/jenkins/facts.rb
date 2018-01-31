@@ -18,7 +18,7 @@ module Puppet
             Puppet::Jenkins::Facts.plugins_str
           end
         end
-        return nil
+        nil
       end
 
       # Return a list of plugins and their versions, e.g.:
@@ -33,7 +33,7 @@ module Puppet
           manifest = plugins[plugin]
           buffer << "#{plugin} #{manifest[:plugin_version]}"
         end
-        return buffer.join(', ')
+        buffer.join(', ')
       end
     end
   end

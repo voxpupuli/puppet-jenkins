@@ -67,7 +67,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
           with(nil) { user_info }
       end
 
-      it 'should return the correct number of instances' do
+      it 'returns the correct number of instances' do
         expect(described_class.instances.size).to eq 2
       end
 
@@ -89,7 +89,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     end
 
     context 'when called with a catalog param' do
-      it 'should pass it on ::user_info_all' do
+      it 'passes it on ::user_info_all' do
         catalog = Puppet::Resource::Catalog.new
 
         expect(described_class).to receive(:user_info_all).
@@ -101,7 +101,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   end # ::instanes
 
   describe '#api_token_public=' do
-    it 'should be read only (fail)' do
+    it 'is read only (fail)' do
       provider = described_class.new
 
       expect { provider.api_token_public = 'foo' }.to raise_error(Puppet::Error, /api_token_pubilc is read-only/)
@@ -109,7 +109,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   end # #api_token_public=
 
   describe '#flush' do
-    it 'should call user_update' do
+    it 'calls user_update' do
       provider = described_class.new
       provider.create
 
@@ -117,7 +117,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       provider.flush
     end
 
-    it 'should call delete_user' do
+    it 'calls delete_user' do
       provider = described_class.new
       provider.destroy
 
@@ -125,7 +125,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       provider.flush
     end
 
-    it 'should call delete_user' do
+    it 'calls delete_user' do
       provider = described_class.new
 
       expect(provider).to receive(:delete_user)
