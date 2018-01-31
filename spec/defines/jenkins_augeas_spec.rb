@@ -20,7 +20,7 @@ describe 'jenkins::augeas' do
 
   [false].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
-      let (:params) {{ config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval }}
+      let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
           incl: '/var/lib/jenkins/foo.xml',
@@ -35,7 +35,7 @@ describe 'jenkins::augeas' do
 
   [true].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
-      let (:params) {{ config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval }}
+      let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
       it do
         is_expected.to contain_jenkins__plugin('myplug')
       end
@@ -43,7 +43,7 @@ describe 'jenkins::augeas' do
   end
 
   describe "with plugin param 'pluginname'" do
-    let (:params) {{ config_filename: 'foo.xml', changes: ['set foo bar'], plugin: 'pluginname' }}
+    let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: 'pluginname' } }
     it do
       is_expected.to contain_jenkins__plugin('pluginname')
     end

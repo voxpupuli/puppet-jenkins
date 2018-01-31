@@ -19,7 +19,7 @@ describe 'jenkins::job::present' do
 
   describe 'with both_config_and_config_file_set' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
-    let(:params) {{ config: quotes, config_file: quotes }}
+    let(:params) { { config: quotes, config_file: quotes } }
     it 'fails' do
       should raise_error(Puppet::Error, /You cannot set both/)
     end
@@ -27,7 +27,7 @@ describe 'jenkins::job::present' do
 
   describe 'with config_file set' do
     let(:config_file) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
-    let(:params) {{ config_file: config_file }}
+    let(:params) { { config_file: config_file } }
     it { should contain_exec('jenkins create-job myjob').with_require('File[' + config_file + ']') }
     it { should contain_exec('jenkins update-job myjob') }
     it { should_not contain_exec('jenkins delete-job myjob') }

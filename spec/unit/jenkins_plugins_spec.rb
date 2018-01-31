@@ -28,7 +28,7 @@ describe Puppet::Jenkins::Plugins do
       end
 
       context 'and the directory does not exist' do
-        it { should be false}
+        it { should be false }
       end
     end
   end
@@ -142,7 +142,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
     context 'uses json' do
       it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin')}
+      it { should have_key('AdaptivePlugin') }
       its (:size) { should eql 1 }
     end
 
@@ -153,7 +153,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
 
       it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin')}
+      it { should have_key('AdaptivePlugin') }
       its (:size) { should eql 1 }
     end
   end

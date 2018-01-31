@@ -50,7 +50,7 @@ describe 'jenkins', type: :class do
 
     describe 'with proxy_host and proxy_port' do
       let(:params) { { proxy_host: '1.2.3.4', proxy_port: 1234 } }
-      it { should contain_class 'jenkins::proxy'}
+      it { should contain_class 'jenkins::proxy' }
     end
 
     describe 'with firewall, configure_firewall => true' do
@@ -72,7 +72,7 @@ describe 'jenkins', type: :class do
 
     describe 'sysconfdir =>' do
       context '/foo/bar' do
-        let(:params) {{ sysconfdir: '/foo/bar' }}
+        let(:params) { { sysconfdir: '/foo/bar' } }
         it do
           should contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
             .with_path('/foo/bar/jenkins')
@@ -89,7 +89,7 @@ describe 'jenkins', type: :class do
 
     describe 'manage_datadirs =>' do
       context 'false' do
-        let(:params) {{ manage_datadirs: false }}
+        let(:params) { { manage_datadirs: false } }
         it { should_not contain_file('/var/lib/jenkins') }
         it { should_not contain_file('/var/lib/jenkins/plugins') }
         it { should_not contain_file('/var/lib/jenkins/jobs') }
@@ -106,7 +106,7 @@ describe 'jenkins', type: :class do
       end
 
       context '/dne' do
-        let(:params) {{ localstatedir: '/dne' }}
+        let(:params) { { localstatedir: '/dne' } }
         it { should contain_file('/dne') }
       end
     end
@@ -117,7 +117,7 @@ describe 'jenkins', type: :class do
       end
 
       context '42' do
-        let(:params) {{ executors: 42 }}
+        let(:params) { { executors: 42 } }
 
         it do
           should contain_jenkins__cli__exec('set_num_executors').with(
@@ -137,7 +137,7 @@ describe 'jenkins', type: :class do
 
       context '7777' do
         let(:port) { 7777 }
-        let(:params) {{ slaveagentport: port }}
+        let(:params) { { slaveagentport: port } }
 
         it do
           should contain_jenkins__cli__exec('set_slaveagent_port').with(
@@ -156,12 +156,12 @@ describe 'jenkins', type: :class do
       end
 
       context 'true' do
-        let(:params) {{ manage_user: true }}
+        let(:params) { { manage_user: true } }
         it { should contain_user('jenkins') }
       end
 
       context 'false' do
-        let(:params) {{ manage_user: false }}
+        let(:params) { { manage_user: false } }
         it { should_not contain_user('jenkins') }
       end
     end # manage_user =>
@@ -196,7 +196,7 @@ describe 'jenkins', type: :class do
       end
 
       context 'bob' do
-        let(:params) {{ user: 'bob' }}
+        let(:params) { { user: 'bob' } }
 
         it do
           should contain_user('bob').with(
@@ -216,12 +216,12 @@ describe 'jenkins', type: :class do
       end
 
       context 'true' do
-        let(:params) {{ manage_group: true }}
+        let(:params) { { manage_group: true } }
         it { should contain_group('jenkins') }
       end
 
       context 'false' do
-        let(:params) {{ manage_group: false }}
+        let(:params) { { manage_group: false } }
         it { should_not contain_group('jenkins') }
       end
     end # manage_group =>
@@ -237,7 +237,7 @@ describe 'jenkins', type: :class do
       end
 
       context 'fred' do
-        let(:params) {{ group: 'fred' }}
+        let(:params) { { group: 'fred' } }
 
         it do
           should contain_group('fred').with(
@@ -270,13 +270,13 @@ describe 'jenkins', type: :class do
     end
 
     describe 'with default plugins override' do
-      let (:params) {{ default_plugins: [] }}
+      let (:params) { { default_plugins: [] } }
       it { should_not contain_jenkins__plugin 'credentials' }
     end
 
     describe 'purge_plugins =>' do
       context 'false' do
-        let(:params) {{ purge_plugins: false }}
+        let(:params) { { purge_plugins: false } }
 
         it do
           should contain_file('/var/lib/jenkins/plugins')
@@ -287,7 +287,7 @@ describe 'jenkins', type: :class do
       end
 
       context 'true' do
-        let(:params) {{ purge_plugins: true }}
+        let(:params) { { purge_plugins: true } }
 
         it do
           should contain_file('/var/lib/jenkins/plugins').with(

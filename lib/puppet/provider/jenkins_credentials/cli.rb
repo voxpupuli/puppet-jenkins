@@ -11,9 +11,9 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
   def self.instances(catalog = nil)
     all = credentials_list_json(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.map {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map { |i| i['id'] }}")
 
-    all.map {|info| from_hash(info) }
+    all.map { |info| from_hash(info) }
   end
 
   def flush
@@ -44,25 +44,25 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
       ensure: :present
     }
 
-    [:impl, :domain, :scope].each {|k| copy_key(params, info, k)}
+    [:impl, :domain, :scope].each { |k| copy_key(params, info, k) }
 
     case info['impl']
     when 'UsernamePasswordCredentialsImpl'
-      [:description, :username, :password].each {|k| copy_key(params, info, k)}
+      [:description, :username, :password].each { |k| copy_key(params, info, k) }
     when 'BasicSSHUserPrivateKey'
-      [:description, :username, :private_key, :passphrase].each {|k| copy_key(params, info, k)}
+      [:description, :username, :private_key, :passphrase].each { |k| copy_key(params, info, k) }
     when 'StringCredentialsImpl'
-      [:description, :secret].each {|k| copy_key(params, info, k)}
+      [:description, :secret].each { |k| copy_key(params, info, k) }
     when 'FileCredentialsImpl'
-      [:description, :file_name, :content].each {|k| copy_key(params, info, k)}
+      [:description, :file_name, :content].each { |k| copy_key(params, info, k) }
     when 'CertificateCredentialsImpl'
-      [:description, :password, :key_store_implementation].each {|k| copy_key(params, info, k)}
+      [:description, :password, :key_store_implementation].each { |k| copy_key(params, info, k) }
     when 'AWSCredentialsImpl'
-      [:description, :secret_key, :access_key].each {|k| copy_key(params, info, k)}
+      [:description, :secret_key, :access_key].each { |k| copy_key(params, info, k) }
     when 'GitLabApiTokenImpl'
-      [:description, :api_token].each {|k| copy_key(params, info, k)}
+      [:description, :api_token].each { |k| copy_key(params, info, k) }
     when 'ConduitCredentialsImpl'
-      [:description, :token, :url].each {|k| copy_key(params, info, k)}
+      [:description, :token, :url].each { |k| copy_key(params, info, k) }
 
       ksi = info['key_store_impl']
       params['key_store_impl'] = ksi
@@ -87,7 +87,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
     info = { 'id' => name }
 
     properties = self.class.resource_type.validproperties
-    properties.reject! {|x| x == :ensure }
+    properties.reject! { |x| x == :ensure }
 
     properties.each do |prop|
       value = @property_hash[prop]

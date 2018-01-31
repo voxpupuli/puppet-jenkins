@@ -9,9 +9,9 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
   def self.instances(catalog = nil)
     all = user_info_all(catalog)
 
-    Puppet.debug("#{sname} instances: #{all.map {|i| i['id']}}")
+    Puppet.debug("#{sname} instances: #{all.map { |i| i['id'] }}")
 
-    all.map {|info| from_hash(info) }
+    all.map { |info| from_hash(info) }
   end
 
   def api_token_public=(value)
@@ -54,8 +54,8 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     info = { 'id' => name }
 
     properties = self.class.resource_type.validproperties
-    properties.reject! {|x| x == :ensure }
-    properties.reject! {|x| x == :api_token_public}
+    properties.reject! { |x| x == :ensure }
+    properties.reject! { |x| x == :api_token_public }
 
     properties.each do |prop|
       value = @property_hash[prop]

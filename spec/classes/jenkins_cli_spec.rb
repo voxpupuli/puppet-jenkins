@@ -44,7 +44,7 @@ describe 'jenkins', type: :class do
     end
 
     context '$cli => false' do
-      let(:params) {{ cli: false }}
+      let(:params) { { cli: false } }
 
       it { should_not contain_class('jenkins::cli') }
       it { should_not contain_class('jenkins::cli_helper') }

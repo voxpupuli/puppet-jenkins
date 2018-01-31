@@ -192,7 +192,7 @@ describe 'jenkins::slave' do
 
     describe 'delete_existing_clients' do
       context 'true' do
-        let(:params) {{ delete_existing_clients: true }}
+        let(:params) { { delete_existing_clients: true } }
 
         it do
           should contain_file(slave_runtime_file)
@@ -201,7 +201,7 @@ describe 'jenkins::slave' do
       end
 
       context 'false' do
-        let(:params) {{ delete_existing_clients: false }}
+        let(:params) { { delete_existing_clients: false } }
 
         it do
           should contain_file(slave_runtime_file)

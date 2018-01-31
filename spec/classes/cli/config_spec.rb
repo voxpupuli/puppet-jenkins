@@ -3,14 +3,14 @@ require 'spec_helper'
 describe 'jenkins::cli::config', type: :class do
   shared_examples 'validate_absolute_path' do |param|
     context 'absolute path' do
-      let(:params) {{ param => '/dne' }}
+      let(:params) { { param => '/dne' } }
       it { should_not raise_error }
     end
   end # validate_absolute_path
 
   shared_examples 'validate_integer' do |param|
     context 'integer' do
-      let(:params) {{ param => 42 }}
+      let(:params) { { param => 42 } }
 
       it { should_not raise_error }
     end
@@ -18,13 +18,13 @@ describe 'jenkins::cli::config', type: :class do
 
   shared_examples 'validate_numeric' do |param|
     context 'integer' do
-      let(:params) {{ param => 42 }}
+      let(:params) { { param => 42 } }
 
       it { should_not raise_error }
     end
 
     context 'float' do
-      let(:params) {{ param => 42.12345 }}
+      let(:params) { { param => 42.12345 } }
 
       it { should_not raise_error }
     end
@@ -32,7 +32,7 @@ describe 'jenkins::cli::config', type: :class do
 
   shared_examples 'validate_string' do |param|
     context 'string' do
-      let(:params) {{ param => 'foo' }}
+      let(:params) { { param => 'foo' } }
 
       it { should_not raise_error }
     end
@@ -82,7 +82,7 @@ describe 'jenkins::cli::config', type: :class do
         end
 
         context 'as non-root user' do
-          let(:facts) {{ id: 'user' }}
+          let(:facts) { { id: 'user' } }
 
           it do
             should contain_file('/dne').with(
@@ -97,7 +97,7 @@ describe 'jenkins::cli::config', type: :class do
         end # as non-root user
 
         context 'as root' do
-          let(:facts) {{ id: 'root' }}
+          let(:facts) { { id: 'root' } }
 
           it do
             should contain_file('/dne').with(
@@ -117,24 +117,24 @@ describe 'jenkins::cli::config', type: :class do
   describe 'package gem provider' do
     context 'is_pe fact' do
       context 'true' do
-        let(:facts) {{ is_pe: true }}
+        let(:facts) { { is_pe: true } }
         it { should contain_package('retries').with(provider: 'pe_gem') }
       end
 
       context 'false' do
-        let(:facts) {{ is_pe: false }}
+        let(:facts) { { is_pe: false } }
         it { should contain_package('retries').with(provider: 'gem') }
       end
     end # 'is_pe fact' do
 
     context 'puppetversion facts' do
       context '=> 3.8.4' do
-        let(:facts) {{ puppetversion: '3.8.4' }}
+        let(:facts) { { puppetversion: '3.8.4' } }
         it { should contain_package('retries').with(provider: 'gem') }
       end
 
       context '=> 4.0.0' do
-        let(:facts) {{ puppetversion: '4.0.0' }}
+        let(:facts) { { puppetversion: '4.0.0' } }
         it { should contain_package('retries').with(provider: 'gem') }
 
         context 'rubysitedir fact' do
