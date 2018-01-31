@@ -9,7 +9,7 @@ describe Puppet::X::Jenkins::Config do
     ssh_private_key: nil,
     puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',
     cli_tries: 30,
-    cli_try_sleep: 2,
+    cli_try_sleep: 2
   }
 
   shared_context 'facts' do

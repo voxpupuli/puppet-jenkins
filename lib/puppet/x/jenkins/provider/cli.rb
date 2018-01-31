@@ -185,7 +185,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = cli_pre_cmd + [
       command(:java),
       '-jar', cli_jar,
-      '-s', url,
+      '-s', url
     ]
 
     cli_cmd = base_cmd + [command]
@@ -277,7 +277,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     cli_auth_errors = [
                         'You must authenticate to access this Jenkins.',
                         'anonymous is missing the Overall/Read permission',
-                        'anonymous is missing the Overall/RunScripts permission',
+                        'anonymous is missing the Overall/RunScripts permission'
                       ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
@@ -285,7 +285,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
                    'SEVERE: I/O error in channel CLI connection',
                    'java.net.SocketException: Connection reset',
                    'java.net.ConnectException: Connection refused',
-                   'java.io.IOException: Failed to connect',
+                   'java.io.IOException: Failed to connect'
                  ]
 
     if options.key?(:tmpfile_as_param)

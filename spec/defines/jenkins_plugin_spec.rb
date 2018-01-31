@@ -7,7 +7,7 @@ describe 'jenkins::plugin' do
       osfamily: 'RedHat',
       operatingsystem: 'CentOS',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
   let(:pdir) { '/var/lib/jenkins/plugins' }
@@ -167,7 +167,7 @@ describe 'jenkins::plugin' do
     shared_examples 'execute the right fetch command' do
       it 'should retrieve the plugin' do
         expect(subject).to contain_archive('git.hpi').with({
-          source: "#{expected_url}",
+          source: "#{expected_url}"
         })
       end
     end
@@ -318,7 +318,7 @@ describe 'jenkins::plugin' do
       'plugin_dir',
       'username',
       'group',
-      'create_user',
+      'create_user'
     ].each do |param|
       context param do
         pending('rspec-puppet support for testing warning()')

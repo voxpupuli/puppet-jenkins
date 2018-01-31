@@ -8,7 +8,7 @@ describe 'jenkins::cli::exec', type: :define do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat', # require by puppetlabs/java
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 

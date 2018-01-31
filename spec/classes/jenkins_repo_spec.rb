@@ -9,7 +9,7 @@ describe 'jenkins', type: :class do
             osfamily: 'RedHat',
             operatingsystem: 'CentOs',
             operatingsystemrelease: '6.7',
-            operatingsystemmajrelease: '6',
+            operatingsystemmajrelease: '6'
           }
         end
         it { should contain_class('jenkins::repo::el') }
@@ -32,8 +32,8 @@ describe 'jenkins', type: :class do
           operatingsystem: 'Debian',
           os: {
             name: 'Debian',
-            release: { full: '11.04' },
-          },
+            release: { full: '11.04' }
+          }
         }}
         it { should contain_class('jenkins::repo::debian') }
         it { should_not contain_class('jenkins::repo::suse') }
@@ -52,7 +52,7 @@ describe 'jenkins', type: :class do
           osfamily: 'RedHat',
           operatingsystem: 'CentOs',
           operatingsystemrelease: '6.7',
-          operatingsystemmajrelease: '6',
+          operatingsystemmajrelease: '6'
         }
       end
       let(:params) { { repo: false } }

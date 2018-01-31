@@ -77,7 +77,7 @@ describe 'jenkins::cli::config', type: :class do
         let(:params) do
           {
             ssh_private_key: '/dne',
-            ssh_private_key_content: 'foo',
+            ssh_private_key_content: 'foo'
           }
         end
 

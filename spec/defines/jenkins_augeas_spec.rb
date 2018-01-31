@@ -7,7 +7,7 @@ describe 'jenkins::augeas' do
       osfamily: 'RedHat',
       operatingsystem: 'CentOS',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -62,7 +62,7 @@ describe 'jenkins::augeas' do
         config_filename: 'foo.xml',
         changes: [],
         plugin_version: '0.1',
-        plugin: true,
+        plugin: true
     }}
     it do
       is_expected.to contain_jenkins__plugin('myplug').with(
@@ -83,7 +83,7 @@ describe 'jenkins::augeas' do
     let (:params) {{
       plugin: false,
       config_filename: 'foo.xml',
-      changes: [],
+      changes: []
     }}
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -99,7 +99,7 @@ describe 'jenkins::augeas' do
       plugin: false,
       config_filename: 'foo.xml',
       context: '/foo/bar',
-      changes: [],
+      changes: []
     }}
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -124,7 +124,7 @@ describe 'jenkins::augeas' do
         plugin: false,
         config_filename: 'foo.xml',
         changes: [ 'set foo bar' ],
-        onlyif: pval,
+        onlyif: pval
       }}
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -148,7 +148,7 @@ describe 'jenkins::augeas' do
       let (:params) {{
         plugin: false,
         config_filename: 'foo.xml',
-        changes: pval,
+        changes: pval
       }}
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -168,14 +168,14 @@ describe 'jenkins::augeas' do
   #                                        |
   {
     true    => 'safe-restart-jenkins',
-    false   => 'reload-jenkins',
+    false   => 'reload-jenkins'
   }.each do |pval,expected|
     describe "with param restart set to '#{pval}' (#{pval.class})" do
       let (:params) {{
         plugin: false,
         config_filename: 'foo.xml',
         changes: [],
-        restart: pval,
+        restart: pval
       }}
       it { is_expected.to contain_augeas('jenkins::augeas: myplug').that_notifies("Exec[#{expected}]") }
     end

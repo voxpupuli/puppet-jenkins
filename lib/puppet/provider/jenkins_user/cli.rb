@@ -47,7 +47,7 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
       api_token_plain: info['api_token_plain'],
       api_token_public: info['api_token_public'],
       public_keys: info['public_keys'],
-      password: info['password'],
+      password: info['password']
     })
   end
   private_class_method :from_hash

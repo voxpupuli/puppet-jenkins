@@ -68,7 +68,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
   [
     :jenkins_user,
     :jenkins_security_realm,
-    :jenkins_authorization_strategy,
+    :jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
       catalog.resources.find_all do |r|

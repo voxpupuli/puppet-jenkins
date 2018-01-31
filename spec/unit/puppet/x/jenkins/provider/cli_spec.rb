@@ -659,7 +659,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           {
             failonfail: true,
             combine: true,
-            stdinfile: '/dne.tmp',
+            stdinfile: '/dne.tmp'
           }
         )
 
@@ -683,7 +683,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           {
             failonfail: true,
             combine: true,
-            stdinfile: '/dne.tmp',
+            stdinfile: '/dne.tmp'
           }
         )
 

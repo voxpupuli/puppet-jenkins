@@ -6,7 +6,7 @@ describe 'jenkins::master' do
       osfamily: 'RedHat',
       operatingsystem: 'CentOS',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 

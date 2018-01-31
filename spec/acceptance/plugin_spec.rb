@@ -11,12 +11,12 @@ describe 'jenkins class', order: :defined do
     "#{$pdir}/c.txt",
     "#{$pdir}/a/foo",
     "#{$pdir}/b/bar",
-    "#{$pdir}/c/baz",
+    "#{$pdir}/c/baz"
   ]
   $dirs = [
     "#{$pdir}/a",
     "#{$pdir}/b",
-    "#{$pdir}/c",
+    "#{$pdir}/c"
   ]
 
   shared_examples 'has_git_plugin' do

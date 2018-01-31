@@ -40,7 +40,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
     args = {
       name: class_name,
       ensure: :present,
-      arguments: ctor_args,
+      arguments: ctor_args
     }
 
     # map nil -> :undef
@@ -86,8 +86,8 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
   def set_security_none
     input = {
       'setSecurityRealm' => {
-        'hudson.security.SecurityRealm$None' => [],
-      },
+        'hudson.security.SecurityRealm$None' => []
+      }
     }
     set_jenkins_instance(input)
   end

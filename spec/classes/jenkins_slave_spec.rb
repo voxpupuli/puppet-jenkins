@@ -66,7 +66,7 @@ describe 'jenkins::slave' do
       let(:params) do
         {
           ui_user: user,
-          ui_pass: password,
+          ui_pass: password
         }
       end
 
@@ -139,7 +139,7 @@ describe 'jenkins::slave' do
         let(:params) do
           {
             version: '2.0',
-            source: source,
+            source: source
           }
         end
         it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-2.0-jar-with-dependencies.jar") }
@@ -148,7 +148,7 @@ describe 'jenkins::slave' do
         let(:params) do
           {
             version: '3.1',
-            source: source,
+            source: source
           }
         end
         it { should contain_archive('get_swarm_client').with_source("#{source}/swarm-client-3.1.jar") }

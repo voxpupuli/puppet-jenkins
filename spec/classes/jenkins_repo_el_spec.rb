@@ -7,7 +7,7 @@ describe 'jenkins', type: :class do
       osfamily: 'Redhat',
       operatingsystem: 'CentOS',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 

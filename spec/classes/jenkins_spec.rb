@@ -9,7 +9,7 @@ describe 'jenkins', type: :class do
         osfamily: 'RedHat',
         operatingsystem: 'CentOS',
         operatingsystemrelease: '6.7',
-        operatingsystemmajrelease: '6',
+        operatingsystemmajrelease: '6'
       }
     end
 
@@ -175,7 +175,7 @@ describe 'jenkins', type: :class do
       context 'false' do
         let(:params) do
           {
-            manage_service: false,
+            manage_service: false
           }
         end
         it { should_not contain_class 'jenkins::service' }
@@ -253,7 +253,7 @@ describe 'jenkins', type: :class do
       [
         '/var/lib/jenkins',
         '/var/lib/jenkins/jobs',
-        '/var/lib/jenkins/plugins',
+        '/var/lib/jenkins/plugins'
       ].each do |dir|
         it do
           should contain_file(dir).with(

@@ -7,7 +7,7 @@ describe 'jenkins::credentials', type: :define do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
   let(:helper_cmd) { '/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy' }
@@ -30,22 +30,22 @@ describe 'jenkins::credentials', type: :define do
   describe 'with ensure is present' do
     let(:params) {{
       ensure: 'present',
-      password: 'mypass',
+      password: 'mypass'
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       command: [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "''", "'Managed by Puppet'", "''" ],
-      unless: "for i in \$(seq 1 10); do \$HELPER_CMD credential_info #{title} && break || sleep 10; done | grep #{title}",
+      unless: "for i in \$(seq 1 10); do \$HELPER_CMD credential_info #{title} && break || sleep 10; done | grep #{title}"
     })}
   end
 
   describe 'with ensure is absent' do
     let(:params) {{
       ensure: 'absent',
-      password: 'mypass',
+      password: 'mypass'
     }}
     it { should contain_jenkins__cli__exec('delete-jenkins-credentials-foo').with({
-      command: [ 'delete_credentials', "#{title}" ],
+      command: [ 'delete_credentials', "#{title}" ]
     })}
   end
 
@@ -53,12 +53,12 @@ describe 'jenkins::credentials', type: :define do
     let(:params) {{
       ensure: 'present',
       password: 'mypass',
-      uuid: 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f',
+      uuid: 'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'
     }}
     it { should contain_jenkins__cli__exec('create-jenkins-credentials-foo').with({
       command: [ 'create_or_update_credentials' , "#{title}", "'mypass'",
                        "'e94d3b98-5ba4-43b9-89ed-79a08ea97f6f'", "'Managed by Puppet'", "''" ],
-      unless: "for i in \$(seq 1 10); do \$HELPER_CMD credential_info #{title} && break || sleep 10; done | grep #{title}",
+      unless: "for i in \$(seq 1 10); do \$HELPER_CMD credential_info #{title} && break || sleep 10; done | grep #{title}"
     })}
   end
 end

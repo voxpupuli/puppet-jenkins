@@ -77,7 +77,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'impl',
         'description',
         'username',
-        'password',
+        'password'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -91,7 +91,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -111,7 +111,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'description',
         'username',
         'private_key',
-        'passphrase',
+        'passphrase'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -124,7 +124,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -142,7 +142,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'scope',
         'impl',
         'description',
-        'secret',
+        'secret'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -157,7 +157,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -177,7 +177,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'description',
         'secret',
         'file_name',
-        'content',
+        'content'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -190,7 +190,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'source',
         'key_store_impl',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -209,7 +209,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'impl',
         'description',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -240,7 +240,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'scope',
         'impl',
         'description',
-        'api_token',
+        'api_token'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
@@ -255,7 +255,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         'content',
         'file_name',
         'secret_key',
-        'access_key',
+        'access_key'
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end

@@ -7,7 +7,7 @@ describe 'jenkins::job' do
       osfamily: 'RedHat',
       operatingsystem: 'RedHat',
       operatingsystemrelease: '6.7',
-      operatingsystemmajrelease: '6',
+      operatingsystemmajrelease: '6'
     }
   end
 
@@ -79,7 +79,7 @@ eos
     let(:params) do
       {
         ensure: 'present',
-        config: unformatted_config,
+        config: unformatted_config
       }
     end
     it do
