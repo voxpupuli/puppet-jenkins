@@ -148,7 +148,7 @@ EOS
           it { should be_mode 644 }
           it { should contain '<description>test job</description>' }
         end
-      end #create
+      end # create
 
       context 'delete' do
         it 'should work with no errors' do
@@ -168,8 +168,8 @@ EOS
         }.each do |config|
           describe file(config) { it { should_not exist } }
         end
-      end #delete
-    end #nested folders
+      end # delete
+    end # nested folders
 
     context 'convert existing job to folder' do
       it 'should work with no errors' do
@@ -201,6 +201,6 @@ EOS
 
         apply2(pp)
       end
-    end #convert existing job to folder
-  end #cloudbees-folder
-end #jenkins_job
+    end # convert existing job to folder
+  end # cloudbees-folder
+end # jenkins_job

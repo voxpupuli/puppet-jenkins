@@ -293,7 +293,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     end
 
     begin
-      #return Puppet::Provider.execute(*args)
+      # return Puppet::Provider.execute(*args)
       if tmpfile_as_param and options.key?(:stdinfile)
         return superclass.execute([ cmd, options[:stdinfile] ].flatten().join(' '), options)
       else

@@ -311,7 +311,7 @@ describe 'jenkins::plugin' do
 
       it { should_not contain_file("#{pdir}/#{title}") }
     end
-  end #purge plugins
+  end # purge plugins
 
   describe 'deprecated params' do
     [

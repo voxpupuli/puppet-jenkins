@@ -8,7 +8,7 @@ describe Puppet::Type.type(:jenkins_user) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -49,7 +49,7 @@ describe Puppet::Type.type(:jenkins_user) do
             .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
         end
       end
-    end #api_token_plain
+    end # api_token_plain
 
     describe 'public_keys' do
       it { expect(described_class.attrtype(:public_keys)).to eq :property }
@@ -65,8 +65,8 @@ describe Puppet::Type.type(:jenkins_user) do
         user = described_class.new(name: 'nobody', public_keys: value)
         expect(user[:public_keys]).to eq value
       end
-    end #public_keys
-  end #properties
+    end # public_keys
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'

@@ -8,7 +8,7 @@ describe Puppet::Type.type(:jenkins_num_executors) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do

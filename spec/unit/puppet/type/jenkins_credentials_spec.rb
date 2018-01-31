@@ -8,7 +8,7 @@ describe Puppet::Type.type(:jenkins_credentials) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -58,7 +58,7 @@ describe Puppet::Type.type(:jenkins_credentials) do
         end
       end
     end
-  end #properties
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'

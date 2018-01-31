@@ -12,7 +12,7 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'show_diff' do
       it_behaves_like 'boolean parameter', :show_diff, true
     end
-  end #parameters
+  end # parameters
 
   describe 'properties' do
     describe 'ensure' do
@@ -66,9 +66,9 @@ describe Puppet::Type.type(:jenkins_job) do
               .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
           end
         end
-      end #change_to_s change string
-    end #config
-  end #properties
+      end # change_to_s change string
+    end # config
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
