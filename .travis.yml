@@ -1,23 +1,23 @@
+---
 sudo: false
 language: ruby
-before_install: gem install bundler -v '~> 1.13' -v '< 1.14' --no-ri --no-rdoc
-bundler_args: "--without development system_tests"
-rvm:
-  - '2.2'
-  - '2.4'
-script:
-  - "bundle exec rake SPEC_OPTS='--format documentation --order random'"
+cache: bundler
+dist: trusty
 env:
   - PUPPET_VERSION="~> 4.10.0"
 matrix:
   include:
-    - rvm: '2.2'
+    - rvm: '2.1.9'
+      bundler_args: --without development system_tests
+      env: PUPPET_VERSION="~> 4.0" CHECK=test PARALLEL_TEST_PROCESSORS=12
+      script: "bundle exec rake SPEC_OPTS='--format documentation --order random'"
+    - rvm: '2.4'
       sudo: required
       services: docker
       env: BEAKER_set="centos-7-docker"
       script: travis_retry bundle exec rake beaker
       bundler_args: --without development
-    - rvm: '2.2'
+    - rvm: '2.4'
       sudo: required
       services: docker
       env: BEAKER_set="ubuntu-14.04-docker"
