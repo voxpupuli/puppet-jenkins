@@ -20,12 +20,14 @@ describe 'jenkins', type: :class do
     context '$cli => true' do
       let(:params) do { cli: true,
                         cli_ssh_keyfile: '/path/to/key',
+                        libdir: '/path/to/libdir',
                         config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
       end
       it { should contain_class('jenkins::cli') }
       it { should contain_exec('jenkins-cli') }
       it { should contain_exec('reload-jenkins').with_command(/http:\/\/localhost:9000/) }
       it { should contain_exec('reload-jenkins').with_command(/-i\s'\/path\/to\/key'/) }
+      it { should contain_exec('reload-jenkins').that_requires('File[/path/to/libdir/jenkins-cli.jar]') }
       it { should contain_exec('safe-restart-jenkins') }
       it { should contain_jenkins__sysconfig('HTTP_PORT').with_value('9000') }
 
