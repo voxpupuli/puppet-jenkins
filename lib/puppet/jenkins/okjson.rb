@@ -178,7 +178,7 @@ module OkJson
     ts = []
     while s.length > 0
       typ, lexeme, val = tok(s)
-      raise Error, "invalid character at #{s[0, 10].inspect}" if typ == nil
+      raise Error, "invalid character at #{s[0, 10].inspect}" if typ.nil?
       ts << [typ, lexeme, val] if typ != :space
       s = s[lexeme.length..-1]
     end
