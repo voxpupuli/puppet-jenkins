@@ -23,7 +23,7 @@ module Puppet
           next if parts.size < 2
           next if parts.first[0] == ' '
 
-          key = parts.first.downcase.gsub('-', '_').chomp
+          key = parts.first.downcase.tr('-', '_').chomp
           # Skip garbage keys
           next if key.nil? || key.empty?
 
