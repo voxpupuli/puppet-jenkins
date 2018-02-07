@@ -45,7 +45,7 @@ describe Puppet::Jenkins::Facts do
 
     before :each do
       Facter.fact(:kernel).stubs(:value).returns(kernel)
-      Puppet::Jenkins::Facts.install
+      described_class.install
     end
 
     context 'on Linux' do
