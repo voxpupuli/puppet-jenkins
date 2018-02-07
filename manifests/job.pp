@@ -1,35 +1,16 @@
-# Define: jenkins::job
+# This class create a new jenkins job given a name and config xml
 #
-#   This class create a new jenkins job given a name and config xml
-#
-# Parameters:
-#
-#   config
-#     the content of the jenkins job config file (required)
-#
-#   source
-#     path to a puppet file() resource containing the Jenkins XML job description
-#     will override 'config' if set
-#
-#   template
-#     path to a puppet template() resource containing the Jenkins XML job description
-#     will override 'config' if set
-#
-#   jobname = $title
-#     the name of the jenkins job
-#
-#   enabled
-#     deprecated parameter (will have no effect if set)
-#
-#   ensure = 'present'
-#     choose 'absent' to ensure the job is removed
-#
-#   difftool = '/usr/bin/diff -b-q'
-#     Provide a command to execute to compare Jenkins job files
-#
-#   replace = 'true'
-#     Wether or not to replace the job if it already exists.
-#
+# @param config The content of the jenkins job config file (required)
+# @param source Path to a puppet file() resource containing the Jenkins XML job description.
+#     Will override 'config' if set
+# @param template Path to a puppet template() resource containing the Jenkins XML job description.
+#     Will override 'config' if set
+# @param jobname the name of the jenkins job
+# @param enabled deprecated parameter (will have no effect if set)
+# @param ensure choose 'absent' to ensure the job is removed
+# @param difftool Provide a command to execute to compare Jenkins job files
+# @param replace
+#     Whether or not to replace the job if it already exists.
 define jenkins::job(
   String $config,
   Optional[String] $source                  = undef,

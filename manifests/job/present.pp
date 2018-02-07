@@ -1,25 +1,11 @@
-# Define: jenkins::job::present
+# Creates or updates a jenkins build job
+# This define should be considered private.
 #
-#   Creates or updates a jenkins build job
-#
-#   This define should be considered private.
-#
-# Parameters:
-#
-#   config
-#     the content of the jenkins job config file
-#
-#   config_file
-#     the jenkins job config file (file on disk)
-#
-#   jobname = $title
-#     the name of the jenkins job
-#
-#   enabled
-#     deprecated parameter (will have no effect if set)
-#
-#   replace = 'true'
-#     Wether or not to replace the job if it already exists.
+# @param config The content of the jenkins job config file
+# @param config_file Jenkins job config file (file on disk)
+# @param jobname The name of the jenkins job
+# @param enabled Deprecated parameter (will have no effect if set)
+# @param replace Whether or not to replace the job if it already exists.
 #
 define jenkins::job::present(
   Optional[String] $config      = undef,
