@@ -133,7 +133,7 @@ describe 'jenkins::slave' do
       end
     end
 
-    describe 'with tunnel specified' do
+    describe 'with valid tunnel specified' do
       let(:params) do
         {
           tunnel: 'localhost:9000'
@@ -141,6 +141,16 @@ describe 'jenkins::slave' do
       end
 
       it {should contain_file(slave_runtime_file).with_content(/^TUNNEL="localhost:9000"$/)}
+
+    end
+
+    describe 'with invalid tunnel specified' do
+      let(:params) do
+        {
+          tunnel: ':'
+        }
+      end
+      it { should raise_error(Puppet::Error) }
 
     end
 
