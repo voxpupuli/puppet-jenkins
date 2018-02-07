@@ -140,7 +140,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it {should contain_file(slave_runtime_file).with_content(/^TUNNEL="localhost:9000"$/)}
+      it { should contain_file(slave_runtime_file).with_content(/^TUNNEL="localhost:9000"$/) }
     end
 
     describe 'with invalid tunnel specified' do
