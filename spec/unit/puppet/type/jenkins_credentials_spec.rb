@@ -25,15 +25,15 @@ describe Puppet::Type.type(:jenkins_credentials) do
 
     describe 'impl' do
       it_behaves_like 'validated property', :impl,
-        :UsernamePasswordCredentialsImpl,
-        [
-          :UsernamePasswordCredentialsImpl,
-          :BasicSSHUserPrivateKey,
-          :StringCredentialsImpl,
-          :FileCredentialsImpl,
-          :AWSCredentialsImpl,
-          :GitLabApiTokenImpl
-        ]
+                      :UsernamePasswordCredentialsImpl,
+                      [
+                        :UsernamePasswordCredentialsImpl,
+                        :BasicSSHUserPrivateKey,
+                        :StringCredentialsImpl,
+                        :FileCredentialsImpl,
+                        :AWSCredentialsImpl,
+                        :GitLabApiTokenImpl
+                      ]
     end
 
     # unvalidated properties

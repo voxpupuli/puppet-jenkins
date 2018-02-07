@@ -656,9 +656,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         expect(described_class.superclass).to receive(:execute).with(
           'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 foo',
-                      failonfail: true,
-                      combine: true,
-                      stdinfile: '/dne.tmp'
+          failonfail: true,
+          combine: true,
+          stdinfile: '/dne.tmp'
         )
 
         described_class.cli('foo', stdinjson: realm_oauth)
@@ -678,9 +678,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         expect(described_class.superclass).to receive(:execute).with(
           'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 foo',
-                      failonfail: true,
-                      combine: true,
-                      stdinfile: '/dne.tmp'
+          failonfail: true,
+          combine: true,
+          stdinfile: '/dne.tmp'
         )
 
         described_class.cli('foo', stdin: 'bar')

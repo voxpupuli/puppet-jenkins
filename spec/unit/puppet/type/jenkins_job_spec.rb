@@ -138,7 +138,7 @@ describe Puppet::Type.type(:jenkins_job) do
       end
 
       it 'autobefores multiple nested parent folder resources',
-          unless: Puppet.version.to_f < 4.0 do
+         unless: Puppet.version.to_f < 4.0 do
         folder1 = described_class.new(
           name: 'foo'
         )
