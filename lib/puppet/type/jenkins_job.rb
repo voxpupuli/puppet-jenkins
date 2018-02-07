@@ -32,7 +32,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
         if @resource[:replace] == false
           return 'left unchanged'
         end
-        if Puppet[:show_diff] and resource[:show_diff]
+        if Puppet[:show_diff] && resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
           Tempfile.open('puppet-file') do |d1|
