@@ -60,6 +60,41 @@ EOS
     end
   end
 
+  context 'no replace' do
+    it 'does not replace an existing job' do
+      pp_create = <<-EOS
+        class {'jenkins':
+          cli_remoting_free => true,
+        }
+        jenkins::job {'test-noreplace-job':
+          config => \'#{test_build_job.gsub("<description>test job</description>", "<description>do not overwrite me</description>")}\',
+        }
+      EOS
+
+      pp_update = <<-EOS
+        class {'jenkins':
+          cli_remoting_free => true,
+        }
+        jenkins::job {'test-noreplace-job':
+          config  => \'#{test_build_job}\',
+          replace => false,
+        }
+      EOS
+
+      apply(pp_create, catch_failures: true)
+      apply(pp_update, catch_failures: true)
+    end
+
+    describe file('/var/lib/jenkins/jobs/test-noreplace-job/config.xml') do
+      it { should be_file }
+      it { should be_owned_by 'jenkins' }
+      it { should be_grouped_into 'jenkins' }
+      it { should be_mode 644 }
+      it { should contain '<description>do not overwrite me</description>' }
+    end
+
+  end
+
   context 'disable' do
     pending('Parameter $enabled is now deprecated, no need to test')
     it 'works with no errors' do
