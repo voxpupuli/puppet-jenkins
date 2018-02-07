@@ -362,9 +362,9 @@ private
   end
 
   def nibble(c)
-    if '0' <= c && c <= '9' then c.ord - '0'.ord
-    elsif 'a' <= c && c <= 'z' then c.ord - 'a'.ord + 10
-    elsif 'A' <= c && c <= 'Z' then c.ord - 'A'.ord + 10
+    if c >= '0' && c <= '9' then c.ord - '0'.ord
+    elsif c >= 'a' && c <= 'z' then c.ord - 'a'.ord + 10
+    elsif c >= 'A' && c <= 'Z' then c.ord - 'A'.ord + 10
     else
       raise Error, "invalid hex code #{c}"
     end
