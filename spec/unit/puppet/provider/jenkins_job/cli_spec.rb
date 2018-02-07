@@ -133,7 +133,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
     end
 
-    it 'should call delete_job' do
+    it 'calls delete_job' do
       provider = described_class.new
       provider.destroy
 
