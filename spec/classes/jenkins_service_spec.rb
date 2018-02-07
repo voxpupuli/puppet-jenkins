@@ -50,7 +50,7 @@ describe 'jenkins', type: :class do
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
         it do
           should contain_transition('stop jenkins service').with(
-            prior_to: [ "File[#{sysv_file}]" ]
+            prior_to: ["File[#{sysv_file}]"]
           )
         end
       else

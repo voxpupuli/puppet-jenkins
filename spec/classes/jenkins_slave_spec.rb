@@ -93,7 +93,7 @@ describe 'jenkins::slave' do
     end
 
     describe 'with java_args as an array' do
-      let(:args) { ['-Xmx2g', '-Xms128m' ] }
+      let(:args) { ['-Xmx2g', '-Xms128m'] }
       let(:params) do
         {
           java_args: args
@@ -120,7 +120,7 @@ describe 'jenkins::slave' do
     end
 
     describe 'with swarm_client_args as an array' do
-      let(:args) { ['-disableSslVerification', '-disableClientsUniqueId' ] }
+      let(:args) { ['-disableSslVerification', '-disableClientsUniqueId'] }
       let(:params) do
         {
           swarm_client_args: args
@@ -313,7 +313,7 @@ describe 'jenkins::slave' do
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
         it do
           should contain_transition('stop jenkins-slave service').with(
-            prior_to: [ "File[#{slave_sysv_file}]" ]
+            prior_to: ["File[#{slave_sysv_file}]"]
           )
         end
       else

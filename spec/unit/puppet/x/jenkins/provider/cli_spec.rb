@@ -232,7 +232,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
     shared_examples 'uses fact values' do
       it 'uses fact values' do
         expect(described_class).to receive(:cli).with(
-          ['groovy', 'fact.groovy', 'foo' ], {}, []
+          ['groovy', 'fact.groovy', 'foo'], {}, []
         )
 
         described_class.clihelper('foo')

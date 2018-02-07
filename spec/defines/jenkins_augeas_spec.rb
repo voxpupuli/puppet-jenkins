@@ -115,12 +115,12 @@ describe 'jenkins::augeas' do
   # `---'`   '`---'`---|``        |---'`---^`    `---^` ' '
   #                `---'          |
 
-  [ ['get foo != bar'], 'get foo != bar'].each do |pval|
+  [['get foo != bar'], 'get foo != bar'].each do |pval|
     describe "with param onlyif set and class is #{pval.class}" do
       let (:params) do {
         plugin: false,
         config_filename: 'foo.xml',
-        changes: [ 'set foo bar' ],
+        changes: ['set foo bar'],
         onlyif: pval
       } end
       it do
@@ -140,7 +140,7 @@ describe 'jenkins::augeas' do
   # |    |   |,---||   ||   ||---'`---.    |   |,---||    ,---|| | |
   # `---'`   '`---^`   '`---|`---'`---'    |---'`---^`    `---^` ' '
   #                     `---'              |
-  [ ['set foo bar'], 'set foo bar'].each do |pval|
+  [['set foo bar'], 'set foo bar'].each do |pval|
     describe "with param changes set and class is #{pval.class}" do
       let (:params) do {
         plugin: false,

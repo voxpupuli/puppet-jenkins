@@ -105,7 +105,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     if cli_remoting_free
       cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
-      cli_cmd = ['groovy', '=' ] + [command]
+      cli_cmd = ['groovy', '='] + [command]
       options[:tmpfile_as_param] = true
     else
       cli_pre_cmd = []
@@ -289,9 +289,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     begin
       # return Puppet::Provider.execute(*args)
       if tmpfile_as_param && options.key?(:stdinfile)
-        return superclass.execute([ cmd, options[:stdinfile] ].flatten.join(' '), options)
+        return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), options)
       else
-        return superclass.execute([ cmd ].flatten.join(' '), options)
+        return superclass.execute([cmd].flatten.join(' '), options)
       end
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|

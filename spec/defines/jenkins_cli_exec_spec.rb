@@ -103,7 +103,7 @@ describe 'jenkins::cli::exec', type: :define do
       it do
         should contain_exec('foo').with(
           command: "#{helper_cmd} foo",
-          environment: [ "HELPER_CMD=eval #{helper_cmd}" ],
+          environment: ["HELPER_CMD=eval #{helper_cmd}"],
           unless: 'bar',
           tries: 10,
           try_sleep: 10
