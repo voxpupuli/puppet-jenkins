@@ -253,7 +253,7 @@ module OkJson
     t = s[0, 10]
     p = t['`']
     t = t[0, p] if p
-    t = t + '...' if t.length < s.length
+    t += '...' if t.length < s.length
     '`' + t + '`'
   end
 
