@@ -203,7 +203,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       else
         # For legacy jenkins, we can only read the provided password file
         # parse it and assume Jenkins 2.46.2++ content
-        (user, pass) = File.open(cli_password_file).read.split("\n").reject { |x| x !~ /(^\S+:\S+$)/ }[0].split(':')
+        (user, pass) = File.open(cli_password_file).read.split("\n").select { |x| x =~ /(^\S+:\S+$)/ }[0].split(':')
         auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
       end
     # we have username and password, then we create the password file and use it
