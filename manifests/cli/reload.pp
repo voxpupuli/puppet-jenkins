@@ -15,5 +15,6 @@ class jenkins::cli::reload {
     tries       => 10,
     try_sleep   => 2,
     refreshonly => true,
+    require     => File[$::jenkins::cli::jar],
   }
 }
