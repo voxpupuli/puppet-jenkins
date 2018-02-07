@@ -65,7 +65,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
     defaultto true
   end
 
-  newparam(:replace, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+  newparam(:replace, boolean: true, parent: Puppet::Parameter::Boolean) do
     desc 'replace existing job'
     defaultto true
   end

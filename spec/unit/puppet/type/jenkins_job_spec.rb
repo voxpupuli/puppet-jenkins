@@ -71,7 +71,7 @@ describe Puppet::Type.type(:jenkins_job) do
           end
         end
         context 'changed without replace' do
-          let(:resource) { described_class.new(:name => 'foo', :config => 'bar', :replace => false) }
+          let(:resource) { described_class.new(name: 'foo', config: 'bar', replace: false) }
           it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
         end
       end # change_to_s change string
