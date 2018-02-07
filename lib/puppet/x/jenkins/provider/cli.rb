@@ -145,9 +145,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     options[:stdinfile] = tmp.path
     begin
       Etc.getpwnam('jenkins')
-      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exists?(tmp.path)
+      FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exist?(tmp.path)
     rescue
-      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exists?(tmp.path)
+      FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exist?(tmp.path)
     end
     result = execute_with_retry(command, options, cli_pre_cmd)
     tmp.close
