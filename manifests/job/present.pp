@@ -1,22 +1,11 @@
-# Define: jenkins::job::present
+# Creates or updates a jenkins build job
+# This define should be considered private.
 #
-#   Creates or updates a jenkins build job
-#
-#   This define should be considered private.
-#
-# Parameters:
-#
-#   config
-#     the content of the jenkins job config file
-#
-#   config_file
-#     the jenkins job config file (file on disk)
-#
-#   jobname = $title
-#     the name of the jenkins job
-#
-#   enabled
-#     deprecated parameter (will have no effect if set)
+# @param config The content of the jenkins job config file
+# @param config_file Jenkins job config file (file on disk)
+# @param jobname The name of the jenkins job
+# @param enabled Deprecated parameter (will have no effect if set)
+# @param replace Whether or not to replace the job if it already exists.
 #
 define jenkins::job::present(
   Optional[String] $config      = undef,
@@ -24,6 +13,7 @@ define jenkins::job::present(
   String $jobname               = $title,
   Any $enabled                  = undef,
   String $difftool              = '/usr/bin/diff -b -q',
+  Boolean $replace              = true,
 ){
 
   include ::jenkins::cli
@@ -44,31 +34,32 @@ define jenkins::job::present(
   $jenkins_cli        = $jenkins::cli::cmd
   if $config == undef {
     $tmp_config_path = $config_file
-  } else {
-      $tmp_config_path    = "/tmp/${jobname}-config.xml"
-      #
-      # When a Jenkins job is imported via the cli, Jenkins will
-      # re-format the xml file based on its own internal rules.
-      # In order to make job management idempotent, we need to
-      # apply that formatting before the import, so we can do a diff
-      # on any pre-existing job to determine if an update is needed.
-      #
-      # Jenkins likes to change single quotes to double quotes
-      $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
-                    'version="1.0" encoding="UTF-8"')
-      # Change empty tags into self-closing tags
-      $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
-      # Change &quot; to " since Jenkins is weird like that
-      $c = regsubst($b, '&quot;', '"', 'MG')
-      # Change &apos; to ' since Jenkins is weird like that
-      $d = regsubst($c, '&apos;', '\'', 'MG')
+  }
+  else {
+    $tmp_config_path    = "/tmp/${jobname}-config.xml"
+    #
+    # When a Jenkins job is imported via the cli, Jenkins will
+    # re-format the xml file based on its own internal rules.
+    # In order to make job management idempotent, we need to
+    # apply that formatting before the import, so we can do a diff
+    # on any pre-existing job to determine if an update is needed.
+    #
+    # Jenkins likes to change single quotes to double quotes
+    $a = regsubst($config, 'version=\'1.0\' encoding=\'UTF-8\'',
+    'version="1.0" encoding="UTF-8"')
+    # Change empty tags into self-closing tags
+    $b = regsubst($a, '<([A-z]+)><\/\1>', '<\1/>', 'IG')
+    # Change &quot; to " since Jenkins is weird like that
+    $c = regsubst($b, '&quot;', '"', 'MG')
+    # Change &apos; to ' since Jenkins is weird like that
+    $d = regsubst($c, '&apos;', '\'', 'MG')
 
-      # Temp file to use as stdin for Jenkins CLI executable
-      file { $tmp_config_path:
-        content => $d,
-        require => Exec['jenkins-cli'],
-      }
+    # Temp file to use as stdin for Jenkins CLI executable
+    file { $tmp_config_path:
+      content => $d,
+      require => Exec['jenkins-cli'],
     }
+  }
 
   $job_dir            = "${::jenkins::job_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
@@ -93,14 +84,16 @@ define jenkins::job::present(
     require => File[$tmp_config_path],
   }
 
-  # Use Jenkins CLI to update the job if it already exists
-  $update_job = "${jenkins_cli} update-job ${jobname}"
-  exec { "jenkins update-job ${jobname}":
-    command => "${cat_config} | ${update_job}",
-    onlyif  => "test -e ${config_path}",
-    unless  => "${difftool} ${config_path} ${tmp_config_path}",
-    require => File[$tmp_config_path],
-    notify  => Exec['reload-jenkins'],
+  if $replace {
+    # Use Jenkins CLI to update the job if it already exists
+    $update_job = "${jenkins_cli} update-job ${jobname}"
+    exec { "jenkins update-job ${jobname}":
+      command => "${cat_config} | ${update_job}",
+      onlyif  => "test -e ${config_path}",
+      unless  => "${difftool} ${config_path} ${tmp_config_path}",
+      require => File[$tmp_config_path],
+      notify  => Exec['reload-jenkins'],
+    }
   }
 
   # Deprecation warning if $enabled is set

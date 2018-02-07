@@ -23,6 +23,10 @@ describe Puppet::Type.type(:jenkins_job) do
       it_behaves_like 'boolean property', :enable, true
     end
 
+    describe 'replace' do
+      it_behaves_like 'boolean parameter', :replace, true
+    end
+
     describe 'config' do
       let(:resource) { described_class.new(name: 'foo', config: 'bar') }
       let(:property) { resource.property(:config) }
@@ -60,15 +64,19 @@ describe Puppet::Type.type(:jenkins_job) do
         context 'removed' do
           it { expect(property.change_to_s(nil, :absent)).to eq 'removed' }
         end
-        context 'changed' do
+        context 'changed with replace' do
           it do
             expect(property.change_to_s('foo', 'bar'))
               .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
           end
         end
-      end # change_to_s change string
-    end # config
-  end # properties
+        context 'changed without replace' do
+          let(:resource) { described_class.new(:name => 'foo', :config => 'bar', :replace => false) }
+          it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
+        end
+      end #change_to_s change string
+    end #config
+  end #properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
