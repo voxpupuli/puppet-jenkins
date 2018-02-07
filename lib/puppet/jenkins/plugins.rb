@@ -99,7 +99,7 @@ module Puppet
           return {} if buffer.nil? || buffer.empty?
           buffer = buffer.split("\n")
           # Trim off the first and last lines, which are the JSONP gunk
-          buffer = buffer[1 ... -1]
+          buffer = buffer[1...-1]
 
           data = parser.call(buffer.join("\n"))
           return data['plugins'] || {}
