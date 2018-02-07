@@ -133,6 +133,17 @@ describe 'jenkins::slave' do
       end
     end
 
+    describe 'with tunnel specified' do
+      let(:params) do
+        {
+          tunnel: 'localhost:9000'
+        }
+      end
+
+      it {should contain_file(slave_runtime_file).with_content(/^TUNNEL="localhost:9000"$/)}
+
+    end
+
     describe 'with different swarm versions' do
       let(:source) { 'http://rspec.example.com' }
       context 'a version lower than 3.0' do
