@@ -41,7 +41,7 @@ module OkJson
   def decode(s)
     ts = lex(s)
     v, ts = textparse(ts)
-    raise Error, 'trailing garbage' if ts.length > 0
+    raise Error, 'trailing garbage' unless ts.empty?
     v
   end
 
@@ -176,7 +176,7 @@ module OkJson
   # excluding white space (as defined in RFC 4627).
   def lex(s)
     ts = []
-    while s.length > 0
+    until s.empty?
       typ, lexeme, val = tok(s)
       raise Error, "invalid character at #{s[0, 10].inspect}" if typ.nil?
       ts << [typ, lexeme, val] if typ != :space
