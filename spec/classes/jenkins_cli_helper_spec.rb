@@ -40,4 +40,3 @@ describe 'jenkins::cli_helper', type: :class do
     it { should contain_class 'jenkins::cli_helper' }
   end
 end
-
