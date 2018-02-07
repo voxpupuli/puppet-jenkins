@@ -165,7 +165,7 @@ describe 'jenkins::plugin' do
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'retrieves the plugin' do
-        expect(subject).to contain_archive('git.hpi').with(source: "#{expected_url}")
+        expect(subject).to contain_archive('git.hpi').with(source: expected_url.to_s)
       end
     end
 

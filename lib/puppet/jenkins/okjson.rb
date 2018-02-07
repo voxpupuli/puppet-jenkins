@@ -433,7 +433,7 @@ module OkJson
         end
       raise Error, "Numeric cannot be represented: #{x}"
     end
-    "#{x}"
+    x.to_s
   end
 
   # Copies the valid UTF-8 bytes of a single character

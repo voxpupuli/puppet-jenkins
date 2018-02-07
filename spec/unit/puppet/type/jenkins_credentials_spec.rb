@@ -52,7 +52,7 @@ describe Puppet::Type.type(:jenkins_credentials) do
       :access_key,
       :api_token
     ].each do |property|
-      describe "#{property}" do
+      describe property.to_s do
         context 'attrtype' do
           it { expect(described_class.attrtype(property)).to eq :property }
         end

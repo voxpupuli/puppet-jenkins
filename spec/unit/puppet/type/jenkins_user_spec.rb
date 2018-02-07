@@ -18,7 +18,7 @@ describe Puppet::Type.type(:jenkins_user) do
     # unvalidated properties
     [:full_name, :email_address,
      :api_token_public, :password].each do |property|
-      describe "#{property}" do
+      describe property.to_s do
         it { expect(described_class.attrtype(property)).to eq :property }
       end
     end
