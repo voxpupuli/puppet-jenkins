@@ -24,7 +24,7 @@ module Puppet::X::Jenkins::Util
     when Array
       data.map { |v| iterate(v, &block) }
     else
-      block.call data
+      yield data
     end
   end
   module_function :iterate
