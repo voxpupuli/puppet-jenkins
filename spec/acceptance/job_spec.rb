@@ -92,7 +92,6 @@ EOS
       it { should be_mode 644 }
       it { should contain '<description>do not overwrite me</description>' }
     end
-
   end
 
   context 'disable' do
