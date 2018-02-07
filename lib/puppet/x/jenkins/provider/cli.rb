@@ -162,10 +162,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     catalog = options.delete(:catalog)
 
-    options.merge!(failonfail: true)
+    options[:failonfail] = true
     # without combine, an execution exception message will not include the
     # stderr
-    options.merge!(combine: true)
+    options[:combine] = true
 
     config = Puppet::X::Jenkins::Config.new(catalog)
     cli_jar                  = config[:cli_jar]
