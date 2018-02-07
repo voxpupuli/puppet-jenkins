@@ -27,7 +27,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '43'
+  Upstream = '43'.freeze
   extend self
 
   # Decodes a json document in string s and
@@ -528,12 +528,12 @@ module OkJson
   Uchar2max = (1 << 11) - 1
   Uchar3max = (1 << 16) - 1
   Ucharerr = 0xFFFD # unicode "replacement char"
-  Ustrerr = "\xef\xbf\xbd" # unicode "replacement char"
+  Ustrerr = "\xef\xbf\xbd".freeze # unicode "replacement char"
   Usurrself = 0x10000
   Usurr1 = 0xd800
   Usurr2 = 0xdc00
   Usurr3 = 0xe000
 
   Spc = ' '[0]
-  Unesc = { 'b' => "\b", 'f' => "\f", 'n' => "\n", 'r' => "\r", 't' => "\t" }
+  Unesc = { 'b' => "\b", 'f' => "\f", 'n' => "\n", 'r' => "\r", 't' => "\t" }.freeze
 end

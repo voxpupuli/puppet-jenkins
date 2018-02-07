@@ -10,7 +10,7 @@ describe Puppet::X::Jenkins::Config do
     puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',
     cli_tries: 30,
     cli_try_sleep: 2
-  }
+  }.freeze
 
   shared_context 'facts' do
     before do

@@ -11,7 +11,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
   NetError = Puppet::X::Jenkins::Provider::Cli::NetError
   UnknownError = Puppet::X::Jenkins::Provider::Cli::UnknownError
 
-  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS]
+  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS].freeze
     anonymous is missing the Overall/Read permission
   EOS
     You must authenticate to access this Jenkins.
@@ -20,7 +20,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
     anonymous is missing the Overall/RunScripts permission
   EOS
 
-  CLI_NET_ERRORS = [<<-EOS, <<-EOS]
+  CLI_NET_ERRORS = [<<-EOS, <<-EOS].freeze
     SEVERE: I/O error in channel CLI connection
   EOS
     java.net.SocketException: Connection reset

@@ -22,9 +22,9 @@ class Puppet::X::Jenkins::Config
     cli_password_file: '/tmp/jenkins_credentials_for_puppet',
     cli_password_file_exists: false,
     cli_remoting_free: false
-  }
-  CONFIG_CLASS = 'jenkins::cli::config'
-  FACT_PREFIX = 'jenkins_'
+  }.freeze
+  CONFIG_CLASS = 'jenkins::cli::config'.freeze
+  FACT_PREFIX = 'jenkins_'.freeze
 
   def initialize(catalog = nil)
     @catalog = catalog
