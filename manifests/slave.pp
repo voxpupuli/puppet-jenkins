@@ -121,7 +121,7 @@ class jenkins::slave (
   Optional[String] $tool_locations        = undef,
   Optional[String] $source                = undef,
   Optional[String] $proxy_server          = undef,
-  Optional[String] $tunnel                = undef,
+  Optional[Jenkins::Tunnel] $tunnel       = undef,
   String $version                         = $jenkins::params::swarm_version,
   Integer $executors                      = 2,
   Boolean $manage_slave_user              = true,
