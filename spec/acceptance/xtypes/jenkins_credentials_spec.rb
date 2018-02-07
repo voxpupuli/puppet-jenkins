@@ -144,6 +144,7 @@ describe 'jenkins_credentials' do
 
       context 'AWSCredentialsImpl' do
         it 'works with no errors' do
+          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
               'jackson2-api',
@@ -171,12 +172,16 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>' }
+          it {
+            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
+            should contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>'
+          }
         end
       end
 
       context 'GitLabApiTokenImpl' do
         it 'works with no errors' do
+          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             package { 'git': }
             jenkins::plugin { [
@@ -212,7 +217,10 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>' }
+          it {
+            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
+            should contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>'
+          }
         end
       end
     end # 'present' do
