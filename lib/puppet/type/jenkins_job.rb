@@ -29,9 +29,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
       elsif newvalue == :absent
         'removed'
       else
-        if @resource[:replace] == false
-          return 'left unchanged'
-        end
+        return 'left unchanged' if @resource[:replace] == false
         if Puppet[:show_diff] && resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
