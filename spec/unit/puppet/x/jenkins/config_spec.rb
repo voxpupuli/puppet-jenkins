@@ -60,8 +60,8 @@ describe Puppet::X::Jenkins::Config do
   describe '#[]' do
     context 'unknown config key' do
       it do
-        expect { described_class.new[:foo] }
-          .to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
+        expect { described_class.new[:foo] }.
+          to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
       end
     end # unknown config key
 

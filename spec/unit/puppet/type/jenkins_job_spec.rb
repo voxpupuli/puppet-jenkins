@@ -66,8 +66,8 @@ describe Puppet::Type.type(:jenkins_job) do
         end
         context 'changed with replace' do
           it do
-            expect(property.change_to_s('foo', 'bar'))
-              .to match(/content changed '{md5}\w+' to '{md5}\w+'/)
+            expect(property.change_to_s('foo', 'bar')).
+              to match(/content changed '{md5}\w+' to '{md5}\w+'/)
           end
         end
         context 'changed without replace' do

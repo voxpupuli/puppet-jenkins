@@ -204,8 +204,8 @@ describe 'jenkins::slave' do
         }
       end
       it 'has disable variable' do
-        is_expected.to contain_file(slave_runtime_file)
-          .with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
+        is_expected.to contain_file(slave_runtime_file).
+          with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
       end
     end
 
@@ -214,8 +214,8 @@ describe 'jenkins::slave' do
         let(:params) { { delete_existing_clients: true } }
 
         it do
-          is_expected.to contain_file(slave_runtime_file)
-            .with_content(/^DELETE_EXISTING_CLIENTS="true"$/)
+          is_expected.to contain_file(slave_runtime_file).
+            with_content(/^DELETE_EXISTING_CLIENTS="true"$/)
         end
       end
 
@@ -223,8 +223,8 @@ describe 'jenkins::slave' do
         let(:params) { { delete_existing_clients: false } }
 
         it do
-          is_expected.to contain_file(slave_runtime_file)
-            .with_content(/^DELETE_EXISTING_CLIENTS=""$/)
+          is_expected.to contain_file(slave_runtime_file).
+            with_content(/^DELETE_EXISTING_CLIENTS=""$/)
         end
       end
     end # delete_existing_clients
@@ -253,8 +253,8 @@ describe 'jenkins::slave' do
       it_behaves_like 'a jenkins::slave catalog'
 
       it do
-        is_expected.to contain_file(slave_startup_script)
-          .that_notifies('Service[jenkins-slave]')
+        is_expected.to contain_file(slave_startup_script).
+          that_notifies('Service[jenkins-slave]')
       end
 
       describe 'with slave_name' do
@@ -303,8 +303,8 @@ describe 'jenkins::slave' do
 
       it_behaves_like 'a jenkins::slave catalog'
       it do
-        is_expected.to contain_file(slave_startup_script)
-          .that_notifies('Service[jenkins-slave]')
+        is_expected.to contain_file(slave_startup_script).
+          that_notifies('Service[jenkins-slave]')
       end
       # XXX the prior_to args check fails under puppet 3.8.7 for unknown
       # reasons...
@@ -318,16 +318,16 @@ describe 'jenkins::slave' do
         it { is_expected.to contain_transition('stop jenkins-slave service') }
       end
       it do
-        is_expected.to contain_file(slave_sysv_file)
-          .with(
+        is_expected.to contain_file(slave_sysv_file).
+          with(
             ensure: 'absent',
             selinux_ignore_defaults: true
-          )
-          .that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
+          ).
+          that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
       end
       it do
-        is_expected.to contain_systemd__unit_file('jenkins-slave.service')
-          .that_notifies('Service[jenkins-slave]')
+        is_expected.to contain_systemd__unit_file('jenkins-slave.service').
+          that_notifies('Service[jenkins-slave]')
       end
     end
   end
@@ -345,8 +345,8 @@ describe 'jenkins::slave' do
     end
 
     it do
-      is_expected.to contain_package('daemon')
-        .that_comes_before('Service[jenkins-slave]')
+      is_expected.to contain_package('daemon').
+        that_comes_before('Service[jenkins-slave]')
     end
   end
 

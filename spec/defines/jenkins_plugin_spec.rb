@@ -20,8 +20,8 @@ describe 'jenkins::plugin' do
         path: "#{pdir}/#{title}.hpi",
         cleanup: false,
         extract: false
-      ).that_requires("File[#{pdir}]")
-        .that_notifies('Service[jenkins]')
+      ).that_requires("File[#{pdir}]").
+        that_notifies('Service[jenkins]')
     end
     it do
       is_expected.to contain_file("#{pdir}/#{title}.hpi").with(
@@ -112,8 +112,8 @@ describe 'jenkins::plugin' do
         owner: 'jenkins',
         group: 'jenkins',
         mode: '0644'
-      ).that_requires("Archive[#{title}.hpi]")
-        .that_notifies('Service[jenkins]')
+      ).that_requires("Archive[#{title}.hpi]").
+        that_notifies('Service[jenkins]')
     end
   end
 
@@ -220,8 +220,8 @@ describe 'jenkins::plugin' do
       it 'downloads from $source url' do
         is_expected.to contain_archive('myplug.hpi').with(
           source: 'http://e.org/myplug.hpi'
-        )
-          .that_requires("File[#{pdir}]")
+        ).
+          that_requires("File[#{pdir}]")
       end
     end
 
@@ -269,9 +269,9 @@ describe 'jenkins::plugin' do
             ensure: 'file',
             owner: 'jenkins',
             group: 'jenkins'
-          )
-            .that_requires('Archive[foo.hpi]')
-            .that_notifies('Service[jenkins]')
+          ).
+            that_requires('Archive[foo.hpi]').
+            that_notifies('Service[jenkins]')
         end
       end
       context 'with pin => false' do

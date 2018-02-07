@@ -15,8 +15,8 @@ describe 'jenkins', type: :class do
       it { is_expected.to contain_class('jenkins::config') }
       it { is_expected.to contain_jenkins__plugin('credentials') }
       it do
-        is_expected.to contain_jenkins__sysconfig('JENKINS_JAVA_OPTIONS')
-          .with_value('-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false')
+        is_expected.to contain_jenkins__sysconfig('JENKINS_JAVA_OPTIONS').
+          with_value('-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false')
       end
       it do
         is_expected.to contain_jenkins__sysconfig('JENKINS_AJP_PORT').with_value('-1')

@@ -42,8 +42,8 @@ describe 'jenkins', type: :class do
       let(:sysv_file) { '/etc/init.d/jenkins' }
 
       it do
-        is_expected.to contain_file(startup_script)
-          .that_notifies('Service[jenkins]')
+        is_expected.to contain_file(startup_script).
+          that_notifies('Service[jenkins]')
       end
       # XXX the prior_to args check fails under puppet 3.8.7 for unknown
       # reasons...
@@ -57,16 +57,16 @@ describe 'jenkins', type: :class do
         it { is_expected.to contain_transition('stop jenkins service') }
       end
       it do
-        is_expected.to contain_file(sysv_file)
-          .with(
+        is_expected.to contain_file(sysv_file).
+          with(
             ensure: 'absent',
             selinux_ignore_defaults: true
-          )
-          .that_comes_before('Systemd::Unit_file[jenkins.service]')
+          ).
+          that_comes_before('Systemd::Unit_file[jenkins.service]')
       end
       it do
-        is_expected.to contain_systemd__unit_file('jenkins.service')
-          .that_notifies('Service[jenkins]')
+        is_expected.to contain_systemd__unit_file('jenkins.service').
+          that_notifies('Service[jenkins]')
       end
     end
 

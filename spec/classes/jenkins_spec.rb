@@ -74,15 +74,15 @@ describe 'jenkins', type: :class do
       context '/foo/bar' do
         let(:params) { { sysconfdir: '/foo/bar' } }
         it do
-          is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
-            .with_path('/foo/bar/jenkins')
+          is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
+            with_path('/foo/bar/jenkins')
         end
       end
 
       context '(default)' do
         it do
-          is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS')
-            .with_path('/etc/sysconfig/jenkins')
+          is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
+            with_path('/etc/sysconfig/jenkins')
         end
       end
     end
@@ -279,10 +279,10 @@ describe 'jenkins', type: :class do
         let(:params) { { purge_plugins: false } }
 
         it do
-          is_expected.to contain_file('/var/lib/jenkins/plugins')
-            .without('purge')
-            .without('recurse')
-            .without('force')
+          is_expected.to contain_file('/var/lib/jenkins/plugins').
+            without('purge').
+            without('recurse').
+            without('force')
         end
       end
 
@@ -300,11 +300,11 @@ describe 'jenkins', type: :class do
 
       context '(default)' do
         it do
-          is_expected.to contain_file('/var/lib/jenkins/plugins')
-            .without('purge')
-            .without('recurse')
-            .without('force')
-            .without('notify')
+          is_expected.to contain_file('/var/lib/jenkins/plugins').
+            without('purge').
+            without('recurse').
+            without('force').
+            without('notify')
         end
       end
     end # purge_plugins

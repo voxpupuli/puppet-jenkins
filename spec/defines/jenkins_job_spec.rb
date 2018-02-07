@@ -91,8 +91,8 @@ eos
       }
     end
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(formatted_config)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(formatted_config)
     end
   end
 
@@ -100,8 +100,8 @@ eos
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { ensure: 'present', config: quotes } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(/version="1\.0" encoding="UTF-8"/)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(/version="1\.0" encoding="UTF-8"/)
     end
   end
 
@@ -109,8 +109,8 @@ eos
     empty_tags = '<xml><notempty><empty></empty></notempty><emptytwo></emptytwo></xml>'
     let(:params) { { ensure: 'present', config: empty_tags } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
     end
   end
 
@@ -118,8 +118,8 @@ eos
     quotes = '<config>the dog said &quot;woof&quot;</config>'
     let(:params) { { ensure: 'present', config: quotes } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content('<config>the dog said "woof"</config>')
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content('<config>the dog said "woof"</config>')
     end
   end
 
@@ -127,8 +127,8 @@ eos
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource, config: '' } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(/sourcedconfig/)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(/sourcedconfig/)
     end
   end
 
@@ -137,8 +137,8 @@ eos
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource, config: quotes } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(/sourcedconfig/)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(/sourcedconfig/)
     end
   end
 
@@ -152,8 +152,8 @@ eos
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(/sourcedconfig/)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(/sourcedconfig/)
     end
   end
 
@@ -162,8 +162,8 @@ eos
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
     it do
-      is_expected.to contain_file('/tmp/myjob-config.xml')
-        .with_content(/sourcedconfig/)
+      is_expected.to contain_file('/tmp/myjob-config.xml').
+        with_content(/sourcedconfig/)
     end
   end
 
