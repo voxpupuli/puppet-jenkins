@@ -24,7 +24,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   # we must invoke ::initvars to setup variables needed by ::commands
-  self.initvars
+  initvars
 
   commands java: 'java'
   confine feature: :retries
@@ -39,7 +39,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
   # shorter class name
   def self.sname
-    self.to_s[/.+::(Jenkins.+)/, 1]
+    to_s[/.+::(Jenkins.+)/, 1]
   end
 
   def self.prefetch(resources)

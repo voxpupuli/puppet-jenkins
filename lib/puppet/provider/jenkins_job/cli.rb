@@ -39,7 +39,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
     case self.ensure
     when :present
       if update
-        update_job if self.replace
+        update_job if replace
       else
         create_job
       end
