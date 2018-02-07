@@ -37,16 +37,14 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     # map nil -> :undef
     info = Puppet::X::Jenkins::Util.undefize(info)
 
-    new({
-      name: info['id'],
-      ensure: :present,
-      full_name: info['full_name'],
-      email_address: info['email_address'],
-      api_token_plain: info['api_token_plain'],
-      api_token_public: info['api_token_public'],
-      public_keys: info['public_keys'],
-      password: info['password']
-    })
+    new(name: info['id'],
+        ensure: :present,
+        full_name: info['full_name'],
+        email_address: info['email_address'],
+        api_token_plain: info['api_token_plain'],
+        api_token_public: info['api_token_public'],
+        public_keys: info['public_keys'],
+        password: info['password'])
   end
   private_class_method :from_hash
 
