@@ -216,11 +216,17 @@ module OkJson
     end
   end
 
-  def nulltok(s);  s[0, 4] == 'null'  ? [:val, 'null',  nil]   : [] end
+  def nulltok(s)
+    s[0, 4] == 'null'  ? [:val, 'null',  nil]   : []
+  end
 
-  def truetok(s);  s[0, 4] == 'true'  ? [:val, 'true',  true]  : [] end
+  def truetok(s)
+    s[0, 4] == 'true'  ? [:val, 'true',  true]  : []
+  end
 
-  def falsetok(s); s[0, 5] == 'false' ? [:val, 'false', false] : [] end
+  def falsetok(s)
+    s[0, 5] == 'false' ? [:val, 'false', false] : []
+  end
 
   def numtok(s)
     m = /-?([1-9][0-9]+|[0-9])([.][0-9]+)?([eE][+-]?[0-9]+)?/.match(s)
