@@ -70,7 +70,7 @@ describe 'jenkins::cli::exec', type: :define do
     end
 
     context "['bar']" do
-      let(:params) { { command: %w{ bar } } }
+      let(:params) { { command: %w{bar} } }
 
       it do
         should contain_exec('foo').with(
