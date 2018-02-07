@@ -119,7 +119,6 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def self.cli(command, options = {}, cli_pre_cmd = [])
-
     if options.nil? || !options.key?(:stdinjson) && !options.key?(:stdin)
       return execute_with_retry(command, options, cli_pre_cmd)
     end
