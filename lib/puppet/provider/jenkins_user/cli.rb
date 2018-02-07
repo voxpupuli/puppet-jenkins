@@ -14,7 +14,7 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     all.map { |info| from_hash(info) }
   end
 
-  def api_token_public=(value)
+  def api_token_public=(_value)
     raise Puppet::Error, 'api_token_public is read-only'
   end
 
