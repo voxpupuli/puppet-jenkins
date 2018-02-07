@@ -18,49 +18,49 @@ describe 'jenkins class' do
     describe port(8080) do
       it {
         sleep(10) # Jenkins takes a while to start up
-        should be_listening
+        is_expected.to be_listening
       }
     end
 
     describe file("#{$libdir}/jenkins-cli.jar") do
-      it { should be_file }
-      it { should be_readable.by('owner') }
-      it { should be_writable.by('owner') }
-      it { should be_readable.by('group') }
-      it { should be_readable.by('others') }
+      it { is_expected.to be_file }
+      it { is_expected.to be_readable.by('owner') }
+      it { is_expected.to be_writable.by('owner') }
+      it { is_expected.to be_readable.by('group') }
+      it { is_expected.to be_readable.by('others') }
     end
 
     describe file("#{$sysconfdir}/jenkins") do
-      it { should be_file }
+      it { is_expected.to be_file }
       if fact('osfamily') == 'Debian'
-        it { should contain 'AJP_PORT="-1"' }
+        it { is_expected.to contain 'AJP_PORT="-1"' }
       else
-        it { should contain 'JENKINS_AJP_PORT="-1"' }
+        it { is_expected.to contain 'JENKINS_AJP_PORT="-1"' }
       end
     end
 
     describe service('jenkins') do
-      it { should be_running }
-      it { should be_enabled }
+      it { is_expected.to be_running }
+      it { is_expected.to be_enabled }
     end
 
     if fact('osfamily') == 'RedHat' && $systemd
       describe file('/etc/systemd/system/jenkins.service') do
-        it { should be_file }
-        it { should contain "ExecStart=#{libdir}/jenkins-run" }
+        it { is_expected.to be_file }
+        it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }
       end
       describe file('/etc/init.d/jenkins') do
-        it { should_not exist }
+        it { is_expected.to_not exist }
       end
       describe service('jenkins') do
-        it { should be_running.under('systemd') }
+        it { is_expected.to be_running.under('systemd') }
       end
     else
       describe file('/etc/systemd/system/jenkins.service') do
-        it { should_not exist }
+        it { is_expected.to_not exist }
       end
       describe file('/etc/init.d/jenkins') do
-        it { should be_file }
+        it { is_expected.to be_file }
       end
     end
   end # default parameters
@@ -80,16 +80,16 @@ describe 'jenkins class' do
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to
       # sleep
-      it { should be_listening }
+      it { is_expected.to be_listening }
     end
 
     describe service('jenkins') do
-      it { should be_running }
-      it { should be_enabled }
+      it { is_expected.to be_running }
+      it { is_expected.to be_enabled }
     end
 
     describe file('/var/lib/jenkins/config.xml') do
-      it { should contain '  <numExecutors>42</numExecutors>' }
+      it { is_expected.to contain '  <numExecutors>42</numExecutors>' }
     end
   end # executors
 
@@ -108,16 +108,16 @@ describe 'jenkins class' do
       describe port(8080) do
         # jenkins should already have been running so we shouldn't have to
         # sleep
-        it { should be_listening }
+        it { is_expected.to be_listening }
       end
 
       describe service('jenkins') do
-        it { should be_running }
-        it { should be_enabled }
+        it { is_expected.to be_running }
+        it { is_expected.to be_enabled }
       end
 
       describe file('/var/lib/jenkins/config.xml') do
-        it { should contain '  <slaveAgentPort>7777</slaveAgentPort>' }
+        it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
       end
     end # slaveagentport
 end

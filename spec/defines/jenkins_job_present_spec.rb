@@ -13,7 +13,7 @@ describe 'jenkins::job::present' do
 
   describe 'with defaults' do
     it 'fails' do
-      should raise_error(Puppet::Error, /Please set one of/)
+      is_expected.to raise_error(Puppet::Error, /Please set one of/)
     end
   end
 
@@ -21,15 +21,15 @@ describe 'jenkins::job::present' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { config: quotes, config_file: quotes } }
     it 'fails' do
-      should raise_error(Puppet::Error, /You cannot set both/)
+      is_expected.to raise_error(Puppet::Error, /You cannot set both/)
     end
   end
 
   describe 'with config_file set' do
     let(:config_file) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { config_file: config_file } }
-    it { should contain_exec('jenkins create-job myjob').with_require('File[' + config_file + ']') }
-    it { should contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.to contain_exec('jenkins create-job myjob').with_require('File[' + config_file + ']') }
+    it { is_expected.to contain_exec('jenkins update-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
   end
 end

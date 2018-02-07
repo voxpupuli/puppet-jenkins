@@ -14,38 +14,38 @@ describe 'jenkins::slave class' do
 
     if $systemd
       describe file('/etc/systemd/system/jenkins-slave.service') do
-        it { should be_file }
-        it { should contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
+        it { is_expected.to be_file }
+        it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
       end
       describe file('/etc/init.d/jenkins-slave') do
-        it { should_not exist }
+        it { is_expected.to_not exist }
       end
       describe service('jenkins-slave') do
-        it { should be_running.under('systemd') }
+        it { is_expected.to be_running.under('systemd') }
       end
     else
       describe file('/etc/systemd/system/jenkins-slave.service') do
-        it { should_not exist }
+        it { is_expected.to_not exist }
       end
       describe file('/etc/init.d/jenkins-slave') do
-        it { should be_file }
-        it { should be_mode 755 }
+        it { is_expected.to be_file }
+        it { is_expected.to be_mode 755 }
       end
     end
 
     describe file("#{$sysconfdir}/jenkins-slave") do
-      it { should be_file }
-      it { should be_mode 600 }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 600 }
     end
 
     describe file('/home/jenkins-slave/swarm-client-2.2-jar-with-dependencies.jar') do
-      it { should be_file }
-      it { should be_mode 644 }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 644 }
     end
 
     describe service('jenkins-slave') do
-      it { should be_running }
-      it { should be_enabled }
+      it { is_expected.to be_running }
+      it { is_expected.to be_enabled }
     end
   end # default parameters
 
@@ -72,10 +72,10 @@ describe 'jenkins::slave class' do
       end
 
       describe process('java') do
-        its(:user) { should eq 'jenkins-slave' }
-        its(:args) { should match /-username imauser/ }
-        its(:args) { should match /-passwordEnvVariable JENKINS_PASSWORD/ }
-        its(:args) { should_not match /imapass/ }
+        its(:user) { is_expected.to eq 'jenkins-slave' }
+        its(:args) { is_expected.to match /-username imauser/ }
+        its(:args) { is_expected.to match /-passwordEnvVariable JENKINS_PASSWORD/ }
+        its(:args) { is_expected.to_not match /imapass/ }
       end
     end # username/password
 
@@ -92,8 +92,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-disableClientsUniqueId/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-disableClientsUniqueId/ }
         end
       end # true
 
@@ -109,8 +109,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should_not match /-disableClientsUniqueId/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to_not match /-disableClientsUniqueId/ }
         end
       end # false
     end # disable_clients_unique_id
@@ -128,8 +128,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-disableSslVerification/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-disableSslVerification/ }
         end
       end # true
 
@@ -145,8 +145,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should_not match /-disableSslVerification/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to_not match /-disableSslVerification/ }
         end
       end # false
     end # disable_ssl_verification
@@ -164,8 +164,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-deleteExistingClients/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-deleteExistingClients/ }
         end
       end # true
 
@@ -181,8 +181,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should_not match /-deleteExistingClients/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to_not match /-deleteExistingClients/ }
         end
       end # false
     end # delete_existing_clients
@@ -200,8 +200,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-labels foo/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-labels foo/ }
         end
       end
 
@@ -217,8 +217,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-labels foo bar baz/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-labels foo bar baz/ }
         end
       end
 
@@ -234,8 +234,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-labels foo bar baz/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-labels foo bar baz/ }
         end
       end
     end # labels
@@ -255,9 +255,9 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /--toolLocation Python-2.7=\/usr\/bin\/python2.7/ }
-          its(:args) { should match /--toolLocation Java-1.8=\/usr\/bin\/java/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /--toolLocation Python-2.7=\/usr\/bin\/python2.7/ }
+          its(:args) { is_expected.to match /--toolLocation Java-1.8=\/usr\/bin\/java/ }
         end
       end
     end # tool_locations
@@ -277,8 +277,8 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { should eq 'jenkins-slave' }
-          its(:args) { should match /-tunnel localhost:9000/ }
+          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:args) { is_expected.to match /-tunnel localhost:9000/ }
         end
       end
     end # tunnel

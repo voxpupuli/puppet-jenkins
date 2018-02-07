@@ -17,7 +17,7 @@ describe 'jenkins::sysconfig' do
     end
 
     it do
-      should contain_file_line('Jenkins sysconfig setting myprop').with(
+      is_expected.to contain_file_line('Jenkins sysconfig setting myprop').with(
         path: '/etc/sysconfig/jenkins',
         line: 'myprop="myvalue"',
         match: '^myprop='
@@ -40,7 +40,7 @@ describe 'jenkins::sysconfig' do
     end
 
     it do
-      should contain_file_line('Jenkins sysconfig setting myprop').with(
+      is_expected.to contain_file_line('Jenkins sysconfig setting myprop').with(
         path: '/etc/default/jenkins',
         line: 'myprop="myvalue"',
         match: '^myprop='

@@ -10,7 +10,7 @@ describe Puppet::Jenkins::Plugins do
         Puppet::Jenkins.stub(:home_dir).and_return(nil)
       end
 
-      it { should be false }
+      it { is_expected.to be false }
     end
 
     context 'if jenkins exists' do
@@ -24,11 +24,11 @@ describe Puppet::Jenkins::Plugins do
 
       context 'and the directory exists' do
         let(:dir_exists) { true }
-        it { should be true }
+        it { is_expected.to be true }
       end
 
       context 'and the directory does not exist' do
-        it { should be false }
+        it { is_expected.to be false }
       end
     end
   end
@@ -41,8 +41,8 @@ describe Puppet::Jenkins::Plugins do
         described_class.should_receive(:exists?).and_return(false)
       end
 
-      it { should be_empty }
-      it { should be_instance_of Hash }
+      it { is_expected.to be_empty }
+      it { is_expected.to be_instance_of Hash }
     end
 
     context 'when plugins exist' do
@@ -92,7 +92,7 @@ Plugin-Developers:
 '
       end
 
-      it { should be_instance_of Hash }
+      it { is_expected.to be_instance_of Hash }
 
       it 'parses the right plugin version' do
         expect(data[:plugin_version]).to eql('1.2')
@@ -128,7 +128,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 '
       end
 
-      it { should be_instance_of Hash }
+      it { is_expected.to be_instance_of Hash }
       it 'has the right number of keys' do
         expect(data.keys.size).to eql(18)
       end
@@ -141,9 +141,9 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
     let(:fixture) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/update-center.json') }
 
     context 'uses json' do
-      it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin') }
-      its (:size) { should eql 1 }
+      it { is_expected.to be_instance_of Hash }
+      it { is_expected.to have_key('AdaptivePlugin') }
+      its (:size) { is_expected.to eql 1 }
     end
 
     context 'uses okjson when json is not avaliable' do
@@ -152,9 +152,9 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
         expect(::Kernel).to receive(:require).with('puppet/jenkins/okjson').and_call_original
       end
 
-      it { should be_instance_of Hash }
-      it { should have_key('AdaptivePlugin') }
-      its (:size) { should eql 1 }
+      it { is_expected.to be_instance_of Hash }
+      it { is_expected.to have_key('AdaptivePlugin') }
+      its (:size) { is_expected.to eql 1 }
     end
   end
 

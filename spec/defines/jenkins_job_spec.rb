@@ -15,11 +15,11 @@ describe 'jenkins::job' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { config: quotes } }
     it do
-      should contain_jenkins__job('myjob').
+      is_expected.to contain_jenkins__job('myjob').
         that_requires('Class[jenkins::cli]')
     end
     it do
-      should contain_jenkins__job('myjob').
+      is_expected.to contain_jenkins__job('myjob').
         that_comes_before('Anchor[jenkins::end]')
     end
   end
@@ -27,32 +27,32 @@ describe 'jenkins::job' do
   describe 'with defaults' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { config: quotes } }
-    it { should contain_exec('jenkins create-job myjob') }
-    it { should contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.to contain_exec('jenkins create-job myjob') }
+    it { is_expected.to contain_exec('jenkins update-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with job present' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { ensure: 'present', config: quotes } }
-    it { should contain_exec('jenkins create-job myjob') }
-    it { should contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.to contain_exec('jenkins create-job myjob') }
+    it { is_expected.to contain_exec('jenkins update-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with job absent' do
     let(:params) { { ensure: 'absent', config: '' } }
-    it { should_not contain_exec('jenkins create-job myjob') }
-    it { should_not contain_exec('jenkins update-job myjob') }
-    it { should contain_exec('jenkins delete-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins create-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins update-job myjob') }
+    it { is_expected.to contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with replace false' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { ensure: 'present', config: quotes, replace: false } }
-    it { should contain_exec('jenkins create-job myjob') }
-    it { should_not contain_exec('jenkins update-job myjob') }
-    it { should_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.to contain_exec('jenkins create-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins update-job myjob') }
+    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with an invalid $difftool' do
@@ -63,7 +63,7 @@ describe 'jenkins::job' do
       }
     end
 
-    it { should_not compile }
+    it { is_expected.to_not compile }
   end
 
   describe 'with unformatted config' do
@@ -91,7 +91,7 @@ eos
       }
     end
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(formatted_config)
     end
   end
@@ -100,7 +100,7 @@ eos
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { ensure: 'present', config: quotes } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(/version="1\.0" encoding="UTF-8"/)
     end
   end
@@ -109,7 +109,7 @@ eos
     empty_tags = '<xml><notempty><empty></empty></notempty><emptytwo></emptytwo></xml>'
     let(:params) { { ensure: 'present', config: empty_tags } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
     end
   end
@@ -118,7 +118,7 @@ eos
     quotes = '<config>the dog said &quot;woof&quot;</config>'
     let(:params) { { ensure: 'present', config: quotes } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content('<config>the dog said "woof"</config>')
     end
   end
@@ -127,7 +127,7 @@ eos
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource, config: '' } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(/sourcedconfig/)
     end
   end
@@ -137,7 +137,7 @@ eos
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource, config: quotes } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(/sourcedconfig/)
     end
   end
@@ -145,14 +145,14 @@ eos
   describe 'with sourced config and no regular config' do
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource } }
-    it { should raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
+    it { is_expected.to raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
   end
 
   describe 'with templated config and blank regular config' do
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(/sourcedconfig/)
     end
   end
@@ -162,7 +162,7 @@ eos
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
     it do
-      should contain_file('/tmp/myjob-config.xml')
+      is_expected.to contain_file('/tmp/myjob-config.xml')
         .with_content(/sourcedconfig/)
     end
   end
@@ -170,6 +170,6 @@ eos
   describe 'with templated config and no regular config' do
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate } }
-    it { should raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
+    it { is_expected.to raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
   end
 end

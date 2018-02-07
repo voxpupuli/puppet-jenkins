@@ -16,11 +16,11 @@ describe 'jenkins::cli::exec', type: :define do
 
   describe 'relationships' do
     it do
-      should contain_jenkins__cli__exec('foo').
+      is_expected.to contain_jenkins__cli__exec('foo').
         that_requires('Class[jenkins::cli_helper]')
     end
     it do
-      should contain_jenkins__cli__exec('foo').
+      is_expected.to contain_jenkins__cli__exec('foo').
         that_comes_before('Anchor[jenkins::end]')
     end
   end
@@ -30,28 +30,28 @@ describe 'jenkins::cli::exec', type: :define do
       # default title...
 
       it do
-        should contain_exec('foo').with(
+        is_expected.to contain_exec('foo').with(
           command: "#{helper_cmd} foo",
           tries: 10,
           try_sleep: 10,
           unless: nil
         )
       end
-      it { should contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
+      it { is_expected.to contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
     end
 
     context 'bar' do
       let(:title) { 'bar' }
 
       it do
-        should contain_exec('bar').with(
+        is_expected.to contain_exec('bar').with(
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
           unless: nil
         )
       end
-      it { should contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
+      it { is_expected.to contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
     end
   end # title =>
 
@@ -60,7 +60,7 @@ describe 'jenkins::cli::exec', type: :define do
       let(:params) { { command: 'bar' } }
 
       it do
-        should contain_exec('foo').with(
+        is_expected.to contain_exec('foo').with(
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
@@ -73,7 +73,7 @@ describe 'jenkins::cli::exec', type: :define do
       let(:params) { { command: %w{bar} } }
 
       it do
-        should contain_exec('foo').with(
+        is_expected.to contain_exec('foo').with(
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
@@ -86,7 +86,7 @@ describe 'jenkins::cli::exec', type: :define do
       let(:params) { { command: %w{bar baz} } }
 
       it do
-        should contain_exec('foo').with(
+        is_expected.to contain_exec('foo').with(
           command: "#{helper_cmd} bar baz",
           tries: 10,
           try_sleep: 10,
@@ -101,7 +101,7 @@ describe 'jenkins::cli::exec', type: :define do
       let(:params) { { unless: 'bar' } }
 
       it do
-        should contain_exec('foo').with(
+        is_expected.to contain_exec('foo').with(
           command: "#{helper_cmd} foo",
           environment: ["HELPER_CMD=eval #{helper_cmd}"],
           unless: 'bar',

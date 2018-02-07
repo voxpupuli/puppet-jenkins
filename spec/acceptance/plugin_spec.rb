@@ -21,10 +21,10 @@ describe 'jenkins class', order: :defined do
 
   shared_examples 'has_git_plugin' do
     describe file("#{$pdir}/git.hpi") do
-      it { should be_file }
+      it { is_expected.to be_file }
     end
     describe file("#{$pdir}/git") do
-      it { should be_directory }
+      it { is_expected.to be_directory }
     end
   end
 
@@ -120,7 +120,7 @@ describe 'jenkins class', order: :defined do
 
       ($dirs + $files).each do |f|
         describe file(f) do
-          it { should_not exist }
+          it { is_expected.to_not exist }
         end
       end
     end # true
@@ -148,13 +148,13 @@ describe 'jenkins class', order: :defined do
 
       $dirs.each do |f|
         describe file(f) do
-          it { should be_directory }
+          it { is_expected.to be_directory }
         end
       end
 
       $files.each do |f|
         describe file(f) do
-          it { should be_file }
+          it { is_expected.to be_file }
         end
       end
     end # false

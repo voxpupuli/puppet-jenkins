@@ -10,7 +10,7 @@ describe Puppet::Jenkins do
         File.should_receive(:expand_path).and_raise(ArgumentError)
       end
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
 
     context 'when a jenkins user does exist' do
@@ -20,7 +20,7 @@ describe Puppet::Jenkins do
         File.should_receive(:expand_path).and_return(home)
       end
 
-      it { should eql home }
+      it { is_expected.to eql home }
     end
   end
 end

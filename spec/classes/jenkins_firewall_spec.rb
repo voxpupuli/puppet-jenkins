@@ -13,6 +13,6 @@ describe 'jenkins', type: :class do
   let(:params) { { configure_firewall: true } }
 
   context 'firewall' do
-    it { should contain_firewall('500 allow Jenkins inbound traffic') }
+    it { is_expected.to contain_firewall('500 allow Jenkins inbound traffic') }
   end
 end

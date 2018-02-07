@@ -12,12 +12,12 @@ describe 'jenkins', type: :class do
 
   context 'jobs' do
     context 'default' do
-      it { should contain_class('jenkins::jobs') }
+      it { is_expected.to contain_class('jenkins::jobs') }
     end
 
     context 'with one job' do
       let(:params) { { job_hash: { 'build' => { 'config' => '<xml/>' } } } }
-      it { should contain_jenkins__job('build').with_config('<xml/>') }
+      it { is_expected.to contain_jenkins__job('build').with_config('<xml/>') }
     end
 
     context 'with cli disabled' do
@@ -29,7 +29,7 @@ describe 'jenkins', type: :class do
         }
       end
       it do
-        expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
+        expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /error during compilation/)
       end
     end
   end

@@ -11,8 +11,8 @@ describe Puppet::Jenkins::Facts do
     end
 
     context 'with no plugins' do
-      it { should be_instance_of String }
-      it { should be_empty }
+      it { is_expected.to be_instance_of String }
+      it { is_expected.to be_empty }
     end
 
     context 'with one plugin' do
@@ -22,8 +22,8 @@ describe Puppet::Jenkins::Facts do
         }
       end
 
-      it { should be_instance_of String }
-      it { should eql 'greenballs 1.1' }
+      it { is_expected.to be_instance_of String }
+      it { is_expected.to eql 'greenballs 1.1' }
     end
 
     context 'with multiple plugins' do
@@ -34,8 +34,8 @@ describe Puppet::Jenkins::Facts do
         }
       end
 
-      it { should be_instance_of String }
-      it { should eql 'git 1.7, greenballs 1.1' }
+      it { is_expected.to be_instance_of String }
+      it { is_expected.to eql 'git 1.7, greenballs 1.1' }
     end
   end
 
@@ -52,7 +52,7 @@ describe Puppet::Jenkins::Facts do
       let(:kernel) { 'Linux' }
 
       context 'with no plugins' do
-        it { should be_nil }
+        it { is_expected.to be_nil }
       end
 
       context 'with plugins' do
@@ -61,14 +61,14 @@ describe Puppet::Jenkins::Facts do
           Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
         end
 
-        it { should eql(plugins_str) }
+        it { is_expected.to eql(plugins_str) }
       end
     end
 
     context 'on FreeBSD' do
       let(:kernel) { 'FreeBSD' }
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
   end
 end
