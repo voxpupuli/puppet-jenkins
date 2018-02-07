@@ -268,18 +268,18 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # that the command failure was due to an authication problem
   def self.execute_exceptionify(cmd, options)
     cli_auth_errors = [
-                        'You must authenticate to access this Jenkins.',
-                        'anonymous is missing the Overall/Read permission',
-                        'anonymous is missing the Overall/RunScripts permission'
-                      ]
+      'You must authenticate to access this Jenkins.',
+      'anonymous is missing the Overall/Read permission',
+      'anonymous is missing the Overall/RunScripts permission'
+    ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
     net_errors = [
-                   'SEVERE: I/O error in channel CLI connection',
-                   'java.net.SocketException: Connection reset',
-                   'java.net.ConnectException: Connection refused',
-                   'java.io.IOException: Failed to connect'
-                 ]
+      'SEVERE: I/O error in channel CLI connection',
+      'java.net.SocketException: Connection reset',
+      'java.net.ConnectException: Connection refused',
+      'java.io.IOException: Failed to connect'
+    ]
 
     if options.key?(:tmpfile_as_param)
       tmpfile_as_param = options[:tmpfile_as_param]
