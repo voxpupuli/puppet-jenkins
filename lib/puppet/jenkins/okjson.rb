@@ -405,13 +405,13 @@ private
         if rubydoesenc?
           begin
             # c.ord will raise an error if c is invalid UTF-8
-            c = '\\u%04x' % [c.ord] if c.ord < Spc.ord
+            c = format('\\u%04x', c.ord) if c.ord < Spc.ord
             t.write(c)
           rescue
             t.write(Ustrerr)
           end
         elsif c < Spc
-          t.write('\\u%04x' % c)
+          t.write(format('\\u%04x', c))
         elsif Spc <= c && c <= '~'
           t.putc(c)
         else
