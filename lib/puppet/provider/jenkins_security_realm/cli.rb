@@ -50,11 +50,11 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
   def to_hash
     ctor = {}
 
-    if arguments == :absent
-      ctor[name] = []
-    else
-      ctor[name] = arguments
-    end
+    ctor[name] = if arguments == :absent
+                   []
+                 else
+                   arguments
+                 end
 
     Puppet.debug("to_hash arguments #{arguments}")
 

@@ -130,11 +130,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     input = options.delete(:stdin) if options.key?(:stdin)
 
-    if options.key?(:tmpfile_as_param)
-      tmpfile_as_param = options[:tmpfile_as_param]
-    else
-      tmpfile_as_param = false
-    end
+    tmpfile_as_param = if options.key?(:tmpfile_as_param)
+                         options[:tmpfile_as_param]
+                       else
+                         false
+                       end
 
     Puppet.debug("#{sname} stdin:\n#{input}")
 
@@ -191,11 +191,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     auth_cmd = nil
     # If we have a ssh cli key file, we use that in old and new syntax
     if !ssh_private_key.nil?
-      if cli_remoting_free
-        auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
-      else
-        auth_cmd = base_cmd + ['-i', ssh_private_key] + [command]
-      end
+      auth_cmd = if cli_remoting_free
+                   base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
+                 else
+                   base_cmd + ['-i', ssh_private_key] + [command]
+                 end
     # we have a prepared username:password file, just use it
     elsif cli_password_file_exists
       if cli_remoting_free
@@ -208,11 +208,11 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       end
     # we have username and password, then we create the password file and use it
     elsif !cli_username.nil? && !cli_password.nil?
-      if cli_remoting_free
-        auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-      else
-        auth_cmd = base_cmd + ['-username', cli_username, '-password', cli_password] + [command]
-      end
+      auth_cmd = if cli_remoting_free
+                   base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
+                 else
+                   base_cmd + ['-username', cli_username, '-password', cli_password] + [command]
+                 end
     end
     auth_cmd.flatten! unless auth_cmd.nil?
 

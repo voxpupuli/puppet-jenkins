@@ -50,11 +50,11 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
   def to_hash
     ctor = {}
 
-    if arguments == :absent
-      ctor[name] = []
-    else
-      ctor[name] = arguments
-    end
+    ctor[name] = if arguments == :absent
+                   []
+                 else
+                   arguments
+                 end
     Puppet.debug("to_hash arguments #{arguments}")
 
     info = { 'setAuthorizationStrategy' => ctor }
