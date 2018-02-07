@@ -64,7 +64,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
   describe '::instances' do
     it 'is not implemented' do
-      expect{ described_class.instances }.to raise_error(Puppet::DevError)
+      expect { described_class.instances }.to raise_error(Puppet::DevError)
     end
   end
 
