@@ -426,7 +426,11 @@ module OkJson
   end
 
   def numenc(x)
-    if ((x.nan? || x.infinite?) rescue false)
+    if begin
+          (x.nan? || x.infinite?)
+        rescue
+          false
+        end
       raise Error, "Numeric cannot be represented: #{x}"
     end
     "#{x}"
