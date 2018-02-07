@@ -15,7 +15,7 @@ describe 'jenkins', type: :class do
       it do
         should contain_service('jenkins').with(
           ensure: 'running',
-          enable: true,
+          enable: true
         )
       end
     end
@@ -25,7 +25,7 @@ describe 'jenkins', type: :class do
         super().merge(
           operatingsystemrelease: '7.1.1503',
           operatingsystemmajrelease: '7',
-          systemd: true,
+          systemd: true
         )
       end
 
@@ -33,7 +33,7 @@ describe 'jenkins', type: :class do
         should contain_service('jenkins').with(
           ensure: 'running',
           enable: true,
-          provider: 'systemd',
+          provider: 'systemd'
         )
       end
 
@@ -50,7 +50,7 @@ describe 'jenkins', type: :class do
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
         it do
           should contain_transition('stop jenkins service').with(
-            prior_to: [ "File[#{sysv_file}]" ],
+            prior_to: [ "File[#{sysv_file}]" ]
           )
         end
       else
@@ -60,7 +60,7 @@ describe 'jenkins', type: :class do
         should contain_file(sysv_file)
           .with(
             ensure: 'absent',
-            selinux_ignore_defaults: true,
+            selinux_ignore_defaults: true
           )
           .that_comes_before('Systemd::Unit_file[jenkins.service]')
       end
@@ -75,7 +75,7 @@ describe 'jenkins', type: :class do
         super().merge(
           operatingsystemrelease: '6.6',
           operatingsystemmajrelease: '6',
-          systemd: false,
+          systemd: false
         )
       end
 
@@ -83,7 +83,7 @@ describe 'jenkins', type: :class do
         should contain_service('jenkins').with(
           ensure: 'running',
           enable: true,
-          provider: nil,
+          provider: nil
         )
       end
     end
@@ -94,7 +94,7 @@ describe 'jenkins', type: :class do
         should contain_service('jenkins').with(
           ensure: 'stopped',
           enable: false,
-          provider: nil,
+          provider: nil
         )
       end
     end

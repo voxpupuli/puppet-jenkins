@@ -394,7 +394,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['credentials_update_json'],
-        { stdinjson: credentials[0] },
+        { stdinjson: credentials[0] }
       )
 
       provider.send :credentials_update_json

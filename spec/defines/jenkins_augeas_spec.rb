@@ -26,7 +26,7 @@ describe 'jenkins::augeas' do
           incl: '/var/lib/jenkins/foo.xml',
           context: '/files/var/lib/jenkins/foo.xml/',
           changes: ['set foo bar'],
-          lens: 'Xml.lns',
+          lens: 'Xml.lns'
         )
         is_expected.to_not contain_jenkins__plugin('myplug')
       end
@@ -66,7 +66,7 @@ describe 'jenkins::augeas' do
     it do
       is_expected.to contain_jenkins__plugin('myplug').with(
         version: '0.1',
-        manage_config: false,
+        manage_config: false
       )
     end
   end
@@ -87,7 +87,7 @@ describe 'jenkins::augeas' do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
         incl: '/var/lib/jenkins/foo.xml',
         context: '/files/var/lib/jenkins/foo.xml/',
-        lens: 'Xml.lns',
+        lens: 'Xml.lns'
       )
     end
   end
@@ -103,7 +103,7 @@ describe 'jenkins::augeas' do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
         incl: '/var/lib/jenkins/foo.xml',
         context: '/files/var/lib/jenkins/foo.xml/foo/bar',
-        lens: 'Xml.lns',
+        lens: 'Xml.lns'
       )
     end
   end
@@ -128,7 +128,7 @@ describe 'jenkins::augeas' do
           incl: '/var/lib/jenkins/foo.xml',
           context: '/files/var/lib/jenkins/foo.xml/',
           changes: ['set foo bar'],
-          onlyif: pval,
+          onlyif: pval
         )
       end
     end
@@ -150,7 +150,7 @@ describe 'jenkins::augeas' do
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
           incl: '/var/lib/jenkins/foo.xml',
-          changes: pval,
+          changes: pval
         )
       end
     end

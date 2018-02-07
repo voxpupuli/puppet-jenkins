@@ -90,7 +90,7 @@ describe 'jenkins::cli::config', type: :class do
               mode: '0400',
               backup: false,
               owner: nil,
-              group: nil,
+              group: nil
             )
           end
           it { should contain_file('/dne').with_content('foo') }
@@ -105,7 +105,7 @@ describe 'jenkins::cli::config', type: :class do
               mode: '0400',
               backup: false,
               owner: 'jenkins',
-              group: 'jenkins',
+              group: 'jenkins'
             )
           end
           it { should contain_file('/dne').with_content('foo') }

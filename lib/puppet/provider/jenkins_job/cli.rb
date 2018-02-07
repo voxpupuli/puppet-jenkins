@@ -18,7 +18,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
         name: job['name'],
         ensure: :present,
         config: job['config'],
-        enable: job['enabled'],
+        enable: job['enabled']
       )
     end
   end

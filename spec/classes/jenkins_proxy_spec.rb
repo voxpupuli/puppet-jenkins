@@ -22,7 +22,7 @@ describe 'jenkins', type: :class do
         should contain_file('/var/lib/jenkins/proxy.xml').with(
           owner: 'jenkins',
           group: 'jenkins',
-          mode: '0644',
+          mode: '0644'
         )
       end
       it { should contain_file('/var/lib/jenkins/proxy.xml').with(content: /<name>myhost<\/name>/) }
@@ -37,7 +37,7 @@ describe 'jenkins', type: :class do
         should contain_file('/var/lib/jenkins/proxy.xml').with(
           owner: 'jenkins',
           group: 'jenkins',
-          mode: '0644',
+          mode: '0644'
         )
       end
       it { should contain_file('/var/lib/jenkins/proxy.xml').with(content: /<name>myhost<\/name>/) }

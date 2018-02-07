@@ -34,7 +34,7 @@ describe 'jenkins::cli::exec', type: :define do
           command: "#{helper_cmd} foo",
           tries: 10,
           try_sleep: 10,
-          unless: nil,
+          unless: nil
         )
       end
       it { should contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
@@ -48,7 +48,7 @@ describe 'jenkins::cli::exec', type: :define do
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
-          unless: nil,
+          unless: nil
         )
       end
       it { should contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
@@ -64,7 +64,7 @@ describe 'jenkins::cli::exec', type: :define do
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
-          unless: nil,
+          unless: nil
         )
       end
     end
@@ -77,7 +77,7 @@ describe 'jenkins::cli::exec', type: :define do
           command: "#{helper_cmd} bar",
           tries: 10,
           try_sleep: 10,
-          unless: nil,
+          unless: nil
         )
       end
     end
@@ -90,7 +90,7 @@ describe 'jenkins::cli::exec', type: :define do
           command: "#{helper_cmd} bar baz",
           tries: 10,
           try_sleep: 10,
-          unless: nil,
+          unless: nil
         )
       end
     end
@@ -106,7 +106,7 @@ describe 'jenkins::cli::exec', type: :define do
           environment: [ "HELPER_CMD=eval #{helper_cmd}" ],
           unless: 'bar',
           tries: 10,
-          try_sleep: 10,
+          try_sleep: 10
         )
       end
     end

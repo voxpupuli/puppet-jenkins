@@ -19,7 +19,7 @@ describe 'jenkins::plugin' do
         source: "#{plugin_host}/latest/myplug.hpi",
         path: "#{pdir}/#{title}.hpi",
         cleanup: false,
-        extract: false,
+        extract: false
       ).that_requires("File[#{pdir}]")
         .that_notifies('Service[jenkins]')
     end
@@ -27,7 +27,7 @@ describe 'jenkins::plugin' do
       should contain_file("#{pdir}/#{title}.hpi").with(
         owner: 'jenkins',
         group: 'jenkins',
-        mode: '0644',
+        mode: '0644'
       ).that_comes_before('Service[jenkins]')
     end
   end
@@ -37,7 +37,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi",
+        source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi"
       )
     end
     it { should contain_file("#{pdir}/myplug.hpi") }
@@ -111,7 +111,7 @@ describe 'jenkins::plugin' do
         ensure: 'present',
         owner: 'jenkins',
         group: 'jenkins',
-        mode: '0644',
+        mode: '0644'
       ).that_requires("Archive[#{title}.hpi]")
         .that_notifies('Service[jenkins]')
     end
@@ -124,7 +124,7 @@ describe 'jenkins::plugin' do
     it { should contain_file("#{pdir}/myplug.hpi") }
     it do
       should contain_file("#{pdir}/myplug.hpi.disabled").with(
-        ensure: 'absent',
+        ensure: 'absent'
       )
     end
   end
@@ -141,7 +141,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        proxy_server: 'http://proxy.company.com:8080',
+        proxy_server: 'http://proxy.company.com:8080'
       )
     end
   end
@@ -157,7 +157,7 @@ describe 'jenkins::plugin' do
 
     it do
       should contain_archive('myplug.hpi').with(
-        source: 'https://update.jenkins.custom/latest/myplug.hpi',
+        source: 'https://update.jenkins.custom/latest/myplug.hpi'
       )
     end
   end
@@ -221,7 +221,7 @@ describe 'jenkins::plugin' do
     shared_examples 'should download from $source url' do
       it 'downloads from $source url' do
         should contain_archive('myplug.hpi').with(
-          source: 'http://e.org/myplug.hpi',
+          source: 'http://e.org/myplug.hpi'
         )
           .that_requires("File[#{pdir}]")
       end
@@ -270,7 +270,7 @@ describe 'jenkins::plugin' do
           should contain_file("#{pdir}/foo.hpi.pinned").with(
             ensure: 'file',
             owner: 'jenkins',
-            group: 'jenkins',
+            group: 'jenkins'
           )
             .that_requires('Archive[foo.hpi]')
             .that_notifies('Service[jenkins]')

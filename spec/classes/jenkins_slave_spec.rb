@@ -5,7 +5,7 @@ describe 'jenkins::slave' do
     it do
       should contain_archive('get_swarm_client').with(
         cleanup: false,
-        extract: false,
+        extract: false
       )
     end
     it { should contain_file(slave_service_file) }
@@ -313,7 +313,7 @@ describe 'jenkins::slave' do
       if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
         it do
           should contain_transition('stop jenkins-slave service').with(
-            prior_to: [ "File[#{slave_sysv_file}]" ],
+            prior_to: [ "File[#{slave_sysv_file}]" ]
           )
         end
       else
@@ -323,7 +323,7 @@ describe 'jenkins::slave' do
         should contain_file(slave_sysv_file)
           .with(
             ensure: 'absent',
-            selinux_ignore_defaults: true,
+            selinux_ignore_defaults: true
           )
           .that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
       end

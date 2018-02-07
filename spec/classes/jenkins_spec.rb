@@ -122,7 +122,7 @@ describe 'jenkins', type: :class do
         it do
           should contain_jenkins__cli__exec('set_num_executors').with(
             command: ['set_num_executors', 42],
-            unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]',
+            unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]'
           )
         end
         it { should contain_jenkins__cli__exec('set_num_executors').that_requires('Class[jenkins::cli]') }
@@ -142,7 +142,7 @@ describe 'jenkins', type: :class do
         it do
           should contain_jenkins__cli__exec('set_slaveagent_port').with(
             command: ['set_slaveagent_port', port],
-            unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]",
+            unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]"
           )
         end
         it { should contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
@@ -190,7 +190,7 @@ describe 'jenkins', type: :class do
             gid: 'jenkins',
             home: '/var/lib/jenkins',
             managehome: false,
-            system: true,
+            system: true
           )
         end
       end
@@ -204,7 +204,7 @@ describe 'jenkins', type: :class do
             gid: 'jenkins',
             home: '/var/lib/jenkins',
             managehome: false,
-            system: true,
+            system: true
           )
         end
       end
@@ -231,7 +231,7 @@ describe 'jenkins', type: :class do
         it do
           should contain_group('jenkins').with(
             ensure: 'present',
-            system: true,
+            system: true
           )
         end
       end
@@ -242,7 +242,7 @@ describe 'jenkins', type: :class do
         it do
           should contain_group('fred').with(
             ensure: 'present',
-            system: true,
+            system: true
           )
         end
       end
@@ -259,7 +259,7 @@ describe 'jenkins', type: :class do
             ensure: 'directory',
             owner: 'jenkins',
             group: 'jenkins',
-            mode: '0755',
+            mode: '0755'
           )
         end
       end
@@ -293,7 +293,7 @@ describe 'jenkins', type: :class do
           should contain_file('/var/lib/jenkins/plugins').with(
             purge: true,
             recurse: true,
-            force: true,
+            force: true
           ).that_notifies('Service[jenkins]')
         end
       end

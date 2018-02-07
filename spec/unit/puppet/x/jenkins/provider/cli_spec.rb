@@ -291,7 +291,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         before do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            puppet_helper: 'cat.groovy',
+            puppet_helper: 'cat.groovy'
           )
 
           catalog.add_resource jenkins
@@ -395,7 +395,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
             url: 'http://localhost:111',
             ssh_private_key: 'cat.id_rsa',
             cli_tries: 222,
-            cli_try_sleep: 333,
+            cli_try_sleep: 333
           )
 
           catalog.add_resource jenkins
@@ -434,7 +434,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         before(:each) do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            ssh_private_key: 'cat.id_rsa',
+            ssh_private_key: 'cat.id_rsa'
           )
           catalog.add_resource jenkins
         end
@@ -502,7 +502,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'retry n times' do
         it 'by default' do
           jenkins = Puppet::Type.type(:component).new(
-            name: 'jenkins::cli::config',
+            name: 'jenkins::cli::config'
           )
           catalog.add_resource jenkins
 
@@ -518,7 +518,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         it 'from catalog value' do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            cli_tries: 2,
+            cli_tries: 2
           )
           catalog.add_resource jenkins
 
@@ -535,7 +535,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           Facter.add(:jenkins_cli_tries) { setcode { 3 } }
 
           jenkins = Puppet::Type.type(:component).new(
-            name: 'jenkins::cli::config',
+            name: 'jenkins::cli::config'
           )
           catalog.add_resource jenkins
 
@@ -553,7 +553,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            cli_tries: 2,
+            cli_tries: 2
           )
           catalog.add_resource jenkins
 
@@ -572,7 +572,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         # for the wallclock delay timeout or attempt to accurate time examples
         it 'by default' do
           jenkins = Puppet::Type.type(:component).new(
-            name: 'jenkins::cli::config',
+            name: 'jenkins::cli::config'
           )
           catalog.add_resource jenkins
 
@@ -584,7 +584,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         it 'from catalog value' do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            cli_try_sleep: 3,
+            cli_try_sleep: 3
           )
           catalog.add_resource jenkins
 
@@ -597,7 +597,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           Facter.add(:jenkins_cli_try_sleep) { setcode { 4 } }
 
           jenkins = Puppet::Type.type(:component).new(
-            name: 'jenkins::cli::config',
+            name: 'jenkins::cli::config'
           )
           catalog.add_resource jenkins
 
@@ -611,7 +611,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
-            cli_try_sleep: 3,
+            cli_try_sleep: 3
           )
           catalog.add_resource jenkins
 

@@ -43,7 +43,7 @@ describe Puppet::Type.type(:jenkins_user) do
           expect do
             described_class.new(
               name: 'nobody',
-              api_token_plain: value,
+              api_token_plain: value
             )
           end
             .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)

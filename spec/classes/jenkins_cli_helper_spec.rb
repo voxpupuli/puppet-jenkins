@@ -26,7 +26,7 @@ describe 'jenkins::cli_helper', type: :class do
       source: 'puppet:///modules/jenkins/puppet_helper.groovy',
       owner: 'jenkins',
       group: 'jenkins',
-      mode: '0444',
+      mode: '0444'
     )
   end
 

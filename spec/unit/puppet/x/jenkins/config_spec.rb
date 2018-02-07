@@ -99,7 +99,7 @@ describe Puppet::X::Jenkins::Config do
         context 'with no params' do
           before do
             jenkins = Puppet::Type.type(:component).new(
-              name: 'jenkins::cli::config',
+              name: 'jenkins::cli::config'
             )
 
             catalog.add_resource jenkins
@@ -125,7 +125,7 @@ describe Puppet::X::Jenkins::Config do
               ssh_private_key: 'cat.id_rsa',
               puppet_helper: 'cat.groovy',
               cli_tries: 222,
-              cli_try_sleep: 333,
+              cli_try_sleep: 333
             )
 
             catalog.add_resource jenkins

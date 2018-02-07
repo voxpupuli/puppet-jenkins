@@ -186,7 +186,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
@@ -202,7 +202,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
@@ -218,7 +218,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
