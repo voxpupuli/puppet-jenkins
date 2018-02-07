@@ -74,9 +74,9 @@ describe Puppet::Type.type(:jenkins_job) do
           let(:resource) { described_class.new(:name => 'foo', :config => 'bar', :replace => false) }
           it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
         end
-      end #change_to_s change string
-    end #config
-  end #properties
+      end # change_to_s change string
+    end # config
+  end # properties
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
