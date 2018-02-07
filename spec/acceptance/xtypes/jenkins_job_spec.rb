@@ -128,10 +128,10 @@ EOS
           apply(pp, catch_failures: true)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
-        }.each do |config|
+        ].each do |config|
           describe file(config) do
             it { is_expected.to be_file }
             it { is_expected.to be_owned_by 'jenkins' }
@@ -161,11 +161,11 @@ EOS
           apply2(pp)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml
-        }.each do |config|
+        ].each do |config|
           describe file(config) { it { is_expected.to_not exist } }
         end
       end # delete

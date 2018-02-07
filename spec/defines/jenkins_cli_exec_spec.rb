@@ -70,7 +70,7 @@ describe 'jenkins::cli::exec', type: :define do
     end
 
     context "['bar']" do
-      let(:params) { { command: %w{bar} } }
+      let(:params) { { command: %w[bar] } }
 
       it do
         is_expected.to contain_exec('foo').with(
@@ -83,7 +83,7 @@ describe 'jenkins::cli::exec', type: :define do
     end
 
     context "['bar', 'baz']" do
-      let(:params) { { command: %w{bar baz} } }
+      let(:params) { { command: %w[bar baz] } }
 
       it do
         is_expected.to contain_exec('foo').with(

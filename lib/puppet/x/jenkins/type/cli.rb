@@ -17,7 +17,7 @@ module Puppet::X::Jenkins::Type::Cli
       config = Puppet::X::Jenkins::Config.new(catalog)
 
       autos = []
-      %w(ssh_private_key puppet_helper cli_jar).each do |param|
+      %w[ssh_private_key puppet_helper cli_jar].each do |param|
         value = config[param.to_sym]
         autos << value unless value.nil?
       end
