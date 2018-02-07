@@ -30,6 +30,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
   end
 
   private
+
   def self.copy_key(dst, src, key)
     dst[key.to_sym] = src[key.to_s]
   end
