@@ -136,7 +136,8 @@ module OkJson
   # Parses a "member" in the sense of RFC 4627.
   # Returns the parsed values and any trailing tokens.
   def pairparse(ts)
-    (typ, _, k), ts = ts[0], ts[1..-1]
+    (typ, _, k) = ts[0]
+    ts = ts[1..-1]
     raise Error, "unexpected #{k.inspect}" if typ != :str
     ts = eat(':', ts)
     v, ts = valparse(ts)
@@ -258,7 +259,8 @@ module OkJson
     a = q.dup # allocate a big enough string
     # In ruby >= 1.9, a[w] is a codepoint, not a byte.
     a.force_encoding('UTF-8') if rubydoesenc?
-    r, w = 0, 0
+    r = 0
+    w = 0
     while r < q.length
       c = q[r]
       if c == '\\'
