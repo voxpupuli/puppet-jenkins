@@ -85,13 +85,13 @@ module Puppet
         begin
           # Using Kernel#require to make it easier to test this from RSpec
           ::Kernel.require 'json'
-          parser = Proc.new { |s| JSON.parse(s) }
+          parser = proc { |s| JSON.parse(s) }
         rescue LoadError
           # swallow the exception and embed okjson, see:
           # <https://github.com/jenkinsci/puppet-jenkins/issues/166>
           # <https://github.com/jenkinsci/puppet-jenkins/issues/176>
           ::Kernel.require 'puppet/jenkins/okjson'
-          parser = Proc.new { |s| OkJson.decode(s) }
+          parser = proc { |s| OkJson.decode(s) }
         end
 
         File.open(filename, 'r') do |fd|
