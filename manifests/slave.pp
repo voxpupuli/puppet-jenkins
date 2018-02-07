@@ -27,6 +27,11 @@
 # [*executors*]
 #   Number of executors for this slave.  (How many jenkins jobs can run simultaneously on this host.)
 #
+# [*tunnel*]
+#   Connect to the specified host and port, instead of connecting directly to Jenkins. Useful when connection to
+#   Hudson needs to be tunneled. Can be also HOST: or :PORT, in which case the missing portion will be
+#   auto-configured like the default behavior
+#
 # [*manage_slave_user*]
 #   Should the class add a user to run the slave code?  1 is currently true
 #   TODO: should be updated to use boolean.
@@ -116,6 +121,7 @@ class jenkins::slave (
   Optional[String] $tool_locations        = undef,
   Optional[String] $source                = undef,
   Optional[String] $proxy_server          = undef,
+  Optional[Jenkins::Tunnel] $tunnel       = undef,
   String $version                         = $jenkins::params::swarm_version,
   Integer $executors                      = 2,
   Boolean $manage_slave_user              = true,

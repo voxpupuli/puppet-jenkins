@@ -261,5 +261,26 @@ describe 'jenkins::slave class' do
         end
       end
     end # tool_locations
+
+    context 'tunnel' do
+      tunnel = 'localhost:9000'
+
+      context tunnel do
+        it 'works with no errors' do
+          pp = <<-EOS
+            class { ::jenkins::slave:
+              tunnel => '#{tunnel}',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe process('java') do
+          its(:user) { should eq 'jenkins-slave' }
+          its(:args) { should match /-tunnel localhost:9000/ }
+        end
+      end
+    end # tunnel
   end # parameters
 end
