@@ -56,18 +56,7 @@ default_tasks = [
   :lint,
   :validate,
   :parallel_spec,
+  :rubocop
 ]
-
-# rubocop 0.47.0 blows up with puppet 3.8, mostly likely due to monkey patching
-# shenanigans:
-#   Running RuboCop...
-#   wrong number of arguments (5 for 1..3)
-#  ../puppet-jenkins/.bundle/ruby/2.0.0/gems/puppet-3.8.7/lib/puppet/vendor/safe_yaml/lib/safe_yaml.rb:162:in `safe_load'
-
-# DISABLE RUBOCOP UNTIL VOXPUPULI MIGRATION IS COMPLETE
-# require 'puppet'
-# if not Puppet.version =~ /^3/
-#  default_tasks.unshift :rubocop
-# end
 
 task :default => default_tasks
