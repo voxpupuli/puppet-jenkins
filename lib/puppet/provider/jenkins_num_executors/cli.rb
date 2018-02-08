@@ -18,7 +18,7 @@ Puppet::Type.type(:jenkins_num_executors).provide(:cli, parent: Puppet::X::Jenki
     when :present
       set_num_executors
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 

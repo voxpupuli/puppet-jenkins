@@ -24,7 +24,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
     when :absent
       set_strategy_unsecured
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 
@@ -69,7 +69,7 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise Puppet::Error, "unable to parse as JSON: #{raw}"
     end
   end
   private_class_method :get_authorization_strategy

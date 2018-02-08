@@ -18,7 +18,7 @@ Puppet::Type.type(:jenkins_slaveagent_port).provide(:cli, parent: Puppet::X::Jen
     when :present
       set_slaveagent_port
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 

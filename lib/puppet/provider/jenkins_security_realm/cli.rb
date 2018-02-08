@@ -24,7 +24,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
     when :absent
       set_security_none
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 
@@ -70,7 +70,7 @@ Puppet::Type.type(:jenkins_security_realm).provide(:cli, parent: Puppet::X::Jenk
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise Puppet::Error, "unable to parse as JSON: #{raw}"
     end
   end
   private_class_method :get_security_realm
