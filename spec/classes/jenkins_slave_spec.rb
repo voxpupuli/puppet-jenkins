@@ -11,7 +11,7 @@ describe 'jenkins::slave' do
     it { is_expected.to contain_file(slave_service_file) }
     it { is_expected.to contain_service('jenkins-slave').with(enable: true, ensure: 'running') }
     # Let the different platform blocks define  `slave_runtime_file` separately below
-    it { is_expected.to contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
+    it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^FSROOT="/home/jenkins-slave"$}) }
     it { is_expected.to contain_file(slave_runtime_file).without_content(%r{ -name }) }
     it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^AUTO_DISCOVERY_ADDRESS=""$}) }
 
@@ -55,8 +55,8 @@ describe 'jenkins::slave' do
       let(:params) { { tool_locations: 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
       it do
         is_expected.to contain_file(slave_runtime_file).
-          with_content(/Python-2.7=\/usr\/bin\/python2.7/).
-          with_content(/Java-1.8=\/usr\/bin\/java/)
+          with_content(%r{Python-2\.7=/usr/bin/python2\.7}).
+          with_content(%r{Java-1\.8=/usr/bin/java})
       end
     end
 

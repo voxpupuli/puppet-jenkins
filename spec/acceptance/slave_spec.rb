@@ -256,8 +256,8 @@ describe 'jenkins::slave class' do
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to match /--toolLocation Python-2.7=\/usr\/bin\/python2.7/ }
-          its(:args) { is_expected.to match /--toolLocation Java-1.8=\/usr\/bin\/java/ }
+          its(:args) { is_expected.to match %r{--toolLocation Python-2\.7=/usr/bin/python2\.7} }
+          its(:args) { is_expected.to match %r{--toolLocation Java-1\.8=/usr/bin/java} }
         end
       end
     end # tool_locations
