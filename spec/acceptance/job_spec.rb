@@ -50,13 +50,13 @@ EOS
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
-      it { should be_file }
-      it { should be_owned_by 'jenkins' }
-      it { should be_grouped_into 'jenkins' }
-      it { should be_mode 644 }
-      it { should contain '<description>test job</description>' }
-      it { should contain '<disabled>false</disabled>' }
-      it { should contain '<command>/usr/bin/true</command>' }
+      it { is_expected.to be_file }
+      it { is_expected.to be_owned_by 'jenkins' }
+      it { is_expected.to be_grouped_into 'jenkins' }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to contain '<description>test job</description>' }
+      it { is_expected.to contain '<disabled>false</disabled>' }
+      it { is_expected.to contain '<command>/usr/bin/true</command>' }
     end
   end
 
@@ -86,13 +86,12 @@ EOS
     end
 
     describe file('/var/lib/jenkins/jobs/test-noreplace-job/config.xml') do
-      it { should be_file }
-      it { should be_owned_by 'jenkins' }
-      it { should be_grouped_into 'jenkins' }
-      it { should be_mode 644 }
-      it { should contain '<description>do not overwrite me</description>' }
+      it { is_expected.to be_file }
+      it { is_expected.to be_owned_by 'jenkins' }
+      it { is_expected.to be_grouped_into 'jenkins' }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to contain '<description>do not overwrite me</description>' }
     end
-
   end
 
   context 'disable' do
@@ -116,12 +115,12 @@ EOS
     end
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
-      it { should be_file }
-      it { should be_owned_by 'jenkins' }
-      it { should be_grouped_into 'jenkins' }
-      it { should be_mode 644 }
-      it { should contain '<description>test job</description>' }
-      it { should contain '<command>/usr/bin/true</command>' }
+      it { is_expected.to be_file }
+      it { is_expected.to be_owned_by 'jenkins' }
+      it { is_expected.to be_grouped_into 'jenkins' }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to contain '<description>test job</description>' }
+      it { is_expected.to contain '<command>/usr/bin/true</command>' }
     end
   end # deprecated param enabled
 
@@ -161,7 +160,7 @@ EOS
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
       # XXX Serverspec::Type::File doesn't support exists?
-      it { should_not be_file }
+      it { is_expected.to_not be_file }
     end
   end
 end

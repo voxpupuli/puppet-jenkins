@@ -18,7 +18,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
         name: job['name'],
         ensure: :present,
         config: job['config'],
-        enable: job['enabled'],
+        enable: job['enabled']
       )
     end
   end
@@ -39,16 +39,14 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
     case self.ensure
     when :present
       if update
-        if self.replace
-          update_job
-        end
+        update_job if replace
       else
         create_job
       end
     when :absent
       delete_job
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 
@@ -66,7 +64,7 @@ Puppet::Type.type(:jenkins_job).provide(:cli, parent: Puppet::X::Jenkins::Provid
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise Puppet::Error, "unable to parse as JSON: #{raw}"
     end
   end
   private_class_method :job_list_json

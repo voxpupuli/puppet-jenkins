@@ -72,11 +72,11 @@ EOS
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
-        it { should be_file }
-        it { should be_owned_by 'jenkins' }
-        it { should be_grouped_into 'jenkins' }
-        it { should be_mode 644 }
-        it { should contain '<description>test job</description>' }
+        it { is_expected.to be_file }
+        it { is_expected.to be_owned_by 'jenkins' }
+        it { is_expected.to be_grouped_into 'jenkins' }
+        it { is_expected.to be_mode 644 }
+        it { is_expected.to contain '<description>test job</description>' }
       end
     end # 'present' do
 
@@ -92,7 +92,7 @@ EOS
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
-        it { should_not exist }
+        it { is_expected.to_not exist }
       end
     end # 'absent' do
   end # 'ensure =>' do
@@ -128,25 +128,25 @@ EOS
           apply(pp, catch_failures: true)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
-        }.each do |config|
+        ].each do |config|
           describe file(config) do
-            it { should be_file }
-            it { should be_owned_by 'jenkins' }
-            it { should be_grouped_into 'jenkins' }
-            it { should be_mode 644 }
-            it { should contain 'cloudbees-folder' }
+            it { is_expected.to be_file }
+            it { is_expected.to be_owned_by 'jenkins' }
+            it { is_expected.to be_grouped_into 'jenkins' }
+            it { is_expected.to be_mode 644 }
+            it { is_expected.to contain 'cloudbees-folder' }
           end
         end
 
         describe file('/var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml') do
-          it { should be_file }
-          it { should be_owned_by 'jenkins' }
-          it { should be_grouped_into 'jenkins' }
-          it { should be_mode 644 }
-          it { should contain '<description>test job</description>' }
+          it { is_expected.to be_file }
+          it { is_expected.to be_owned_by 'jenkins' }
+          it { is_expected.to be_grouped_into 'jenkins' }
+          it { is_expected.to be_mode 644 }
+          it { is_expected.to contain '<description>test job</description>' }
         end
       end # create
 
@@ -161,12 +161,12 @@ EOS
           apply2(pp)
         end
 
-        %w{
+        %w[
           /var/lib/jenkins/jobs/foo/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml
-        }.each do |config|
-          describe file(config) { it { should_not exist } }
+        ].each do |config|
+          describe file(config) { it { is_expected.to_not exist } }
         end
       end # delete
     end # nested folders

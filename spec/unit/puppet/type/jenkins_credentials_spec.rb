@@ -25,15 +25,15 @@ describe Puppet::Type.type(:jenkins_credentials) do
 
     describe 'impl' do
       it_behaves_like 'validated property', :impl,
-        :UsernamePasswordCredentialsImpl,
-        [
-          :UsernamePasswordCredentialsImpl,
-          :BasicSSHUserPrivateKey,
-          :StringCredentialsImpl,
-          :FileCredentialsImpl,
-          :AWSCredentialsImpl,
-          :GitLabApiTokenImpl
-        ]
+                      :UsernamePasswordCredentialsImpl,
+                      [
+                        :UsernamePasswordCredentialsImpl,
+                        :BasicSSHUserPrivateKey,
+                        :StringCredentialsImpl,
+                        :FileCredentialsImpl,
+                        :AWSCredentialsImpl,
+                        :GitLabApiTokenImpl
+                      ]
     end
 
     # unvalidated properties
@@ -52,7 +52,7 @@ describe Puppet::Type.type(:jenkins_credentials) do
       :access_key,
       :api_token
     ].each do |property|
-      describe "#{property}" do
+      describe property.to_s do
         context 'attrtype' do
           it { expect(described_class.attrtype(property)).to eq :property }
         end

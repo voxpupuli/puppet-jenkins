@@ -23,7 +23,7 @@ module Puppet
           next if parts.size < 2
           next if parts.first[0] == ' '
 
-          key = parts.first.downcase.gsub('-', '_').chomp
+          key = parts.first.downcase.tr('-', '_').chomp
           # Skip garbage keys
           next if key.nil? || key.empty?
 
@@ -85,13 +85,13 @@ module Puppet
         begin
           # Using Kernel#require to make it easier to test this from RSpec
           ::Kernel.require 'json'
-          parser = Proc.new { |s| JSON.parse(s) }
+          parser = proc { |s| JSON.parse(s) }
         rescue LoadError
           # swallow the exception and embed okjson, see:
           # <https://github.com/jenkinsci/puppet-jenkins/issues/166>
           # <https://github.com/jenkinsci/puppet-jenkins/issues/176>
           ::Kernel.require 'puppet/jenkins/okjson'
-          parser = Proc.new { |s| OkJson.decode(s) }
+          parser = proc { |s| OkJson.decode(s) }
         end
 
         File.open(filename, 'r') do |fd|
@@ -99,7 +99,7 @@ module Puppet
           return {} if buffer.nil? || buffer.empty?
           buffer = buffer.split("\n")
           # Trim off the first and last lines, which are the JSONP gunk
-          buffer = buffer[1 ... -1]
+          buffer = buffer[1...-1]
 
           data = parser.call(buffer.join("\n"))
           return data['plugins'] || {}

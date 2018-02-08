@@ -1,4 +1,3 @@
-# encoding: UTF-8
 #
 # Copyright 2011, 2012 Keith Rarick
 #
@@ -28,7 +27,7 @@ require 'stringio'
 # http://golang.org/src/pkg/json/decode.go and
 # http://golang.org/src/pkg/utf8/utf8.go
 module OkJson
-  Upstream = '43'
+  Upstream = '43'.freeze
   extend self
 
   # Decodes a json document in string s and
@@ -42,7 +41,7 @@ module OkJson
   def decode(s)
     ts = lex(s)
     v, ts = textparse(ts)
-    raise Error, 'trailing garbage' if ts.length > 0
+    raise Error, 'trailing garbage' unless ts.empty?
     v
   end
 
@@ -78,7 +77,7 @@ module OkJson
     end
   end
 
-private
+  private
 
   # Parses a "json text" in the sense of RFC 4627.
   # Returns the parsed value and any trailing tokens.
@@ -137,7 +136,8 @@ private
   # Parses a "member" in the sense of RFC 4627.
   # Returns the parsed values and any trailing tokens.
   def pairparse(ts)
-    (typ, _, k), ts = ts[0], ts[1..-1]
+    (typ, _, k) = ts[0]
+    ts = ts[1..-1]
     raise Error, "unexpected #{k.inspect}" if typ != :str
     ts = eat(':', ts)
     v, ts = valparse(ts)
@@ -176,9 +176,9 @@ private
   # excluding white space (as defined in RFC 4627).
   def lex(s)
     ts = []
-    while s.length > 0
+    until s.empty?
       typ, lexeme, val = tok(s)
-      raise Error, "invalid character at #{s[0, 10].inspect}" if typ == nil
+      raise Error, "invalid character at #{s[0, 10].inspect}" if typ.nil?
       ts << [typ, lexeme, val] if typ != :space
       s = s[lexeme.length..-1]
     end
@@ -200,25 +200,33 @@ private
   # it is the lexeme.
   def tok(s)
     case s[0]
-    when ?{ then ['{', s[0, 1], s[0, 1]]
-    when ?} then ['}', s[0, 1], s[0, 1]]
-    when ?: then [':', s[0, 1], s[0, 1]]
-    when ?, then [',', s[0, 1], s[0, 1]]
-    when ?[ then ['[', s[0, 1], s[0, 1]]
-    when ?] then [']', s[0, 1], s[0, 1]]
-    when ?n then nulltok(s)
-    when ?t then truetok(s)
-    when ?f then falsetok(s)
-    when ?" then strtok(s)
-    when Spc, ?\t, ?\n, ?\r then [:space, s[0, 1], s[0, 1]]
+    when '{' then ['{', s[0, 1], s[0, 1]]
+    when '}' then ['}', s[0, 1], s[0, 1]]
+    when ':' then [':', s[0, 1], s[0, 1]]
+    when ',' then [',', s[0, 1], s[0, 1]]
+    when '[' then ['[', s[0, 1], s[0, 1]]
+    when ']' then [']', s[0, 1], s[0, 1]]
+    when 'n' then nulltok(s)
+    when 't' then truetok(s)
+    when 'f' then falsetok(s)
+    when '"' then strtok(s)
+    when Spc, "\t", "\n", "\r" then [:space, s[0, 1], s[0, 1]]
     else
       numtok(s)
     end
   end
 
-  def nulltok(s);  s[0, 4] == 'null'  ? [:val, 'null',  nil]   : [] end
-  def truetok(s);  s[0, 4] == 'true'  ? [:val, 'true',  true]  : [] end
-  def falsetok(s); s[0, 5] == 'false' ? [:val, 'false', false] : [] end
+  def nulltok(s)
+    s[0, 4] == 'null'  ? [:val, 'null',  nil]   : []
+  end
+
+  def truetok(s)
+    s[0, 4] == 'true'  ? [:val, 'true',  true]  : []
+  end
+
+  def falsetok(s)
+    s[0, 5] == 'false' ? [:val, 'false', false] : []
+  end
 
   def numtok(s)
     m = /-?([1-9][0-9]+|[0-9])([.][0-9]+)?([eE][+-]?[0-9]+)?/.match(s)
@@ -245,7 +253,7 @@ private
     t = s[0, 10]
     p = t['`']
     t = t[0, p] if p
-    t = t + '...' if t.length < s.length
+    t += '...' if t.length < s.length
     '`' + t + '`'
   end
 
@@ -257,25 +265,26 @@ private
     a = q.dup # allocate a big enough string
     # In ruby >= 1.9, a[w] is a codepoint, not a byte.
     a.force_encoding('UTF-8') if rubydoesenc?
-    r, w = 0, 0
+    r = 0
+    w = 0
     while r < q.length
       c = q[r]
-      if c == ?\\
+      if c == '\\'
         r += 1
         if r >= q.length
           raise Error, "string literal ends with a \"\\\": \"#{q}\""
         end
 
         case q[r]
-        when ?", ?\\, ?/, ?'
+        when '"', '\\', '/', "'"
           a[w] = q[r]
           r += 1
           w += 1
-        when ?b, ?f, ?n, ?r, ?t
+        when 'b', 'f', 'n', 'r', 't'
           a[w] = Unesc[q[r]]
           r += 1
           w += 1
-        when ?u
+        when 'u'
           r += 1
           uchar = begin
             hexdec4(q[r, 4])
@@ -302,7 +311,7 @@ private
         else
           raise Error, "invalid escape char #{q[r]} in \"#{q}\""
         end
-      elsif c == ?" || c < Spc
+      elsif c == '"' || c < Spc
         raise Error, "invalid character in string literal \"#{q}\""
       else
         # Copy anything else byte-for-byte.
@@ -360,20 +369,20 @@ private
   end
 
   def nibble(c)
-    if ?0 <= c && c <= ?9 then c.ord - ?0.ord
-    elsif ?a <= c && c <= ?z then c.ord - ?a.ord + 10
-    elsif ?A <= c && c <= ?Z then c.ord - ?A.ord + 10
+    if c >= '0' && c <= '9' then c.ord - '0'.ord
+    elsif c >= 'a' && c <= 'z' then c.ord - 'a'.ord + 10
+    elsif c >= 'A' && c <= 'Z' then c.ord - 'A'.ord + 10
     else
       raise Error, "invalid hex code #{c}"
     end
   end
 
   def objenc(x)
-    '{' + x.map{ |k, v| keyenc(k) + ':' + valenc(v) }.join(',') + '}'
+    '{' + x.map { |k, v| keyenc(k) + ':' + valenc(v) }.join(',') + '}'
   end
 
   def arrenc(a)
-    '[' + a.map{ |x| valenc(x) }.join(',') + ']'
+    '[' + a.map { |x| valenc(x) }.join(',') + ']'
   end
 
   def keyenc(k)
@@ -386,32 +395,32 @@ private
 
   def strenc(s)
     t = StringIO.new
-    t.putc(?")
+    t.putc('"')
     r = 0
 
     while r < s.length
       case s[r]
-      when ?"  then t.print('\\"')
-      when ?\\ then t.print('\\\\')
-      when ?\b then t.print('\\b')
-      when ?\f then t.print('\\f')
-      when ?\n then t.print('\\n')
-      when ?\r then t.print('\\r')
-      when ?\t then t.print('\\t')
+      when '"'  then t.print('\\"')
+      when '\\' then t.print('\\\\')
+      when "\b" then t.print('\\b')
+      when "\f" then t.print('\\f')
+      when "\n" then t.print('\\n')
+      when "\r" then t.print('\\r')
+      when "\t" then t.print('\\t')
       else
         c = s[r]
         # In ruby >= 1.9, s[r] is a codepoint, not a byte.
         if rubydoesenc?
           begin
             # c.ord will raise an error if c is invalid UTF-8
-            c = '\\u%04x' % [c.ord] if c.ord < Spc.ord
+            c = format('\\u%04x', c.ord) if c.ord < Spc.ord
             t.write(c)
           rescue
             t.write(Ustrerr)
           end
         elsif c < Spc
-          t.write('\\u%04x' % c)
-        elsif Spc <= c && c <= ?~
+          t.write(format('\\u%04x', c))
+        elsif Spc <= c && c <= '~'
           t.putc(c)
         else
           n = ucharcopy(t, s, r) # ensure valid UTF-8 output
@@ -420,15 +429,19 @@ private
       end
       r += 1
     end
-    t.putc(?")
+    t.putc('"')
     t.string
   end
 
   def numenc(x)
-    if ((x.nan? || x.infinite?) rescue false)
+    if begin
+          (x.nan? || x.infinite?)
+        rescue
+          false
+        end
       raise Error, "Numeric cannot be represented: #{x}"
     end
-    "#{x}"
+    x.to_s
   end
 
   # Copies the valid UTF-8 bytes of a single character
@@ -523,12 +536,12 @@ private
   Uchar2max = (1 << 11) - 1
   Uchar3max = (1 << 16) - 1
   Ucharerr = 0xFFFD # unicode "replacement char"
-  Ustrerr = "\xef\xbf\xbd" # unicode "replacement char"
+  Ustrerr = "\xef\xbf\xbd".freeze # unicode "replacement char"
   Usurrself = 0x10000
   Usurr1 = 0xd800
   Usurr2 = 0xdc00
   Usurr3 = 0xe000
 
   Spc = ' '[0]
-  Unesc = { ?b => ?\b, ?f => ?\f, ?n => ?\n, ?r => ?\r, ?t => ?\t }
+  Unesc = { 'b' => "\b", 'f' => "\f", 'n' => "\n", 'r' => "\r", 't' => "\t" }.freeze
 end

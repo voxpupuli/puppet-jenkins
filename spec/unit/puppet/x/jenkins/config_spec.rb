@@ -10,7 +10,7 @@ describe Puppet::X::Jenkins::Config do
     puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',
     cli_tries: 30,
     cli_try_sleep: 2
-  }
+  }.freeze
 
   shared_context 'facts' do
     before do
@@ -54,14 +54,14 @@ describe Puppet::X::Jenkins::Config do
   # we are relying on a side effect of this method being to test features /
   # load libs
   describe '#initialize' do
-    it { expect(described_class.new).to be_kind_of Puppet::X::Jenkins::Config }
+    it { expect(described_class.new).to be_kind_of described_class }
   end
 
   describe '#[]' do
     context 'unknown config key' do
       it do
-        expect{ described_class.new[:foo] }
-          .to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
+        expect { described_class.new[:foo] }.
+          to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
       end
     end # unknown config key
 
@@ -99,7 +99,7 @@ describe Puppet::X::Jenkins::Config do
         context 'with no params' do
           before do
             jenkins = Puppet::Type.type(:component).new(
-              name: 'jenkins::cli::config',
+              name: 'jenkins::cli::config'
             )
 
             catalog.add_resource jenkins
@@ -125,7 +125,7 @@ describe Puppet::X::Jenkins::Config do
               ssh_private_key: 'cat.id_rsa',
               puppet_helper: 'cat.groovy',
               cli_tries: 222,
-              cli_try_sleep: 333,
+              cli_try_sleep: 333
             )
 
             catalog.add_resource jenkins

@@ -17,25 +17,25 @@ describe 'jenkins', type: :class do
 
   context 'repo::debian' do
     shared_examples 'an apt catalog' do
-      it { should contain_class('apt') }
-      it { should contain_apt__source('jenkins').that_notifies('Exec[apt_update]') }
+      it { is_expected.to contain_class('apt') }
+      it { is_expected.to contain_apt__source('jenkins').that_notifies('Exec[apt_update]') }
     end
 
     describe 'default' do
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
+      it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
     end
 
     describe 'lts = true' do
       let(:params) { { lts: true } }
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
+      it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
     end
 
     describe 'lts = false' do
       let(:params) { { lts: false } }
       it_behaves_like 'an apt catalog'
-      it { should contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian') }
+      it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian') }
     end
   end
 end

@@ -15,19 +15,19 @@ describe 'jenkins::plugin' do
 
   describe 'without version' do
     it do
-      should contain_archive("#{title}.hpi").with(
+      is_expected.to contain_archive("#{title}.hpi").with(
         source: "#{plugin_host}/latest/myplug.hpi",
         path: "#{pdir}/#{title}.hpi",
         cleanup: false,
-        extract: false,
-      ).that_requires("File[#{pdir}]")
-        .that_notifies('Service[jenkins]')
+        extract: false
+      ).that_requires("File[#{pdir}]").
+        that_notifies('Service[jenkins]')
     end
     it do
-      should contain_file("#{pdir}/#{title}.hpi").with(
+      is_expected.to contain_file("#{pdir}/#{title}.hpi").with(
         owner: 'jenkins',
         group: 'jenkins',
-        mode: '0644',
+        mode: '0644'
       ).that_comes_before('Service[jenkins]')
     end
   end
@@ -36,27 +36,27 @@ describe 'jenkins::plugin' do
     let(:params) { { version: '1.2.3' } }
 
     it do
-      should contain_archive('myplug.hpi').with(
-        source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi",
+      is_expected.to contain_archive('myplug.hpi').with(
+        source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi"
       )
     end
-    it { should contain_file("#{pdir}/myplug.hpi") }
+    it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
   describe 'with version and in middle of jenkins_plugins fact' do
     let(:params) { { version: '1.2.3' } }
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
 
-    it { should_not contain_archive('myplug.hpi') }
-    it { should contain_file("#{pdir}/myplug.hpi") }
+    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
   describe 'with version and at end of jenkins_plugins fact' do
     let(:params) { { version: '1.2.3' } }
     before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3' }
 
-    it { should_not contain_archive('myplug.hpi') }
-    it { should contain_file("#{pdir}/myplug.hpi") }
+    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
   describe 'with name and version' do
@@ -64,67 +64,67 @@ describe 'jenkins::plugin' do
       let(:params) { { version: '1.2.3' } }
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3' }
 
-      it { should contain_archive('myplug.hpi') }
-      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
+      it { is_expected.to contain_archive('myplug.hpi') }
+      it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
 
     describe 'where name & version are a substring of another plugin' do
       let(:params) { { version: '1.2.3' } }
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3.4' }
 
-      it { should contain_archive('myplug.hpi') }
-      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
+      it { is_expected.to contain_archive('myplug.hpi') }
+      it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
 
     describe 'where version is a substring of the already installed plugin' do
       let(:params) { { version: '1.2.3' } }
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3.4' }
 
-      it { should contain_archive('myplug.hpi') }
-      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
+      it { is_expected.to contain_archive('myplug.hpi') }
+      it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
 
     describe 'and no plugins are installed (should not actually happen)' do
       let(:params) { { version: '1.2.3' } }
       before { facts[:jenkins_plugins] = '' }
 
-      it { should contain_archive('myplug.hpi') }
-      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
+      it { is_expected.to contain_archive('myplug.hpi') }
+      it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
 
     describe 'where version contains a + and is already installed' do
       let(:params) { { version: '1.2+3.4' } }
       before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
 
-      it { should_not contain_archive('myplug.hpi') }
-      it { should contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
+      it { is_expected.to_not contain_archive('myplug.hpi') }
+      it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
   end # 'with name and version'
 
   describe 'with enabled is false' do
     let(:params) { { enabled: false } }
 
-    it { should contain_archive('myplug.hpi') }
-    it { should contain_file("#{pdir}/myplug.hpi") }
+    it { is_expected.to contain_archive('myplug.hpi') }
+    it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
     it do
-      should contain_file("#{pdir}/myplug.hpi.disabled").with(
+      is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
         ensure: 'present',
         owner: 'jenkins',
         group: 'jenkins',
-        mode: '0644',
-      ).that_requires("Archive[#{title}.hpi]")
-        .that_notifies('Service[jenkins]')
+        mode: '0644'
+      ).that_requires("Archive[#{title}.hpi]").
+        that_notifies('Service[jenkins]')
     end
   end
 
   describe 'with enabled is true' do
     let(:params) { { enabled: true } }
 
-    it { should contain_archive('myplug.hpi') }
-    it { should contain_file("#{pdir}/myplug.hpi") }
+    it { is_expected.to contain_archive('myplug.hpi') }
+    it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
     it do
-      should contain_file("#{pdir}/myplug.hpi.disabled").with(
-        ensure: 'absent',
+      is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
+        ensure: 'absent'
       )
     end
   end
@@ -140,8 +140,8 @@ describe 'jenkins::plugin' do
     end
 
     it do
-      should contain_archive('myplug.hpi').with(
-        proxy_server: 'http://proxy.company.com:8080',
+      is_expected.to contain_archive('myplug.hpi').with(
+        proxy_server: 'http://proxy.company.com:8080'
       )
     end
   end
@@ -156,8 +156,8 @@ describe 'jenkins::plugin' do
     end
 
     it do
-      should contain_archive('myplug.hpi').with(
-        source: 'https://update.jenkins.custom/latest/myplug.hpi',
+      is_expected.to contain_archive('myplug.hpi').with(
+        source: 'https://update.jenkins.custom/latest/myplug.hpi'
       )
     end
   end
@@ -165,9 +165,7 @@ describe 'jenkins::plugin' do
   describe 'with a custom update center' do
     shared_examples 'execute the right fetch command' do
       it 'retrieves the plugin' do
-        expect(subject).to contain_archive('git.hpi').with({
-          source: "#{expected_url}"
-        })
+        expect(subject).to contain_archive('git.hpi').with(source: expected_url.to_s)
       end
     end
 
@@ -220,10 +218,10 @@ describe 'jenkins::plugin' do
   describe 'source' do
     shared_examples 'should download from $source url' do
       it 'downloads from $source url' do
-        should contain_archive('myplug.hpi').with(
-          source: 'http://e.org/myplug.hpi',
-        )
-          .that_requires("File[#{pdir}]")
+        is_expected.to contain_archive('myplug.hpi').with(
+          source: 'http://e.org/myplug.hpi'
+        ).
+          that_requires("File[#{pdir}]")
       end
     end
 
@@ -249,7 +247,7 @@ describe 'jenkins::plugin' do
       context 'string' do
         let(:params) { { source: 'foo.hpi' } }
 
-        it { should_not raise_error }
+        it { is_expected.to_not raise_error }
       end
     end # validate_string
   end # source
@@ -260,28 +258,28 @@ describe 'jenkins::plugin' do
     context 'with source param' do
       let(:params) { { source: 'foo.jpi' } }
 
-      it { should contain_file("#{pdir}/foo.jpi.pinned").without_ensure }
+      it { is_expected.to contain_file("#{pdir}/foo.jpi.pinned").without_ensure }
     end
 
     describe 'pin parameter' do
       context 'with pin => true' do
         let(:params) { { pin: true } }
         it do
-          should contain_file("#{pdir}/foo.hpi.pinned").with(
+          is_expected.to contain_file("#{pdir}/foo.hpi.pinned").with(
             ensure: 'file',
             owner: 'jenkins',
-            group: 'jenkins',
-          )
-            .that_requires('Archive[foo.hpi]')
-            .that_notifies('Service[jenkins]')
+            group: 'jenkins'
+          ).
+            that_requires('Archive[foo.hpi]').
+            that_notifies('Service[jenkins]')
         end
       end
       context 'with pin => false' do
         let(:params) { { pin: false } }
-        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
+        it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
       context 'with default pin param' do
-        it { should contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
+        it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
     end
   end # pinned file extension name
@@ -296,7 +294,7 @@ describe 'jenkins::plugin' do
         EOS
       end
 
-      it { should contain_file("#{pdir}/#{title}").only_with(ensure: nil) }
+      it { is_expected.to contain_file("#{pdir}/#{title}").only_with(ensure: nil) }
     end
 
     context 'false' do
@@ -308,7 +306,7 @@ describe 'jenkins::plugin' do
         EOS
       end
 
-      it { should_not contain_file("#{pdir}/#{title}") }
+      it { is_expected.to_not contain_file("#{pdir}/#{title}") }
     end
   end # purge plugins
 

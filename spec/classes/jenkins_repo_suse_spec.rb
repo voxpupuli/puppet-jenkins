@@ -6,17 +6,17 @@ describe 'jenkins', type: :class do
 
   context 'repo::suse' do
     describe 'default' do
-      it { should contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse-stable/') }
+      it { is_expected.to contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse-stable/') }
     end
 
     describe 'lts = true' do
       let(:params) { { lts: true } }
-      it { should contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse-stable/') }
+      it { is_expected.to contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse-stable/') }
     end
 
     describe 'lts = false' do
       let(:params) { { lts: false } }
-      it { should contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse/') }
+      it { is_expected.to contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse/') }
     end
   end
 end

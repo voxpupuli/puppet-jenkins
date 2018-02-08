@@ -14,8 +14,8 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     all.map { |info| from_hash(info) }
   end
 
-  def api_token_public=(value)
-    fail 'api_token_pubilc is read-only'
+  def api_token_public=(_value)
+    raise Puppet::Error, 'api_token_public is read-only'
   end
 
   def flush
@@ -27,7 +27,7 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     when :absent
       delete_user
     else
-      fail("invalid :ensure value: #{self.ensure}")
+      raise Puppet::Error, "invalid :ensure value: #{self.ensure}"
     end
   end
 
@@ -37,16 +37,14 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
     # map nil -> :undef
     info = Puppet::X::Jenkins::Util.undefize(info)
 
-    new({
-      name: info['id'],
-      ensure: :present,
-      full_name: info['full_name'],
-      email_address: info['email_address'],
-      api_token_plain: info['api_token_plain'],
-      api_token_public: info['api_token_public'],
-      public_keys: info['public_keys'],
-      password: info['password']
-    })
+    new(name: info['id'],
+        ensure: :present,
+        full_name: info['full_name'],
+        email_address: info['email_address'],
+        api_token_plain: info['api_token_plain'],
+        api_token_public: info['api_token_public'],
+        public_keys: info['public_keys'],
+        password: info['password'])
   end
   private_class_method :from_hash
 
@@ -69,16 +67,16 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
   # array of hashes for multiple users
   def self.user_info_all(catalog = nil)
     raw = nil
-    unless catalog.nil?
-      raw = clihelper(['user_info_all'], catalog: catalog)
-    else
-      raw = clihelper(['user_info_all'])
-    end
+    raw = if catalog.nil?
+            clihelper(['user_info_all'])
+          else
+            clihelper(['user_info_all'], catalog: catalog)
+          end
 
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      fail("unable to parse as JSON: #{raw}")
+      raise Puppet::Error, "unable to parse as JSON: #{raw}"
     end
   end
   private_class_method :user_info_all

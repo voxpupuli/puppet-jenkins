@@ -18,7 +18,7 @@ describe Puppet::Type.type(:jenkins_user) do
     # unvalidated properties
     [:full_name, :email_address,
      :api_token_public, :password].each do |property|
-      describe "#{property}" do
+      describe property.to_s do
         it { expect(described_class.attrtype(property)).to eq :property }
       end
     end
@@ -33,8 +33,8 @@ describe Puppet::Type.type(:jenkins_user) do
             name: 'nobody',
             api_token_plain: value
           )
-        end
-          .to_not raise_error
+        end.
+          to_not raise_error
       end
 
       %w[ 51a8b1dd95bc76b1a2869356c043e8b
@@ -43,10 +43,10 @@ describe Puppet::Type.type(:jenkins_user) do
           expect do
             described_class.new(
               name: 'nobody',
-              api_token_plain: value,
+              api_token_plain: value
             )
-          end
-            .to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
+          end.
+            to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
         end
       end
     end # api_token_plain

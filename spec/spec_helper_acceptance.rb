@@ -11,7 +11,7 @@ unless ENV['RS_PROVISION'] == 'no'
   run_puppet_install_helper
 end
 
-UNSUPPORTED_PLATFORMS = ['Suse', 'windows', 'AIX', 'Solaris']
+UNSUPPORTED_PLATFORMS = ['Suse', 'windows', 'AIX', 'Solaris'].freeze
 
 RSpec.configure do |c|
   # Project root
@@ -26,14 +26,14 @@ RSpec.configure do |c|
     hosts.each do |host|
       copy_module_to(host, source: proj_root, module_name: 'jenkins')
 
-      on host, puppet('module install puppetlabs-stdlib'), { acceptable_exit_codes: [0] }
-      on host, puppet('module install puppetlabs-java'), { acceptable_exit_codes: [0] }
-      on host, puppet('module install puppetlabs-apt'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppetlabs-stdlib'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-java'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-apt'), acceptable_exit_codes: [0]
 
-      on host, puppet('module install puppet-zypprepo'), { acceptable_exit_codes: [0] }
-      on host, puppet('module install puppet-archive'), { acceptable_exit_codes: [0] }
-      on host, puppet('module install camptocamp-systemd'), { acceptable_exit_codes: [0] }
-      on host, puppet('module install puppetlabs-transition'), { acceptable_exit_codes: [0] }
+      on host, puppet('module install puppet-zypprepo'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppet-archive'), acceptable_exit_codes: [0]
+      on host, puppet('module install camptocamp-systemd'), acceptable_exit_codes: [0]
+      on host, puppet('module install puppetlabs-transition'), acceptable_exit_codes: [0]
     end
   end
 end
@@ -95,8 +95,8 @@ end
 # https://tickets.puppetlabs.com/browse/BKR-1040
 # https://tickets.puppetlabs.com/browse/BKR-1041
 #
-if shell('ps -p 1 -o comm=').stdout =~ /systemd/
-  $systemd = true
-else
-  $systemd = false
-end
+$systemd = if shell('ps -p 1 -o comm=').stdout =~ /systemd/
+             true
+           else
+             false
+           end

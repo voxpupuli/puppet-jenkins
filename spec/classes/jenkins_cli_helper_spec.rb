@@ -12,21 +12,21 @@ describe 'jenkins::cli_helper', type: :class do
 
   describe 'relationships' do
     it do
-      should contain_class('jenkins::cli_helper').
+      is_expected.to contain_class('jenkins::cli_helper').
         that_requires('Class[jenkins::cli]')
     end
     it do
-      should contain_class('jenkins::cli_helper').
+      is_expected.to contain_class('jenkins::cli_helper').
         that_comes_before('Anchor[jenkins::end]')
     end
   end
 
   it do
-    should contain_file('/usr/lib/jenkins/puppet_helper.groovy').with(
+    is_expected.to contain_file('/usr/lib/jenkins/puppet_helper.groovy').with(
       source: 'puppet:///modules/jenkins/puppet_helper.groovy',
       owner: 'jenkins',
       group: 'jenkins',
-      mode: '0444',
+      mode: '0444'
     )
   end
 
@@ -37,7 +37,6 @@ describe 'jenkins::cli_helper', type: :class do
       }
     end
 
-    it { should contain_class 'jenkins::cli_helper' }
+    it { is_expected.to contain_class 'jenkins::cli_helper' }
   end
 end
-

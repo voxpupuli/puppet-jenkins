@@ -26,7 +26,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>9b07d668-a87e-4877-9407-ae05056e32ac</id>' }
+          it { is_expected.to contain '<id>9b07d668-a87e-4877-9407-ae05056e32ac</id>' }
         end
       end
 
@@ -52,7 +52,7 @@ describe 'jenkins_credentials' do
         describe file('/var/lib/jenkins/credentials.xml') do
           it {
             pending('puppet_helper.groovy implementation missing, see https://github.com/jenkinsci/puppet-jenkins/issues/753')
-            should contain '<id>002224bd-60cb-49f3-a314-d0f73f82233d</id>'
+            is_expected.to contain '<id>002224bd-60cb-49f3-a314-d0f73f82233d</id>'
           }
         end
       end
@@ -81,7 +81,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>a0469025-1202-4007-983d-0c62f230f1a7</id>' }
+          it { is_expected.to contain '<id>a0469025-1202-4007-983d-0c62f230f1a7</id>' }
         end
       end
 
@@ -109,7 +109,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+          it { is_expected.to contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
         end
       end
 
@@ -138,7 +138,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should contain '<id>95bfe159-8bf0-4605-be20-47e201220e7c</id>' }
+          it { is_expected.to contain '<id>95bfe159-8bf0-4605-be20-47e201220e7c</id>' }
         end
       end
 
@@ -174,7 +174,7 @@ describe 'jenkins_credentials' do
           # credentails
           it {
             pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-            should contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>'
+            is_expected.to contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>'
           }
         end
       end
@@ -219,7 +219,7 @@ describe 'jenkins_credentials' do
           # credentails
           it {
             pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-            should contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>'
+            is_expected.to contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>'
           }
         end
       end
@@ -248,7 +248,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should_not contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+          it { is_expected.to_not contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
         end
       end
 
@@ -277,7 +277,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { should_not contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
+          it { is_expected.to_not contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
         end
       end
     end # 'absent' do

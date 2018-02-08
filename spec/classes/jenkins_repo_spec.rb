@@ -12,16 +12,16 @@ describe 'jenkins', type: :class do
             operatingsystemmajrelease: '6'
           }
         end
-        it { should contain_class('jenkins::repo::el') }
-        it { should_not contain_class('jenkins::repo::suse') }
-        it { should_not contain_class('jenkins::repo::debian') }
+        it { is_expected.to contain_class('jenkins::repo::el') }
+        it { is_expected.to_not contain_class('jenkins::repo::suse') }
+        it { is_expected.to_not contain_class('jenkins::repo::debian') }
       end
 
       describe 'Suse' do
         let(:facts) { { osfamily: 'Suse', operatingsystem: 'OpenSuSE' } }
-        it { should contain_class('jenkins::repo::suse') }
-        it { should_not contain_class('jenkins::repo::el') }
-        it { should_not contain_class('jenkins::repo::debian') }
+        it { is_expected.to contain_class('jenkins::repo::suse') }
+        it { is_expected.to_not contain_class('jenkins::repo::el') }
+        it { is_expected.to_not contain_class('jenkins::repo::debian') }
       end
 
       describe 'Debian' do
@@ -35,14 +35,14 @@ describe 'jenkins', type: :class do
             release: { full: '11.04' }
           }
         } end
-        it { should contain_class('jenkins::repo::debian') }
-        it { should_not contain_class('jenkins::repo::suse') }
-        it { should_not contain_class('jenkins::repo::el') }
+        it { is_expected.to contain_class('jenkins::repo::debian') }
+        it { is_expected.to_not contain_class('jenkins::repo::suse') }
+        it { is_expected.to_not contain_class('jenkins::repo::el') }
       end
 
       describe 'Unknown' do
         let(:facts) { { osfamily: 'SomethingElse', operatingsystem: 'RedHat' } }
-        it { expect { should raise_error(Puppet::Error) } }
+        it { expect { is_expected.to raise_error(Puppet::Error) } }
       end
     end
 
@@ -56,10 +56,10 @@ describe 'jenkins', type: :class do
         }
       end
       let(:params) { { repo: false } }
-      it { should_not contain_class('jenkins::repo') }
-      it { should_not contain_class('jenkins::repo::el') }
-      it { should_not contain_class('jenkins::repo::suse') }
-      it { should_not contain_class('jenkins::repo::debian') }
+      it { is_expected.to_not contain_class('jenkins::repo') }
+      it { is_expected.to_not contain_class('jenkins::repo::el') }
+      it { is_expected.to_not contain_class('jenkins::repo::suse') }
+      it { is_expected.to_not contain_class('jenkins::repo::debian') }
     end
   end
 end

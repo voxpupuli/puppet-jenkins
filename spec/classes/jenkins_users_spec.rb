@@ -12,7 +12,7 @@ describe 'jenkins', type: :class do
 
   context 'users' do
     context 'default' do
-      it { should contain_class('jenkins::users') }
+      it { is_expected.to contain_class('jenkins::users') }
     end
 
     context 'with testuser' do
@@ -21,7 +21,7 @@ describe 'jenkins', type: :class do
           'email' => 'user@example.com',
           'password' => 'test'
       } } } end
-      it { should contain_jenkins__user('user').with_email('user@example.com').with_password('test') }
+      it { is_expected.to contain_jenkins__user('user').with_email('user@example.com').with_password('test') }
     end
   end
 end

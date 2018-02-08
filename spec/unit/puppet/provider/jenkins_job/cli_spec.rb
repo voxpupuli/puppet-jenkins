@@ -133,7 +133,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
     end
 
-    it 'should call delete_job' do
+    it 'calls delete_job' do
       provider = described_class.new
       provider.destroy
 
@@ -150,7 +150,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:cli).with(
         ['list-jobs'],
-        { catalog: nil }
+        catalog: nil
       ) { list_jobs_output }
 
       ret = described_class.send :list_jobs
@@ -162,7 +162,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:cli).with(
         ['get-job', 'foo'],
-        { catalog: nil }
+        catalog: nil
       ) { foo_xml }
 
       ret = described_class.send :get_job, 'foo'
@@ -174,7 +174,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['job_enabled', 'foo'],
-        { catalog: nil }
+        catalog: nil
       ) { 'true' }
 
       ret = described_class.send :job_enabled, 'foo'
@@ -186,12 +186,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
         ['create-job', 'foo'],
-        { stdin: foo_xml }
+        stdin: foo_xml
       )
 
       provider.send :create_job
@@ -202,12 +202,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
         ['update-job', 'foo'],
-        { stdin: foo_xml }
+        stdin: foo_xml
       )
 
       provider.send :update_job
@@ -218,7 +218,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml,
+        config: foo_xml
       )
 
       expect(described_class).to receive(:cli).with(
