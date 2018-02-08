@@ -46,7 +46,7 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
       provider.destroy
 
       expect { provider.flush }.
-        to raise_error(Puppet::Error, /invalid :ensure value: absent/)
+        to raise_error(Puppet::Error, %r{invalid :ensure value: absent})
     end
   end # #flush
 

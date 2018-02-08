@@ -101,7 +101,7 @@ eos
     let(:params) { { ensure: 'present', config: quotes } }
     it do
       is_expected.to contain_file('/tmp/myjob-config.xml').
-        with_content(/version="1\.0" encoding="UTF-8"/)
+        with_content(%r{version="1\.0" encoding="UTF-8"})
     end
   end
 
@@ -128,7 +128,7 @@ eos
     let(:params) { { ensure: 'present', source: thesource, config: '' } }
     it do
       is_expected.to contain_file('/tmp/myjob-config.xml').
-        with_content(/sourcedconfig/)
+        with_content(%r{sourcedconfig})
     end
   end
 
@@ -138,14 +138,14 @@ eos
     let(:params) { { ensure: 'present', source: thesource, config: quotes } }
     it do
       is_expected.to contain_file('/tmp/myjob-config.xml').
-        with_content(/sourcedconfig/)
+        with_content(%r{sourcedconfig})
     end
   end
 
   describe 'with sourced config and no regular config' do
     let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', source: thesource } }
-    it { is_expected.to raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
+    it { is_expected.to raise_error(Puppet::Error, %r{(Must pass config|expects a value for parameter 'config')}) }
   end
 
   describe 'with templated config and blank regular config' do
@@ -153,7 +153,7 @@ eos
     let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
     it do
       is_expected.to contain_file('/tmp/myjob-config.xml').
-        with_content(/sourcedconfig/)
+        with_content(%r{sourcedconfig})
     end
   end
 
@@ -163,13 +163,13 @@ eos
     let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
     it do
       is_expected.to contain_file('/tmp/myjob-config.xml').
-        with_content(/sourcedconfig/)
+        with_content(%r{sourcedconfig})
     end
   end
 
   describe 'with templated config and no regular config' do
     let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
     let(:params) { { ensure: 'present', template: thetemplate } }
-    it { is_expected.to raise_error(Puppet::Error, /(Must pass config|expects a value for parameter 'config')/) }
+    it { is_expected.to raise_error(Puppet::Error, %r{(Must pass config|expects a value for parameter 'config')}) }
   end
 end

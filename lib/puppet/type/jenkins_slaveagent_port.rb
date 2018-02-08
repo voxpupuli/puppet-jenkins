@@ -14,7 +14,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_slaveagent_port) do
     isnamevar
 
     munge do |value|
-      if value.is_a?(String) && value =~ /^[0-9]+$/
+      if value.is_a?(String) && value =~ %r{^[0-9]+$}
         Integer(value)
       else
         value
