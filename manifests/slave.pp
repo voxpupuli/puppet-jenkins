@@ -140,6 +140,7 @@ class jenkins::slave (
   Any $java_args                          = undef,
   Any $swarm_client_args                  = undef,
   Boolean $delete_existing_clients        = false,
+  Boolean $manage_slave_service           = true,
 ) inherits jenkins::params {
 
   if versioncmp($version, '3.0') < 0 {
@@ -197,98 +198,102 @@ class jenkins::slave (
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
     include ::java
-    Class['java'] -> Service['jenkins-slave']
+    if ($manage_slave_service) {
+      Class['java'] -> Service['jenkins-slave']
+    }
   }
 
   # customizations based on the OS family
-  case $::osfamily {
-    'Debian': {
-      $defaults_location = $::jenkins::params::sysconfdir
+  if ($manage_slave_service) {
+    case $::osfamily {
+      'Debian': {
+        $defaults_location = $::jenkins::params::sysconfdir
 
-      ensure_packages(['daemon'])
-      Package['daemon'] -> Service['jenkins-slave']
+        ensure_packages(['daemon'])
+        Package['daemon'] -> Service['jenkins-slave']
+      }
+      'Darwin': {
+        $defaults_location = $slave_home
+      }
+      default: {
+        $defaults_location = $::jenkins::params::sysconfdir
+      }
     }
-    'Darwin': {
-      $defaults_location = $slave_home
-    }
-    default: {
-      $defaults_location = $::jenkins::params::sysconfdir
-    }
-  }
 
-  case $::kernel {
-    'Linux': {
-      $service_name     = 'jenkins-slave'
-      $defaults_user    = 'root'
-      $defaults_group   = 'root'
-      $manage_user_home = true
-      $sysv_init        = '/etc/init.d/jenkins-slave'
+  
+    case $::kernel {
+      'Linux': {
+        $service_name     = 'jenkins-slave'
+        $defaults_user    = 'root'
+        $defaults_group   = 'root'
+        $manage_user_home = true
+        $sysv_init        = '/etc/init.d/jenkins-slave'
 
-      if $::systemd {
-        jenkins::systemd { 'jenkins-slave':
-          user   => $slave_user,
-          libdir => $slave_home,
+        if $::systemd {
+          jenkins::systemd { 'jenkins-slave':
+            user   => $slave_user,
+            libdir => $slave_home,
+          }
+        } else {
+          file { "${slave_home}/${service_name}-run":
+            content => template("${module_name}/${service_name}-run.erb"),
+            owner   => $slave_user,
+            mode    => '0755',
+            notify  => Service[$service_name],
+          }
+
+          file { $sysv_init:
+            ensure  => 'file',
+            mode    => '0755',
+            owner   => 'root',
+            group   => 'root',
+            content => template("${module_name}/${service_name}.${::osfamily}.erb"),
+            notify  => Service[$service_name],
+          }
         }
-      } else {
-        file { "${slave_home}/${service_name}-run":
-          content => template("${module_name}/${service_name}-run.erb"),
-          owner   => $slave_user,
-          mode    => '0755',
-          notify  => Service[$service_name],
-        }
+      }
+      'Darwin': {
+        $service_name     = 'org.jenkins-ci.slave.jnlp'
+        $defaults_user    = 'jenkins'
+        $defaults_group   = 'wheel'
+        $manage_user_home = false
 
-        file { $sysv_init:
+        file { "${slave_home}/start-slave.sh":
           ensure  => 'file',
+          content => template("${module_name}/start-slave.sh.erb"),
           mode    => '0755',
           owner   => 'root',
-          group   => 'root',
-          content => template("${module_name}/${service_name}.${::osfamily}.erb"),
-          notify  => Service[$service_name],
+          group   => 'wheel',
+        }
+
+        file { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist':
+          ensure  => 'file',
+          content => template("${module_name}/org.jenkins-ci.slave.jnlp.plist.erb"),
+          mode    => '0644',
+          owner   => 'root',
+          group   => 'wheel',
+        }
+        -> Service['jenkins-slave']
+
+        file { '/var/log/jenkins':
+          ensure => 'directory',
+          owner  => $slave_user,
+        }
+        -> Service['jenkins-slave']
+
+        if $manage_slave_user {
+          # osx doesn't have managehome support, so create directory
+          file { $slave_home:
+            ensure  => directory,
+            mode    => '0755',
+            owner   => $slave_user,
+            require => User['jenkins-slave_user'],
+          }
         }
       }
+      default: { }
     }
-    'Darwin': {
-      $service_name     = 'org.jenkins-ci.slave.jnlp'
-      $defaults_user    = 'jenkins'
-      $defaults_group   = 'wheel'
-      $manage_user_home = false
-
-      file { "${slave_home}/start-slave.sh":
-        ensure  => 'file',
-        content => template("${module_name}/start-slave.sh.erb"),
-        mode    => '0755',
-        owner   => 'root',
-        group   => 'wheel',
-      }
-
-      file { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist':
-        ensure  => 'file',
-        content => template("${module_name}/org.jenkins-ci.slave.jnlp.plist.erb"),
-        mode    => '0644',
-        owner   => 'root',
-        group   => 'wheel',
-      }
-      -> Service['jenkins-slave']
-
-      file { '/var/log/jenkins':
-        ensure => 'directory',
-        owner  => $slave_user,
-      }
-      -> Service['jenkins-slave']
-
-      if $manage_slave_user {
-        # osx doesn't have managehome support, so create directory
-        file { $slave_home:
-          ensure  => directory,
-          mode    => '0755',
-          owner   => $slave_user,
-          require => User['jenkins-slave_user'],
-        }
-      }
-    }
-    default: { }
-  }
-
+ }  
   #a Add jenkins slave user if necessary.
   if $manage_slave_user {
     user { 'jenkins-slave_user':
@@ -302,35 +307,39 @@ class jenkins::slave (
       groups     => $slave_groups,
     }
   }
-
-  file { "${defaults_location}/jenkins-slave":
-    ensure  => 'file',
-    mode    => '0600',
-    owner   => $defaults_user,
-    group   => $defaults_group,
-    content => template("${module_name}/jenkins-slave-defaults.erb"),
-    notify  => Service['jenkins-slave'],
-  }
-
-  if ($manage_client_jar) {
-    archive { 'get_swarm_client':
-      source       => "${client_url}/${client_jar}",
-      path         => "${slave_home}/${client_jar}",
-      proxy_server => $proxy_server,
-      cleanup      => false,
-      extract      => false,
+  if ($manage_slave_service) {
+    file { "${defaults_location}/jenkins-slave":
+      ensure  => 'file',
+      mode    => '0600',
+      owner   => $defaults_user,
+      group   => $defaults_group,
+      content => template("${module_name}/jenkins-slave-defaults.erb"),
     }
-    -> Service['jenkins-slave']
+      File['jenkins-slave'] ~> Service['jenkins-slave']
+  }
+  
+  if ($manage_client_jar) {
+    if ($manage_slave_service) {
+      archive { 'get_swarm_client':
+        source       => "${client_url}/${client_jar}",
+        path         => "${slave_home}/${client_jar}",
+        proxy_server => $proxy_server,
+        cleanup      => false,
+        extract      => false,
+      }
+      -> Service['jenkins-slave']
+    }
   }
 
-  service { 'jenkins-slave':
-    ensure     => $ensure,
-    name       => $service_name,
-    enable     => $enable,
-    hasstatus  => true,
-    hasrestart => true,
-  }
-
+  if ($manage_slave_service) {
+    service { 'jenkins-slave':
+      ensure     => $ensure,
+      name       => $service_name,
+      enable     => $enable,
+      hasstatus  => true,
+      hasrestart => true,
+    }
+ }   
   if $manage_slave_user and $manage_client_jar {
     User['jenkins-slave_user']
       -> Archive['get_swarm_client']
