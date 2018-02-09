@@ -13,7 +13,7 @@ describe 'jenkins::job::present' do
 
   describe 'with defaults' do
     it 'fails' do
-      is_expected.to raise_error(Puppet::Error, /Please set one of/)
+      is_expected.to raise_error(Puppet::Error, %r{Please set one of})
     end
   end
 
@@ -21,7 +21,7 @@ describe 'jenkins::job::present' do
     quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
     let(:params) { { config: quotes, config_file: quotes } }
     it 'fails' do
-      is_expected.to raise_error(Puppet::Error, /You cannot set both/)
+      is_expected.to raise_error(Puppet::Error, %r{You cannot set both})
     end
   end
 

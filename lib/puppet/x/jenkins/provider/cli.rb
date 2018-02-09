@@ -39,7 +39,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
   # shorter class name
   def self.sname
-    to_s[/.+::(Jenkins.+)/, 1]
+    to_s[%r{.+::(Jenkins.+)}, 1]
   end
 
   def self.prefetch(resources)
@@ -203,7 +203,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       else
         # For legacy jenkins, we can only read the provided password file
         # parse it and assume Jenkins 2.46.2++ content
-        (user, pass) = File.open(cli_password_file).read.split("\n").select { |x| x =~ /(^\S+:\S+$)/ }[0].split(':')
+        (user, pass) = File.open(cli_password_file).read.split("\n").select { |x| x =~ %r{(^\S+:\S+$)} }[0].split(':')
         auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
       end
     # we have username and password, then we create the password file and use it
@@ -220,7 +220,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     # AuthError has bubbled up to this level it means either an ssh_private_key
     # is required and we don't have one or that one we have was rejected.
     handler = proc do |exception, attempt_number, total_delay|
-      Puppet.debug("#{sname} caught #{exception.class.to_s.match(/::([^:]+)$/)[1]}; retry attempt #{attempt_number}; #{total_delay.round(3)} seconds have passed")
+      Puppet.debug("#{sname} caught #{exception.class.to_s.match(%r{::([^:]+)$})[1]}; retry attempt #{attempt_number}; #{total_delay.round(3)} seconds have passed")
     end
     with_retries(
       max_tries: cli_tries,

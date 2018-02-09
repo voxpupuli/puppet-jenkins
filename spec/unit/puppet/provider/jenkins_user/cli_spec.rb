@@ -104,7 +104,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     it 'is read only (fail)' do
       provider = described_class.new
 
-      expect { provider.api_token_public = 'foo' }.to raise_error(Puppet::Error, /api_token_public is read-only/)
+      expect { provider.api_token_public = 'foo' }.to raise_error(Puppet::Error, %r{api_token_public is read-only})
     end
   end # #api_token_public=
 

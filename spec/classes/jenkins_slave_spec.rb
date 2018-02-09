@@ -11,9 +11,9 @@ describe 'jenkins::slave' do
     it { is_expected.to contain_file(slave_service_file) }
     it { is_expected.to contain_service('jenkins-slave').with(enable: true, ensure: 'running') }
     # Let the different platform blocks define  `slave_runtime_file` separately below
-    it { is_expected.to contain_file(slave_runtime_file).with_content(/^FSROOT="\/home\/jenkins-slave"$/) }
-    it { is_expected.to contain_file(slave_runtime_file).without_content(/ -name /) }
-    it { is_expected.to contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS=""$/) }
+    it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^FSROOT="/home/jenkins-slave"$}) }
+    it { is_expected.to contain_file(slave_runtime_file).without_content(%r{ -name }) }
+    it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^AUTO_DISCOVERY_ADDRESS=""$}) }
 
     describe 'with manage_slave_user true and manage_client_jar enabled' do
       let(:params) { { manage_slave_user: true, manage_client_jar: true } }
@@ -27,7 +27,7 @@ describe 'jenkins::slave' do
 
     describe 'with auto discovery address' do
       let(:params) { { autodiscoveryaddress: '255.255.255.0' } }
-      it { is_expected.to contain_file(slave_runtime_file).with_content(/^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$/) }
+      it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$}) }
     end
 
     describe 'slave_uid' do
@@ -43,7 +43,7 @@ describe 'jenkins::slave' do
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
       let(:params) { { slave_home: home } }
-      it { is_expected.to contain_file(slave_runtime_file).with_content(/^FSROOT="#{home}"$/) }
+      it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^FSROOT="#{home}"$}) }
     end
 
     describe 'with service disabled' do
@@ -55,8 +55,8 @@ describe 'jenkins::slave' do
       let(:params) { { tool_locations: 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
       it do
         is_expected.to contain_file(slave_runtime_file).
-          with_content(/Python-2.7=\/usr\/bin\/python2.7/).
-          with_content(/Java-1.8=\/usr\/bin\/java/)
+          with_content(%r{Python-2\.7=/usr/bin/python2\.7}).
+          with_content(%r{Java-1\.8=/usr/bin/java})
       end
     end
 
@@ -71,11 +71,11 @@ describe 'jenkins::slave' do
       end
 
       it 'escapes the user' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^JENKINS_USERNAME='#{user}'$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^JENKINS_USERNAME='#{user}'$})
       end
 
       it 'escapes the password' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^JENKINS_PASSWORD="#{password}"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^JENKINS_PASSWORD="#{password}"$})
       end
     end
 
@@ -88,7 +88,7 @@ describe 'jenkins::slave' do
       end
 
       it 'sets java_args' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args}"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA_ARGS="#{args}"$})
       end
     end
 
@@ -102,7 +102,7 @@ describe 'jenkins::slave' do
 
       it 'converts java_args to a string' do
         args_as_string = args.join ' '
-        is_expected.to contain_file(slave_runtime_file).with_content(/^JAVA_ARGS="#{args_as_string}"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA_ARGS="#{args_as_string}"$})
       end
     end
 
@@ -115,7 +115,7 @@ describe 'jenkins::slave' do
       end
 
       it 'sets swarm_client_args' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args}"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^OTHER_ARGS="#{args}"$})
       end
     end
 
@@ -129,7 +129,7 @@ describe 'jenkins::slave' do
 
       it 'converts swarm_client_args to a string' do
         args_as_string = args.join ' '
-        is_expected.to contain_file(slave_runtime_file).with_content(/^OTHER_ARGS="#{args_as_string}"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^OTHER_ARGS="#{args_as_string}"$})
       end
     end
 
@@ -140,7 +140,7 @@ describe 'jenkins::slave' do
         }
       end
 
-      it { is_expected.to contain_file(slave_runtime_file).with_content(/^TUNNEL="localhost:9000"$/) }
+      it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^TUNNEL="localhost:9000"$}) }
     end
 
     describe 'with invalid tunnel specified' do
@@ -182,7 +182,7 @@ describe 'jenkins::slave' do
       end
 
       it 'sets LABEL as a string' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^LABELS="hello world"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^LABELS="hello world"$})
       end
     end
 
@@ -194,7 +194,7 @@ describe 'jenkins::slave' do
       end
 
       it 'sets LABEL as a string' do
-        is_expected.to contain_file(slave_runtime_file).with_content(/^LABELS="unlimited blades"$/)
+        is_expected.to contain_file(slave_runtime_file).with_content(%r{^LABELS="unlimited blades"$})
       end
     end
     describe 'disable unique client id' do
@@ -205,7 +205,7 @@ describe 'jenkins::slave' do
       end
       it 'has disable variable' do
         is_expected.to contain_file(slave_runtime_file).
-          with_content(/^DISABLE_CLIENTS_UNIQUE_ID="true"$/)
+          with_content(%r{^DISABLE_CLIENTS_UNIQUE_ID="true"$})
       end
     end
 
@@ -215,7 +215,7 @@ describe 'jenkins::slave' do
 
         it do
           is_expected.to contain_file(slave_runtime_file).
-            with_content(/^DELETE_EXISTING_CLIENTS="true"$/)
+            with_content(%r{^DELETE_EXISTING_CLIENTS="true"$})
         end
       end
 
@@ -224,14 +224,14 @@ describe 'jenkins::slave' do
 
         it do
           is_expected.to contain_file(slave_runtime_file).
-            with_content(/^DELETE_EXISTING_CLIENTS=""$/)
+            with_content(%r{^DELETE_EXISTING_CLIENTS=""$})
         end
       end
     end # delete_existing_clients
   end
 
   shared_examples 'using slave_name' do
-    it { is_expected.to contain_file(slave_runtime_file).with_content(/^CLIENT_NAME="jenkins-slave"$/) }
+    it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^CLIENT_NAME="jenkins-slave"$}) }
   end
 
   describe 'RedHat' do

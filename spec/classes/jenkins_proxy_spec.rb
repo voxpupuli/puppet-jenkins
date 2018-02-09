@@ -25,9 +25,9 @@ describe 'jenkins', type: :class do
           mode: '0644'
         )
       end
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: /<name>myhost<\/name>/) }
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: /<port>1234<\/port>/) }
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').without(content: /<noProxyHost>/) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: %r{<name>myhost</name>}) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: %r{<port>1234</port>}) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').without(content: %r{<noProxyHost>}) }
     end
 
     context 'with "no_proxy_list" proxy config' do
@@ -40,9 +40,9 @@ describe 'jenkins', type: :class do
           mode: '0644'
         )
       end
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: /<name>myhost<\/name>/) }
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: /<port>1234<\/port>/) }
-      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: /<noProxyHost>example\.com\ntest\.host\.net<\/noProxyHost>/) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: %r{<name>myhost</name>}) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: %r{<port>1234</port>}) }
+      it { is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(content: %r{<noProxyHost>example\.com\ntest\.host\.net</noProxyHost>}) }
     end
   end
 end

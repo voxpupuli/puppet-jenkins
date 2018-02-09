@@ -41,7 +41,7 @@ class Puppet::X::Jenkins::Config
 
     # handle puppet 3.x passing in all values as strings and convert back to
     # Integer/Fixnum
-    if Puppet.version =~ /^3/
+    if Puppet.version =~ %r{^3}
       default_type_integer?(key) ? value.to_i : value
     else
       value

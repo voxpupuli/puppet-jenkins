@@ -95,7 +95,7 @@ end
 # https://tickets.puppetlabs.com/browse/BKR-1040
 # https://tickets.puppetlabs.com/browse/BKR-1041
 #
-$systemd = if shell('ps -p 1 -o comm=').stdout =~ /systemd/
+$systemd = if shell('ps -p 1 -o comm=').stdout =~ %r{systemd}
              true
            else
              false

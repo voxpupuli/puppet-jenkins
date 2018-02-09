@@ -46,7 +46,7 @@ describe Puppet::Type.type(:jenkins_user) do
               api_token_plain: value
             )
           end.
-            to raise_error(Puppet::ResourceError, /is not a 32char hex string/)
+            to raise_error(Puppet::ResourceError, %r{is not a 32char hex string})
         end
       end
     end # api_token_plain
