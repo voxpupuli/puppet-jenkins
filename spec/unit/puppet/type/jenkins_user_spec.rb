@@ -34,7 +34,7 @@ describe Puppet::Type.type(:jenkins_user) do
             api_token_plain: value
           )
         end.
-          to_not raise_error
+          not_to raise_error
       end
 
       %w[ 51a8b1dd95bc76b1a2869356c043e8b

@@ -120,7 +120,7 @@ describe 'jenkins class', order: :defined do
 
       ($dirs + $files).each do |f|
         describe file(f) do
-          it { is_expected.to_not exist }
+          it { is_expected.not_to exist }
         end
       end
     end # true

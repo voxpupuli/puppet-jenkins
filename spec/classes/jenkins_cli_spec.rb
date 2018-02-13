@@ -50,8 +50,8 @@ describe 'jenkins', type: :class do
     context '$cli => false' do
       let(:params) { { cli: false } }
 
-      it { is_expected.to_not contain_class('jenkins::cli') }
-      it { is_expected.to_not contain_class('jenkins::cli_helper') }
+      it { is_expected.not_to contain_class('jenkins::cli') }
+      it { is_expected.not_to contain_class('jenkins::cli_helper') }
     end
   end
 end

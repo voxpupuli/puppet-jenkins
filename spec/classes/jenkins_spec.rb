@@ -20,24 +20,24 @@ describe 'jenkins', type: :class do
       it { is_expected.to contain_class 'jenkins::config' }
       it { is_expected.to contain_class 'jenkins::plugins' }
       it { is_expected.to contain_class 'jenkins::service' }
-      it { is_expected.to_not contain_class 'jenkins::firewall' }
+      it { is_expected.not_to contain_class 'jenkins::firewall' }
       it { is_expected.to contain_class 'jenkins::proxy' }
       it { is_expected.to contain_class 'jenkins::repo' }
       it { is_expected.to contain_class 'jenkins::repo::el' }
-      it { is_expected.to_not contain_class 'jenkins::repo::debian' }
-      it { is_expected.to_not contain_class 'jenkins::repo::suse' }
+      it { is_expected.not_to contain_class 'jenkins::repo::debian' }
+      it { is_expected.not_to contain_class 'jenkins::repo::suse' }
     end
 
     describe 'without java' do
       let(:params) { { install_java: false } }
 
-      it { is_expected.to_not contain_class 'java' }
+      it { is_expected.not_to contain_class 'java' }
     end
 
     describe 'without repo' do
       let(:params) { { repo: false } }
 
-      it { is_expected.to_not contain_class 'jenkins::repo' }
+      it { is_expected.not_to contain_class 'jenkins::repo' }
     end
 
     describe 'with only proxy host' do
@@ -69,7 +69,7 @@ describe 'jenkins', type: :class do
       let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { configure_firewall: false } }
 
-      it { is_expected.to_not contain_class 'jenkins::firewall' }
+      it { is_expected.not_to contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall, configure_firewall unset' do
@@ -100,9 +100,9 @@ describe 'jenkins', type: :class do
       context 'false' do
         let(:params) { { manage_datadirs: false } }
 
-        it { is_expected.to_not contain_file('/var/lib/jenkins') }
-        it { is_expected.to_not contain_file('/var/lib/jenkins/plugins') }
-        it { is_expected.to_not contain_file('/var/lib/jenkins/jobs') }
+        it { is_expected.not_to contain_file('/var/lib/jenkins') }
+        it { is_expected.not_to contain_file('/var/lib/jenkins/plugins') }
+        it { is_expected.not_to contain_file('/var/lib/jenkins/jobs') }
       end
 
       context '(default)' do
@@ -124,7 +124,7 @@ describe 'jenkins', type: :class do
 
     describe 'executors =>' do
       context 'undef' do
-        it { is_expected.to_not contain_jenkins__cli__exec('set_num_executors') }
+        it { is_expected.not_to contain_jenkins__cli__exec('set_num_executors') }
       end
 
       context '42' do
@@ -143,7 +143,7 @@ describe 'jenkins', type: :class do
 
     describe 'slaveagentport =>' do
       context 'undef' do
-        it { is_expected.to_not contain_jenkins__cli__exec('set_slaveagent_port') }
+        it { is_expected.not_to contain_jenkins__cli__exec('set_slaveagent_port') }
       end
 
       context '7777' do
@@ -175,7 +175,7 @@ describe 'jenkins', type: :class do
       context 'false' do
         let(:params) { { manage_user: false } }
 
-        it { is_expected.to_not contain_user('jenkins') }
+        it { is_expected.not_to contain_user('jenkins') }
       end
     end # manage_user =>
 
@@ -191,8 +191,8 @@ describe 'jenkins', type: :class do
           }
         end
 
-        it { is_expected.to_not contain_class 'jenkins::service' }
-        it { is_expected.to_not contain_service 'jenkins' }
+        it { is_expected.not_to contain_class 'jenkins::service' }
+        it { is_expected.not_to contain_service 'jenkins' }
       end
     end # manage_service =>
 
@@ -238,7 +238,7 @@ describe 'jenkins', type: :class do
       context 'false' do
         let(:params) { { manage_group: false } }
 
-        it { is_expected.to_not contain_group('jenkins') }
+        it { is_expected.not_to contain_group('jenkins') }
       end
     end # manage_group =>
 
@@ -288,7 +288,7 @@ describe 'jenkins', type: :class do
     describe 'with default plugins override' do
       let (:params) { { default_plugins: [] } }
 
-      it { is_expected.to_not contain_jenkins__plugin 'credentials' }
+      it { is_expected.not_to contain_jenkins__plugin 'credentials' }
     end
 
     describe 'purge_plugins =>' do

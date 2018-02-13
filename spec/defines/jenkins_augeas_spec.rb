@@ -29,7 +29,7 @@ describe 'jenkins::augeas' do
           changes: ['set foo bar'],
           lens: 'Xml.lns'
         )
-        is_expected.to_not contain_jenkins__plugin('myplug')
+        is_expected.not_to contain_jenkins__plugin('myplug')
       end
     end
   end

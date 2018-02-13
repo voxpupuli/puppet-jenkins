@@ -464,7 +464,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
             described_class.cli('foo', catalog: catalog)
 
             # and it should remember that auth is required
-            expect(described_class.superclass).to_not receive(:execute).with(
+            expect(described_class.superclass).not_to receive(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 foo',
               failonfail: true, combine: true
             )

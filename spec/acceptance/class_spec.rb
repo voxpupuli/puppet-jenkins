@@ -50,14 +50,14 @@ describe 'jenkins class' do
         it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }
       end
       describe file('/etc/init.d/jenkins') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe service('jenkins') do
         it { is_expected.to be_running.under('systemd') }
       end
     else
       describe file('/etc/systemd/system/jenkins.service') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe file('/etc/init.d/jenkins') do
         it { is_expected.to be_file }

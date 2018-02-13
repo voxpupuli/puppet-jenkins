@@ -14,16 +14,16 @@ describe 'jenkins', type: :class do
         end
 
         it { is_expected.to contain_class('jenkins::repo::el') }
-        it { is_expected.to_not contain_class('jenkins::repo::suse') }
-        it { is_expected.to_not contain_class('jenkins::repo::debian') }
+        it { is_expected.not_to contain_class('jenkins::repo::suse') }
+        it { is_expected.not_to contain_class('jenkins::repo::debian') }
       end
 
       describe 'Suse' do
         let(:facts) { { osfamily: 'Suse', operatingsystem: 'OpenSuSE' } }
 
         it { is_expected.to contain_class('jenkins::repo::suse') }
-        it { is_expected.to_not contain_class('jenkins::repo::el') }
-        it { is_expected.to_not contain_class('jenkins::repo::debian') }
+        it { is_expected.not_to contain_class('jenkins::repo::el') }
+        it { is_expected.not_to contain_class('jenkins::repo::debian') }
       end
 
       describe 'Debian' do
@@ -41,8 +41,8 @@ describe 'jenkins', type: :class do
         end
 
         it { is_expected.to contain_class('jenkins::repo::debian') }
-        it { is_expected.to_not contain_class('jenkins::repo::suse') }
-        it { is_expected.to_not contain_class('jenkins::repo::el') }
+        it { is_expected.not_to contain_class('jenkins::repo::suse') }
+        it { is_expected.not_to contain_class('jenkins::repo::el') }
       end
 
       describe 'Unknown' do
@@ -63,10 +63,10 @@ describe 'jenkins', type: :class do
       end
       let(:params) { { repo: false } }
 
-      it { is_expected.to_not contain_class('jenkins::repo') }
-      it { is_expected.to_not contain_class('jenkins::repo::el') }
-      it { is_expected.to_not contain_class('jenkins::repo::suse') }
-      it { is_expected.to_not contain_class('jenkins::repo::debian') }
+      it { is_expected.not_to contain_class('jenkins::repo') }
+      it { is_expected.not_to contain_class('jenkins::repo::el') }
+      it { is_expected.not_to contain_class('jenkins::repo::suse') }
+      it { is_expected.not_to contain_class('jenkins::repo::debian') }
     end
   end
 end

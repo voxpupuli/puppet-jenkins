@@ -32,6 +32,6 @@ describe 'jenkins::job::present' do
 
     it { is_expected.to contain_exec('jenkins create-job myjob').with_require('File[' + config_file + ']') }
     it { is_expected.to contain_exec('jenkins update-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins delete-job myjob') }
   end
 end

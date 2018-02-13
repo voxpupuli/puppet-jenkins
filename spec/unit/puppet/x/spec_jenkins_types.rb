@@ -29,7 +29,7 @@ shared_examples 'generic ensurable' do |*allowed|
 
   allowed.each do |value|
     it "should support #{value} as a value to :ensure" do
-      expect { described_class.new(name: 'nobody', ensure: value) }.to_not raise_error
+      expect { described_class.new(name: 'nobody', ensure: value) }.not_to raise_error
     end
   end
 
@@ -46,7 +46,7 @@ shared_examples 'validated property' do |param, default, allowed|
   allowed.each do |value|
     it "should support #{value} as a value" do
       expect { described_class.new(:name => 'nobody', param => value) }.
-        to_not raise_error
+        not_to raise_error
     end
   end
 

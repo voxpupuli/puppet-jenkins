@@ -31,7 +31,7 @@ describe 'jenkins::job' do
 
     it { is_expected.to contain_exec('jenkins create-job myjob') }
     it { is_expected.to contain_exec('jenkins update-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with job present' do
@@ -40,14 +40,14 @@ describe 'jenkins::job' do
 
     it { is_expected.to contain_exec('jenkins create-job myjob') }
     it { is_expected.to contain_exec('jenkins update-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with job absent' do
     let(:params) { { ensure: 'absent', config: '' } }
 
-    it { is_expected.to_not contain_exec('jenkins create-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins update-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins create-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins update-job myjob') }
     it { is_expected.to contain_exec('jenkins delete-job myjob') }
   end
 
@@ -56,8 +56,8 @@ describe 'jenkins::job' do
     let(:params) { { ensure: 'present', config: quotes, replace: false } }
 
     it { is_expected.to contain_exec('jenkins create-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins update-job myjob') }
-    it { is_expected.to_not contain_exec('jenkins delete-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins update-job myjob') }
+    it { is_expected.not_to contain_exec('jenkins delete-job myjob') }
   end
 
   describe 'with an invalid $difftool' do
@@ -68,7 +68,7 @@ describe 'jenkins::job' do
       }
     end
 
-    it { is_expected.to_not compile }
+    it { is_expected.not_to compile }
   end
 
   describe 'with unformatted config' do

@@ -276,7 +276,7 @@ describe 'jenkins::slave' do
         it_behaves_like 'using slave_name'
       end
 
-      it { is_expected.to_not contain_package('daemon') }
+      it { is_expected.not_to contain_package('daemon') }
 
       context '::jenkins & ::jenkins::slave should co-exist' do
         let(:pre_condition) do
@@ -286,7 +286,7 @@ describe 'jenkins::slave' do
           EOS
         end
 
-        it { is_expected.to_not raise_error }
+        it { is_expected.not_to raise_error }
       end
 
       describe 'with proxy_server' do
@@ -385,7 +385,7 @@ describe 'jenkins::slave' do
       it_behaves_like 'using slave_name'
     end
 
-    it { is_expected.to_not contain_package('daemon') }
+    it { is_expected.not_to contain_package('daemon') }
   end
 
   describe 'Unknown' do

@@ -160,7 +160,7 @@ EOS
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
       # XXX Serverspec::Type::File doesn't support exists?
-      it { is_expected.to_not be_file }
+      it { is_expected.not_to be_file }
     end
   end
 end

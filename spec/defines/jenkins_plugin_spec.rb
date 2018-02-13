@@ -48,7 +48,7 @@ describe 'jenkins::plugin' do
 
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
 
-    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.not_to contain_archive('myplug.hpi') }
     it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
@@ -57,7 +57,7 @@ describe 'jenkins::plugin' do
 
     before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3' }
 
-    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.not_to contain_archive('myplug.hpi') }
     it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
@@ -103,7 +103,7 @@ describe 'jenkins::plugin' do
 
       before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
 
-      it { is_expected.to_not contain_archive('myplug.hpi') }
+      it { is_expected.not_to contain_archive('myplug.hpi') }
       it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
   end # 'with name and version'
@@ -254,7 +254,7 @@ describe 'jenkins::plugin' do
       context 'string' do
         let(:params) { { source: 'foo.hpi' } }
 
-        it { is_expected.to_not raise_error }
+        it { is_expected.not_to raise_error }
       end
     end # validate_string
   end # source
@@ -315,7 +315,7 @@ describe 'jenkins::plugin' do
         EOS
       end
 
-      it { is_expected.to_not contain_file("#{pdir}/#{title}") }
+      it { is_expected.not_to contain_file("#{pdir}/#{title}") }
     end
   end # purge plugins
 
