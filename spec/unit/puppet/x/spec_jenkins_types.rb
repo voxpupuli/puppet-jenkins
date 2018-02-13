@@ -9,7 +9,7 @@ shared_examples 'generic namevar' do |name|
 end # generic namevar
 
 shared_examples 'generic ensurable' do |*allowed|
-  allow ||= [:present, :absent]
+  allowed ||= [:present, :absent]
 
   context 'attrtype' do
     it { expect(described_class.attrtype(:ensure)).to eq :property }

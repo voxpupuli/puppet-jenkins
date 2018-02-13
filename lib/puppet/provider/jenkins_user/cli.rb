@@ -66,7 +66,6 @@ Puppet::Type.type(:jenkins_user).provide(:cli, parent: Puppet::X::Jenkins::Provi
 
   # array of hashes for multiple users
   def self.user_info_all(catalog = nil)
-    raw = nil
     raw = if catalog.nil?
             clihelper(['user_info_all'])
           else
