@@ -67,7 +67,7 @@ EOS
           cli_remoting_free => true,
         }
         jenkins::job {'test-noreplace-job':
-          config => \'#{test_build_job.gsub("<description>test job</description>", "<description>do not overwrite me</description>")}\',
+          config => \'#{test_build_job.gsub('<description>test job</description>', '<description>do not overwrite me</description>')}\',
         }
       EOS
 
@@ -160,7 +160,7 @@ EOS
 
     describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
       # XXX Serverspec::Type::File doesn't support exists?
-      it { is_expected.to_not be_file }
+      it { is_expected.not_to be_file }
     end
   end
 end

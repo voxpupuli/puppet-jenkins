@@ -18,14 +18,14 @@ describe 'jenkins::slave class' do
         it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
       end
       describe file('/etc/init.d/jenkins-slave') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe service('jenkins-slave') do
         it { is_expected.to be_running.under('systemd') }
       end
     else
       describe file('/etc/systemd/system/jenkins-slave.service') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe file('/etc/init.d/jenkins-slave') do
         it { is_expected.to be_file }
@@ -75,7 +75,7 @@ describe 'jenkins::slave class' do
         its(:user) { is_expected.to eq 'jenkins-slave' }
         its(:args) { is_expected.to match %r{-username imauser} }
         its(:args) { is_expected.to match %r{-passwordEnvVariable JENKINS_PASSWORD} }
-        its(:args) { is_expected.to_not match %r{imapass} }
+        its(:args) { is_expected.not_to match %r{imapass} }
       end
     end # username/password
 
@@ -110,7 +110,7 @@ describe 'jenkins::slave class' do
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to_not match %r{-disableClientsUniqueId} }
+          its(:args) { is_expected.not_to match %r{-disableClientsUniqueId} }
         end
       end # false
     end # disable_clients_unique_id
@@ -146,7 +146,7 @@ describe 'jenkins::slave class' do
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to_not match %r{-disableSslVerification} }
+          its(:args) { is_expected.not_to match %r{-disableSslVerification} }
         end
       end # false
     end # disable_ssl_verification
@@ -182,7 +182,7 @@ describe 'jenkins::slave class' do
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to_not match %r{-deleteExistingClients} }
+          its(:args) { is_expected.not_to match %r{-deleteExistingClients} }
         end
       end # false
     end # delete_existing_clients

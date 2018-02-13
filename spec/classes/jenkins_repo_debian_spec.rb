@@ -28,12 +28,14 @@ describe 'jenkins', type: :class do
 
     describe 'lts = true' do
       let(:params) { { lts: true } }
+
       it_behaves_like 'an apt catalog'
       it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
     end
 
     describe 'lts = false' do
       let(:params) { { lts: false } }
+
       it_behaves_like 'an apt catalog'
       it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian') }
     end

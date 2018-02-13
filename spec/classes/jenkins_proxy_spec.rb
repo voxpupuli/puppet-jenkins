@@ -17,6 +17,7 @@ describe 'jenkins', type: :class do
 
     context 'with basic proxy config' do
       let(:params) { { proxy_host: 'myhost', proxy_port: 1234 } }
+
       it { is_expected.to create_class('jenkins::proxy') }
       it do
         is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(
@@ -32,6 +33,7 @@ describe 'jenkins', type: :class do
 
     context 'with "no_proxy_list" proxy config' do
       let(:params) { { proxy_host: 'myhost', proxy_port: 1234, no_proxy_list: ['example.com', 'test.host.net'] } }
+
       it { is_expected.to create_class('jenkins::proxy') }
       it do
         is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
 describe Puppet::Type.type(:jenkins_job) do
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   describe 'parameters' do
     describe 'name' do
@@ -72,6 +72,7 @@ describe Puppet::Type.type(:jenkins_job) do
         end
         context 'changed without replace' do
           let(:resource) { described_class.new(name: 'foo', config: 'bar', replace: false) }
+
           it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
         end
       end # change_to_s change string

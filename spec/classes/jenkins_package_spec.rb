@@ -17,6 +17,7 @@ describe 'jenkins', type: :class do
 
     context 'with version' do
       let(:params) { { version: '1.2.3' } }
+
       it { is_expected.to contain_package('jenkins').with_ensure('1.2.3') }
     end
   end

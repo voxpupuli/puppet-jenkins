@@ -34,7 +34,7 @@ describe Puppet::X::Jenkins::Config do
   shared_examples 'returns fact values' do |_param|
     it 'returns fact values' do
       DEFAULTS.each do |k, _v|
-        expect(config[k]).to eq Facter.value("jenkins_#{k.to_s}".to_sym)
+        expect(config[k]).to eq Facter.value("jenkins_#{k}".to_sym)
       end
     end
   end # returns fact values
@@ -49,7 +49,7 @@ describe Puppet::X::Jenkins::Config do
     end
   end # returns catalog values
 
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   # we are relying on a side effect of this method being to test features /
   # load libs

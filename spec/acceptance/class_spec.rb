@@ -50,14 +50,14 @@ describe 'jenkins class' do
         it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }
       end
       describe file('/etc/init.d/jenkins') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe service('jenkins') do
         it { is_expected.to be_running.under('systemd') }
       end
     else
       describe file('/etc/systemd/system/jenkins.service') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
       describe file('/etc/init.d/jenkins') do
         it { is_expected.to be_file }
@@ -94,30 +94,30 @@ describe 'jenkins class' do
   end # executors
 
   context 'slaveagentport' do
-      it 'works with no errors' do
-        pp = <<-EOS
+    it 'works with no errors' do
+      pp = <<-EOS
         class {'jenkins':
           slaveagentport    => 7777,
           cli_remoting_free => true,
         }
         EOS
 
-        apply2(pp)
-      end
+      apply2(pp)
+    end
 
-      describe port(8080) do
-        # jenkins should already have been running so we shouldn't have to
-        # sleep
-        it { is_expected.to be_listening }
-      end
+    describe port(8080) do
+      # jenkins should already have been running so we shouldn't have to
+      # sleep
+      it { is_expected.to be_listening }
+    end
 
-      describe service('jenkins') do
-        it { is_expected.to be_running }
-        it { is_expected.to be_enabled }
-      end
+    describe service('jenkins') do
+      it { is_expected.to be_running }
+      it { is_expected.to be_enabled }
+    end
 
-      describe file('/var/lib/jenkins/config.xml') do
-        it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
-      end
-    end # slaveagentport
+    describe file('/var/lib/jenkins/config.xml') do
+      it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
+    end
+  end # slaveagentport
 end

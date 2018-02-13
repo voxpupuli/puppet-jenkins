@@ -45,23 +45,26 @@ describe 'jenkins::plugin' do
 
   describe 'with version and in middle of jenkins_plugins fact' do
     let(:params) { { version: '1.2.3' } }
+
     before { facts[:jenkins_plugins] = 'myplug 1.2.3, fooplug 1.4.5' }
 
-    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.not_to contain_archive('myplug.hpi') }
     it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
   describe 'with version and at end of jenkins_plugins fact' do
     let(:params) { { version: '1.2.3' } }
+
     before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3' }
 
-    it { is_expected.to_not contain_archive('myplug.hpi') }
+    it { is_expected.not_to contain_archive('myplug.hpi') }
     it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
   end
 
   describe 'with name and version' do
     describe 'where name & version are a substring of another plugin' do
       let(:params) { { version: '1.2.3' } }
+
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3' }
 
       it { is_expected.to contain_archive('myplug.hpi') }
@@ -70,6 +73,7 @@ describe 'jenkins::plugin' do
 
     describe 'where name & version are a substring of another plugin' do
       let(:params) { { version: '1.2.3' } }
+
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, bar-myplug 1.2.3.4' }
 
       it { is_expected.to contain_archive('myplug.hpi') }
@@ -78,6 +82,7 @@ describe 'jenkins::plugin' do
 
     describe 'where version is a substring of the already installed plugin' do
       let(:params) { { version: '1.2.3' } }
+
       before { facts[:jenkins_plugins] = 'fooplug 1.4.5, myplug 1.2.3.4' }
 
       it { is_expected.to contain_archive('myplug.hpi') }
@@ -86,6 +91,7 @@ describe 'jenkins::plugin' do
 
     describe 'and no plugins are installed (should not actually happen)' do
       let(:params) { { version: '1.2.3' } }
+
       before { facts[:jenkins_plugins] = '' }
 
       it { is_expected.to contain_archive('myplug.hpi') }
@@ -94,9 +100,10 @@ describe 'jenkins::plugin' do
 
     describe 'where version contains a + and is already installed' do
       let(:params) { { version: '1.2+3.4' } }
+
       before { facts[:jenkins_plugins] = 'myplug 1.2+3.4' }
 
-      it { is_expected.to_not contain_archive('myplug.hpi') }
+      it { is_expected.not_to contain_archive('myplug.hpi') }
       it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
     end
   end # 'with name and version'
@@ -247,7 +254,7 @@ describe 'jenkins::plugin' do
       context 'string' do
         let(:params) { { source: 'foo.hpi' } }
 
-        it { is_expected.to_not raise_error }
+        it { is_expected.not_to raise_error }
       end
     end # validate_string
   end # source
@@ -264,6 +271,7 @@ describe 'jenkins::plugin' do
     describe 'pin parameter' do
       context 'with pin => true' do
         let(:params) { { pin: true } }
+
         it do
           is_expected.to contain_file("#{pdir}/foo.hpi.pinned").with(
             ensure: 'file',
@@ -276,6 +284,7 @@ describe 'jenkins::plugin' do
       end
       context 'with pin => false' do
         let(:params) { { pin: false } }
+
         it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
       end
       context 'with default pin param' do
@@ -306,16 +315,16 @@ describe 'jenkins::plugin' do
         EOS
       end
 
-      it { is_expected.to_not contain_file("#{pdir}/#{title}") }
+      it { is_expected.not_to contain_file("#{pdir}/#{title}") }
     end
   end # purge plugins
 
   describe 'deprecated params' do
-    [
-      'plugin_dir',
-      'username',
-      'group',
-      'create_user'
+    %w[
+      plugin_dir
+      username
+      group
+      create_user
     ].each do |param|
       context param do
         pending('rspec-puppet support for testing warning()')

@@ -11,7 +11,7 @@ unless ENV['RS_PROVISION'] == 'no'
   run_puppet_install_helper
 end
 
-UNSUPPORTED_PLATFORMS = ['Suse', 'windows', 'AIX', 'Solaris'].freeze
+UNSUPPORTED_PLATFORMS = %w[Suse windows AIX Solaris].freeze
 
 RSpec.configure do |c|
   # Project root

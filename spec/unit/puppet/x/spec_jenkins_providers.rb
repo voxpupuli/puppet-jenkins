@@ -14,7 +14,7 @@ shared_examples 'confines to cli dependencies' do
       it do
         expect(confines).to include(
           be_kind_of(Puppet::Confine::Feature).
-          and have_attributes(values: [:retries])
+          and(have_attributes(values: [:retries]))
         )
       end
     end
@@ -23,14 +23,14 @@ shared_examples 'confines to cli dependencies' do
       it do
         expect(confines).to include(
           be_kind_of(Puppet::Confine::Exists).
-          and have_attributes(values: ['java'])
+          and(have_attributes(values: ['java']))
         )
       end
     end
   end
 
   describe 'commands' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:command).with(:java).and_return('java')
     end
 

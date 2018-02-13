@@ -18,11 +18,13 @@ describe 'jenkins', type: :class do
     end
 
     context '$cli => true' do
-      let(:params) do { cli: true,
-                        cli_ssh_keyfile: '/path/to/key',
-                        libdir: '/path/to/libdir',
-                        config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
+      let(:params) do
+        { cli: true,
+          cli_ssh_keyfile: '/path/to/key',
+          libdir: '/path/to/libdir',
+          config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
       end
+
       it { is_expected.to contain_class('jenkins::cli') }
       it { is_expected.to contain_exec('jenkins-cli') }
       it { is_expected.to contain_exec('reload-jenkins').with_command(%r{http://localhost:9000}) }
@@ -48,8 +50,8 @@ describe 'jenkins', type: :class do
     context '$cli => false' do
       let(:params) { { cli: false } }
 
-      it { is_expected.to_not contain_class('jenkins::cli') }
-      it { is_expected.to_not contain_class('jenkins::cli_helper') }
+      it { is_expected.not_to contain_class('jenkins::cli') }
+      it { is_expected.not_to contain_class('jenkins::cli_helper') }
     end
   end
 end

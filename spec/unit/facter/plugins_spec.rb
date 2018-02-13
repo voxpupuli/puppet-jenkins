@@ -4,9 +4,10 @@ require 'lib/facter/jenkins'
 describe Puppet::Jenkins::Facts do
   describe '.plugins_str' do
     subject(:plugins_str) { described_class.plugins_str }
+
     let(:plugins) { {} }
 
-    before :each do
+    before do
       Puppet::Jenkins::Plugins.should_receive(:available).and_return(plugins)
     end
 
@@ -40,10 +41,11 @@ describe Puppet::Jenkins::Facts do
   end
 
   describe 'jenkins_plugins fact', type: :fact do
-    let(:fact) { Facter.fact(:jenkins_plugins) }
     subject(:plugins) { fact.value }
 
-    before :each do
+    let(:fact) { Facter.fact(:jenkins_plugins) }
+
+    before do
       Facter.fact(:kernel).stubs(:value).returns(kernel)
       described_class.install
     end
@@ -57,7 +59,8 @@ describe Puppet::Jenkins::Facts do
 
       context 'with plugins' do
         let(:plugins_str) { 'ant 1.2, git 2.0.1' }
-        before :each do
+
+        before do
           Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
         end
 

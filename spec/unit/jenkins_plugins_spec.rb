@@ -6,7 +6,7 @@ describe Puppet::Jenkins::Plugins do
     subject(:exists) { described_class.exists? }
 
     context 'if jenkins does not exist' do
-      before :each do
+      before do
         Puppet::Jenkins.stub(:home_dir).and_return(nil)
       end
 
@@ -17,13 +17,14 @@ describe Puppet::Jenkins::Plugins do
       let(:home) { '/var/lib/jenkins' }
       let(:dir_exists) { false }
 
-      before :each do
+      before do
         Puppet::Jenkins.stub(:home_dir).and_return(home)
         File.should_receive(:directory?).with(File.join(home, 'plugins')).and_return(dir_exists)
       end
 
       context 'and the directory exists' do
         let(:dir_exists) { true }
+
         it { is_expected.to be true }
       end
 
@@ -37,7 +38,7 @@ describe Puppet::Jenkins::Plugins do
     subject(:available) { described_class.available }
 
     context 'when plugins do not exist' do
-      before :each do
+      before do
         described_class.should_receive(:exists?).and_return(false)
       end
 
@@ -130,7 +131,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
       it { is_expected.to be_instance_of Hash }
       it 'has the right number of keys' do
-        expect(data.keys.size).to eql(18)
+        expect(data.keys.size).to be(18)
       end
     end
   end
@@ -143,18 +144,18 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
     context 'uses json' do
       it { is_expected.to be_instance_of Hash }
       it { is_expected.to have_key('AdaptivePlugin') }
-      its (:size) { is_expected.to eql 1 }
+      its (:size) { is_expected.to be 1 }
     end
 
     context 'uses okjson when json is not avaliable' do
-      before :each do
+      before do
         expect(::Kernel).to receive(:require).with('json').and_raise(LoadError)
         expect(::Kernel).to receive(:require).with('puppet/jenkins/okjson').and_call_original
       end
 
       it { is_expected.to be_instance_of Hash }
       it { is_expected.to have_key('AdaptivePlugin') }
-      its (:size) { is_expected.to eql 1 }
+      its (:size) { is_expected.to be 1 }
     end
   end
 

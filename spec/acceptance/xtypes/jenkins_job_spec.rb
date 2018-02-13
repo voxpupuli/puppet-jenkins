@@ -92,7 +92,7 @@ EOS
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
-        it { is_expected.to_not exist }
+        it { is_expected.not_to exist }
       end
     end # 'absent' do
   end # 'ensure =>' do
@@ -166,7 +166,7 @@ EOS
           /var/lib/jenkins/jobs/foo/jobs/bar/config.xml
           /var/lib/jenkins/jobs/foo/jobs/bar/jobs/baz/config.xml
         ].each do |config|
-          describe file(config) { it { is_expected.to_not exist } }
+          describe file(config) { it { is_expected.not_to exist } }
         end
       end # delete
     end # nested folders

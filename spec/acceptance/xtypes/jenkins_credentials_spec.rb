@@ -248,7 +248,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { is_expected.to_not contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
+          it { is_expected.not_to contain '<id>150b2895-b0eb-4813-b8a5-3779690c063c</id>' }
         end
       end
 
@@ -277,7 +277,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it { is_expected.to_not contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
+          it { is_expected.not_to contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
         end
       end
     end # 'absent' do

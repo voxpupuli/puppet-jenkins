@@ -9,7 +9,7 @@ module Jenkins
       # we don't pick up some facts left over from rspec-puppet
       #
       # Also clear at the end to be a good citizen
-      around :each do
+      around do
         Facter.clear
         Facter.clear_messages
       end
@@ -18,7 +18,7 @@ module Jenkins
     shared_context 'module pre-conditions', type: :module do
       let(:pre_condition) { [] }
 
-      before :each do
+      before do
         if pre_condition.instance_of? Array
           pre_condition << 'class stdlib {}'
         else

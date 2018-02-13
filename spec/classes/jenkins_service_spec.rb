@@ -90,6 +90,7 @@ describe 'jenkins', type: :class do
 
     context 'managing service' do
       let(:params) { { service_ensure: 'stopped', service_enable: false } }
+
       it do
         is_expected.to contain_service('jenkins').with(
           ensure: 'stopped',
