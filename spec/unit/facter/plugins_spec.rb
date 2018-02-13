@@ -4,6 +4,7 @@ require 'lib/facter/jenkins'
 describe Puppet::Jenkins::Facts do
   describe '.plugins_str' do
     subject(:plugins_str) { described_class.plugins_str }
+
     let(:plugins) { {} }
 
     before do
