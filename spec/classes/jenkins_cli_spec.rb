@@ -18,10 +18,11 @@ describe 'jenkins', type: :class do
     end
 
     context '$cli => true' do
-      let(:params) do { cli: true,
-                        cli_ssh_keyfile: '/path/to/key',
-                        libdir: '/path/to/libdir',
-                        config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
+      let(:params) do
+        { cli: true,
+          cli_ssh_keyfile: '/path/to/key',
+          libdir: '/path/to/libdir',
+          config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
       end
 
       it { is_expected.to contain_class('jenkins::cli') }
