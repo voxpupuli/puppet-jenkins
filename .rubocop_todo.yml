@@ -31,12 +31,6 @@ Layout/MultilineBlockLayout:
     - 'spec/defines/jenkins_augeas_spec.rb'
     - 'spec/defines/jenkins_credentials_spec.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Layout/SpaceBeforeComma:
-  Exclude:
-    - 'spec/defines/jenkins_credentials_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
