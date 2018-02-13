@@ -157,9 +157,3 @@ Style/GlobalVars:
 Style/GuardClause:
   Exclude:
     - 'lib/puppet/x/jenkins/provider/cli.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/NestedParenthesizedCalls:
-  Exclude:
-    - 'spec/unit/puppet/x/spec_jenkins_providers.rb'
