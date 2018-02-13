@@ -48,7 +48,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     catalog = resources.first[1].catalog
 
     instances(catalog).each do |prov|
-      if resource = resources[prov.name]
+      if (resource = resources[prov.name])
         resource.provider = prov
       end
     end
