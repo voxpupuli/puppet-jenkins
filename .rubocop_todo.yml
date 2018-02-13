@@ -40,12 +40,6 @@ Lint/ParenthesesAsGroupedExpression:
     - 'spec/defines/jenkins_augeas_spec.rb'
     - 'spec/unit/jenkins_plugins_spec.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/StringConversionInInterpolation:
-  Exclude:
-    - 'spec/unit/puppet/x/jenkins/config_spec.rb'
-
 # Offense count: 3
 Lint/UselessAssignment:
   Exclude:
