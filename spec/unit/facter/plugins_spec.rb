@@ -41,9 +41,9 @@ describe Puppet::Jenkins::Facts do
   end
 
   describe 'jenkins_plugins fact', type: :fact do
-    let(:fact) { Facter.fact(:jenkins_plugins) }
-
     subject(:plugins) { fact.value }
+
+    let(:fact) { Facter.fact(:jenkins_plugins) }
 
     before do
       Facter.fact(:kernel).stubs(:value).returns(kernel)
