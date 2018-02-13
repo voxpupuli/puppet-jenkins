@@ -67,7 +67,7 @@ EOS
           cli_remoting_free => true,
         }
         jenkins::job {'test-noreplace-job':
-          config => \'#{test_build_job.gsub("<description>test job</description>", "<description>do not overwrite me</description>")}\',
+          config => \'#{test_build_job.gsub('<description>test job</description>', '<description>do not overwrite me</description>')}\',
         }
       EOS
 
