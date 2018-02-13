@@ -61,10 +61,10 @@ describe 'jenkins::augeas' do
 
   describe 'with plugin_version set' do
     let (:params) do {
-        config_filename: 'foo.xml',
-        changes: [],
-        plugin_version: '0.1',
-        plugin: true
+      config_filename: 'foo.xml',
+      changes: [],
+      plugin_version: '0.1',
+      plugin: true
     }
     end
 
