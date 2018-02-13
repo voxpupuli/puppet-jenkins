@@ -40,11 +40,6 @@ RSpec/MultipleExpectations:
   Max: 8
 
 # Offense count: 3
-RSpec/ScatteredLet:
-  Exclude:
-    - 'spec/classes/jenkins_service_spec.rb'
-
-# Offense count: 3
 RSpec/ScatteredSetup:
   Exclude:
     - 'spec/unit/puppet/x/jenkins/provider/cli_spec.rb'
