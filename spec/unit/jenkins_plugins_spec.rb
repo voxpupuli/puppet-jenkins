@@ -131,7 +131,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
       it { is_expected.to be_instance_of Hash }
       it 'has the right number of keys' do
-        expect(data.keys.size).to eql(18)
+        expect(data.keys.size).to be(18)
       end
     end
   end
@@ -144,7 +144,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
     context 'uses json' do
       it { is_expected.to be_instance_of Hash }
       it { is_expected.to have_key('AdaptivePlugin') }
-      its (:size) { is_expected.to eql 1 }
+      its (:size) { is_expected.to be 1 }
     end
 
     context 'uses okjson when json is not avaliable' do
@@ -155,7 +155,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
       it { is_expected.to be_instance_of Hash }
       it { is_expected.to have_key('AdaptivePlugin') }
-      its (:size) { is_expected.to eql 1 }
+      its (:size) { is_expected.to be 1 }
     end
   end
 
