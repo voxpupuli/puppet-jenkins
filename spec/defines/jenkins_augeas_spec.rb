@@ -65,7 +65,8 @@ describe 'jenkins::augeas' do
         changes: [],
         plugin_version: '0.1',
         plugin: true
-    } end
+    }
+    end
 
     it do
       is_expected.to contain_jenkins__plugin('myplug').with(
@@ -86,7 +87,8 @@ describe 'jenkins::augeas' do
       plugin: false,
       config_filename: 'foo.xml',
       changes: []
-    } end
+    }
+    end
 
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -103,7 +105,8 @@ describe 'jenkins::augeas' do
       config_filename: 'foo.xml',
       context: '/foo/bar',
       changes: []
-    } end
+    }
+    end
 
     it do
       is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -128,7 +131,8 @@ describe 'jenkins::augeas' do
         config_filename: 'foo.xml',
         changes: ['set foo bar'],
         onlyif: pval
-      } end
+      }
+      end
 
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -153,7 +157,8 @@ describe 'jenkins::augeas' do
         plugin: false,
         config_filename: 'foo.xml',
         changes: pval
-      } end
+      }
+      end
 
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -180,7 +185,8 @@ describe 'jenkins::augeas' do
         config_filename: 'foo.xml',
         changes: [],
         restart: pval
-      } end
+      }
+      end
 
       it { is_expected.to contain_augeas('jenkins::augeas: myplug').that_notifies("Exec[#{expected}]") }
     end

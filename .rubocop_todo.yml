@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 13
-# Cop supports --auto-correct.
-Layout/BlockEndNewline:
-  Exclude:
-    - 'spec/classes/jenkins_repo_spec.rb'
-    - 'spec/classes/jenkins_users_spec.rb'
-    - 'spec/defines/jenkins_augeas_spec.rb'
-    - 'spec/defines/jenkins_credentials_spec.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: IndentationWidth.

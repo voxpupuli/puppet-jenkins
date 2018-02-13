@@ -36,7 +36,8 @@ describe 'jenkins', type: :class do
             name: 'Debian',
             release: { full: '11.04' }
           }
-        } end
+        }
+        end
 
         it { is_expected.to contain_class('jenkins::repo::debian') }
         it { is_expected.to_not contain_class('jenkins::repo::suse') }
