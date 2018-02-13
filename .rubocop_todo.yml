@@ -76,9 +76,3 @@ Style/GlobalVars:
     - 'spec/acceptance/plugin_spec.rb'
     - 'spec/acceptance/slave_spec.rb'
     - 'spec/spec_helper_acceptance.rb'
-
-# Offense count: 1
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Exclude:
-    - 'lib/puppet/x/jenkins/provider/cli.rb'

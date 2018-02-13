@@ -286,12 +286,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     end
 
     begin
-      # return Puppet::Provider.execute(*args)
       if tmpfile_as_param && options.key?(:stdinfile)
         return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), options)
-      else
-        return superclass.execute([cmd].flatten.join(' '), options)
       end
+      return superclass.execute([cmd].flatten.join(' '), options)
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
         raise AuthError, e.message, e.backtrace if e.message.match(error)
