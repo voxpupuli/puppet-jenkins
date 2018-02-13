@@ -75,8 +75,8 @@ describe 'jenkins class', order: :defined do
 
     context 'downgrade' do
       git_version =
-      it 'downgrades git version' do
-        pp = <<-EOS
+        it 'downgrades git version' do
+          pp = <<-EOS
         class {'jenkins':
           cli_remoting_free => true,
           purge_plugins     => true,
@@ -87,11 +87,11 @@ describe 'jenkins class', order: :defined do
           version => '1.0',
         }
         EOS
-        apply2(pp)
-        # Find the version of the installed git plugin
-        git_version = shell("unzip -p #{$pdir}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
-        git_version.should eq('1.0')
-      end
+          apply2(pp)
+          # Find the version of the installed git plugin
+          git_version = shell("unzip -p #{$pdir}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
+          git_version.should eq('1.0')
+        end
       it_behaves_like 'has_git_plugin'
     end
   end
