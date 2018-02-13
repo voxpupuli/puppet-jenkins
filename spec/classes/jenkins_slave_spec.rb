@@ -189,7 +189,7 @@ describe 'jenkins::slave' do
     describe 'with LABELS as an array' do
       let(:params) do
         {
-          labels: ['hello', 'world']
+          labels: %w[hello world]
         }
       end
 

@@ -320,11 +320,11 @@ describe 'jenkins::plugin' do
   end # purge plugins
 
   describe 'deprecated params' do
-    [
-      'plugin_dir',
-      'username',
-      'group',
-      'create_user'
+    %w[
+      plugin_dir
+      username
+      group
+      create_user
     ].each do |param|
       context param do
         pending('rspec-puppet support for testing warning()')

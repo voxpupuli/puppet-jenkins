@@ -154,7 +154,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       ) { list_jobs_output }
 
       ret = described_class.send :list_jobs
-      expect(ret).to eq ['foo', 'bar']
+      expect(ret).to eq %w[foo bar]
     end
   end # ::list_jobs
 
@@ -173,7 +173,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   describe '::job_enabled' do
     it do
       expect(described_class).to receive(:clihelper).with(
-        ['job_enabled', 'foo'],
+        %w[job_enabled foo],
         catalog: nil
       ) { 'true' }
 

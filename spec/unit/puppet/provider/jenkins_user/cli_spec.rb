@@ -193,7 +193,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       provider = described_class.send :from_hash, user_info[0]
 
       expect(described_class).to receive(:clihelper).with(
-        ['delete_user', 'test']
+        %w[delete_user test]
       )
 
       provider.send :delete_user

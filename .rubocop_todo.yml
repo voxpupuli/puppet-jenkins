@@ -204,16 +204,3 @@ Style/NestedParenthesizedCalls:
 Style/StringLiteralsInInterpolation:
   Exclude:
     - 'spec/acceptance/job_spec.rb'
-
-# Offense count: 18
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, MinSize, WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  Exclude:
-    - 'spec/classes/jenkins_slave_spec.rb'
-    - 'spec/defines/jenkins_plugin_spec.rb'
-    - 'spec/spec_helper_acceptance.rb'
-    - 'spec/unit/puppet/provider/jenkins_credentials/cli_spec.rb'
-    - 'spec/unit/puppet/provider/jenkins_job/cli_spec.rb'
-    - 'spec/unit/puppet/provider/jenkins_user/cli_spec.rb'

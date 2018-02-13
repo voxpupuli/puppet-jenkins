@@ -71,27 +71,27 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'username',
-        'password'
+      %w[
+        domain
+        scope
+        impl
+        description
+        username
+        password
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'private_key',
-        'passphrase',
-        'secret',
-        'file_name',
-        'content',
-        'source',
-        'key_store_impl',
-        'secret_key',
-        'access_key'
+      %w[
+        private_key
+        passphrase
+        secret
+        file_name
+        content
+        source
+        key_store_impl
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -104,27 +104,27 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'username',
-        'private_key',
-        'passphrase'
+      %w[
+        domain
+        scope
+        impl
+        description
+        username
+        private_key
+        passphrase
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'password',
-        'secret',
-        'file_name',
-        'content',
-        'source',
-        'key_store_impl',
-        'secret_key',
-        'access_key'
+      %w[
+        password
+        secret
+        file_name
+        content
+        source
+        key_store_impl
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -137,27 +137,27 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'secret'
+      %w[
+        domain
+        scope
+        impl
+        description
+        secret
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'username',
-        'password',
-        'private_key',
-        'passphrase',
-        'file_name',
-        'content',
-        'source',
-        'key_store_impl',
-        'secret_key',
-        'access_key'
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        file_name
+        content
+        source
+        key_store_impl
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -170,27 +170,27 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'secret',
-        'file_name',
-        'content'
+      %w[
+        domain
+        scope
+        impl
+        description
+        secret
+        file_name
+        content
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'username',
-        'password',
-        'private_key',
-        'passphrase',
-        'source',
-        'key_store_impl',
-        'secret_key',
-        'access_key'
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -203,26 +203,26 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'secret_key',
-        'access_key'
+      %w[
+        domain
+        scope
+        impl
+        description
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'username',
-        'password',
-        'private_key',
-        'passphrase',
-        'source',
-        'key_store_impl',
-        'content',
-        'file_name'
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        content
+        file_name
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -235,27 +235,27 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
-      [
-        'domain',
-        'scope',
-        'impl',
-        'description',
-        'api_token'
+      %w[
+        domain
+        scope
+        impl
+        description
+        api_token
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
       end
 
-      [
-        'username',
-        'password',
-        'private_key',
-        'passphrase',
-        'source',
-        'key_store_impl',
-        'content',
-        'file_name',
-        'secret_key',
-        'access_key'
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        content
+        file_name
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
