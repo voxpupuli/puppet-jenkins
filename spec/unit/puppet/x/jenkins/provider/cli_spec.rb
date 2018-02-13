@@ -37,16 +37,16 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
   end
 
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
-  before(:each) do
+  before do
     # clear class level state
     if described_class.class_variable_defined?(:@@cli_auth_required)
       described_class.class_variable_set(:@@cli_auth_required, false)
     end
   end
 
-  before(:each) do
+  before do
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
@@ -311,7 +311,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
   end # ::clihelper
 
   describe '::cli' do
-    before(:each) do
+    before do
       # disable with_retries sleeping to [vastly] speed up testing
       #
       # we are relying the side effects of ::suitable? from a previous example
@@ -432,7 +432,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'with ssh_private_key' do
         let(:catalog) { Puppet::Resource::Catalog.new }
 
-        before(:each) do
+        before do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
             ssh_private_key: 'cat.id_rsa'

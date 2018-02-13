@@ -49,7 +49,7 @@ describe Puppet::X::Jenkins::Config do
     end
   end # returns catalog values
 
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   # we are relying on a side effect of this method being to test features /
   # load libs

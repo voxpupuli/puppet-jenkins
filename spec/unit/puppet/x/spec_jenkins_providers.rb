@@ -30,7 +30,7 @@ shared_examples 'confines to cli dependencies' do
   end
 
   describe 'commands' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:command).with(:java).and_return('java')
     end
 

@@ -105,7 +105,7 @@ shared_examples 'array_matching property' do |_param|
 end # array_matching property
 
 shared_examples 'autorequires cli resources' do
-  before(:each) { Facter.clear }
+  before { Facter.clear }
 
   it 'autorequires service' do
     service_resource = Puppet::Type.type(:service).new(

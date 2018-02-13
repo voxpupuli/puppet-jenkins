@@ -6,7 +6,7 @@ describe Puppet::Jenkins::Facts do
     subject(:plugins_str) { described_class.plugins_str }
     let(:plugins) { {} }
 
-    before :each do
+    before do
       Puppet::Jenkins::Plugins.should_receive(:available).and_return(plugins)
     end
 
@@ -44,7 +44,7 @@ describe Puppet::Jenkins::Facts do
 
     subject(:plugins) { fact.value }
 
-    before :each do
+    before do
       Facter.fact(:kernel).stubs(:value).returns(kernel)
       described_class.install
     end
@@ -59,7 +59,7 @@ describe Puppet::Jenkins::Facts do
       context 'with plugins' do
         let(:plugins_str) { 'ant 1.2, git 2.0.1' }
 
-        before :each do
+        before do
           Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
         end
 
