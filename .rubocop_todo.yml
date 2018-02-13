@@ -102,10 +102,6 @@ RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/unit/jenkins_provider_spec.rb'
 
-# Offense count: 110
-RSpec/EmptyLineAfterFinalLet:
-  Enabled: false
-
 # Offense count: 1
 RSpec/EmptyLineAfterSubject:
   Exclude:

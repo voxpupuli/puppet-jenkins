@@ -12,6 +12,7 @@ describe 'jenkins', type: :class do
             operatingsystemmajrelease: '6'
           }
         end
+
         it { is_expected.to contain_class('jenkins::repo::el') }
         it { is_expected.to_not contain_class('jenkins::repo::suse') }
         it { is_expected.to_not contain_class('jenkins::repo::debian') }
@@ -19,6 +20,7 @@ describe 'jenkins', type: :class do
 
       describe 'Suse' do
         let(:facts) { { osfamily: 'Suse', operatingsystem: 'OpenSuSE' } }
+
         it { is_expected.to contain_class('jenkins::repo::suse') }
         it { is_expected.to_not contain_class('jenkins::repo::el') }
         it { is_expected.to_not contain_class('jenkins::repo::debian') }
@@ -35,6 +37,7 @@ describe 'jenkins', type: :class do
             release: { full: '11.04' }
           }
         } end
+
         it { is_expected.to contain_class('jenkins::repo::debian') }
         it { is_expected.to_not contain_class('jenkins::repo::suse') }
         it { is_expected.to_not contain_class('jenkins::repo::el') }
@@ -42,6 +45,7 @@ describe 'jenkins', type: :class do
 
       describe 'Unknown' do
         let(:facts) { { osfamily: 'SomethingElse', operatingsystem: 'RedHat' } }
+
         it { expect { is_expected.to raise_error(Puppet::Error) } }
       end
     end
@@ -56,6 +60,7 @@ describe 'jenkins', type: :class do
         }
       end
       let(:params) { { repo: false } }
+
       it { is_expected.to_not contain_class('jenkins::repo') }
       it { is_expected.to_not contain_class('jenkins::repo::el') }
       it { is_expected.to_not contain_class('jenkins::repo::suse') }

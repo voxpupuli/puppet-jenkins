@@ -23,6 +23,7 @@ describe 'jenkins', type: :class do
                         libdir: '/path/to/libdir',
                         config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
       end
+
       it { is_expected.to contain_class('jenkins::cli') }
       it { is_expected.to contain_exec('jenkins-cli') }
       it { is_expected.to contain_exec('reload-jenkins').with_command(%r{http://localhost:9000}) }

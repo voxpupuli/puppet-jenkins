@@ -30,49 +30,58 @@ describe 'jenkins', type: :class do
 
     describe 'without java' do
       let(:params) { { install_java: false } }
+
       it { is_expected.to_not contain_class 'java' }
     end
 
     describe 'without repo' do
       let(:params) { { repo: false } }
+
       it { is_expected.to_not contain_class 'jenkins::repo' }
     end
 
     describe 'with only proxy host' do
       let(:params) { { proxy_host: '1.2.3.4' } }
+
       it { is_expected.to contain_class('jenkins::proxy') }
     end
 
     describe 'with only proxy_port' do
       let(:params) { { proxy_port: 1234 } }
+
       it { is_expected.to contain_class('jenkins::proxy') }
     end
 
     describe 'with proxy_host and proxy_port' do
       let(:params) { { proxy_host: '1.2.3.4', proxy_port: 1234 } }
+
       it { is_expected.to contain_class 'jenkins::proxy' }
     end
 
     describe 'with firewall, configure_firewall => true' do
       let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { configure_firewall: true } }
+
       it { is_expected.to contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall, configure_firewall => false' do
       let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
       let(:params) { { configure_firewall: false } }
+
       it { is_expected.to_not contain_class 'jenkins::firewall' }
     end
 
     describe 'with firewall, configure_firewall unset' do
       let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
+
       it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
     describe 'sysconfdir =>' do
       context '/foo/bar' do
         let(:params) { { sysconfdir: '/foo/bar' } }
+
         it do
           is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
             with_path('/foo/bar/jenkins')
@@ -90,6 +99,7 @@ describe 'jenkins', type: :class do
     describe 'manage_datadirs =>' do
       context 'false' do
         let(:params) { { manage_datadirs: false } }
+
         it { is_expected.to_not contain_file('/var/lib/jenkins') }
         it { is_expected.to_not contain_file('/var/lib/jenkins/plugins') }
         it { is_expected.to_not contain_file('/var/lib/jenkins/jobs') }
@@ -107,6 +117,7 @@ describe 'jenkins', type: :class do
 
       context '/dne' do
         let(:params) { { localstatedir: '/dne' } }
+
         it { is_expected.to contain_file('/dne') }
       end
     end
@@ -157,11 +168,13 @@ describe 'jenkins', type: :class do
 
       context 'true' do
         let(:params) { { manage_user: true } }
+
         it { is_expected.to contain_user('jenkins') }
       end
 
       context 'false' do
         let(:params) { { manage_user: false } }
+
         it { is_expected.to_not contain_user('jenkins') }
       end
     end # manage_user =>
@@ -177,6 +190,7 @@ describe 'jenkins', type: :class do
             manage_service: false
           }
         end
+
         it { is_expected.to_not contain_class 'jenkins::service' }
         it { is_expected.to_not contain_service 'jenkins' }
       end
@@ -217,11 +231,13 @@ describe 'jenkins', type: :class do
 
       context 'true' do
         let(:params) { { manage_group: true } }
+
         it { is_expected.to contain_group('jenkins') }
       end
 
       context 'false' do
         let(:params) { { manage_group: false } }
+
         it { is_expected.to_not contain_group('jenkins') }
       end
     end # manage_group =>
@@ -271,6 +287,7 @@ describe 'jenkins', type: :class do
 
     describe 'with default plugins override' do
       let (:params) { { default_plugins: [] } }
+
       it { is_expected.to_not contain_jenkins__plugin 'credentials' }
     end
 

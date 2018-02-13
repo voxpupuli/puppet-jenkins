@@ -11,11 +11,13 @@ describe 'jenkins', type: :class do
 
     describe 'lts = true' do
       let(:params) { { lts: true } }
+
       it { is_expected.to contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse-stable/') }
     end
 
     describe 'lts = false' do
       let(:params) { { lts: false } }
+
       it { is_expected.to contain_zypprepo('jenkins').with_baseurl('https://pkg.jenkins.io/opensuse/') }
     end
   end

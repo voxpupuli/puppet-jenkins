@@ -431,6 +431,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       context 'with ssh_private_key' do
         let(:catalog) { Puppet::Resource::Catalog.new }
+
         before(:each) do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',

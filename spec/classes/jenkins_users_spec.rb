@@ -21,6 +21,7 @@ describe 'jenkins', type: :class do
           'email' => 'user@example.com',
           'password' => 'test'
       } } } end
+
       it { is_expected.to contain_jenkins__user('user').with_email('user@example.com').with_password('test') }
     end
   end

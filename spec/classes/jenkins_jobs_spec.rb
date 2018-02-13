@@ -17,6 +17,7 @@ describe 'jenkins', type: :class do
 
     context 'with one job' do
       let(:params) { { job_hash: { 'build' => { 'config' => '<xml/>' } } } }
+
       it { is_expected.to contain_jenkins__job('build').with_config('<xml/>') }
     end
 
@@ -28,6 +29,7 @@ describe 'jenkins', type: :class do
           job_hash: { 'build' => { 'config' => '<xml/>' } }
         }
       end
+
       it do
         expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, %r{error during compilation})
       end

@@ -24,6 +24,7 @@ describe Puppet::Jenkins::Plugins do
 
       context 'and the directory exists' do
         let(:dir_exists) { true }
+
         it { is_expected.to be true }
       end
 

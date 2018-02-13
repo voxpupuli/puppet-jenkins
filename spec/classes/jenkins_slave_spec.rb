@@ -17,42 +17,50 @@ describe 'jenkins::slave' do
 
     describe 'with manage_slave_user true and manage_client_jar enabled' do
       let(:params) { { manage_slave_user: true, manage_client_jar: true } }
+
       it { is_expected.to contain_user('jenkins-slave_user').with_uid(nil).that_comes_before('Archive[get_swarm_client]') }
     end
 
     describe 'with manage_slave_user true and manage_client_jar false' do
       let(:params) { { manage_slave_user: true, manage_client_jar: false } }
+
       it { is_expected.to contain_user('jenkins-slave_user').with_uid(nil) }
     end
 
     describe 'with auto discovery address' do
       let(:params) { { autodiscoveryaddress: '255.255.255.0' } }
+
       it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^AUTO_DISCOVERY_ADDRESS="255.255.255.0"$}) }
     end
 
     describe 'slave_uid' do
       let(:params) { { slave_uid: 123 } }
+
       it { is_expected.to contain_user('jenkins-slave_user').with_uid(123) }
     end
 
     describe 'slave_groups' do
       let(:params) { { slave_groups: 'docker' } }
+
       it { is_expected.to contain_user('jenkins-slave_user').with_groups('docker') }
     end
 
     describe 'with a non-default $slave_home' do
       let(:home) { '/home/rspec-runner' }
       let(:params) { { slave_home: home } }
+
       it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^FSROOT="#{home}"$}) }
     end
 
     describe 'with service disabled' do
       let(:params) { { enable: false, ensure: 'stopped' } }
+
       it { is_expected.to contain_service('jenkins-slave').with(enable: false, ensure: 'stopped') }
     end
 
     describe 'with tool_locations' do
       let(:params) { { tool_locations: 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
+
       it do
         is_expected.to contain_file(slave_runtime_file).
           with_content(%r{Python-2\.7=/usr/bin/python2\.7}).
@@ -149,11 +157,13 @@ describe 'jenkins::slave' do
           tunnel: ':'
         }
       end
+
       it { is_expected.to raise_error(Puppet::Error) }
     end
 
     describe 'with different swarm versions' do
       let(:source) { 'http://rspec.example.com' }
+
       context 'a version lower than 3.0' do
         let(:params) do
           {
@@ -161,6 +171,7 @@ describe 'jenkins::slave' do
             source: source
           }
         end
+
         it { is_expected.to contain_archive('get_swarm_client').with_source("#{source}/swarm-client-2.0-jar-with-dependencies.jar") }
       end
       context 'a version higher than 3.0' do
@@ -170,6 +181,7 @@ describe 'jenkins::slave' do
             source: source
           }
         end
+
         it { is_expected.to contain_archive('get_swarm_client').with_source("#{source}/swarm-client-3.1.jar") }
       end
     end
@@ -203,6 +215,7 @@ describe 'jenkins::slave' do
           disable_clients_unique_id: true
         }
       end
+
       it 'has disable variable' do
         is_expected.to contain_file(slave_runtime_file).
           with_content(%r{^DISABLE_CLIENTS_UNIQUE_ID="true"$})
@@ -259,6 +272,7 @@ describe 'jenkins::slave' do
 
       describe 'with slave_name' do
         let(:params) { { slave_name: 'jenkins-slave' } }
+
         it_behaves_like 'using slave_name'
       end
 
@@ -277,6 +291,7 @@ describe 'jenkins::slave' do
 
       describe 'with proxy_server' do
         let(:params) { { proxy_server: 'https://foo' } }
+
         it do
           is_expected.to contain_archive('get_swarm_client').with(
             proxy_server: 'https://foo'
@@ -341,6 +356,7 @@ describe 'jenkins::slave' do
 
     describe 'with slave_name' do
       let(:params) { { slave_name: 'jenkins-slave' } }
+
       it_behaves_like 'using slave_name'
     end
 
@@ -365,6 +381,7 @@ describe 'jenkins::slave' do
     # NOTE: pending because jenkins-slave doesn't get installed on Darwin
     describe 'with slave_name' do
       let(:params) { { slave_name: 'jenkins-slave' } }
+
       it_behaves_like 'using slave_name'
     end
 
@@ -373,6 +390,7 @@ describe 'jenkins::slave' do
 
   describe 'Unknown' do
     let(:facts) { { ostype: 'Unknown' } }
+
     it { expect { is_expected.to raise_error(Puppet::Error) } }
   end
 end

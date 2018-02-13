@@ -4,6 +4,7 @@ describe 'jenkins::cli::config', type: :class do
   shared_examples 'validate_absolute_path' do |param|
     context 'absolute path' do
       let(:params) { { param => '/dne' } }
+
       it { is_expected.to_not raise_error }
     end
   end # validate_absolute_path
@@ -118,11 +119,13 @@ describe 'jenkins::cli::config', type: :class do
     context 'is_pe fact' do
       context 'true' do
         let(:facts) { { is_pe: true } }
+
         it { is_expected.to contain_package('retries').with(provider: 'pe_gem') }
       end
 
       context 'false' do
         let(:facts) { { is_pe: false } }
+
         it { is_expected.to contain_package('retries').with(provider: 'gem') }
       end
     end # 'is_pe fact' do
@@ -130,11 +133,13 @@ describe 'jenkins::cli::config', type: :class do
     context 'puppetversion facts' do
       context '=> 3.8.4' do
         let(:facts) { { puppetversion: '3.8.4' } }
+
         it { is_expected.to contain_package('retries').with(provider: 'gem') }
       end
 
       context '=> 4.0.0' do
         let(:facts) { { puppetversion: '4.0.0' } }
+
         it { is_expected.to contain_package('retries').with(provider: 'gem') }
 
         context 'rubysitedir fact' do
