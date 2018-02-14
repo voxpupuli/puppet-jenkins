@@ -37,12 +37,6 @@ RSpec/AroundBlock:
   Exclude:
     - 'spec/helpers/rspechelpers.rb'
 
-# Offense count: 1
-# Configuration parameters: CustomIncludeMethods.
-RSpec/EmptyExampleGroup:
-  Exclude:
-    - 'spec/unit/jenkins_provider_spec.rb'
-
 # Offense count: 104
 # Configuration parameters: SupportedStyles.
 # SupportedStyles: have_received, receive
