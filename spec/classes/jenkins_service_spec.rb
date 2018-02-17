@@ -28,6 +28,9 @@ describe 'jenkins', type: :class do
           systemd: true
         )
       end
+      let(:service_file) { '/etc/systemd/system/jenkins.service' }
+      let(:startup_script) { '/usr/lib/jenkins/jenkins-run' }
+      let(:sysv_file) { '/etc/init.d/jenkins' }
 
       it do
         is_expected.to contain_service('jenkins').with(
@@ -36,10 +39,6 @@ describe 'jenkins', type: :class do
           provider: 'systemd'
         )
       end
-
-      let(:service_file) { '/etc/systemd/system/jenkins.service' }
-      let(:startup_script) { '/usr/lib/jenkins/jenkins-run' }
-      let(:sysv_file) { '/etc/init.d/jenkins' }
 
       it do
         is_expected.to contain_file(startup_script).
