@@ -37,11 +37,6 @@ Style/AccessorMethodName:
     - 'lib/puppet/provider/jenkins_authorization_strategy/cli.rb'
     - 'lib/puppet/provider/jenkins_security_realm/cli.rb'
 
-# Offense count: 1
-Style/DoubleNegation:
-  Exclude:
-    - 'lib/puppet/provider/jenkins_job/cli.rb'
-
 # Offense count: 33
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
