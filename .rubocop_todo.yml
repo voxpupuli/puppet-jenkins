@@ -39,11 +39,6 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Max: 8
 
-# Offense count: 3
-RSpec/ScatteredSetup:
-  Exclude:
-    - 'spec/unit/puppet/x/jenkins/provider/cli_spec.rb'
-
 # Offense count: 2
 # Configuration parameters: IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:

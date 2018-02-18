@@ -37,16 +37,12 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
   end
 
-  before { Facter.clear }
-
   before do
+    Facter.clear
     # clear class level state
     if described_class.class_variable_defined?(:@@cli_auth_required)
       described_class.class_variable_set(:@@cli_auth_required, false)
     end
-  end
-
-  before do
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
