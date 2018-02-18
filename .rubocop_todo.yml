@@ -11,14 +11,6 @@ Lint/HandleExceptions:
   Exclude:
     - 'lib/puppet/jenkins/plugins.rb'
 
-# Offense count: 14
-Lint/ParenthesesAsGroupedExpression:
-  Exclude:
-    - 'spec/classes/jenkins_direct_download_spec.rb'
-    - 'spec/classes/jenkins_spec.rb'
-    - 'spec/defines/jenkins_augeas_spec.rb'
-    - 'spec/unit/jenkins_plugins_spec.rb'
-
 # Offense count: 1
 Lint/UselessAssignment:
   Exclude:

@@ -40,14 +40,14 @@ describe 'jenkins', type: :class do
     end
 
     context 'package removable' do
-      let (:params) { { version: 'absent', direct_download: 'http://local.space/jenkins.rpm' } }
+      let(:params) { { version: 'absent', direct_download: 'http://local.space/jenkins.rpm' } }
 
       it { is_expected.not_to contain_staging__file('jenkins.rpm') }
       it { is_expected.to contain_package('jenkins').with_ensure('absent') }
     end
 
     context 'unsupported provider fails' do
-      let (:params) { { package_provider: false, direct_download: 'http://local.space/jenkins.rpm' } }
+      let(:params) { { package_provider: false, direct_download: 'http://local.space/jenkins.rpm' } }
 
       it do
         expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, %r{error during compilation})
