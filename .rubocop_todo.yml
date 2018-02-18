@@ -32,12 +32,6 @@ RSpec/MultipleExpectations:
   Max: 8
 
 # Offense count: 2
-# Configuration parameters: IgnoreSymbolicNames.
-RSpec/VerifiedDoubles:
-  Exclude:
-    - 'spec/unit/puppet/x/jenkins/provider/cli_spec.rb'
-
-# Offense count: 2
 Style/AccessorMethodName:
   Exclude:
     - 'lib/puppet/provider/jenkins_authorization_strategy/cli.rb'
