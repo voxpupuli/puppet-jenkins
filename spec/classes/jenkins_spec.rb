@@ -286,7 +286,7 @@ describe 'jenkins', type: :class do
     end
 
     describe 'with default plugins override' do
-      let (:params) { { default_plugins: [] } }
+      let(:params) { { default_plugins: [] } }
 
       it { is_expected.not_to contain_jenkins__plugin 'credentials' }
     end

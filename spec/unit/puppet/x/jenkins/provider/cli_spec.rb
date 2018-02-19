@@ -37,16 +37,12 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
   end
 
-  before { Facter.clear }
-
   before do
+    Facter.clear
     # clear class level state
     if described_class.class_variable_defined?(:@@cli_auth_required)
       described_class.class_variable_set(:@@cli_auth_required, false)
     end
-  end
-
-  before do
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
@@ -646,7 +642,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       let(:realm_oauth) { JSON.parse(realm_oauth_json) }
 
       it 'generates a temp file with json output' do
-        tmp = double('Template')
+        tmp = instance_double('Template')
 
         expect(Tempfile).to receive(:open) { tmp }
         expect(tmp).to receive(:write).with(a_json_doc(realm_oauth))
@@ -668,7 +664,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
     context 'options with :stdin' do
       it 'generates a temp file with stdin string' do
-        tmp = double('Template')
+        tmp = instance_double('Template')
 
         expect(Tempfile).to receive(:open) { tmp }
         expect(tmp).to receive(:write).with('bar')

@@ -20,7 +20,7 @@ describe 'jenkins::augeas' do
 
   [false].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
-      let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
+      let(:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
 
       it do
         is_expected.to contain_augeas('jenkins::augeas: myplug').with(
@@ -36,7 +36,7 @@ describe 'jenkins::augeas' do
 
   [true].each do |pval|
     describe "with plugin param #{pval} (#{pval.class})" do
-      let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
+      let(:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: pval } }
 
       it do
         is_expected.to contain_jenkins__plugin('myplug')
@@ -45,7 +45,7 @@ describe 'jenkins::augeas' do
   end
 
   describe "with plugin param 'pluginname'" do
-    let (:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: 'pluginname' } }
+    let(:params) { { config_filename: 'foo.xml', changes: ['set foo bar'], plugin: 'pluginname' } }
 
     it do
       is_expected.to contain_jenkins__plugin('pluginname')
@@ -60,7 +60,7 @@ describe 'jenkins::augeas' do
   # |              `---'      ---                                    |
 
   describe 'with plugin_version set' do
-    let (:params) do
+    let(:params) do
       {
         config_filename: 'foo.xml',
         changes: [],
@@ -84,7 +84,7 @@ describe 'jenkins::augeas' do
   # `---'`---'`   '`---'`---''  ``---'    |---'`---^`    `---^` ' '
   #                                       |
   describe 'without context set' do
-    let (:params) do
+    let(:params) do
       {
         plugin: false,
         config_filename: 'foo.xml',
@@ -102,7 +102,7 @@ describe 'jenkins::augeas' do
   end
 
   describe 'with context set' do
-    let (:params) do
+    let(:params) do
       {
         plugin: false,
         config_filename: 'foo.xml',
@@ -129,7 +129,7 @@ describe 'jenkins::augeas' do
 
   [['get foo != bar'], 'get foo != bar'].each do |pval|
     describe "with param onlyif set and class is #{pval.class}" do
-      let (:params) do
+      let(:params) do
         {
           plugin: false,
           config_filename: 'foo.xml',
@@ -157,7 +157,7 @@ describe 'jenkins::augeas' do
   #                     `---'              |
   [['set foo bar'], 'set foo bar'].each do |pval|
     describe "with param changes set and class is #{pval.class}" do
-      let (:params) do
+      let(:params) do
         {
           plugin: false,
           config_filename: 'foo.xml',
@@ -185,7 +185,7 @@ describe 'jenkins::augeas' do
     false   => 'reload-jenkins'
   }.each do |pval, expected|
     describe "with param restart set to '#{pval}' (#{pval.class})" do
-      let (:params) do
+      let(:params) do
         {
           plugin: false,
           config_filename: 'foo.xml',

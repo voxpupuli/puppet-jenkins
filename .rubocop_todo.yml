@@ -11,14 +11,6 @@ Lint/HandleExceptions:
   Exclude:
     - 'lib/puppet/jenkins/plugins.rb'
 
-# Offense count: 14
-Lint/ParenthesesAsGroupedExpression:
-  Exclude:
-    - 'spec/classes/jenkins_direct_download_spec.rb'
-    - 'spec/classes/jenkins_spec.rb'
-    - 'spec/defines/jenkins_augeas_spec.rb'
-    - 'spec/unit/jenkins_plugins_spec.rb'
-
 # Offense count: 1
 Lint/UselessAssignment:
   Exclude:
@@ -39,27 +31,11 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Max: 8
 
-# Offense count: 3
-RSpec/ScatteredSetup:
-  Exclude:
-    - 'spec/unit/puppet/x/jenkins/provider/cli_spec.rb'
-
-# Offense count: 2
-# Configuration parameters: IgnoreSymbolicNames.
-RSpec/VerifiedDoubles:
-  Exclude:
-    - 'spec/unit/puppet/x/jenkins/provider/cli_spec.rb'
-
 # Offense count: 2
 Style/AccessorMethodName:
   Exclude:
     - 'lib/puppet/provider/jenkins_authorization_strategy/cli.rb'
     - 'lib/puppet/provider/jenkins_security_realm/cli.rb'
-
-# Offense count: 1
-Style/DoubleNegation:
-  Exclude:
-    - 'lib/puppet/provider/jenkins_job/cli.rb'
 
 # Offense count: 33
 # Configuration parameters: AllowedVariables.
