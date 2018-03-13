@@ -56,7 +56,7 @@
     },
     {
       "name": "camptocamp/systemd",
-      "version_requirement": ">= 0.3.0 < 2.0.0"
+      "version_requirement": ">= 0.3.0 < 3.0.0"
     },
     {
       "name": "puppetlabs/transition",
