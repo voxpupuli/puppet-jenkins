@@ -25,7 +25,7 @@ class jenkins::proxy {
 
     Package['jenkins']
     -> File[$proxy_xml]
-    ~> Service['jenkins']
+    ~> Class['::jenkins::service']
 
   } else {
     $url = undef
