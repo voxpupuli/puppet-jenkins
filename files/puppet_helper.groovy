@@ -546,6 +546,10 @@ class Actions {
               throw new UnsupportedCredentialsClass("unsupported " + keyStoreSource)
           }
           break
+        case 'com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredentials':
+          info['account_id'] = cred.getServiceAccountConfig().getAccountId()
+          info['private_key'] = new String(cred.getServiceAccountConfig().getPrivateKey().getEncoded())
+          break
         default:
           throw new UnsupportedCredentialsClass("unsupported " + cred)
       }
