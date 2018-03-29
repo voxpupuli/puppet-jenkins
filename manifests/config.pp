@@ -51,8 +51,11 @@ class jenkins::config {
     default => $dir_params,
   }
 
-  if $::jenkins::manage_datadirs {
+  if $::jenkins::manage_home_dir {
     ensure_resource('file', $::jenkins::localstatedir, $dir_params)
+  }
+
+  if $::jenkins::manage_datadirs {
     ensure_resource('file', $::jenkins::plugin_dir, $plugin_dir_params)
     ensure_resource('file', $::jenkins::job_dir, $dir_params)
   }

@@ -18,6 +18,7 @@ class jenkins::params {
   $package_name          = 'jenkins'
 
   $manage_datadirs = true
+  $manage_home_dir = true
   $localstatedir   = '/var/lib/jenkins'
 
   $manage_user  = true
