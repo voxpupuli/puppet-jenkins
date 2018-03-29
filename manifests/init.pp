@@ -226,6 +226,9 @@
 # @param manage_datadirs
 #   manage the local state dir, plugins dir and jobs dir
 #
+# @param manage_home_dirs
+#   manage the home dir
+#
 # @param localstatedir
 #   base path, in the ``autoconf`` sense, for jenkins local data including jobs
 #   and plugins
@@ -324,6 +327,7 @@ class jenkins(
   Stdlib::Absolutepath $libdir                    = $jenkins::params::libdir,
   Stdlib::Absolutepath $sysconfdir                = $jenkins::params::sysconfdir,
   Boolean $manage_datadirs                        = $jenkins::params::manage_datadirs,
+  Boolean $manage_home_dir                        = $jenkins::params::manage_home_dir,
   Stdlib::Absolutepath $localstatedir             = $::jenkins::params::localstatedir,
   Optional[Integer] $executors                    = undef,
   Optional[Integer] $slaveagentport               = undef,
