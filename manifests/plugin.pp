@@ -91,7 +91,7 @@ define jenkins::plugin(
     fail("unsupported plugin extension in source url: ${download_url}")
   }
 
-  $installed_plugins = $::jenkins_plugins ? {
+  $installed_plugins = fact('jenkins_plugins') ? {
     undef   => [],
     default => strip(split($::jenkins_plugins, ',')),
   }
