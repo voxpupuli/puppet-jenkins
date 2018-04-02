@@ -1,17 +1,11 @@
 ---
 sudo: false
-dist: trusty
 language: ruby
 cache: bundler
-# related to https://github.com/rubygems/rubygems/issues/2123
-before_install:
-  - 'rm -f Gemfile.lock'
-  - 'gem update --system'
-  - 'gem install bundler'
-script:
-  - 'bundle exec rake $CHECK'
+dist: trusty
+env:
+  - PUPPET_VERSION="~> 4.10.0"
 matrix:
-  fast_finish: true
   include:
   - rvm: 2.1.9
     bundler_args: --without system_tests release
