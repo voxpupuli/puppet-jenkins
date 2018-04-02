@@ -3,8 +3,7 @@ node default {
   package { 'jre':
     ensure => installed,
   }
-  ->
-  class {'::jenkins':
+  -> class {'::jenkins':
     install_java => false,
     repo         => false,
   }
