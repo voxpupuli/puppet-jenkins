@@ -1,4 +1,6 @@
+# lint:ignore:autoloader_layout
 class jenkins::job::build(
+# lint:endignore
   $config   = undef,
   $jobname  = $title,
   $enabled  = 1,
