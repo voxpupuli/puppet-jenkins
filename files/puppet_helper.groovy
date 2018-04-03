@@ -655,10 +655,10 @@ class Actions {
 
         def getFileItemFromString = { id, keyByteArray, classLoader ->
           def fileItemFactory = classLoader.loadClass('org.apache.commons.fileupload.disk.DiskFileItemFactory').newInstance()
-          fileItemFactory.setSizeThreshold(keyByteArray.length())
+          fileItemFactory.setSizeThreshold(keyByteArray.length)
           def fileItem = fileItemFactory.createItem('tempfile', 'plain/text', false, id)
           def outputStream = fileItem.getOutputStream()
-          outputStream.write(keyByteArray, 0 , keyByteArray.length())
+          outputStream.write(keyByteArray, 0 , keyByteArray.length)
           outputStream.flush()
           outputStream.close()
 
