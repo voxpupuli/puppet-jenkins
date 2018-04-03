@@ -683,7 +683,8 @@ class Actions {
 
         cred = this.class.classLoader.loadClass('com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredentials').newInstance(
           conf['id'],
-          serviceAccountConfig
+          serviceAccountConfig,
+          null
         )
         break
       default:
