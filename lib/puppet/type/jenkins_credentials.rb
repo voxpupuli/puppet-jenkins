@@ -103,17 +103,14 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:json_key) do
     desc 'JSON key string - GoogleRobotPrivateKeyCredentials'
-    defaultto :undef
   end
 
   newproperty(:email_address) do
     desc 'Email address used with a P12 key - GoogleRobotPrivateKeyCredentials'
-    defaultto :undef
   end
 
   newproperty(:p12_key) do
     desc 'P12 key string - GoogleRobotPrivateKeyCredentials'
-    defaultto :undef
   end
 
   # require all authentication & authorization related types
