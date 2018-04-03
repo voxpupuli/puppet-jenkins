@@ -110,7 +110,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   end
 
   newproperty(:p12_key) do
-    desc 'P12 key string - GoogleRobotPrivateKeyCredentials'
+    desc 'P12 key string in Base64 format - GoogleRobotPrivateKeyCredentials'
   end
 
   # require all authentication & authorization related types

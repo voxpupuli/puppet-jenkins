@@ -653,12 +653,12 @@ class Actions {
       case 'GoogleRobotPrivateKeyCredentials':
         util.requirePlugin('google-oauth-plugin')
 
-        def getFileItemFromString = { id, keyString, classLoader ->
+        def getFileItemFromString = { id, keyByteArray, classLoader ->
           def fileItemFactory = classLoader.loadClass('org.apache.commons.fileupload.disk.DiskFileItemFactory').newInstance()
-          fileItemFactory.setSizeThreshold(keyString.length())
+          fileItemFactory.setSizeThreshold(keyByteArray.length())
           def fileItem = fileItemFactory.createItem('tempfile', 'plain/text', false, id)
           def outputStream = fileItem.getOutputStream()
-          outputStream.write(keyString.getBytes(), 0 , keyString.length())
+          outputStream.write(keyByteArray, 0 , keyByteArray.length())
           outputStream.flush()
           outputStream.close()
 
@@ -668,13 +668,13 @@ class Actions {
         def serviceAccountConfig = null
         if (conf['json_key'] != null) {
           serviceAccountConfig = this.class.classLoader.loadClass('com.google.jenkins.plugins.credentials.oauth.JsonServiceAccountConfig').newInstance(
-            getFileItemFromString(conf['id'], conf['json_key'], this.class.classLoader),
+            getFileItemFromString(conf['id'], conf['json_key'].getBytes(), this.class.classLoader),
             null
           )
         } else if (conf['email_address'] != null && conf['p12_key'] != null) {
           serviceAccountConfig = this.class.classLoader.loadClass('com.google.jenkins.plugins.credentials.oauth.P12ServiceAccountConfig').newInstance(
             conf['email_address'],
-            getFileItemFromString(conf['id'], conf['p12_key'], this.class.classLoader),
+            getFileItemFromString(conf['id'], conf['p12_key'].decodeBase64(), this.class.classLoader),
             null
           )
         } else {
