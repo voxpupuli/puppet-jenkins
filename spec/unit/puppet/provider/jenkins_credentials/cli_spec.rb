@@ -73,7 +73,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           "scope": null,
           "impl": "GoogleRobotPrivateKeyCredentials",
           "email_address": "random@developer.gserviceaccount.com",
-          "p12_key": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg==",
+          "p12_key": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg=="
         }
     ]
     EOS
