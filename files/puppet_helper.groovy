@@ -547,8 +547,19 @@ class Actions {
           }
           break
         case 'com.google.jenkins.plugins.credentials.oauth.GoogleRobotPrivateKeyCredentials':
-          info['account_id'] = cred.getServiceAccountConfig().getAccountId()
-          info['private_key'] = IOUtils.toString(cred.getServiceAccountConfig().getPrivateKey().getEncoded(), "UTF-8")
+          info['json_key'] = null
+          info['email_address'] = null
+          info['p12_key'] = null
+
+          def serviceAccountConfig = cred.getServiceAccountConfig()
+          if (serviceAccountConfig.getClass().getName() == 'com.google.jenkins.plugins.credentials.oauth.JsonServiceAccountConfig') {
+            info['json_key'] = Secret.fromString(new File(serviceAccountConfig.getJsonKeyFile()).getText('UTF-8')).getPlainText()
+          } else if (serviceAccountConfig.getClass().getName() == 'com.google.jenkins.plugins.credentials.oauth.P12ServiceAccountConfig') {
+            info['email_address'] = serviceAccountConfig.getEmailAddress()
+            info['p12_key'] = new File(serviceAccountConfig.getP12KeyFile()).getBytes().encodeBase64().toString()
+          } else {
+            throw new UnsupportedCredentialsClass("unsupported service account config " + serviceAccountConfig.getClass().getName())
+          }
           break
         default:
           throw new UnsupportedCredentialsClass("unsupported " + cred)

@@ -59,6 +59,21 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "impl": "GitLabApiTokenImpl",
             "description": "GitLab API token",
             "api_token": "tokens for days"
+        },
+        {
+          "id": "587690b0-f793-44e6-bc46-889cce58fb71",
+          "domain": null,
+          "scope": null,
+          "impl": "GoogleRobotPrivateKeyCredentials",
+          "json_key": "{\"client_email\":\"random@developer.gserviceaccount.com\",\"private_key\":\"-----BEGIN PRIVATE KEY-----\\\\n...\\\\n-----END PRIVATE KEY-----\\\\n\"}"
+        },
+        {
+          "id": "2f867d0d-e0c7-48a6-a355-1d4fd2ac6c22",
+          "domain": null,
+          "scope": null,
+          "impl": "GoogleRobotPrivateKeyCredentials",
+          "email_address": "random@developer.gserviceaccount.com",
+          "p12_key": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg==",
         }
     ]
     EOS
@@ -92,6 +107,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
+        email_address
+        p12_key
+        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -125,6 +143,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
+        email_address
+        p12_key
+        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -158,6 +179,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
+        email_address
+        p12_key
+        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -191,6 +215,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
+        email_address
+        p12_key
+        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -223,6 +250,9 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         content
         file_name
+        email_address
+        p12_key
+        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -256,6 +286,74 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         file_name
         secret_key
         access_key
+        email_address
+        p12_key
+        json_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+    end
+  end
+
+  shared_examples 'a provider from example hash 7' do
+    it do
+      cred = credentials[5]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      %w[
+        domain
+        scope
+        impl
+        json_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        content
+        file_name
+        secret_key
+        access_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+    end
+  end
+
+  shared_examples 'a provider from example hash 8' do
+    it do
+      cred = credentials[5]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      %w[
+        domain
+        scope
+        impl
+        email_address
+        p12_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      %w[
+        username
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        content
+        file_name
+        secret_key
+        access_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -272,7 +370,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it 'returns the correct number of instances' do
-        expect(described_class.instances.size).to eq 6
+        expect(described_class.instances.size).to eq 8
       end
 
       context 'first instance returned' do

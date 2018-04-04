@@ -64,6 +64,9 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
       [:description, :api_token].each { |k| copy_key(params, info, k) }
     when 'GoogleRobotPrivateKeyCredentials'
       [:json_key, :email_address, :p12_key].each { |k| copy_key(params, info, k) }
+      # Since the plugin does not allow to configure the description of the credentials,
+      # we will just hardcode it to the default value.
+      params[:description] = 'Managed by Puppet'
     when 'ConduitCredentialsImpl'
       [:description, :token, :url].each { |k| copy_key(params, info, k) }
 
