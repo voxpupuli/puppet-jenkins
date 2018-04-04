@@ -65,7 +65,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           "domain": null,
           "scope": null,
           "impl": "GoogleRobotPrivateKeyCredentials",
-          "json_key": "{\"client_email\":\"random@developer.gserviceaccount.com\",\"private_key\":\"-----BEGIN PRIVATE KEY-----\\\\n...\\\\n-----END PRIVATE KEY-----\\\\n\"}"
+          "json_key": "{\\\"client_email\\\":\\\"random@developer.gserviceaccount.com\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\n...\\\\n-----END PRIVATE KEY-----\\\\n\\\"}"
         },
         {
           "id": "2f867d0d-e0c7-48a6-a355-1d4fd2ac6c22",
