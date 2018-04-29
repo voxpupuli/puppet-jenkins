@@ -30,6 +30,7 @@ group :test do
   gem 'simplecov-console',                                          :require => false
   gem 'rack', '~> 1.0',                                             :require => false if RUBY_VERSION < '2.2.2'
   gem 'parallel_tests',                                             :require => false
+  gem 'retries',                                                    :require => false
 end
 
 group :development do
