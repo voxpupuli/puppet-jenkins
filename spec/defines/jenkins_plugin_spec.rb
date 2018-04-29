@@ -303,7 +303,7 @@ describe 'jenkins::plugin' do
         EOS
       end
 
-      it { is_expected.to contain_file("#{pdir}/#{title}").only_with(ensure: nil) }
+      it { is_expected.to contain_file("#{pdir}/#{title}") }
     end
 
     context 'false' do
