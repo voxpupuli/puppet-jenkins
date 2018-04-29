@@ -12,19 +12,13 @@ matrix:
   include:
   - rvm: 2.1.9
     bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 4.0" CHECK=test PARALLEL_TEST_PROCESSORS=12
+    env: PUPPET_VERSION="~> 4.0" CHECK=test_with_coveralls PARALLEL_TEST_PROCESSORS=12
   - rvm: 2.4.3
     bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=test_with_coveralls
-  - rvm: 2.5.0
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=test_with_coveralls
+    env: PUPPET_VERSION="~> 4.0" CHECK=rubocop
   - rvm: 2.4.3
     bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=rubocop
-  - rvm: 2.4.3
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=build DEPLOY_TO_FORGE=yes
+    env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
   - rvm: 2.4.3
     bundler_args: --without development release
     dist: trusty
