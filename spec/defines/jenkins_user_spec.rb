@@ -3,14 +3,12 @@ require 'spec_helper'
 describe 'jenkins::user', type: :define do
   let(:title) { 'foo' }
 
-
   let :pre_condition do
     'include jenkins'
   end
 
   on_supported_os.each do |os, facts|
     context "on #{os} " do
-
       systemd_fact = case facts[:operatingsystemmajrelease]
                      when '6'
                        { systemd: false }

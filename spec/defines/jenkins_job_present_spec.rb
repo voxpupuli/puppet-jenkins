@@ -9,7 +9,6 @@ describe 'jenkins::job::present' do
 
   on_supported_os.each do |os, facts|
     context "on #{os} " do
-
       systemd_fact = case facts[:operatingsystemmajrelease]
                      when '6'
                        { systemd: false }
