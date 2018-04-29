@@ -7,16 +7,18 @@ ENV['STRICT_VARIABLES'] = 'no'
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/fixtures/modules/archive/lib'))
-
 require 'spec/helpers/rspechelpers'
 
 RSpec.configure do |c|
-  # Override puppetlabs_spec_helper's stupid setting of mock_with to :mocha,
-  # which is a totally piece of garbage mocking library
   c.mock_with :rspec
-  c.deprecation_stream = '/dev/null'
-
   c.include(Jenkins::RSpecHelpers)
+  default_facts = {
+    puppetversion: Puppet.version,
+    facterversion: Facter.version
+  }
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_facts.yml', __FILE__))
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_module_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_module_facts.yml', __FILE__))
+  c.default_facts = default_facts
 end
 
 # a simple class to inject :undef
