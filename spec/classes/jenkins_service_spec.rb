@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe 'jenkins', type: :class do
   on_supported_os.each do |os, facts|
-
     next unless facts[:os]['family'] == 'RedHat'
 
     context "on #{os} " do
@@ -15,6 +14,7 @@ describe 'jenkins', type: :class do
       let :facts do
         facts.merge(systemd_fact)
       end
+
       context 'service' do
         context 'default' do
           it do
@@ -73,7 +73,7 @@ describe 'jenkins', type: :class do
             it do
               is_expected.to contain_service('jenkins').with(
                 ensure: 'running',
-                enable: true,
+                enable: true
               )
             end
           end
@@ -84,7 +84,7 @@ describe 'jenkins', type: :class do
             it do
               is_expected.to contain_service('jenkins').with(
                 ensure: 'stopped',
-                enable: false,
+                enable: false
               )
             end
           end

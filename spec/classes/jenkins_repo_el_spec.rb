@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe 'jenkins', type: :class do
   on_supported_os.each do |os, facts|
-
     next unless facts[:os]['family'] == 'RedHat'
 
     context "on #{os} " do

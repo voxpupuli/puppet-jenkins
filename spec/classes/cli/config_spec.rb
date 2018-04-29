@@ -28,6 +28,7 @@ describe 'jenkins::cli::config', type: :class do
       let :facts do
         facts.merge(systemd_fact)
       end
+
       shared_examples 'validate_absolute_path' do |param|
         context 'absolute path' do
           let(:params) { { param => '/dne' } }

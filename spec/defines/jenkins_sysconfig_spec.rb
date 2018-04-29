@@ -6,6 +6,7 @@ describe 'jenkins::sysconfig' do
   let(:title) { 'myprop' }
 
   let(:params) { { 'value' => 'myvalue' } }
+
   on_supported_os.each do |os, facts|
     context "on #{os} " do
       systemd_fact = case facts[:operatingsystemmajrelease]

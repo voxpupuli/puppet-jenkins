@@ -52,22 +52,22 @@ describe 'jenkins', type: :class do
           it { is_expected.not_to contain_class 'jenkins::repo::suse' }
         end
         describe 'sysconfdir =>' do
-            context '/foo/bar' do
-              let(:params) { { sysconfdir: '/foo/bar' } }
+          context '/foo/bar' do
+            let(:params) { { sysconfdir: '/foo/bar' } }
 
-              it do
-                is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
-                  with_path('/foo/bar/jenkins')
-              end
-            end
-
-            context '(default)' do
-              it do
-                is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
-                  with_path('/etc/sysconfig/jenkins')
-              end
+            it do
+              is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
+                with_path('/foo/bar/jenkins')
             end
           end
+
+          context '(default)' do
+            it do
+              is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
+                with_path('/etc/sysconfig/jenkins')
+            end
+          end
+        end
       when 'Debian'
         it { is_expected.not_to contain_class 'jenkins::repo::el' }
         it { is_expected.to contain_class 'jenkins::repo::debian' }

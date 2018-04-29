@@ -18,7 +18,7 @@ describe 'jenkins::job' do
       let :facts do
         facts.merge(systemd_fact)
       end
-  
+
       describe 'relationships' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
         let(:params) { { config: quotes } }

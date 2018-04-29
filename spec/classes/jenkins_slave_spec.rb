@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe 'jenkins::slave' do
   on_supported_os.each do |os, facts|
-
     context "on #{os} " do
       systemd_fact = case facts[:operatingsystemmajrelease]
                      when '6'
@@ -13,6 +12,7 @@ describe 'jenkins::slave' do
       let :facts do
         facts.merge(systemd_fact)
       end
+
       shared_context 'a jenkins::slave catalog' do
         it do
           is_expected.to contain_archive('get_swarm_client').with(
