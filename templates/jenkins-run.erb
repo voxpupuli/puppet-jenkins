@@ -50,8 +50,6 @@ do
   JENKINS_JAVA_CMD="$candidate"
 done
 
-JAVA_CMD="$JENKINS_JAVA_CMD $JENKINS_JAVA_OPTIONS -DJENKINS_HOME=$JENKINS_HOME -jar $JENKINS_WAR"
-
 PARAMS=()
 PARAMS+=("--logfile=/var/log/jenkins/jenkins.log")
 PARAMS+=("--webroot=/var/cache/jenkins/war")
@@ -75,4 +73,4 @@ if [ "$JENKINS_ENABLE_ACCESS_LOG" = "yes" ]; then
   PARAMS+=("--simpleAccessLogger.file=/var/log/jenkins/access_log")
 fi
 
-$JAVA_CMD "${PARAMS[@]}"
+$JENKINS_JAVA_CMD "$JENKINS_JAVA_OPTIONS" "-DJENKINS_HOME=$JENKINS_HOME" -jar "$JENKINS_WAR" "${PARAMS[@]}"
