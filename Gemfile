@@ -30,8 +30,6 @@ group :test do
   gem 'simplecov-console',                                          :require => false
   gem 'rack', '~> 1.0',                                             :require => false if RUBY_VERSION < '2.2.2'
   gem 'parallel_tests',                                             :require => false
-  gem 'retries',                                                    :require => false
-  gem 'rspec-its',                                                  :require => false
 end
 
 group :development do
@@ -42,7 +40,7 @@ group :development do
 end
 
 group :system_tests do
-  gem 'winrm',                         :require => false
+  gem 'winrm',                              :require => false
   if beaker_version = ENV['BEAKER_VERSION']
     gem 'beaker', *location_for(beaker_version)
   else
@@ -53,9 +51,10 @@ group :system_tests do
   else
     gem 'beaker-rspec',  :require => false
   end
-  gem 'serverspec',                    :require => false
-  gem 'beaker-puppet_install_helper',  :require => false
-  gem 'beaker-module_install_helper',  :require => false
+  gem 'serverspec',                         :require => false
+  gem 'beaker-hostgenerator', '>= 1.1.10',  :require => false
+  gem 'beaker-puppet_install_helper',       :require => false
+  gem 'beaker-module_install_helper',       :require => false
 end
 
 group :release do
@@ -73,7 +72,7 @@ else
   gem 'facter', :require => false, :groups => [:test]
 end
 
-ENV['PUPPET_VERSION'].nil? ? puppetversion = '~> 4.0' : puppetversion = ENV['PUPPET_VERSION'].to_s
+ENV['PUPPET_VERSION'].nil? ? puppetversion = '~> 5.0' : puppetversion = ENV['PUPPET_VERSION'].to_s
 gem 'puppet', puppetversion, :require => false, :groups => [:test]
 
 # vim: syntax=ruby

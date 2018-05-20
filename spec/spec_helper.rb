@@ -1,8 +1,10 @@
-require 'rspec'
-require 'rspec/its'
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
 include RspecPuppetFacts
+
+# This file is managed via modulesync
+# https://github.com/voxpupuli/modulesync
+# https://github.com/voxpupuli/modulesync_config
 
 if Dir.exist?(File.expand_path('../../lib', __FILE__))
   require 'coveralls'
@@ -20,14 +22,7 @@ if Dir.exist?(File.expand_path('../../lib', __FILE__))
   end
 end
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/fixtures/modules/archive/lib'))
-require 'spec/helpers/rspechelpers'
-
 RSpec.configure do |c|
-  c.mock_with :rspec
-  c.include(Jenkins::RSpecHelpers)
   default_facts = {
     puppetversion: Puppet.version,
     facterversion: Facter.version
