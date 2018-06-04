@@ -40,7 +40,7 @@ class jenkins::cli {
     path        => ['/bin', '/usr/bin'],
     cwd         => '/tmp',
     refreshonly => true,
-    require     => Service['jenkins'],
+    require     => Class['::jenkins::service'],
   }
   # Extract latest CLI in case package is updated / downgraded
   Package[$::jenkins::package_name] ~> Exec['jenkins-cli']
