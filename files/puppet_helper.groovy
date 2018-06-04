@@ -896,6 +896,7 @@ class Actions {
               strategy.allowGithubWebHookPermission,
               strategy.allowCcTrayPermission,
               strategy.allowAnonymousReadPermission,
+              strategy.allowAnonymousJobStatusPermission,
             ],
           ],
         ]
