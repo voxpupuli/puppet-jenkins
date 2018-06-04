@@ -819,7 +819,7 @@ class Actions {
               realm.getGithubWebUri(),
               realm.getGithubApiUri(),
               realm.getClientID(),
-              realm.getClientSecret(),
+              realm.getClientSecret().plainText,
               realm.getOauthScopes(),
             ],
           ],
@@ -882,7 +882,7 @@ class Actions {
 
     def className = strategy.getClass().getName()
     def config
-    switch (strategy) {
+    switch (className) {
       // github-oauth
       case 'org.jenkinsci.plugins.GithubAuthorizationStrategy':
         config = [
@@ -896,6 +896,7 @@ class Actions {
               strategy.allowGithubWebHookPermission,
               strategy.allowCcTrayPermission,
               strategy.allowAnonymousReadPermission,
+              strategy.allowAnonymousJobStatusPermission,
             ],
           ],
         ]
