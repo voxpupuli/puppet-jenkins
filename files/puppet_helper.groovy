@@ -882,7 +882,7 @@ class Actions {
 
     def className = strategy.getClass().getName()
     def config
-    switch (strategy) {
+    switch (className) {
       // github-oauth
       case 'org.jenkinsci.plugins.GithubAuthorizationStrategy':
         config = [
