@@ -819,7 +819,7 @@ class Actions {
               realm.getGithubWebUri(),
               realm.getGithubApiUri(),
               realm.getClientID(),
-              realm.getClientSecret(),
+              realm.getClientSecret().plainText,
               realm.getOauthScopes(),
             ],
           ],
