@@ -9,8 +9,7 @@ node default {
   package { 'openjdk':
     ensure => installed,
   }
-  ->
-  class {'::jenkins':
+  -> class {'::jenkins':
     install_java => false,
     repo         => false,
   }
