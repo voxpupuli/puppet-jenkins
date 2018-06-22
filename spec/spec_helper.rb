@@ -1,6 +1,8 @@
 require 'rspec'
 require 'rspec/its'
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
+include RspecPuppetFacts
 
 ENV['STRICT_VARIABLES'] = 'no'
 
