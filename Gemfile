@@ -14,6 +14,7 @@ gem 'rspec-puppet', '~> 2.5.0',                  :require => false
 gem 'rubocop', '~> 0.49.1',                      :require => false
 gem 'rubocop-rspec', '~> 1.15.0',                :require => false
 gem 'travis', '~> 1.8',                          :require => false
+gem 'rspec-puppet-facts'
 
 group :development do
   gem 'byebug'
