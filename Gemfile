@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gem 'json',                                      :require => false
 gem 'metadata-json-lint',                        :require => false
 gem 'parallel_tests',                            :require => false
-gem 'puppet', ENV['PUPPET_VERSION'] || '~> 4.7', :require => false
 gem 'puppet-lint', '~> 2.0',                     :require => false
 gem 'puppet-strings',                            :require => false
 gem 'puppet-syntax', '~> 2.0',                   :require => false
@@ -31,3 +30,14 @@ group :system_tests do
   gem 'vagrant-wrapper',              :require => false
   gem 'beaker'
 end
+
+if facterversion = ENV['FACTER_GEM_VERSION']
+  gem 'facter', facterversion.to_s, :require => false, :groups => [:test]
+else
+  gem 'facter', :require => false, :groups => [:test]
+end
+
+ENV['PUPPET_VERSION'].nil? ? puppetversion = '~> 4.0' : puppetversion = ENV['PUPPET_VERSION'].to_s
+gem 'puppet', puppetversion, :require => false, :groups => [:test]
+
+# vim: syntax=ruby
