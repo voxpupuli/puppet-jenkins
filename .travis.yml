@@ -1,11 +1,17 @@
 ---
 sudo: false
+dist: trusty
 language: ruby
 cache: bundler
-dist: trusty
-env:
-  - PUPPET_VERSION="~> 4.10.0"
+# related to https://github.com/rubygems/rubygems/issues/2123
+before_install:
+  - 'rm -f Gemfile.lock'
+  - 'gem update --system'
+  - 'gem install bundler'
+script:
+  - 'bundle exec rake $CHECK'
 matrix:
+  fast_finish: true
   include:
   - rvm: 2.1.9
     bundler_args: --without system_tests release
@@ -43,3 +49,19 @@ branches:
   - /^v\d/
 notifications:
   email: false
+  irc:
+    on_success: always
+    on_failure: always
+    channels:
+      - "chat.freenode.org#voxpupuli-notifications"
+deploy:
+  provider: puppetforge
+  user: puppet
+  password:
+    secure: ""
+  on:
+    tags: true
+    # all_branches is required to use tags
+    all_branches: true
+    # Only publish the build marked with "DEPLOY_TO_FORGE"
+    condition: "$DEPLOY_TO_FORGE = yes"

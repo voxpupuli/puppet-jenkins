@@ -1,19 +1,28 @@
-require 'rspec'
-require 'rspec/its'
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
 include RspecPuppetFacts
 
-ENV['STRICT_VARIABLES'] = 'no'
+# This file is managed via modulesync
+# https://github.com/voxpupuli/modulesync
+# https://github.com/voxpupuli/modulesync_config
 
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/fixtures/modules/archive/lib'))
-require 'spec/helpers/rspechelpers'
+if Dir.exist?(File.expand_path('../../lib', __FILE__))
+  require 'coveralls'
+  require 'simplecov'
+  require 'simplecov-console'
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console
+  ]
+  SimpleCov.start do
+    track_files 'lib/**/*.rb'
+    add_filter '/spec'
+    add_filter '/vendor'
+    add_filter '/.vendor'
+  end
+end
 
 RSpec.configure do |c|
-  c.mock_with :rspec
-  c.include(Jenkins::RSpecHelpers)
   default_facts = {
     puppetversion: Puppet.version,
     facterversion: Facter.version
@@ -23,10 +32,4 @@ RSpec.configure do |c|
   c.default_facts = default_facts
 end
 
-# a simple class to inject :undef
-# https://groups.google.com/d/msg/puppet-users/6nL2eROH8is/UDqRNu34lB0J
-class Undef
-  def inspect
-    'undef'
-  end
-end
+# vim: syntax=ruby
