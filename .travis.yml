@@ -34,9 +34,6 @@ matrix:
     env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/centos-7 CHECK=beaker
     services: docker
     sudo: required
-  allow_failures:
-    - env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/centos-7 CHECK=beaker
-    - env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/ubuntu-16.04 CHECK=beaker
 branches:
   only:
   - master
