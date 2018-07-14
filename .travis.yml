@@ -1,37 +1,49 @@
 ---
 sudo: false
+dist: trusty
 language: ruby
 cache: bundler
-dist: trusty
-env:
-  - PUPPET_VERSION="~> 4.10.0"
+# related to https://github.com/rubygems/rubygems/issues/2123
+before_install:
+  - 'rm -f Gemfile.lock'
+  - 'gem update --system'
+  - 'gem install bundler'
+script:
+  - 'bundle exec rake $CHECK'
 matrix:
+  fast_finish: true
   include:
   - rvm: 2.1.9
-    bundler_args: --without system_tests release
-    env: PUPPET_VERSION="~> 4.0" CHECK=test_with_coveralls PARALLEL_TEST_PROCESSORS=12
-  - rvm: 2.4.3
-    bundler_args: --without system_tests release
-    env: PUPPET_VERSION="~> 4.0" CHECK=rubocop
-  - rvm: 2.4.3
-    bundler_args: --without system_tests release
-    env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
-  - rvm: 2.4.3
-    bundler_args: --without release
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 4.0" CHECK=test PARALLEL_TEST_PROCESSORS=12
+  - rvm: 2.4.4
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=test
+  - rvm: 2.5.1
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=test_with_coveralls
+  - rvm: 2.4.4
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=rubocop
+  - rvm: 2.5.1
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=build DEPLOY_TO_FORGE=yes
+  - rvm: 2.5.1
+    bundler_args: --without development release
     dist: trusty
-    env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/ubuntu-14.04 CHECK=beaker
+    env: PUPPET_INSTALL_TYPE=agent BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_debug=true BEAKER_setfile=docker/ubuntu-14.04{hypervisor=docker} CHECK=beaker
     services: docker
     sudo: required
-  - rvm: 2.4.3
-    bundler_args: --without release
+  - rvm: 2.5.1
+    bundler_args: --without development release
     dist: trusty
-    env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/ubuntu-16.04 CHECK=beaker
+    env: PUPPET_INSTALL_TYPE=agent BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_debug=true BEAKER_setfile=docker/ubuntu-16.04{hypervisor=docker} CHECK=beaker
     services: docker
     sudo: required
-  - rvm: 2.4.3
-    bundler_args: --without release
+  - rvm: 2.5.1
+    bundler_args: --without development release
     dist: trusty
-    env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_set=docker/centos-7 CHECK=beaker
+    env: PUPPET_INSTALL_TYPE=agent BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_debug=true BEAKER_setfile=docker/centos-7{hypervisor=docker} CHECK=beaker
     services: docker
     sudo: required
 branches:
