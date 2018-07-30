@@ -6,7 +6,6 @@ class jenkins::repo::debian
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  include stdlib
   include apt
 
   $pkg_host = 'https://pkg.jenkins.io'

@@ -2,7 +2,6 @@
 # jenkins::repo handles pulling in the platform specific repo classes
 #
 class jenkins::repo {
-  include stdlib
   anchor { 'jenkins::repo::begin': }
   anchor { 'jenkins::repo::end': }
 
