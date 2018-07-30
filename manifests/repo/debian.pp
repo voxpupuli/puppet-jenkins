@@ -20,7 +20,6 @@ class jenkins::repo::debian
         'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
-      notify   => Exec['apt_update'],
     }
   }
   else {
@@ -35,7 +34,6 @@ class jenkins::repo::debian
         'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
-      notify   => Exec['apt_update'],
     }
   }
 
