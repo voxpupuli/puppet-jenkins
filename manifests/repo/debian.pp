@@ -8,8 +8,6 @@ class jenkins::repo::debian
 
   $pkg_host = 'https://pkg.jenkins.io'
 
-  ensure_packages(['apt-transport-https'])
-
   if $::jenkins::lts  {
     apt::source { 'jenkins':
       location => "${pkg_host}/debian-stable",
@@ -22,7 +20,6 @@ class jenkins::repo::debian
         'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
-      require  => Package['apt-transport-https'],
       notify   => Exec['apt_update'],
     }
   }
@@ -38,7 +35,6 @@ class jenkins::repo::debian
         'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
         'source' => "${pkg_host}/debian/jenkins-ci.org.key",
       },
-      require  => Package['apt-transport-https'],
       notify   => Exec['apt_update'],
     }
   }
