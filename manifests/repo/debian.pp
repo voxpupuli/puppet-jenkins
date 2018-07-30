@@ -1,39 +1,28 @@
 # Class: jenkins::repo::debian
 #
-class jenkins::repo::debian
-{
+class jenkins::repo::debian (
+  String $gpg_key_id = '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+) {
   assert_private()
 
   include apt
 
-  $pkg_host = 'https://pkg.jenkins.io'
-
-  if $::jenkins::lts  {
-    apt::source { 'jenkins':
-      location => "${pkg_host}/debian-stable",
-      release  => 'binary/',
-      repos    => '',
-      include  => {
-        'src' => false,
-      },
-      key      => {
-        'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-        'source' => "${pkg_host}/debian/jenkins-ci.org.key",
-      },
-    }
+  if $jenkins::lts {
+    $location = "${jenkins::repo::base_url}/debian-stable"
+  } else {
+    $location = "${jenkins::repo::base_url}/debian"
   }
-  else {
-    apt::source { 'jenkins':
-      location => "${pkg_host}/debian",
-      release  => 'binary/',
-      repos    => '',
-      include  => {
-        'src' => false,
-      },
-      key      => {
-        'id'     => '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
-        'source' => "${pkg_host}/debian/jenkins-ci.org.key",
-      },
-    }
+
+  apt::source { 'jenkins':
+    location => $location,
+    release  => 'binary/',
+    repos    => '',
+    include  => {
+      'src' => false,
+    },
+    key      => {
+      'id'     => $gpg_key_id,
+      'source' => "${location}/${jenkins::repo::gpg_key_filename}",
+    },
   }
 }

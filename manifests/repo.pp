@@ -1,7 +1,10 @@
 #
 # jenkins::repo handles pulling in the platform specific repo classes
 #
-class jenkins::repo {
+class jenkins::repo(
+  Stdlib::Httpurl $base_url = 'https://pkg.jenkins.io',
+  String $gpg_key_filename = 'jenkins.io.key',
+) {
   assert_private()
 
   if $::jenkins::repo {
