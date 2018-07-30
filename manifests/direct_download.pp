@@ -3,9 +3,7 @@
 # is available
 #
 class jenkins::direct_download {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   include jenkins::proxy
 

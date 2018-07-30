@@ -5,9 +5,7 @@ class jenkins::repo {
   anchor { 'jenkins::repo::begin': }
   anchor { 'jenkins::repo::end': }
 
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   if ( $::jenkins::repo ) {
     case $::osfamily {

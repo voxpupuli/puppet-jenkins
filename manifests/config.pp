@@ -1,10 +1,7 @@
 # This class should be considered private
 #
 class jenkins::config {
-
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   ensure_resource('jenkins::plugin', $::jenkins::default_plugins)
 

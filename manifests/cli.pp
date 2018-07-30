@@ -3,9 +3,7 @@
 # Allow Jenkins commands to be issued from the command line
 #
 class jenkins::cli {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   include jenkins
 
