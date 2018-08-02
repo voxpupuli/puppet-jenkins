@@ -87,13 +87,15 @@
 #   can be a String, or an Array.
 #
 # [*proxy_server*]
-#
 #   Serves the same function as `::jenkins::proxy_server` but is an independent
 #   parameter so the `::jenkins` class does not need to be the catalog for
 #   slave only nodes.
 #
 # [*swarm_client_args*]
 #   Swarm client arguments to add to slave command line. More info: https://github.com/jenkinsci/swarm-plugin/blob/master/client/src/main/java/hudson/plugins/swarm/Options.java
+#
+# [*java_cmd*]
+#   Path to the java command in ${defaults_location}/jenkins-slave. Defaults to '/usr/bin/java'
 #
 
 # === Examples
@@ -140,6 +142,7 @@ class jenkins::slave (
   Any $java_args                          = undef,
   Any $swarm_client_args                  = undef,
   Boolean $delete_existing_clients        = false,
+  Any $java_cmd                           = '/usr/bin/java',
 ) inherits jenkins::params {
 
   if versioncmp($version, '3.0') < 0 {
