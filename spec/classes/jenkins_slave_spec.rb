@@ -259,7 +259,6 @@ describe 'jenkins::slave' do
 
           it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA="#{java_cmd}"$}) }
         end
-
       end
 
       shared_examples 'using slave_name' do
