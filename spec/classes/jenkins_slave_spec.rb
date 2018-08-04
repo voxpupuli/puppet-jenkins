@@ -255,9 +255,10 @@ describe 'jenkins::slave' do
         end # delete_existing_clients
 
         describe 'with a non-default $java_cmd' do
-          let(:params) { { java_cmd: '/usr/local/bin/java' } }
+          java_cmd = '/usr/local/bin/java'
+          let(:params) { { java_cmd: java_cmd } }
 
-          it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA="#{java_cmd}"$}) }
+          it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA=#{java_cmd}$}) }
         end
       end
 

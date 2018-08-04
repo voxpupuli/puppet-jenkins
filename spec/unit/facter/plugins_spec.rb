@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'lib/facter/jenkins'
+require 'facter/jenkins'
 
 describe Puppet::Jenkins::Facts do
   describe '.plugins_str' do
@@ -46,7 +46,7 @@ describe Puppet::Jenkins::Facts do
     let(:fact) { Facter.fact(:jenkins_plugins) }
 
     before do
-      Facter.fact(:kernel).stubs(:value).returns(kernel)
+      Facter.fact(:kernel).stub(:value).and_return(kernel)
       described_class.install
     end
 
@@ -54,14 +54,14 @@ describe Puppet::Jenkins::Facts do
       let(:kernel) { 'Linux' }
 
       context 'with no plugins' do
-        it { is_expected.to be_nil }
+        it { is_expected.to be_empty }
       end
 
       context 'with plugins' do
         let(:plugins_str) { 'ant 1.2, git 2.0.1' }
 
         before do
-          Jenkins::Facts::Plugins.should_receive(:plugins).and_return(plugins_str)
+          Puppet::Jenkins::Plugins.should_receive(:plugins).and_return(plugins_str)
         end
 
         it { is_expected.to eql(plugins_str) }
@@ -71,7 +71,7 @@ describe Puppet::Jenkins::Facts do
     context 'on FreeBSD' do
       let(:kernel) { 'FreeBSD' }
 
-      it { is_expected.to be_nil }
+      it { is_expected.to be_empty }
     end
   end
 end
