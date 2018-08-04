@@ -10,3 +10,6 @@ Gemfile:
     ':test':
       - gem: 'rspec-its'
       - gem: 'retries'
+spec/spec_helper.rb:
+  spec_overrides: "require 'rspec/its'"
+  mock_with: ':rspec'
