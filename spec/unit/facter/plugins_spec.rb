@@ -61,7 +61,7 @@ describe Puppet::Jenkins::Facts do
         let(:plugins_str) { 'ant 1.2, git 2.0.1' }
 
         before do
-          Puppet::Jenkins::Plugins.should_receive(:plugins).and_return(plugins_str)
+          Puppet::Jenkins::Facts.should_receive(:plugins_str).and_return(plugins_str)
         end
 
         it { is_expected.to eql(plugins_str) }

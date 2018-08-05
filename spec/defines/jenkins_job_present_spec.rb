@@ -10,7 +10,13 @@ describe 'jenkins::job::present' do
       operatingsystemmajrelease: '6'
     }
   end
-
+  let(:pre_condition) do
+￼     "
+￼       class { 'jenkins':
+￼         cli => true,
+￼       }
+￼     "
+￼   end
   describe 'with defaults' do
     it 'fails' do
       is_expected.to raise_error(Puppet::Error, %r{Please set one of})
