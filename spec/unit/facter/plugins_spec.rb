@@ -41,13 +41,18 @@ describe Puppet::Jenkins::Facts do
   end
 
   describe 'jenkins_plugins fact', type: :fact do
+    let(:fact) { Facter.fact(:jenkins_plugins) }
     subject(:plugins) { fact.value }
 
-    let(:fact) { Facter.fact(:jenkins_plugins) }
 
     before do
       Facter.fact(:kernel).stub(:value).and_return(kernel)
       described_class.install
+    end
+
+    after :each do
+      Facter.clear
+      Facter.clear_messages
     end
 
     context 'on Linux' do
@@ -58,8 +63,8 @@ describe Puppet::Jenkins::Facts do
       end
 
       context 'with plugins' do
-        let(:plugins_str) { 'ant 1.2, git 2.0.1' }
-
+        plugins_str = 'ant 1.2, git 2.0.1'
+        let(:plugins_str) { plugins_str }
         before do
           Puppet::Jenkins::Facts.should_receive(:plugins_str).and_return(plugins_str)
         end
@@ -71,7 +76,7 @@ describe Puppet::Jenkins::Facts do
     context 'on FreeBSD' do
       let(:kernel) { 'FreeBSD' }
 
-      it { is_expected.to be_empty }
+      it { is_expected.to be_nil }
     end
   end
 end
