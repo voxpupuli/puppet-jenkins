@@ -1,3 +1,4 @@
+inherit_from: .rubocop_todo.yml
 require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 1.9
@@ -13,6 +14,7 @@ AllCops:
     - Rakefile
     - Guardfile
     - Vagrantfile
+    - lib/puppet/jenkins/okjson.rb
 Lint/ConditionPosition:
   Enabled: True
 

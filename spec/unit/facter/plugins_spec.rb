@@ -41,16 +41,16 @@ describe Puppet::Jenkins::Facts do
   end
 
   describe 'jenkins_plugins fact', type: :fact do
-    let(:fact) { Facter.fact(:jenkins_plugins) }
     subject(:plugins) { fact.value }
 
+    let(:fact) { Facter.fact(:jenkins_plugins) }
 
     before do
       Facter.fact(:kernel).stub(:value).and_return(kernel)
       described_class.install
     end
 
-    after :each do
+    after do
       Facter.clear
       Facter.clear_messages
     end
@@ -65,8 +65,9 @@ describe Puppet::Jenkins::Facts do
       context 'with plugins' do
         plugins_str = 'ant 1.2, git 2.0.1'
         let(:plugins_str) { plugins_str }
+
         before do
-          Puppet::Jenkins::Facts.should_receive(:plugins_str).and_return(plugins_str)
+          described_class.should_receive(:plugins_str).and_return(plugins_str)
         end
 
         it { is_expected.to eql(plugins_str) }
