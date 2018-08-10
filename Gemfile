@@ -30,8 +30,8 @@ group :test do
   gem 'simplecov-console',                                          :require => false
   gem 'rack', '~> 1.0',                                             :require => false if RUBY_VERSION < '2.2.2'
   gem 'parallel_tests',                                             :require => false
-  gem 'retries',                                                    :require => false
   gem 'rspec-its',                                                  :require => false
+  gem 'retries',                                                    :require => false
 end
 
 group :development do
@@ -55,9 +55,10 @@ group :system_tests do
   end
   gem 'serverspec',                         :require => false
   gem 'beaker-hostgenerator', '>= 1.1.10',  :require => false
+  gem 'beaker-docker',                      :require => false
   gem 'beaker-puppet_install_helper',       :require => false
   gem 'beaker-module_install_helper',       :require => false
-  gem 'rbnacl', '~> 4',                     :require => false if RUBY_VERSION >= '2.2.6'
+  gem 'rbnacl', '>= 4',                     :require => false if RUBY_VERSION >= '2.2.6'
   gem 'rbnacl-libsodium',                   :require => false if RUBY_VERSION >= '2.2.6'
   gem 'bcrypt_pbkdf',                       :require => false
 end
