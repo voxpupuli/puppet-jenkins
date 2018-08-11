@@ -11,9 +11,7 @@ describe 'jenkins::job::present' do
     }
   end
   let(:pre_condition) do
-    "class { 'jenkins':
-      cli => true,
-    ￼}"
+    "class { 'jenkins': cli => true, }"
   end
 
   describe 'with defaults' do
