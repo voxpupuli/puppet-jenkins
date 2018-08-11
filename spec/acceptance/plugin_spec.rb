@@ -77,6 +77,9 @@ describe 'jenkins class', order: :defined do
       git_version =
         it 'downgrades git version' do
           pp = <<-EOS
+          package{'unzip':
+            ensure => present
+          }
         class {'jenkins':
           cli_remoting_free => true,
           purge_plugins     => true,
