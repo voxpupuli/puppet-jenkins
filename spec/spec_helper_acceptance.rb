@@ -2,6 +2,7 @@ require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/module_install_helper'
+require 'beaker-puppet'
 
 run_puppet_install_helper unless ENV['BEAKER_provision'] == 'no'
 
