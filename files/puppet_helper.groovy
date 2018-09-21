@@ -102,7 +102,7 @@ class Util {
     def tokenProperty = user.getProperty(jenkins.security.ApiTokenProperty)
     if (tokenProperty != null) {
       conf['api_token_public'] = tokenProperty.getApiToken()
-      conf['api_token_plain'] = tokenProperty.@apiToken.getPlainText()
+      conf['api_token_plain'] = tokenProperty.@apiToken?.getPlainText()
     }
 
     def passwordProperty = user.getProperty(hudson.security.HudsonPrivateSecurityRealm.Details)
