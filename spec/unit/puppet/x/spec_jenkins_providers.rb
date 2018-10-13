@@ -8,19 +8,6 @@ shared_examples 'confines to cli dependencies' do
       described_class.confine_collection.instance_variable_get(:@confines)
     end
 
-    it 'has no matched confines' do
-      expect(described_class.confine_collection.summary).to eq({})
-    end
-
-    context 'feature :retries' do
-      it do
-        expect(confines).to include(
-          be_a(Puppet::Confine::Feature).
-          and(have_attributes(values: [:retries]))
-        )
-      end
-    end
-
     context 'commands :java' do
       it do
         expect(confines).to include(
