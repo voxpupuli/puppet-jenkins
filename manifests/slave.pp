@@ -159,7 +159,7 @@ class jenkins::slave (
   $quoted_ui_pass = shellquote($ui_pass)
 
   if $labels {
-    if is_array($labels) {
+    if $labels =~ Array {
       $_combined_labels = hiera_array('jenkins::slave::labels', $labels)
       $_real_labels = join($_combined_labels, ' ')
     }
@@ -169,7 +169,7 @@ class jenkins::slave (
   }
 
   if $java_args {
-    if is_array($java_args) {
+    if $java_args =~ Array {
       $_combined_java_args = hiera_array('jenkins::slave::java_args', $java_args)
       $_real_java_args = join($_combined_java_args, ' ')
     }
@@ -179,7 +179,7 @@ class jenkins::slave (
   }
 
   if $swarm_client_args {
-    if is_array($swarm_client_args) {
+    if $swarm_client_args =~ Array {
       $_combined_swarm_client_args = hiera_array('jenkins::slave::swarm_client_args', $swarm_client_args)
       $_real_swarm_client_args = join($_combined_swarm_client_args, ' ')
     }
