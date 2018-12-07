@@ -19,6 +19,8 @@
 # [*restart*]:          If set to true, will trigger a jenkins (safe-)restart in stead of reloading
 #                       the configuration.
 #
+# [*show_diff*]:        Whether to display differences when the file changes, defaulting to true.
+#
 # === Example:
 #
 #     jenkins::augeas {'git':
@@ -41,6 +43,7 @@ define jenkins::augeas (
   String $context                                  = '/',
   Optional[Variant[Boolean,String]] $plugin        = false,
   Boolean $restart                                 = false,
+  Boolean $show_diff                               = true,
 ) {
   include ::jenkins
   include ::jenkins::cli
@@ -73,12 +76,13 @@ define jenkins::augeas (
   }
 
   augeas {"jenkins::augeas: ${name}":
-    incl    => "${::jenkins::localstatedir}/${config_filename}",
-    lens    => 'Xml.lns',
-    context => regsubst("/files${::jenkins::localstatedir}/${config_filename}/${context}", '\/{2,}', '/', 'G'),
-    notify  => Exec[$notify_exec],
-    onlyif  => $onlyif,
-    changes => $changes,
+    incl      => "${::jenkins::localstatedir}/${config_filename}",
+    lens      => 'Xml.lns',
+    context   => regsubst("/files${::jenkins::localstatedir}/${config_filename}/${context}", '\/{2,}', '/', 'G'),
+    notify    => Exec[$notify_exec],
+    onlyif    => $onlyif,
+    changes   => $changes,
+    show_diff => $show_diff,
   }
 
 }
