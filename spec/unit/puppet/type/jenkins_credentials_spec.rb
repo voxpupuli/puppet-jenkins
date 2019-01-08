@@ -33,7 +33,8 @@ describe Puppet::Type.type(:jenkins_credentials) do
                         :FileCredentialsImpl,
                         :AWSCredentialsImpl,
                         :GitLabApiTokenImpl,
-                        :GoogleRobotPrivateKeyCredentials
+                        :GoogleRobotPrivateKeyCredentials,
+                        :BrowserStackCredentials
                       ]
     end
 

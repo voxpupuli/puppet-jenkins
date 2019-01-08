@@ -61,7 +61,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
     when 'AWSCredentialsImpl'
       [:description, :secret_key, :access_key].each { |k| copy_key(params, info, k) }
     when 'BrowserStackCredentials'
-      [:description, :username, :access_key].each {|k| copy_key(params, info, k)}
+      [:description, :username, :access_key].each { |k| copy_key(params, info, k) }
     when 'GitLabApiTokenImpl'
       [:description, :api_token].each { |k| copy_key(params, info, k) }
     when 'GoogleRobotPrivateKeyCredentials'

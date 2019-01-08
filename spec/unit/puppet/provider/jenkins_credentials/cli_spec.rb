@@ -74,10 +74,19 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           "impl": "GoogleRobotPrivateKeyCredentials",
           "email_address": "random@developer.gserviceaccount.com",
           "p12_key": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg=="
+        },
+        {
+          "id": "562fa23d-a441-4cab-997f-58df6e245813",
+          "domain": null,
+          "scope": null,
+          "impl": "BrowserStackCredentials",
+          "username": "whats this?",
+          "access_key": "you know I payed for this"
         }
     ]
     EOS
   end
+
   let(:credentials) { JSON.parse(credentials_list_json_raw) }
 
   shared_examples 'a provider from example hash 1' do
@@ -360,6 +369,40 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     end
   end
 
+  shared_examples 'a provider from example hash 9' do
+    it do
+      cred = credentials[8]
+
+      expect(provider.name).to eq cred['id']
+      expect(provider.ensure).to eq :present
+      %w[
+        domain
+        scope
+        impl
+        username
+        access_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
+      end
+
+      %w[
+        password
+        private_key
+        passphrase
+        source
+        key_store_impl
+        content
+        file_name
+        secret_key
+        email_address
+        p12_key
+        json_key
+      ].each do |k|
+        expect(provider.public_send(k.to_sym)).to eq :absent
+      end
+    end
+  end
+
   include_examples 'confines to cli dependencies'
 
   describe '::instances' do
@@ -370,7 +413,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       it 'returns the correct number of instances' do
-        expect(described_class.instances.size).to eq 8
+        expect(described_class.instances.size).to eq credentials.size
       end
 
       context 'first instance returned' do
