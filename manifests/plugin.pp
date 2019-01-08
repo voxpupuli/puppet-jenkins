@@ -35,6 +35,20 @@ define jenkins::plugin(
   Any $create_user                  = undef,
 ) {
 
+  include jenkins
+
+  if $jenkins::manage_service {
+    $notify = Class['jenkins::service']
+  } else {
+    $notify = undef
+  }
+
+  if $jenkins::manage_datadirs {
+    $plugindir = File[$jenkins::plugin_dir]
+  } else {
+    $plugindir = undef
+  }
+
   if $timeout {
     warning('jenkins::plugin::timeout presently has effect')
   }
@@ -138,7 +152,7 @@ define jenkins::plugin(
       group   => $::jenkins::group,
       mode    => '0644',
       require => Archive[$plugin],
-      notify  => Class['::jenkins::service'],
+      notify  => $notify,
     }
 
     $pinned_ensure = $pin ? {
@@ -151,7 +165,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       require => Archive[$plugin],
-      notify  => Class['::jenkins::service'],
+      notify  => $notify,
     }
 
     if $digest_string {
@@ -176,8 +190,8 @@ define jenkins::plugin(
       proxy_server    => $::jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
-      require         => File[$::jenkins::plugin_dir],
-      notify          => Class['::jenkins::service'],
+      require         => $plugindir,
+      notify          => $notify,
     }
     $archive_require = Archive[$plugin]
   } else {
@@ -189,7 +203,7 @@ define jenkins::plugin(
     group   => $::jenkins::group,
     mode    => '0644',
     require => $archive_require,
-    before  => Class['::jenkins::service'],
+    before  => $notify,
   }
 
   if $manage_config {

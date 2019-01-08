@@ -11,6 +11,9 @@ describe 'jenkins::master' do
   end
 
   let(:params) { { version: '1.2.3' } }
+  let :pre_condition do
+    'include jenkins'
+  end
 
   it { is_expected.to contain_jenkins__plugin('swarm').with_version('1.2.3') }
 end
