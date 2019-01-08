@@ -40,7 +40,7 @@
     },
     {
       "name": "puppetlabs/apt",
-      "version_requirement": ">= 2.1.0 < 5.0.0"
+      "version_requirement": ">= 2.1.0 < 7.0.0"
     },
     {
       "name": "puppetlabs/java",
