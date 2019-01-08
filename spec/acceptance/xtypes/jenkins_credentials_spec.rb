@@ -293,6 +293,42 @@ describe 'jenkins_credentials' do
           }
         end
       end
+
+      context 'BrowserStackCredentials' do
+        it 'works with no errors' do
+          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
+          pp = base_manifest + <<-EOS
+            jenkins::plugin { [
+              'jackson2-api',
+              'credentials-binding',
+              'workflow-step-api',
+              'ssh-credentials',
+              'plain-credentials',
+              'browserstack-integration'
+            ]: }
+
+            jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813'
+              ensure      => 'present',
+              description => 'browserstack credentials',
+              impl        => 'BrowserStackCredentials',
+              username    => 'whats this?',
+              secret_key  => 'you know I payed for this',
+            }
+          EOS
+
+          apply2(pp)
+        end
+
+        describe file('/var/lib/jenkins/credentials.xml') do
+          # XXX need to properly compare the XML doc
+          # trying to match anything other than the id this way might match other
+          # credentails
+          it {
+            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
+            is_expected.to contain '<id>562fa23d-a441-4cab-997f-58df6e245813</id>'
+          }
+        end
+      end
     end # 'present' do
 
     context 'absent' do
