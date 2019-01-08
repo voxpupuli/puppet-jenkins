@@ -7,3 +7,6 @@ fixtures:
     archive: "https://github.com/voxpupuli/puppet-archive.git"
     systemd: "https://github.com/camptocamp/puppet-systemd"
     transition: "https://github.com/puppetlabs/puppetlabs-transition"
+    yumrepo_core:
+      repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
+      puppet_version: ">= 6.0.0"
