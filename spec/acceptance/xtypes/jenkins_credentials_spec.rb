@@ -238,7 +238,7 @@ describe 'jenkins_credentials' do
             jenkins_credentials { '587690b0-f793-44e6-bc46-889cce58fb71':
               ensure   => 'present',
               impl     => 'GoogleRobotPrivateKeyCredentials',
-              json_key => @END
+              json_key => @(END)
               {
                 "client_email": "random@developer.gserviceaccount.com",
                 "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
