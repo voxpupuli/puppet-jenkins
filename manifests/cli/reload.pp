@@ -8,6 +8,8 @@ class jenkins::cli::reload {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
+  $jar_file = $jenkins::cli::jar
+
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
     command     => "${::jenkins::cli::cmd} reload-configuration",
@@ -15,6 +17,6 @@ class jenkins::cli::reload {
     tries       => 10,
     try_sleep   => 2,
     refreshonly => true,
-    require     => File[$::jenkins::cli::jar],
+    require     => File[$jar_file],
   }
 }

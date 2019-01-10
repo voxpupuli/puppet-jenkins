@@ -2,6 +2,13 @@
 .travis.yml:
   secure: "cQdjbcwx+q/ArSkOtnxMYmlsWnJmyNEz7IUmpSx3F/z1ntX75/J3mJYFgYuvrOw2IbmmuwgVPofBpJjJajkhGOpaywOjKA6PgxKzSEu6e/q5CXJwMLnsDhHqY6X9bdGF5TU/DUkNzxBQlI7uDyk3yBVAACzLGMTCFksoztdlIbI="
   docker_sets:
-    - set: docker/ubuntu-14.04
-    - set: docker/ubuntu-16.04
-    - set: docker/centos-7
+    - set: ubuntu1604-64
+    - set: centos7-64
+Gemfile:
+  optional:
+    ':test':
+      - gem: 'rspec-its'
+      - gem: 'retries'
+spec/spec_helper.rb:
+  spec_overrides: "require 'rspec/its'"
+  mock_with: ':rspec'

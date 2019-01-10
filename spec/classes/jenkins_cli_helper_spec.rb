@@ -12,6 +12,7 @@ describe 'jenkins::cli_helper', type: :class do
 
   describe 'relationships' do
     it do
+      is_expected.to contain_class('jenkins::cli')
       is_expected.to contain_class('jenkins::cli_helper').
         that_requires('Class[jenkins::cli]')
     end
