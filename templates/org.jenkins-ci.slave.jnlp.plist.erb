@@ -2,11 +2,77 @@
 <!DOCTYPE plist PUBLIC "-/Apple/DTD PLIST 1.0/EN" "http:/www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+  <% if @quoted_ui_pass -%>
+  <key>EnvironmentVariables</key>
+  <dict>
+  	<key>JENKINS_PASSWORD</key>
+  	<string><%= @quoted_ui_pass -%></string>
+  </dict>
+  <% end -%>
   <key>Label</key>
   <string>org.jenkins-ci.slave.jnlp</string>
   <key>ProgramArguments</key>
   <array>
-    <string><%= @slave_home %>/start-slave.sh</string>
+    <string>/usr/bin/java</string>
+    <% if @_real_java_args -%>
+    <string><%= @_real_java_args -%></string>
+    <% end -%>
+    <string>-jar</string>
+    <string><%= @slave_home -%>/<%= @client_jar -%></string>
+    <% if @slave_mode -%>
+    <string>-mode</string>
+    <string><%= @slave_mode -%></string>
+    <% end -%>
+    <% if @executors -%>
+    <string>-executors</string>
+    <string><%= @executors -%></string>
+    <% end -%>
+    <% if @quoted_ui_user -%>
+    <string>-username</string>
+    <string><%= @quoted_ui_user -%></string>
+    <% end -%>
+    <% if @quoted_ui_pass -%>
+    <string>-passwordEnvVariable</string>
+    <string>JENKINS_PASSWORD</string>
+    <% end -%>
+    <% if @slave_name -%>
+    <string>-name</string>
+    <string><%= @slave_name -%></string>
+    <% end -%>
+    <% if @masterurl -%>
+    <string>-master</string>
+    <string><%= @masterurl -%></string>
+    <% end -%>
+    <% if @slave_home -%>
+    <string>-fsroot</string>
+    <string><%= @slave_home -%></string>
+    <% end -%>
+    <% if @disable_clients_unique_id -%>
+    <string>-disableClientsUniqueId</string>
+    <% end -%>
+    <% if @disable_ssl_verification -%>
+    <string>-disableSslVerification</string>
+    <% end -%>
+    <% if @delete_existing_clients -%>
+    <string>-deleteExistingClients</string>
+    <% end -%>
+    <% if @description -%>
+    <string>-description</string>
+    <string><%= @description -%></string>
+    <% end -%>
+    <% if @autodiscoveryaddress -%>
+    <string>-autoDiscoveryAddress</string>
+    <string><%= @autodiscoveryaddress -%></string>
+    <% end -%>
+    <% if @_real_tool_locations -%>
+    <% @_real_tool_locations.each do |location| -%>
+    <string>-toolLocation</string>
+    <string><%= location -%></string>
+    <% end -%>
+    <% end -%>
+    <% if @_real_swarm_client_args -%>
+    <string><%= @_real_swarm_client_args -%></string>
+    <% end -%>
   </array>
   <key>KeepAlive</key>
   <true/>

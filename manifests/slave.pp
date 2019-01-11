@@ -256,14 +256,6 @@ class jenkins::slave (
       $defaults_group   = 'wheel'
       $manage_user_home = false
 
-      file { "${slave_home}/start-slave.sh":
-        ensure  => 'file',
-        content => template("${module_name}/start-slave.sh.erb"),
-        mode    => '0755',
-        owner   => 'root',
-        group   => 'wheel',
-      }
-
       file { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist':
         ensure  => 'file',
         content => template("${module_name}/org.jenkins-ci.slave.jnlp.plist.erb"),
