@@ -258,7 +258,7 @@ class jenkins::slave (
 
       file { '/Library/LaunchDaemons/org.jenkins-ci.slave.jnlp.plist':
         ensure  => 'file',
-        content => template("${module_name}/org.jenkins-ci.slave.jnlp.plist.erb"),
+        content => template("${module_name}/org.jenkins-ci.slave.jnlp.plist.epp"),
         mode    => '0644',
         owner   => 'root',
         group   => 'wheel',
