@@ -37,7 +37,8 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
               :FileCredentialsImpl,
               :AWSCredentialsImpl,
               :GitLabApiTokenImpl,
-              :GoogleRobotPrivateKeyCredentials)
+              :GoogleRobotPrivateKeyCredentials,
+              :BrowserStackCredentials)
   end
 
   newproperty(:description) do
@@ -46,7 +47,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   end
 
   newproperty(:username) do
-    desc 'username for credentials - UsernamePasswordCredentialsImpl, CertificateCredentialsImpl'
+    desc 'username for credentials - UsernamePasswordCredentialsImpl, CertificateCredentialsImpl, BrowserStackCredentials'
   end
 
   newproperty(:password) do
@@ -58,7 +59,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   end
 
   newproperty(:access_key) do
-    desc 'AWS access key - AWSCredentialsImpl'
+    desc 'AWS access key - AWSCredentialsImpl, BrowserStackCredentials'
   end
 
   newproperty(:secret_key) do

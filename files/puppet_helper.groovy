@@ -513,6 +513,11 @@ class Actions {
           info['api_token'] = cred.apiToken.plainText
           info['description'] = cred.description
           break
+        case 'com.browserstack.automate.ci.jenkins.BrowserStackCredentials':
+          info['description'] = cred.description
+          info['username'] = cred.getUsername()
+          info['access_key'] = cred.getDecryptedAccesskey()
+          break
         case 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl':
           info['description'] = cred.description
           info['secret'] = cred.secret.plainText
@@ -613,6 +618,18 @@ class Actions {
           key,
           conf['passphrase'],
           conf['description']
+        )
+        break
+      case 'BrowserStackCredentials':
+        util.requirePlugin('browserstack-integration')
+
+        cred = this.class.classLoader.loadClass('com.browserstack.automate.ci.jenkins.BrowserStackCredentials').newInstance(
+          // Always uses global scope.
+          //CredentialsScope."${conf['scope']}",
+          conf['id'],
+          conf['description'],
+          conf['username'],
+          conf['access_key']
         )
         break
       case 'StringCredentialsImpl':
