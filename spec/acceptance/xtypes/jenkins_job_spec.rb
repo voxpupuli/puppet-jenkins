@@ -81,14 +81,15 @@ EOS
     end # 'present' do
 
     context 'absent' do
-      it 'works with no errors' do
+      it 'works with no errors and idempotently' do
         pp = base_manifest + <<-EOS
           jenkins_job { 'foo':
             ensure => absent,
           }
         EOS
 
-        apply2(pp)
+        apply(pp, catch_failures: true)
+        apply(pp, catch_changes: true)
       end
 
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
@@ -151,14 +152,15 @@ EOS
       end # create
 
       context 'delete' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = manifest + <<-EOS
             jenkins_job { 'foo': ensure => absent }
             jenkins_job { 'foo/bar': ensure => absent }
             jenkins_job { 'foo/bar/baz': ensure => absent }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         %w[
