@@ -6,7 +6,7 @@ describe 'jenkins_credentials' do
   context 'ensure =>' do
     context 'present' do
       context 'UsernamePasswordCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins_credentials { '9b07d668-a87e-4877-9407-ae05056e32ac':
               ensure      => 'present',
@@ -19,7 +19,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -31,7 +32,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'ConduitCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('puppet_helper.groovy implementation missing, see https://github.com/jenkinsci/puppet-jenkins/issues/753')
           pp = base_manifest + <<-EOS
             jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
@@ -44,8 +45,10 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
+
         # XXX need to properly compare the XML doc
         # trying to match anything other than the id this way might match other
         # credentials
@@ -58,7 +61,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'BasicSSHUserPrivateKey' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'ssh-credentials': }
 
@@ -74,7 +77,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -86,7 +90,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'StringCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,
@@ -102,7 +106,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -114,7 +119,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'FileCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,
@@ -131,7 +136,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -143,7 +149,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'AWSCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
@@ -165,7 +171,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -180,7 +187,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'GitLabApiTokenImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             package { 'git': }
@@ -210,7 +217,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -225,7 +233,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'GoogleRobotPrivateKeyCredentials with json_key' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
@@ -247,7 +255,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -262,7 +271,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'GoogleRobotPrivateKeyCredentials with email_address and p12_key' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
@@ -280,7 +289,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -295,7 +305,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'BrowserStackCredentials' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
@@ -316,7 +326,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -333,7 +344,7 @@ describe 'jenkins_credentials' do
 
     context 'absent' do
       context 'StringCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials': }
 
@@ -347,7 +358,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
@@ -359,7 +371,7 @@ describe 'jenkins_credentials' do
       end
 
       context 'FileCredentialsImpl' do
-        it 'works with no errors' do
+        it 'works with no errors and idempotently' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { 'plain-credentials':
               pin => true,
@@ -376,7 +388,8 @@ describe 'jenkins_credentials' do
             }
           EOS
 
-          apply2(pp)
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
         end
 
         describe file('/var/lib/jenkins/credentials.xml') do
