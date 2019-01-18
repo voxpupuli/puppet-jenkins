@@ -4,13 +4,11 @@ describe 'jenkins::slave class' do
   include_context 'jenkins'
 
   context 'default parameters' do
-    it 'works with no errors' do
-      pp = <<-EOS
-        include ::jenkins::slave
-      EOS
+    pp = <<-EOS
+      include ::jenkins::slave
+    EOS
 
-      apply2(pp)
-    end
+    apply2(pp)
 
     if $systemd
       describe file('/etc/systemd/system/jenkins-slave.service') do
@@ -60,16 +58,14 @@ describe 'jenkins::slave class' do
     end
 
     context 'ui_user/ui_pass' do
-      it 'works with no errors' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            ui_user => 'imauser',
-            ui_pass => 'imapass',
-          }
-        EOS
+      pp = <<-EOS
+        class { ::jenkins::slave:
+          ui_user => 'imauser',
+          ui_pass => 'imapass',
+        }
+      EOS
 
-        apply2(pp)
-      end
+      apply2(pp)
 
       describe process('java') do
         its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -81,15 +77,13 @@ describe 'jenkins::slave class' do
 
     context 'disable_clients_unique_id' do
       context 'true' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              disable_clients_unique_id => true,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            disable_clients_unique_id => true,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -98,15 +92,13 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              disable_clients_unique_id => false,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            disable_clients_unique_id => false,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -117,15 +109,13 @@ describe 'jenkins::slave class' do
 
     context 'disable_ssl_verification' do
       context 'true' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              disable_ssl_verification => true,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            disable_ssl_verification => true,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -134,15 +124,13 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              disable_ssl_verification => false,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            disable_ssl_verification => false,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -153,15 +141,13 @@ describe 'jenkins::slave class' do
 
     context 'delete_existing_clients' do
       context 'true' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              delete_existing_clients => true,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            delete_existing_clients => true,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -170,15 +156,13 @@ describe 'jenkins::slave class' do
       end # true
 
       context 'false' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              delete_existing_clients => false,
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            delete_existing_clients => false,
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -189,15 +173,13 @@ describe 'jenkins::slave class' do
 
     context 'labels' do
       context 'single label in string' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              labels => 'foo',
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            labels => 'foo',
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -206,15 +188,13 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in string' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              labels => 'foo bar baz',
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            labels => 'foo bar baz',
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -223,15 +203,13 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in array' do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              labels => ['foo', 'bar', 'baz'],
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            labels => ['foo', 'bar', 'baz'],
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -244,15 +222,13 @@ describe 'jenkins::slave class' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
 
       context tool_locations do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              tool_locations => '#{tool_locations}',
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            tool_locations => '#{tool_locations}',
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -266,15 +242,13 @@ describe 'jenkins::slave class' do
       tunnel = 'localhost:9000'
 
       context tunnel do
-        it 'works with no errors' do
-          pp = <<-EOS
-            class { ::jenkins::slave:
-              tunnel => '#{tunnel}',
-            }
-          EOS
+        pp = <<-EOS
+          class { ::jenkins::slave:
+            tunnel => '#{tunnel}',
+          }
+        EOS
 
-          apply2(pp)
-        end
+        apply2(pp)
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }

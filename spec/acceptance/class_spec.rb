@@ -4,16 +4,14 @@ describe 'jenkins class' do
   include_context 'jenkins'
 
   context 'default parameters' do
-    it 'works with no errors' do
-      pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-        cli               => true,
-      }
-      EOS
+    pp = <<-EOS
+    class {'jenkins':
+      cli_remoting_free => true,
+      cli               => true,
+    }
+    EOS
 
-      apply2(pp)
-    end
+    apply2(pp)
 
     describe port(8080) do
       it {
@@ -66,16 +64,14 @@ describe 'jenkins class' do
   end # default parameters
 
   context 'executors' do
-    it 'works with no errors' do
-      pp = <<-EOS
-      class {'jenkins':
-        executors         => 42,
-        cli_remoting_free => true,
-      }
-      EOS
+    pp = <<-EOS
+    class {'jenkins':
+      executors         => 42,
+      cli_remoting_free => true,
+    }
+    EOS
 
-      apply2(pp)
-    end
+    apply2(pp)
 
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to
@@ -94,16 +90,14 @@ describe 'jenkins class' do
   end # executors
 
   context 'slaveagentport' do
-    it 'works with no errors' do
-      pp = <<-EOS
-        class {'jenkins':
-          slaveagentport    => 7777,
-          cli_remoting_free => true,
-        }
-        EOS
+    pp = <<-EOS
+      class {'jenkins':
+        slaveagentport    => 7777,
+        cli_remoting_free => true,
+      }
+      EOS
 
-      apply2(pp)
-    end
+    apply2(pp)
 
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to

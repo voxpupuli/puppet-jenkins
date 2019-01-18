@@ -62,8 +62,12 @@ end
 
 # Run it twice and test for idempotency
 def apply2(pp)
-  apply(pp, catch_failures: true)
-  apply(pp, catch_changes: true)
+  it 'works with no error' do
+    apply_manifest(pp, catch_failures: true)
+  end
+  it 'works idempotently' do
+    apply_manifest(pp, catch_changes: true)
+  end
 end
 
 # probe stolen from:
