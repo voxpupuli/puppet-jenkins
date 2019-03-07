@@ -87,13 +87,15 @@
 #   can be a String, or an Array.
 #
 # [*proxy_server*]
-#
 #   Serves the same function as `::jenkins::proxy_server` but is an independent
 #   parameter so the `::jenkins` class does not need to be the catalog for
 #   slave only nodes.
 #
 # [*swarm_client_args*]
 #   Swarm client arguments to add to slave command line. More info: https://github.com/jenkinsci/swarm-plugin/blob/master/client/src/main/java/hudson/plugins/swarm/Options.java
+#
+# [*java_cmd*]
+#   Path to the java command in ${defaults_location}/jenkins-slave. Defaults to '/usr/bin/java'
 #
 
 # === Examples
@@ -140,6 +142,7 @@ class jenkins::slave (
   Any $java_args                          = undef,
   Any $swarm_client_args                  = undef,
   Boolean $delete_existing_clients        = false,
+  Any $java_cmd                           = '/usr/bin/java',
 ) inherits jenkins::params {
 
   if versioncmp($version, '3.0') < 0 {
@@ -156,7 +159,7 @@ class jenkins::slave (
   $quoted_ui_pass = shellquote($ui_pass)
 
   if $labels {
-    if is_array($labels) {
+    if $labels =~ Array {
       $_combined_labels = hiera_array('jenkins::slave::labels', $labels)
       $_real_labels = join($_combined_labels, ' ')
     }
@@ -166,7 +169,7 @@ class jenkins::slave (
   }
 
   if $java_args {
-    if is_array($java_args) {
+    if $java_args =~ Array {
       $_combined_java_args = hiera_array('jenkins::slave::java_args', $java_args)
       $_real_java_args = join($_combined_java_args, ' ')
     }
@@ -176,7 +179,7 @@ class jenkins::slave (
   }
 
   if $swarm_client_args {
-    if is_array($swarm_client_args) {
+    if $swarm_client_args =~ Array {
       $_combined_swarm_client_args = hiera_array('jenkins::slave::swarm_client_args', $swarm_client_args)
       $_real_swarm_client_args = join($_combined_swarm_client_args, ' ')
     }

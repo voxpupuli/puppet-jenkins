@@ -1,4 +1,6 @@
+# lint:ignore:autoloader_layout
 class jenkins::plugin::git (
+# lint:endignore
   $version            = 0,
   $manage_config      = false,
   $config_filename    = 'hudson.plugins.git.GitSCM.xml',

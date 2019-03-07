@@ -1,15 +1,15 @@
 fixtures:
   repositories:
-    apt:
-      repo: "https://github.com/puppetlabs/puppetlabs-apt"
-      ref: "4.1.0"
-    stdlib:
-      repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
-      ref: "4.18.0"
+    apt: "https://github.com/puppetlabs/puppetlabs-apt"
+    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib"
     java: "https://github.com/puppetlabs/puppetlabs-java"
     zypprepo: "https://github.com/voxpupuli/puppet-zypprepo.git"
     archive: "https://github.com/voxpupuli/puppet-archive.git"
     systemd: "https://github.com/camptocamp/puppet-systemd"
     transition: "https://github.com/puppetlabs/puppetlabs-transition"
-  symlinks:
-    "jenkins": "#{source_dir}"
+    yumrepo_core:
+      repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
+      puppet_version: ">= 6.0.0"
+    augeas_core:
+      repo: https://github.com/puppetlabs/puppetlabs-augeas_core.git
+      puppet_version: ">= 6.0.0"

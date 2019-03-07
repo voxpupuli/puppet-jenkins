@@ -46,7 +46,7 @@ class jenkins::config {
       'purge'   => true,
       'recurse' => true,
       'force'   => true,
-      'notify'  => Service['jenkins'],
+      'notify'  => Class['::jenkins::service'],
     }),
     default => $dir_params,
   }

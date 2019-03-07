@@ -39,20 +39,18 @@ describe 'jenkins class', order: :defined do
   end
 
   context 'default parameters' do
-    it 'works with no errors' do
-      pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-      }
+    pp = <<-EOS
+    class {'jenkins':
+      cli_remoting_free => true,
+    }
 
-      jenkins::plugin {'git-plugin':
-        name    => 'git',
-        version => '2.3.4',
-      }
-      EOS
+    jenkins::plugin {'git-plugin':
+      name    => 'git',
+      version => '2.3.4',
+    }
+    EOS
 
-      apply2(pp)
-    end
+    apply2(pp)
 
     it_behaves_like 'has_git_plugin'
   end
@@ -70,24 +68,32 @@ describe 'jenkins class', order: :defined do
         version => '2.3.4',
       }
       EOS
-      apply2(pp)
+
+      apply(pp, catch_failures: true)
+      apply(pp, catch_changes: true)
     end
 
     context 'downgrade' do
       git_version =
         it 'downgrades git version' do
           pp = <<-EOS
-        class {'jenkins':
-          cli_remoting_free => true,
-          purge_plugins     => true,
-        }
+          package{'unzip':
+            ensure => present
+          }
+          class {'jenkins':
+            cli_remoting_free => true,
+            purge_plugins     => true,
+          }
 
-        jenkins::plugin {'git-plugin':
-          name    => 'git',
-          version => '1.0',
-        }
-        EOS
-          apply2(pp)
+          jenkins::plugin {'git-plugin':
+            name    => 'git',
+            version => '1.0',
+          }
+          EOS
+
+          apply(pp, catch_failures: true)
+          apply(pp, catch_changes: true)
+
           # Find the version of the installed git plugin
           git_version = shell("unzip -p #{$pdir}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
           git_version.should eq('1.0')
@@ -113,7 +119,8 @@ describe 'jenkins class', order: :defined do
         }
         EOS
 
-        apply2(pp)
+        apply(pp, catch_failures: true)
+        apply(pp, catch_changes: true)
       end
 
       it_behaves_like 'has_git_plugin'
@@ -141,7 +148,8 @@ describe 'jenkins class', order: :defined do
         }
         EOS
 
-        apply2(pp)
+        apply(pp, catch_failures: true)
+        apply(pp, catch_changes: true)
       end
 
       it_behaves_like 'has_git_plugin'

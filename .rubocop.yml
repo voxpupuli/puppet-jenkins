@@ -263,7 +263,7 @@ Metrics/CyclomaticComplexity:
   Enabled: False
 
 Style/ConstantName:
-  Enabled: True
+  Enabled: False
 
 Style/Documentation:
   Enabled: False
@@ -333,7 +333,7 @@ Style/TrailingCommaInLiteral:
   Enabled: True
 
 Style/GlobalVars:
-  Enabled: True
+  Enabled: False
 
 Style/GuardClause:
   Enabled: True
@@ -544,4 +544,10 @@ Style/FormatStringToken:
 # This is useful, but sometimes a little too picky about where unit tests files
 # are located.
 RSpec/FilePath:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleExpectations:
   Enabled: false

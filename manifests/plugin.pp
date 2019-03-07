@@ -91,7 +91,7 @@ define jenkins::plugin(
     fail("unsupported plugin extension in source url: ${download_url}")
   }
 
-  $installed_plugins = $::jenkins_plugins ? {
+  $installed_plugins = fact('jenkins_plugins') ? {
     undef   => [],
     default => strip(split($::jenkins_plugins, ',')),
   }
@@ -138,7 +138,7 @@ define jenkins::plugin(
       group   => $::jenkins::group,
       mode    => '0644',
       require => Archive[$plugin],
-      notify  => Service['jenkins'],
+      notify  => Class['::jenkins::service'],
     }
 
     $pinned_ensure = $pin ? {
@@ -151,7 +151,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       require => Archive[$plugin],
-      notify  => Service['jenkins'],
+      notify  => Class['::jenkins::service'],
     }
 
     if $digest_string {
@@ -177,7 +177,7 @@ define jenkins::plugin(
       cleanup         => false,
       extract         => false,
       require         => File[$::jenkins::plugin_dir],
-      notify          => Service['jenkins'],
+      notify          => Class['::jenkins::service'],
     }
     $archive_require = Archive[$plugin]
   } else {
@@ -189,7 +189,7 @@ define jenkins::plugin(
     group   => $::jenkins::group,
     mode    => '0644',
     require => $archive_require,
-    before  => Service['jenkins'],
+    before  => Class['::jenkins::service'],
   }
 
   if $manage_config {
@@ -203,7 +203,7 @@ define jenkins::plugin(
       owner   => $::jenkins::user,
       group   => $::jenkins::group,
       mode    => '0644',
-      notify  => Service['jenkins'],
+      notify  => Class['::jenkins::service'],
     }
   }
 }

@@ -1,28 +1,40 @@
-require 'rspec'
-require 'rspec/its'
-require 'puppetlabs_spec_helper/module_spec_helper'
-
-ENV['STRICT_VARIABLES'] = 'no'
-
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/fixtures/modules/archive/lib'))
-
-require 'spec/helpers/rspechelpers'
-
+# This file is managed via modulesync
+# https://github.com/voxpupuli/modulesync
+# https://github.com/voxpupuli/modulesync_config
 RSpec.configure do |c|
-  # Override puppetlabs_spec_helper's stupid setting of mock_with to :mocha,
-  # which is a totally piece of garbage mocking library
   c.mock_with :rspec
-  c.deprecation_stream = '/dev/null'
-
-  c.include(Jenkins::RSpecHelpers)
 end
 
-# a simple class to inject :undef
-# https://groups.google.com/d/msg/puppet-users/6nL2eROH8is/UDqRNu34lB0J
-class Undef
-  def inspect
-    'undef'
+require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
+include RspecPuppetFacts
+
+if Dir.exist?(File.expand_path('../../lib', __FILE__))
+  require 'coveralls'
+  require 'simplecov'
+  require 'simplecov-console'
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console
+  ]
+  SimpleCov.start do
+    track_files 'lib/**/*.rb'
+    add_filter '/spec'
+    add_filter '/vendor'
+    add_filter '/.vendor'
   end
 end
+
+RSpec.configure do |c|
+  default_facts = {}
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_facts.yml', __FILE__))
+  default_facts.merge!(YAML.load(File.read(File.expand_path('../default_module_facts.yml', __FILE__)))) if File.exist?(File.expand_path('../default_module_facts.yml', __FILE__))
+  c.default_facts = default_facts
+
+  # Coverage generation
+  c.after(:suite) do
+    RSpec::Puppet::Coverage.report!
+  end
+end
+
+require 'rspec/its'

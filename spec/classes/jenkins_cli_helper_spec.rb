@@ -12,6 +12,7 @@ describe 'jenkins::cli_helper', type: :class do
 
   describe 'relationships' do
     it do
+      is_expected.to contain_class('jenkins::cli')
       is_expected.to contain_class('jenkins::cli_helper').
         that_requires('Class[jenkins::cli]')
     end
@@ -28,15 +29,5 @@ describe 'jenkins::cli_helper', type: :class do
       group: 'jenkins',
       mode: '0444'
     )
-  end
-
-  context 'should accept the ssh_keyfile parameter' do
-    let(:params) do
-      {
-        ssh_keyfile: '/tmp/rspec'
-      }
-    end
-
-    it { is_expected.to contain_class 'jenkins::cli_helper' }
   end
 end

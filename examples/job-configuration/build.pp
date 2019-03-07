@@ -1,4 +1,6 @@
+# lint:ignore:autoloader_layout
 class jenkins::job::build(
+# lint:endignore
   $config   = undef,
   $jobname  = $title,
   $enabled  = 1,
@@ -12,9 +14,9 @@ class jenkins::job::build(
   }
 
   jenkins::job { 'build':
-    config  => $real_content,
+    ensure  => $ensure,
     jobname => $jobname,
     enabled => $enabled,
-    ensure  => $ensure,
+    config  => $real_content,
   }
 }
