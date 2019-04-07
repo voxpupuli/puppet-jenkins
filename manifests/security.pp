@@ -19,7 +19,7 @@
 class jenkins::security (
   String $security_model,
 ){
-  include ::jenkins::cli_helper
+  include jenkins::cli_helper
 
   Class['jenkins::cli_helper']
     -> Class['jenkins::security']

@@ -199,7 +199,7 @@ class jenkins::slave (
   if $install_java and ($::osfamily != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
-    include ::java
+    include java
     Class['java'] -> Service['jenkins-slave']
   }
 
