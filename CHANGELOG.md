@@ -10,7 +10,7 @@ This is a manually kept file, and may not entirely reflect reality
 * [#365](https://github.com/jenkinsci/puppet-jenkins/issues/365) - jenkins user and jenkins_home directory not configurable
 * [#367](https://github.com/jenkinsci/puppet-jenkins/pull/367) - [puppet-jenkins#366] Replace -toolLocations with --toolLocation
 * [#371](https://github.com/jenkinsci/puppet-jenkins/issues/371) - slave:  INFO: Failure authenticating with BASIC 'Jenkins'  401
-* [#372](https://github.com/jenkinsci/puppet-jenkins/issues/372) - Slave: swarm-client requires a cashe directory /home/jenkins-slave/.jenkins/ 
+* [#372](https://github.com/jenkinsci/puppet-jenkins/issues/372) - Slave: swarm-client requires a cashe directory /home/jenkins-slave/.jenkins/
 * [#374](https://github.com/jenkinsci/puppet-jenkins/pull/374) - add single quotes for credentials
 * [#376](https://github.com/jenkinsci/puppet-jenkins/pull/376) - Add template in the jenkins::job
 * [#377](https://github.com/jenkinsci/puppet-jenkins/pull/377) - Making the management of the daemon package optional
