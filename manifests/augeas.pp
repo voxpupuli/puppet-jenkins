@@ -45,8 +45,8 @@ define jenkins::augeas (
   Boolean $restart                                 = false,
   Boolean $show_diff                               = true,
 ) {
-  include ::jenkins
-  include ::jenkins::cli
+  include jenkins
+  include jenkins::cli
 
 
   case $plugin {

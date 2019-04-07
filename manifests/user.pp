@@ -24,7 +24,7 @@ define jenkins::user (
   Enum['present', 'absent'] $ensure = 'present',
 ){
 
-  include ::jenkins::cli_helper
+  include jenkins::cli_helper
 
   Class['jenkins::cli_helper']
     -> Jenkins::User[$title]

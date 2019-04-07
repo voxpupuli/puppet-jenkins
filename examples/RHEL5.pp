@@ -13,7 +13,7 @@ node default {
     ensure => present,
     source => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
   }
-  -> class {'::jenkins':
+  -> class {'jenkins':
     install_java => false,
     cli          => true,
   }

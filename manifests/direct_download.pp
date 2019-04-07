@@ -7,7 +7,7 @@ class jenkins::direct_download {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  include ::jenkins::proxy
+  include jenkins::proxy
 
   # directory for temp files
   file { $::jenkins::package_cache_dir:

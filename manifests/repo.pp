@@ -2,7 +2,7 @@
 # jenkins::repo handles pulling in the platform specific repo classes
 #
 class jenkins::repo {
-  include ::stdlib
+  include stdlib
   anchor { 'jenkins::repo::begin': }
   anchor { 'jenkins::repo::end': }
 
@@ -14,21 +14,21 @@ class jenkins::repo {
     case $::osfamily {
 
       'RedHat', 'Linux': {
-        class { '::jenkins::repo::el': }
+        class { 'jenkins::repo::el': }
         Anchor['jenkins::repo::begin']
           -> Class['jenkins::repo::el']
           -> Anchor['jenkins::repo::end']
       }
 
       'Debian': {
-        class { '::jenkins::repo::debian': }
+        class { 'jenkins::repo::debian': }
         Anchor['jenkins::repo::begin']
           -> Class['jenkins::repo::debian']
           -> Anchor['jenkins::repo::end']
       }
 
       'Suse' : {
-        class { '::jenkins::repo::suse': }
+        class { 'jenkins::repo::suse': }
         Anchor['jenkins::repo::begin']
           -> Class['jenkins::repo::suse']
           -> Anchor['jenkins::repo::end']

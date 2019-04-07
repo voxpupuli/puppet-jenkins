@@ -24,8 +24,8 @@ define jenkins::credentials (
   String $uuid                      = '',
 ){
 
-  include ::jenkins
-  include ::jenkins::cli_helper
+  include jenkins
+  include jenkins::cli_helper
 
   Class['jenkins::cli_helper']
     -> Jenkins::Credentials[$title]

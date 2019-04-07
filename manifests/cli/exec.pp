@@ -8,9 +8,9 @@ define jenkins::cli::exec(
   Variant[String, Array] $command = $title,
 ) {
 
-  include ::jenkins
-  include ::jenkins::cli_helper
-  include ::jenkins::cli::reload
+  include jenkins
+  include jenkins::cli_helper
+  include jenkins::cli::reload
 
   Class['jenkins::cli_helper']
     -> Jenkins::Cli::Exec[$title]

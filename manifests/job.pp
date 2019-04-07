@@ -26,7 +26,7 @@ define jenkins::job(
     warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
 
-  include ::jenkins::cli
+  include jenkins::cli
 
   Class['jenkins::cli']
     -> Jenkins::Job[$title]
