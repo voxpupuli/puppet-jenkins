@@ -251,7 +251,8 @@ describe 'jenkins_credentials' do
                 "client_email": "random@developer.gserviceaccount.com",
                 "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
               }
-              | END,
+              | END
+              ,
             }
           EOS
 
