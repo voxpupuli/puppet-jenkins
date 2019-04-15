@@ -61,7 +61,7 @@ class jenkins::params {
       # it is part of the public interface to ::jenkins; it needs to be
       # maintained until at least a major version bump.  It has been somewhat
       # repurposed as a flag for specific systemd support.
-      if $::systemd {
+      if $facts['systemd'] {
         $service_provider = 'systemd'
       } else {
         $service_provider = undef
