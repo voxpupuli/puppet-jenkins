@@ -120,6 +120,7 @@ class jenkins::slave (
   Optional[String] $autodiscoveryaddress  = undef,
   Optional[String] $ui_user               = undef,
   Optional[String] $ui_pass               = undef,
+  Optional[String] $ui_pass_file          = undef,
   Optional[String] $tool_locations        = undef,
   Optional[String] $source                = undef,
   Optional[String] $proxy_server          = undef,
@@ -157,6 +158,7 @@ class jenkins::slave (
   }
   $quoted_ui_user = shellquote($ui_user)
   $quoted_ui_pass = shellquote($ui_pass)
+  $quoted_ui_pass_file = shellquote($ui_pass_file)
 
   if $labels {
     if $labels =~ Array {
