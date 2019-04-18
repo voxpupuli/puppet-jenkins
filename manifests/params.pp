@@ -8,7 +8,7 @@ class jenkins::params {
   $service_enable        = true
   $service_ensure        = 'running'
   $install_java          = true
-  $swarm_version         = '2.2'
+  $swarm_version         = '3.15'
   $default_plugins_host  = 'https://updates.jenkins.io'
   $port                  = 8080
   $prefix                = ''

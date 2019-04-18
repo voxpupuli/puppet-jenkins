@@ -31,7 +31,7 @@ SLAVE_ARGS+=(-jar "$JENKINS_SLAVE_JAR")
   SLAVE_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
 
 [[ -n "$JENKINS_PASSWORD_FILE" ]] &&
-  SLAVE_ARGS+=(-passwordFile JENKINS_PASSWORD_FILE)
+  SLAVE_ARGS+=(-passwordFile "$JENKINS_PASSWORD_FILE")
 
 [[ -n "$CLIENT_NAME" ]] &&
   SLAVE_ARGS+=(-name "$CLIENT_NAME")
