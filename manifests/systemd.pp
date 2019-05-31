@@ -12,7 +12,7 @@ define jenkins::systemd(
   }
   $service = $name
 
-  include ::systemd
+  include systemd
 
   $sysv_init = "/etc/init.d/${service}"
 

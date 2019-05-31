@@ -21,7 +21,7 @@ class jenkins::cli::config(
   Optional[String] $ssh_private_key_content       = undef,
 ) {
 
-  if str2bool($::is_pe) {
+  if str2bool($facts['is_pe']) {
     $gem_provider = 'pe_gem'
   } elsif $::puppetversion
       and (versioncmp($::puppetversion, '4.0.0') >= 0)

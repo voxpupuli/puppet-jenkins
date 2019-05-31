@@ -66,7 +66,7 @@ define jenkins::plugin(
     warning('jenkins::plugin::create_user is deprecated and has no effect')
   }
 
-  include ::jenkins
+  include jenkins
 
   if $version {
     $plugins_host = $update_url ? {
