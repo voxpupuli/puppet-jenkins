@@ -1,7 +1,7 @@
 {
   "name": "puppet-jenkins",
-  "version": "1.7.0",
-  "author": "R. Tyler Croy <tyler@monkeypox.org>, Joshua Hoblitt <josh@hoblitt.com>",
+  "version": "2.0.0",
+  "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
   "source": "https://github.com/voxpupuli/puppet-jenkins",
