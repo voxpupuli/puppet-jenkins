@@ -2,13 +2,10 @@
 # jenkins::repo handles pulling in the platform specific repo classes
 #
 class jenkins::repo {
-  include stdlib
   anchor { 'jenkins::repo::begin': }
   anchor { 'jenkins::repo::end': }
 
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   if ( $::jenkins::repo ) {
     case $::osfamily {

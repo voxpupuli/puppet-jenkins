@@ -3,10 +3,7 @@
 # Command Jenkins to reload config.xml via the CLI.
 #
 class jenkins::cli::reload {
-
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   $jar_file = $jenkins::cli::jar
 

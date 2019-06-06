@@ -1,9 +1,6 @@
 #
 class jenkins::proxy {
-
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   # Bring variables from Class['::jenkins'] into local scope.
   $proxy_host = $::jenkins::proxy_host

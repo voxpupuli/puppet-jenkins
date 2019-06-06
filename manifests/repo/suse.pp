@@ -2,10 +2,7 @@
 #
 class jenkins::repo::suse
 {
-
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   if $::jenkins::lts {
     zypprepo {'jenkins':

@@ -18,7 +18,7 @@ describe 'jenkins', type: :class do
       context 'repo::debian' do
         shared_examples 'an apt catalog' do
           it { is_expected.to contain_class('apt') }
-          it { is_expected.to contain_apt__source('jenkins').that_notifies('Exec[apt_update]') }
+          it { is_expected.to contain_apt__source('jenkins') }
         end
 
         describe 'default' do
