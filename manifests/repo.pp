@@ -1,34 +1,25 @@
 #
 # jenkins::repo handles pulling in the platform specific repo classes
 #
-class jenkins::repo {
-  anchor { 'jenkins::repo::begin': }
-  anchor { 'jenkins::repo::end': }
-
+class jenkins::repo(
+  Stdlib::Httpurl $base_url = 'https://pkg.jenkins.io',
+  String $gpg_key_filename = 'jenkins.io.key',
+) {
   assert_private()
 
-  if ( $::jenkins::repo ) {
+  if $::jenkins::repo {
     case $::osfamily {
 
       'RedHat', 'Linux': {
-        class { 'jenkins::repo::el': }
-        Anchor['jenkins::repo::begin']
-          -> Class['jenkins::repo::el']
-          -> Anchor['jenkins::repo::end']
+        contain jenkins::repo::el
       }
 
       'Debian': {
-        class { 'jenkins::repo::debian': }
-        Anchor['jenkins::repo::begin']
-          -> Class['jenkins::repo::debian']
-          -> Anchor['jenkins::repo::end']
+        contain jenkins::repo::debian
       }
 
       'Suse' : {
-        class { 'jenkins::repo::suse': }
-        Anchor['jenkins::repo::begin']
-          -> Class['jenkins::repo::suse']
-          -> Anchor['jenkins::repo::end']
+        contain jenkins::repo::suse
       }
 
       default: {
