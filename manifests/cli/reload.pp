@@ -3,8 +3,12 @@
 class jenkins::cli::reload {
   assert_private()
 
-  $cli_tries = $jenkins::cli_tries
-  $cli_try_sleep = $jenkins::cli_try_sleep
+  if $caller_module_name != $module_name {
+    fail("Use of private class ${name} by ${caller_module_name}")
+  }
+
+  $cli_tries = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
   $jar_file = $jenkins::cli::jar
 
   # Reload all Jenkins config from disk (only when notified)
