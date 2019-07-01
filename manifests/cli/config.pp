@@ -60,7 +60,7 @@ class jenkins::cli::config(
     }
   }
 
-  # We manage the password file, to avoid printing username/password in the 
+  # We manage the password file, to avoid printing username/password in the
   # ps ax output.
   # If file exists, we assume the user manages permissions and content
   if $cli_username and $cli_password and !$cli_password_file_exists {
