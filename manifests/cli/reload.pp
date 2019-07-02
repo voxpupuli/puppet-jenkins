@@ -5,14 +5,16 @@
 class jenkins::cli::reload {
   assert_private()
 
+  $cli_tries = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
   $jar_file = $jenkins::cli::jar
 
   # Reload all Jenkins config from disk (only when notified)
   exec { 'reload-jenkins':
     command     => "${::jenkins::cli::cmd} reload-configuration",
     path        => ['/bin', '/usr/bin'],
-    tries       => 10,
-    try_sleep   => 2,
+    tries       => $cli_tries,
+    try_sleep   => $cli_try_sleep,
     refreshonly => true,
     require     => File[$jar_file],
   }

@@ -26,6 +26,8 @@ class jenkins::cli {
   $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
+  $cli_tries = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
 
   # make sure we always call Exec[jenlins-cli] in case
   # the binary does not exist
@@ -66,8 +68,8 @@ class jenkins::cli {
   exec { 'safe-restart-jenkins':
     command     => "${cmd} safe-restart && /bin/sleep 10",
     path        => ['/bin', '/usr/bin'],
-    tries       => 10,
-    try_sleep   => 2,
+    tries       => $cli_tries,
+    try_sleep   => $cli_try_sleep,
     refreshonly => true,
     require     => File[$jar],
   }
