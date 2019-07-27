@@ -21,6 +21,7 @@ group :test do
   gem 'puppet-lint-unquoted_string-check',                          :require => false
   gem 'puppet-lint-variable_contains_upcase',                       :require => false
   gem 'puppet-lint-absolute_classname-check',                       :require => false
+  gem 'puppet-lint-topscope-variable-check',                        :require => false
   gem 'metadata-json-lint',                                         :require => false
   gem 'redcarpet',                                                  :require => false
   gem 'rubocop', '~> 0.49.1',                                       :require => false
