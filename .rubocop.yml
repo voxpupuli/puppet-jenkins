@@ -1,4 +1,3 @@
-inherit_from: .rubocop_todo.yml
 require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 1.9
@@ -14,7 +13,6 @@ AllCops:
     - Rakefile
     - Guardfile
     - Vagrantfile
-    - lib/puppet/jenkins/okjson.rb
 Lint/ConditionPosition:
   Enabled: True
 
@@ -263,7 +261,7 @@ Metrics/CyclomaticComplexity:
   Enabled: False
 
 Style/ConstantName:
-  Enabled: False
+  Enabled: True
 
 Style/Documentation:
   Enabled: False
@@ -333,7 +331,7 @@ Style/TrailingCommaInLiteral:
   Enabled: True
 
 Style/GlobalVars:
-  Enabled: False
+  Enabled: True
 
 Style/GuardClause:
   Enabled: True
@@ -544,10 +542,4 @@ Style/FormatStringToken:
 # This is useful, but sometimes a little too picky about where unit tests files
 # are located.
 RSpec/FilePath:
-  Enabled: false
-
-RSpec/MessageSpies:
-  Enabled: false
-
-RSpec/MultipleExpectations:
   Enabled: false

@@ -7,6 +7,7 @@ end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
+require 'bundler'
 include RspecPuppetFacts
 
 if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
@@ -31,6 +32,7 @@ if Dir.exist?(File.expand_path('../../lib', __FILE__))
     add_filter '/spec'
     add_filter '/vendor'
     add_filter '/.vendor'
+    add_filter Bundler.configured_bundle_path.path
   end
 end
 
