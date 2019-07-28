@@ -16,7 +16,7 @@ class jenkins::cli {
   #
   # As an attempt to preserve backwards compatibility, there are includes and
   # resource relationships being scattered throughout this module.
-  if $::jenkins::manage_service {
+  if $jenkins::manage_service {
     Class['jenkins::service']
       -> Class['jenkins::cli']
         -> Anchor['jenkins::end']
@@ -26,8 +26,8 @@ class jenkins::cli {
   $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
-  $cli_tries = $::jenkins::cli_tries
-  $cli_try_sleep = $::jenkins::cli_try_sleep
+  $cli_tries = $jenkins::cli_tries
+  $cli_try_sleep = $jenkins::cli_try_sleep
 
   # make sure we always call Exec[jenlins-cli] in case
   # the binary does not exist
@@ -42,7 +42,7 @@ class jenkins::cli {
     refreshonly => true,
   }
   # Extract latest CLI in case package is updated / downgraded
-  Package[$::jenkins::package_name] ~> Exec['jenkins-cli']
+  Package[$jenkins::package_name] ~> Exec['jenkins-cli']
 
   file { $jar:
     ensure  => file,
@@ -59,7 +59,7 @@ class jenkins::cli {
       'java',
       "-jar ${jar}",
       "-s http://localhost:${port}${prefix}",
-      $::jenkins::_cli_auth_arg,
+      $jenkins::_cli_auth_arg,
     ]),
     ' '
   )

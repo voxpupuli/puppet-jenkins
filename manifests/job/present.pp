@@ -62,12 +62,12 @@ define jenkins::job::present(
     }
   }
 
-  $job_dir            = "${::jenkins::job_dir}/${jobname}"
+  $job_dir            = "${jenkins::job_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
   # Bring variables from Class['::jenkins'] into local scope.
-  $cli_tries          = $::jenkins::cli_tries
-  $cli_try_sleep   = $::jenkins::cli_try_sleep
+  $cli_tries          = $jenkins::cli_tries
+  $cli_try_sleep   = $jenkins::cli_try_sleep
 
   Exec {
     logoutput   => false,

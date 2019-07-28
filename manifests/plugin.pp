@@ -70,7 +70,7 @@ define jenkins::plugin(
 
   if $version {
     $plugins_host = $update_url ? {
-      undef   => $::jenkins::default_plugins_host,
+      undef   => $jenkins::default_plugins_host,
       default => $update_url,
     }
     $base_url = "${plugins_host}/download/plugins/${name}/${version}/"
@@ -85,7 +85,7 @@ define jenkins::plugin(
   }
   else {
     $plugins_host = $update_url ? {
-      undef   => $::jenkins::default_plugins_host,
+      undef   => $jenkins::default_plugins_host,
       default => $update_url,
     }
     $base_url = "${plugins_host}/latest/"
@@ -112,8 +112,8 @@ define jenkins::plugin(
 
   # create a file resource for the download + unpacked plugin dir to prevent it
   # from being recursively deleted
-  if $::jenkins::purge_plugins {
-    file { "${::jenkins::plugin_dir}/${name}": }
+  if $jenkins::purge_plugins {
+    file { "${jenkins::plugin_dir}/${name}": }
   }
 
   if (empty(grep($installed_plugins, $search))) {
@@ -136,9 +136,9 @@ define jenkins::plugin(
     $inverse_plugin     = "${name}.${inverse_plugin_ext}"
 
     file {[
-      "${::jenkins::plugin_dir}/${inverse_plugin}",
-      "${::jenkins::plugin_dir}/${inverse_plugin}.disabled",
-      "${::jenkins::plugin_dir}/${inverse_plugin}.pinned",
+      "${jenkins::plugin_dir}/${inverse_plugin}",
+      "${jenkins::plugin_dir}/${inverse_plugin}.disabled",
+      "${jenkins::plugin_dir}/${inverse_plugin}.pinned",
     ]:
       ensure => absent,
       before => Archive[$plugin],
@@ -146,10 +146,10 @@ define jenkins::plugin(
 
 
     # Allow plugins that are already installed to be enabled/disabled.
-    file { "${::jenkins::plugin_dir}/${plugin}.disabled":
+    file { "${jenkins::plugin_dir}/${plugin}.disabled":
       ensure  => $enabled_ensure,
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
+      owner   => $jenkins::user,
+      group   => $jenkins::group,
       mode    => '0644',
       require => Archive[$plugin],
       notify  => $notify,
@@ -160,10 +160,10 @@ define jenkins::plugin(
       default => undef,
     }
 
-    file { "${::jenkins::plugin_dir}/${plugin}.pinned":
+    file { "${jenkins::plugin_dir}/${plugin}.pinned":
       ensure  => $pinned_ensure,
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
+      owner   => $jenkins::user,
+      group   => $jenkins::group,
       require => Archive[$plugin],
       notify  => $notify,
     }
@@ -179,15 +179,15 @@ define jenkins::plugin(
     }
 
     exec{"force ${plugin}-${version}":
-      command => "/bin/rm -rf ${::jenkins::plugin_dir}/${plugin}",
+      command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
       source          => $download_url,
-      path            => "${::jenkins::plugin_dir}/${plugin}",
+      path            => "${jenkins::plugin_dir}/${plugin}",
       checksum_verify => $checksum_verify,
       checksum        => $checksum,
       checksum_type   => $checksum_type,
-      proxy_server    => $::jenkins::proxy::url,
+      proxy_server    => $jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
       require         => $plugindir,
@@ -198,9 +198,9 @@ define jenkins::plugin(
     $archive_require = undef
   }
 
-  file { "${::jenkins::plugin_dir}/${plugin}" :
-    owner   => $::jenkins::user,
-    group   => $::jenkins::group,
+  file { "${jenkins::plugin_dir}/${plugin}" :
+    owner   => $jenkins::user,
+    group   => $jenkins::group,
     mode    => '0644',
     require => $archive_require,
     before  => $notify,
@@ -211,11 +211,11 @@ define jenkins::plugin(
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
-    file {"${::jenkins::localstatedir}/${config_filename}":
+    file {"${jenkins::localstatedir}/${config_filename}":
       ensure  => present,
       content => $config_content,
-      owner   => $::jenkins::user,
-      group   => $::jenkins::group,
+      owner   => $jenkins::user,
+      group   => $jenkins::group,
       mode    => '0644',
       notify  => Class['::jenkins::service'],
     }

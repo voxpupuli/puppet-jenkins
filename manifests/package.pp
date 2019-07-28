@@ -7,7 +7,7 @@
 class jenkins::package {
   assert_private()
 
-  package { $::jenkins::package_name:
-    ensure => $::jenkins::version,
+  package { $jenkins::package_name:
+    ensure => $jenkins::version,
   }
 }

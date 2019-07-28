@@ -7,7 +7,7 @@ class jenkins::repo(
 ) {
   assert_private()
 
-  if $::jenkins::repo {
+  if $jenkins::repo {
     case $::osfamily {
 
       'RedHat', 'Linux': {

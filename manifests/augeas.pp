@@ -76,9 +76,9 @@ define jenkins::augeas (
   }
 
   augeas {"jenkins::augeas: ${name}":
-    incl      => "${::jenkins::localstatedir}/${config_filename}",
+    incl      => "${jenkins::localstatedir}/${config_filename}",
     lens      => 'Xml.lns',
-    context   => regsubst("/files${::jenkins::localstatedir}/${config_filename}/${context}", '\/{2,}', '/', 'G'),
+    context   => regsubst("/files${jenkins::localstatedir}/${config_filename}/${context}", '\/{2,}', '/', 'G'),
     notify    => Exec[$notify_exec],
     onlyif    => $onlyif,
     changes   => $changes,
