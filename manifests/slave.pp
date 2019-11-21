@@ -206,7 +206,7 @@ class jenkins::slave (
   # customizations based on the OS family
   case $::osfamily {
     'Debian': {
-      $defaults_location = $::jenkins::params::sysconfdir
+      $defaults_location = $jenkins::params::sysconfdir
 
       ensure_packages(['daemon'])
       Package['daemon'] -> Service['jenkins-slave']
@@ -215,7 +215,7 @@ class jenkins::slave (
       $defaults_location = $slave_home
     }
     default: {
-      $defaults_location = $::jenkins::params::sysconfdir
+      $defaults_location = $jenkins::params::sysconfdir
     }
   }
 

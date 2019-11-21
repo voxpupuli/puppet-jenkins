@@ -14,7 +14,7 @@ define jenkins::sysconfig(
     $notify = undef
   }
   file_line { "Jenkins sysconfig setting ${name}":
-    path   => "${::jenkins::sysconfdir}/jenkins",
+    path   => "${jenkins::sysconfdir}/jenkins",
     line   => "${name}=\"${value}\"",
     match  => "^${name}=",
     notify => $notify,

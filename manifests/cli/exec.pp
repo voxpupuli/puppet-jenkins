@@ -20,7 +20,7 @@ define jenkins::cli::exec(
   $run = join(
     delete_undef_values(
       flatten([
-        $::jenkins::cli_helper::helper_cmd,
+        $jenkins::cli_helper::helper_cmd,
         $command,
       ])
     ),
@@ -28,7 +28,7 @@ define jenkins::cli::exec(
   )
 
   if $unless {
-    $environment_run = [ "HELPER_CMD=eval ${::jenkins::cli_helper::helper_cmd}" ]
+    $environment_run = [ "HELPER_CMD=eval ${jenkins::cli_helper::helper_cmd}" ]
   } else {
     $environment_run = undef
   }
@@ -38,8 +38,8 @@ define jenkins::cli::exec(
     command     => $run,
     environment => $environment_run,
     unless      => $unless,
-    tries       => $::jenkins::cli_tries,
-    try_sleep   => $::jenkins::cli_try_sleep,
+    tries       => $jenkins::cli_tries,
+    try_sleep   => $jenkins::cli_try_sleep,
     notify      => Class['jenkins::cli::reload'],
   }
 }
