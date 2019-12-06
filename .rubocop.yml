@@ -1,6 +1,6 @@
-inherit_from: .rubocop_todo.yml
 require: rubocop-rspec
 AllCops:
+# Puppet Server 5 defaults to jruby 1.7 so TargetRubyVersion must stay at 1.9 until we drop support for puppet 5
   TargetRubyVersion: 1.9
   Include:
     - ./**/*.rb
@@ -262,7 +262,7 @@ Metrics/CyclomaticComplexity:
   Enabled: False
 
 Style/ConstantName:
-  Enabled: False
+  Enabled: True
 
 Style/Documentation:
   Enabled: False
@@ -332,7 +332,7 @@ Style/TrailingCommaInLiteral:
   Enabled: True
 
 Style/GlobalVars:
-  Enabled: False
+  Enabled: True
 
 Style/GuardClause:
   Enabled: True
