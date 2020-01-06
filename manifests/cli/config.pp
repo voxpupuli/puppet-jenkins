@@ -46,7 +46,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $::id == 'root' {
+    if $facts['id'] == 'root' {
       File[$ssh_private_key] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
@@ -69,7 +69,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $::id == 'root' {
+    if $facts['id'] == 'root' {
       File[$cli_password_file] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place

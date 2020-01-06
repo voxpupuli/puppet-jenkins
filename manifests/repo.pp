@@ -8,7 +8,7 @@ class jenkins::repo(
   assert_private()
 
   if $jenkins::repo {
-    case $::osfamily {
+    case $facts['os']['family'] {
 
       'RedHat', 'Linux': {
         contain jenkins::repo::el
@@ -23,7 +23,7 @@ class jenkins::repo(
       }
 
       default: {
-        fail( "Unsupported OS family: ${::osfamily}" )
+        fail( "Unsupported OS family: ${facts['os']['family']}" )
       }
     }
   }

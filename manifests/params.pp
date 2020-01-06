@@ -31,7 +31,7 @@ class jenkins::params {
   ]
   $purge_plugins = false
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'Debian': {
       $repo                 = true
       $libdir               = '/usr/share/jenkins'
