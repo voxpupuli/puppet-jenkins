@@ -369,7 +369,7 @@ You can also specify a UUID to use with the credentials, which will be used to
 identify the credentials from within the job config. This is necessary when setting
 credentials for use with the [git plugin](http://docs.openstack.org/infra/jenkins-job-builder/scm.html#scm.git), for example.
 
-You can either manually generate a UUID from a site like https://www.uuidgenerator.net,
+You can either manually generate a UUID from a site like [UUIDTools.com](https://www.uuidtools.com/generate/v4),
 or use the UUID from an existing user, which is accessible within the URL of the
 Jenkins console when managing an existing user's credentials.
 
