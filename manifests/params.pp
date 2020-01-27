@@ -25,10 +25,10 @@ class jenkins::params {
   $manage_group = true
   $group        = 'jenkins'
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
-  $default_plugins = [
-    'credentials', # required by puppet_helper.groovy
-    'structs', # required by credentials plugin
-  ]
+  $default_plugins = {
+    'credentials' => {}, # required by puppet_helper.groovy
+    'structs' => {}, # required by credentials plugin
+  }
   $purge_plugins = false
 
   case $::osfamily {

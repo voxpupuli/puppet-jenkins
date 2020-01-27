@@ -331,7 +331,7 @@ class jenkins(
   String $user                                    = $jenkins::params::user,
   Boolean $manage_group                           = $jenkins::params::manage_group,
   String $group                                   = $jenkins::params::group,
-  Array $default_plugins                          = $jenkins::params::default_plugins,
+  Hash $default_plugins                           = $jenkins::params::default_plugins,
   String $default_plugins_host                    = $jenkins::params::default_plugins_host,
   Boolean $purge_plugins                          = $jenkins::params::purge_plugins,
 ) inherits jenkins::params {
@@ -449,7 +449,7 @@ class jenkins(
   if $manage_service {
     include jenkins::service
     if empty($default_plugins){
-      notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($jenkins::params::default_plugins,','))) # lint:ignore:140chars
+      notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',keys($::jenkins::params::default_plugins))) # lint:ignore:140chars
     }
   }
 
