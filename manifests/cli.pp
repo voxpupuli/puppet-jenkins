@@ -64,6 +64,15 @@ class jenkins::cli {
     ' '
   )
 
+  if !empty($jenkins::cli_password) {
+    $cmd_environment = [
+      "JENKINS_USER_ID=${jenkins::cli_username}",
+      "JENKINS_API_TOKEN=${jenkins::cli_password}",
+    ]
+  } else {
+    $cmd_environment = undef
+  }
+
   # Do a safe restart of Jenkins (only when notified)
   exec { 'safe-restart-jenkins':
     command     => "${cmd} safe-restart && /bin/sleep 10",
@@ -72,6 +81,7 @@ class jenkins::cli {
     try_sleep   => $cli_try_sleep,
     refreshonly => true,
     require     => File[$jar],
+    environment => $cmd_environment,
   }
 
   # jenkins::cli::reload should be included only after $::jenkins::cli::cmd is

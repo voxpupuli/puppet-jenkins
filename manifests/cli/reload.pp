@@ -17,5 +17,6 @@ class jenkins::cli::reload {
     try_sleep   => $cli_try_sleep,
     refreshonly => true,
     require     => File[$jar_file],
+    environment => $jenkins::cli::cmd_environment,
   }
 }
