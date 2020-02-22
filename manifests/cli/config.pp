@@ -23,10 +23,7 @@ class jenkins::cli::config(
 
   if str2bool($facts['is_pe']) {
     $gem_provider = 'pe_gem'
-  } elsif $::puppetversion
-      and (versioncmp($::puppetversion, '4.0.0') >= 0)
-      and $::rubysitedir
-      and ('/opt/puppetlabs/puppet/lib/ruby' in $::rubysitedir) {
+  } elsif $facts['rubysitedir'] and ('/opt/puppetlabs/puppet/lib/ruby' in $facts['rubysitedir']) {
     # AIO puppet
     $gem_provider = 'puppet_gem'
   } else {

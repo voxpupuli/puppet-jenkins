@@ -165,24 +165,6 @@ describe 'jenkins::cli::config', type: :class do
             it { is_expected.to contain_package('retries').with(provider: 'gem') }
           end
         end # 'is_pe fact' do
-
-        context 'puppetversion facts' do
-          context '=> 3.8.4' do
-            let :facts do
-              super().merge(puppetversion: '3.8.4')
-            end
-
-            it { is_expected.to contain_package('retries').with(provider: 'gem') }
-          end
-
-          context '=> 4.0.0' do
-            let :facts do
-              super().merge(puppetversion: '4.0.0')
-            end
-
-            it { is_expected.to contain_package('retries').with(provider: 'gem') }
-          end
-        end # 'puppetversion facts' do
       end # 'package gem provider' do
     end
   end
