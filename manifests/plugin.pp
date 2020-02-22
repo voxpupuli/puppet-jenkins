@@ -217,7 +217,7 @@ define jenkins::plugin(
       owner   => $jenkins::user,
       group   => $jenkins::group,
       mode    => '0644',
-      notify  => Class['::jenkins::service'],
+      notify  => $notify,
     }
   }
 }
