@@ -23,12 +23,18 @@ class jenkins::cli::config(
 
   if str2bool($facts['is_pe']) {
     $gem_provider = 'pe_gem'
+    # lint:ignore:legacy_facts
   } elsif $facts['rubysitedir'] and ('/opt/puppetlabs/puppet/lib/ruby' in $facts['rubysitedir']) {
+    # lint:endignore
     # AIO puppet
     $gem_provider = 'puppet_gem'
   } else {
     $gem_provider = 'gem'
   }
+
+  # lint:ignore:legacy_facts
+  $is_root = $facts['id'] == 'root'
+  # lint:endignore
 
   # required by PuppetX::Jenkins::Provider::Clihelper base
   if ! defined(Package['retries']) {
@@ -46,7 +52,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $facts['id'] == 'root' {
+    if $is_root {
       File[$ssh_private_key] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
@@ -69,7 +75,7 @@ class jenkins::cli::config(
     }
 
     # allow this class to be included when not running as root
-    if $facts['id'] == 'root' {
+    if $is_root {
       File[$cli_password_file] {
         # the owner/group should probably be set externally and retrieved if
         # present in the manfiest. At present, there is no authoritative place
