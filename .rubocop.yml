@@ -14,7 +14,6 @@ AllCops:
     - Rakefile
     - Guardfile
     - Vagrantfile
-    - lib/puppet/jenkins/okjson.rb
 Lint/ConditionPosition:
   Enabled: True
 

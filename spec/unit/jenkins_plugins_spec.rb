@@ -139,24 +139,11 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
   describe '.plugins_from_updatecenter' do
     subject(:plugins) { described_class.plugins_from_updatecenter(fixture) }
 
-    let(:fixture) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/update-center.json') }
+    let(:fixture) { File.expand_path(File.join(__dir__, '..', 'fixtures', 'update-center.json')) }
 
-    context 'uses json' do
-      it { is_expected.to be_instance_of Hash }
-      it { is_expected.to have_key('AdaptivePlugin') }
-      its(:size) { is_expected.to be 1 }
-    end
-
-    context 'uses okjson when json is not avaliable' do
-      before do
-        expect(::Kernel).to receive(:require).with('json').and_raise(LoadError)
-        expect(::Kernel).to receive(:require).with('puppet/jenkins/okjson').and_call_original
-      end
-
-      it { is_expected.to be_instance_of Hash }
-      it { is_expected.to have_key('AdaptivePlugin') }
-      its(:size) { is_expected.to be 1 }
-    end
+    it { is_expected.to be_instance_of Hash }
+    it { is_expected.to have_key('AdaptivePlugin') }
+    its(:size) { is_expected.to be 1 }
   end
 
   let(:git_plugin) do
