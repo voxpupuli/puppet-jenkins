@@ -1,19 +1,9 @@
 require 'spec_helper'
 
-describe 'jenkins', type: :class do
-  on_supported_os.each do |os, facts|
-    next unless facts[:os]['family'] == 'RedHat'
-
-    context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+describe 'jenkins' do
+  on_supported_os(supported_os: [{ 'operatingsystem' => 'CentOS' }]).each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       context 'service' do
         context 'default' do
@@ -25,12 +15,15 @@ describe 'jenkins', type: :class do
           end
         end
 
-        case facts[:os]['release']['major']
+        case os_facts[:os]['release']['major']
         when '7'
           context 'EL 7' do
             let(:service_file) { '/etc/systemd/system/jenkins.service' }
             let(:startup_script) { '/usr/lib/jenkins/jenkins-run' }
             let(:sysv_file) { '/etc/init.d/jenkins' }
+
+            it { is_expected.to contain_class('jenkins').with_service_provider('systemd') }
+            it { is_expected.to contain_jenkins__systemd('jenkins') }
 
             it do
               is_expected.to contain_service('jenkins').with(

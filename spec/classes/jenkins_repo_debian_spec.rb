@@ -1,19 +1,9 @@
 require 'spec_helper'
 
-describe 'jenkins', type: :class do
-  on_supported_os.each do |os, facts|
-    next unless facts[:os]['family'] == 'Debian'
-
-    context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+describe 'jenkins' do
+  on_supported_os(supported_os: [{ 'operatingsystem' => 'Debian' }, { 'operatingsystem' => 'Ubuntu' }]).each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       context 'repo::debian' do
         shared_examples 'an apt catalog' do

@@ -1,21 +1,13 @@
 require 'spec_helper'
 
-describe 'jenkins', type: :class do
-  on_supported_os.each do |os, facts|
-    context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+describe 'jenkins' do
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       describe 'repo' do
         describe 'default' do
-          case facts[:os]['family']
+          case os_facts[:os]['family']
           when 'RedHat'
             describe 'RedHat' do
               it { is_expected.to compile.with_all_deps }

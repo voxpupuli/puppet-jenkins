@@ -1,33 +1,9 @@
 require 'spec_helper'
 
-describe 'jenkins::cli::config', type: :class do
-  on_supported_os.each do |os, facts|
-    context "on #{os} " do
-      systemd_fact = case facts[:os]['family']
-                     when 'Archlinux', 'Fedora'
-                       { systemd: true }
-                     when 'Debian'
-                       case facts[:os]['release']['major']
-                       when '16.04', '18.04'
-                         { systemd: true }
-                       when '8', '9'
-                         { systemd: true }
-                       else
-                         { systemd: false }
-                       end
-                     when 'RedHat'
-                       case facts[:os]['release']['major']
-                       when '7'
-                         { systemd: true }
-                       else
-                         { systemd: false }
-                       end
-                     else
-                       { systemd: false }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+describe 'jenkins::cli::config' do
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       shared_examples 'validate_absolute_path' do |param|
         context 'absolute path' do

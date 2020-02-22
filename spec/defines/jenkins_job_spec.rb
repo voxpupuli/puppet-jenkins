@@ -7,17 +7,9 @@ describe 'jenkins::job' do
     'include jenkins'
   end
 
-  on_supported_os.each do |os, facts|
-    context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       describe 'relationships' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"

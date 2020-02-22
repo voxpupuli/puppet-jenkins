@@ -1,17 +1,9 @@
 require 'spec_helper'
 
 describe 'jenkins::slave' do
-  on_supported_os.each do |os, facts|
-    context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
       shared_context 'a jenkins::slave catalog' do
         it do
@@ -170,7 +162,7 @@ describe 'jenkins::slave' do
             }
           end
 
-          it { is_expected.to compile.and_raise_error }
+          it { is_expected.to compile.and_raise_error(%r{tunnel}) }
         end
 
         describe 'with different swarm versions' do
@@ -266,10 +258,10 @@ describe 'jenkins::slave' do
         it { is_expected.to contain_file(slave_runtime_file).with_content(%r{^CLIENT_NAME="jenkins-slave"$}) }
       end
 
-      case facts[:os]['family']
+      case os_facts[:os]['family']
       when 'RedHat'
         describe 'RedHat' do
-          case facts[:os]['release']['major']
+          case os_facts[:os]['release']['major']
           when '6'
             context 'sysv init' do
               let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
