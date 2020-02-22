@@ -451,6 +451,19 @@ class jenkins(
     if empty($default_plugins){
       notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($jenkins::params::default_plugins,','))) # lint:ignore:140chars
     }
+
+    if $service_provider == 'systemd' {
+      jenkins::systemd { 'jenkins':
+        user   => $user,
+        libdir => $libdir,
+      }
+
+      # jenkins::config manages the jenkins user resource, which is autorequired
+      # by the file resource for the run wrapper.
+      Class['jenkins::config']
+        -> Jenkins::Systemd['jenkins']
+          -> Anchor['jenkins::end']
+    }
   }
 
   if defined('::firewall') and $configure_firewall {
@@ -512,19 +525,6 @@ class jenkins(
   if ($configure_firewall and $manage_service) {
     Class['jenkins::service']
       -> Class['jenkins::firewall']
-        -> Anchor['jenkins::end']
-  }
-
-  if $service_provider == 'systemd' {
-    jenkins::systemd { 'jenkins':
-      user   => $user,
-      libdir => $libdir,
-    }
-
-    # jenkins::config manages the jenkins user resource, which is autorequired
-    # by the file resource for the run wrapper.
-    Class['jenkins::config']
-      -> Jenkins::Systemd['jenkins']
         -> Anchor['jenkins::end']
   }
 }
