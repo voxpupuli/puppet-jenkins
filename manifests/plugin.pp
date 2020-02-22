@@ -107,7 +107,7 @@ define jenkins::plugin(
 
   $installed_plugins = fact('jenkins_plugins') ? {
     undef   => [],
-    default => strip(split($::jenkins_plugins, ',')),
+    default => strip(split($facts['jenkins_plugins'], ',')),
   }
 
   # create a file resource for the download + unpacked plugin dir to prevent it
