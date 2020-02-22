@@ -33,7 +33,7 @@ describe 'jenkins::cli::config', type: :class do
         context 'absolute path' do
           let(:params) { { param => '/dne' } }
 
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
       end # validate_absolute_path
 
@@ -41,7 +41,7 @@ describe 'jenkins::cli::config', type: :class do
         context 'integer' do
           let(:params) { { param => 42 } }
 
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
       end # validate_integer
 
@@ -49,13 +49,13 @@ describe 'jenkins::cli::config', type: :class do
         context 'integer' do
           let(:params) { { param => 42 } }
 
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
 
         context 'float' do
           let(:params) { { param => 42.12345 } }
 
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
       end # validate_numeric
 
@@ -63,13 +63,13 @@ describe 'jenkins::cli::config', type: :class do
         context 'string' do
           let(:params) { { param => 'foo' } }
 
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
       end # validate_string
 
       describe 'parameters' do
         context 'accept all params undef' do
-          it { is_expected.not_to raise_error }
+          it { is_expected.to compile }
         end
 
         describe 'cli_jar' do

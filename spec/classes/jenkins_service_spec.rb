@@ -44,16 +44,9 @@ describe 'jenkins', type: :class do
               is_expected.to contain_file(startup_script).
                 that_notifies('Service[jenkins]')
             end
-            # XXX the prior_to args check fails under puppet 3.8.7 for unknown
-            # reasons...
-            if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
-              it do
-                is_expected.to contain_transition('stop jenkins service').with(
-                  prior_to: ["File[#{sysv_file}]"]
-                )
-              end
-            else
-              it { is_expected.to contain_transition('stop jenkins service') }
+            it do
+              is_expected.to contain_transition('stop jenkins service').
+                with_prior_to(["File[#{sysv_file}]"])
             end
             it do
               is_expected.to contain_file(sysv_file).

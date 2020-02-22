@@ -254,7 +254,7 @@ describe 'jenkins::plugin' do
       context 'string' do
         let(:params) { { source: 'foo.hpi' } }
 
-        it { is_expected.not_to raise_error }
+        it { is_expected.compile }
       end
     end # validate_string
   end # source

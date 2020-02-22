@@ -170,7 +170,7 @@ describe 'jenkins::slave' do
             }
           end
 
-          it { is_expected.to raise_error(Puppet::Error) }
+          it { is_expected.to compile.and_raise_error }
         end
 
         describe 'with different swarm versions' do
@@ -299,7 +299,7 @@ describe 'jenkins::slave' do
                   EOS
                 end
 
-                it { is_expected.not_to raise_error }
+                it { is_expected.to compile.with_all_deps }
               end
 
               describe 'with proxy_server' do
@@ -324,16 +324,9 @@ describe 'jenkins::slave' do
                 is_expected.to contain_file(slave_startup_script).
                   that_notifies('Service[jenkins-slave]')
               end
-              # XXX the prior_to args check fails under puppet 3.8.7 for unknown
-              # reasons...
-              if Puppet::Util::Package.versioncmp(Puppet.version, '4.0.0') >= 0
-                it do
-                  is_expected.to contain_transition('stop jenkins-slave service').with(
-                    prior_to: ["File[#{slave_sysv_file}]"]
-                  )
-                end
-              else
-                it { is_expected.to contain_transition('stop jenkins-slave service') }
+              it do
+                is_expected.to contain_transition('stop jenkins-slave service').
+                  with_prior_to(["File[#{slave_sysv_file}]"])
               end
               it do
                 is_expected.to contain_file(slave_sysv_file).
