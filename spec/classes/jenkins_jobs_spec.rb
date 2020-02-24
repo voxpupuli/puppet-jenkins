@@ -30,9 +30,7 @@ describe 'jenkins', type: :class do
         }
       end
 
-      it do
-        expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError, %r{error during compilation})
-      end
+      it { is_expected.to compile.and_raise_error(%r{Management of Jenkins jobs requires \\\$jenkins::service_ensure to be set to 'running'}) }
     end
   end
 end
