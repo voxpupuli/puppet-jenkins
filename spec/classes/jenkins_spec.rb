@@ -72,12 +72,6 @@ describe 'jenkins', type: :class do
       it { is_expected.not_to contain_class 'jenkins::firewall' }
     end
 
-    describe 'with firewall, configure_firewall unset' do
-      let(:pre_condition) { 'define firewall ($action, $state, $dport, $proto) {}' }
-
-      it { expect { is_expected.to raise_error(Puppet::Error) } }
-    end
-
     describe 'sysconfdir =>' do
       context '/foo/bar' do
         let(:params) { { sysconfdir: '/foo/bar' } }
