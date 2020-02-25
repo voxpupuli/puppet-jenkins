@@ -20,7 +20,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file("#{$libdir}/jenkins-cli.jar") do
+    describe file("#{LIBDIR}/jenkins-cli.jar") do
       it { is_expected.to be_file }
       it { is_expected.to be_readable.by('owner') }
       it { is_expected.to be_writable.by('owner') }
@@ -28,7 +28,7 @@ describe 'jenkins class' do
       it { is_expected.to be_readable.by('others') }
     end
 
-    describe file("#{$sysconfdir}/jenkins") do
+    describe file("#{SYSCONFDIR}/jenkins") do
       it { is_expected.to be_file }
       if fact('osfamily') == 'Debian'
         it { is_expected.to contain 'AJP_PORT="-1"' }
@@ -42,7 +42,7 @@ describe 'jenkins class' do
       it { is_expected.to be_enabled }
     end
 
-    if fact('osfamily') == 'RedHat' && $systemd
+    if fact('osfamily') == 'RedHat' && SYSTEMD
       describe file('/etc/systemd/system/jenkins.service') do
         it { is_expected.to be_file }
         it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }

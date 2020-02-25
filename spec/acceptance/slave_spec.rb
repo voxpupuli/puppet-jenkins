@@ -10,7 +10,7 @@ describe 'jenkins::slave class' do
 
     apply2(pp)
 
-    if $systemd
+    if SYSTEMD
       describe file('/etc/systemd/system/jenkins-slave.service') do
         it { is_expected.to be_file }
         it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
@@ -31,7 +31,7 @@ describe 'jenkins::slave class' do
       end
     end
 
-    describe file("#{$sysconfdir}/jenkins-slave") do
+    describe file("#{SYSCONFDIR}/jenkins-slave") do
       it { is_expected.to be_file }
       it { is_expected.to be_mode 600 }
     end

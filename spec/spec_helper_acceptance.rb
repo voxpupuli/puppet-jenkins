@@ -19,25 +19,25 @@ RSpec.configure do |c|
 end
 
 shared_context 'jenkins' do
-  # rspec examples are not avaiable as variables to serverspec describe blocks
-  $libdir = case fact 'osfamily'
-            when 'RedHat'
-              '/usr/lib/jenkins'
-            when 'Debian'
-              '/usr/share/jenkins'
-            when 'Archlinux'
-              '/usr/share/java/jenkins/'
-            end
-  $sysconfdir = case fact 'osfamily'
-                when 'RedHat'
-                  '/etc/sysconfig'
-                when 'Debian'
-                  '/etc/default'
-                when 'Archlinux'
-                  '/etc/conf.d'
-                end
+  # rspec examples are not available as variables to serverspec describe blocks
+  LIBDIR = case fact 'osfamily'
+           when 'RedHat'
+             '/usr/lib/jenkins'
+           when 'Debian'
+             '/usr/share/jenkins'
+           when 'Archlinux'
+             '/usr/share/java/jenkins/'
+           end
+  SYSCONFDIR = case fact 'osfamily'
+               when 'RedHat'
+                 '/etc/sysconfig'
+               when 'Debian'
+                 '/etc/default'
+               when 'Archlinux'
+                 '/etc/conf.d'
+               end
 
-  let(:libdir) { $libdir }
+  let(:libdir) { LIBDIR }
 
   let(:base_manifest) do
     <<-EOS
@@ -86,8 +86,4 @@ end
 # https://tickets.puppetlabs.com/browse/BKR-1040
 # https://tickets.puppetlabs.com/browse/BKR-1041
 #
-$systemd = if shell('ps -p 1 -o comm=').stdout =~ %r{systemd}
-             true
-           else
-             false
-           end
+SYSTEMD = shell('ps -p 1 -o comm=').stdout =~ %r{systemd}

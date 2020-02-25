@@ -1,40 +1,39 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins class', order: :defined do
-  $pdir = '/var/lib/jenkins/plugins'
-  let(:pdir) { $pdir }
+  PDIR = '/var/lib/jenkins/plugins'.freeze
 
   # files/directories to test plugin purging removal of unmanaged files
-  $files = [
-    "#{$pdir}/a.hpi",
-    "#{$pdir}/b.jpi",
-    "#{$pdir}/c.txt",
-    "#{$pdir}/a/foo",
-    "#{$pdir}/b/bar",
-    "#{$pdir}/c/baz"
-  ]
-  $dirs = [
-    "#{$pdir}/a",
-    "#{$pdir}/b",
-    "#{$pdir}/c"
-  ]
+  FILES = [
+    "#{PDIR}/a.hpi",
+    "#{PDIR}/b.jpi",
+    "#{PDIR}/c.txt",
+    "#{PDIR}/a/foo",
+    "#{PDIR}/b/bar",
+    "#{PDIR}/c/baz"
+  ].freeze
+  DIRS = [
+    "#{PDIR}/a",
+    "#{PDIR}/b",
+    "#{PDIR}/c"
+  ].freeze
 
   shared_examples 'has_git_plugin' do
-    describe file("#{$pdir}/git.hpi") do
+    describe file("#{PDIR}/git.hpi") do
       it { is_expected.to be_file }
     end
-    describe file("#{$pdir}/git") do
+    describe file("#{PDIR}/git") do
       it { is_expected.to be_directory }
     end
   end
 
   shared_context 'plugin_test_files' do
     before(:context) do
-      shell("mkdir -p #{$dirs.join(' ')}")
-      shell("touch #{$files.join(' ')}")
+      shell("mkdir -p #{DIRS.join(' ')}")
+      shell("touch #{FILES.join(' ')}")
     end
     after(:context) do
-      shell("rm -rf #{$dirs.join(' ')} #{$files.join(' ')}")
+      shell("rm -rf #{DIRS.join(' ')} #{FILES.join(' ')}")
     end
   end
 
@@ -95,7 +94,7 @@ describe 'jenkins class', order: :defined do
           apply(pp, catch_changes: true)
 
           # Find the version of the installed git plugin
-          git_version = shell("unzip -p #{$pdir}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
+          git_version = shell("unzip -p #{PDIR}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
           git_version.should eq('1.0')
         end
       it_behaves_like 'has_git_plugin'
@@ -125,7 +124,7 @@ describe 'jenkins class', order: :defined do
 
       it_behaves_like 'has_git_plugin'
 
-      ($dirs + $files).each do |f|
+      (DIRS + FILES).each do |f|
         describe file(f) do
           it { is_expected.not_to exist }
         end
@@ -154,13 +153,13 @@ describe 'jenkins class', order: :defined do
 
       it_behaves_like 'has_git_plugin'
 
-      $dirs.each do |f|
+      DIRS.each do |f|
         describe file(f) do
           it { is_expected.to be_directory }
         end
       end
 
-      $files.each do |f|
+      FILES.each do |f|
         describe file(f) do
           it { is_expected.to be_file }
         end
