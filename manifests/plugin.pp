@@ -94,7 +94,7 @@ define jenkins::plugin(
 
   # if $source is specified, it overrides any other URL construction
   $download_url = $source ? {
-    undef   => "${base_url}${name}.hpi",
+    undef   => "${base_url}${name}.jpi",
     default => $source,
   }
 

@@ -19,7 +19,7 @@ describe 'jenkins class', order: :defined do
   ].freeze
 
   shared_examples 'has_git_plugin' do
-    describe file("#{PDIR}/git.hpi") do
+    describe file("#{PDIR}/git.jpi") do
       it { is_expected.to be_file }
     end
     describe file("#{PDIR}/git") do
@@ -94,7 +94,7 @@ describe 'jenkins class', order: :defined do
           apply(pp, catch_changes: true)
 
           # Find the version of the installed git plugin
-          git_version = shell("unzip -p #{PDIR}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
+          git_version = shell("unzip -p #{PDIR}/git.jpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
           git_version.should eq('1.0')
         end
       it_behaves_like 'has_git_plugin'
