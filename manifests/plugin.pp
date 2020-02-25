@@ -212,7 +212,7 @@ define jenkins::plugin(
     }
 
     file {"${jenkins::localstatedir}/${config_filename}":
-      ensure  => present,
+      ensure  => file,
       content => $config_content,
       owner   => $jenkins::user,
       group   => $jenkins::group,

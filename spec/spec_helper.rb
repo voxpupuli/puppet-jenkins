@@ -10,14 +10,38 @@ require 'rspec-puppet-facts'
 require 'bundler'
 include RspecPuppetFacts
 
-if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
-  facts = YAML.load(File.read(File.join(__dir__, 'default_module_facts.yml')))
-  if facts
-    facts.each do |name, value|
-      add_custom_fact name.to_sym, value
-    end
-  end
+if ENV['DEBUG']
+  Puppet::Util::Log.level = :debug
+  Puppet::Util::Log.newdestination(:console)
 end
+
+# Rough conversion of grepping in the puppet source:
+# grep defaultfor lib/puppet/provider/service/*.rb
+add_custom_fact(:service_provider, lambda do |_os, facts|
+  case facts[:os]['family'].downcase
+  when 'archlinux'
+    'systemd'
+  when 'darwin'
+    'launchd'
+  when 'debian'
+    'systemd'
+  when 'freebsd'
+    'freebsd'
+  when 'gentoo'
+    'openrc'
+  when 'openbsd'
+    'openbsd'
+  when 'redhat'
+    facts[:operatingsystemrelease].to_i >= 7 ? 'systemd' : 'redhat'
+  when 'suse'
+    facts[:operatingsystemmajrelease].to_i >= 12 ? 'systemd' : 'redhat'
+  when 'windows'
+    'windows'
+  else
+    'init'
+  end
+end)
+add_custom_fact :systemd, ->(_os, facts) { facts['service_provider'] == 'systemd' }
 
 if Dir.exist?(File.expand_path('../../lib', __FILE__))
   require 'coveralls'
@@ -37,6 +61,22 @@ if Dir.exist?(File.expand_path('../../lib', __FILE__))
 end
 
 RSpec.configure do |c|
+  # getting the correct facter version is tricky. We use facterdb as a source to mock facts
+  # see https://github.com/camptocamp/facterdb
+  # people might provide a specific facter version. In that case we use it.
+  # Otherwise we need to match the correct facter version to the used puppet version.
+  # as of 2019-10-31, puppet 5 ships facter 3.11 and puppet 6 ships facter 3.14
+  # https://puppet.com/docs/puppet/5.5/about_agent.html
+  #
+  # The environment variable `PUPPET_VERSION` is available in our travis environment, but we cannot rely on it
+  # if somebody runs the tests locally. For that case we should fallback the the puppet gem version.
+  c.default_facter_version = if ENV['FACTERDB_FACTS_VERSION']
+                               ENV['FACTERDB_FACTS_VERSION']
+                             else
+                               puppet_version = ENV['PUPPET_VERSION'] ? ENV['PUPPET_VERSION'] : Gem.loaded_specs['puppet'].version.to_s
+                               Gem::Dependency.new('', puppet_version).match?('', '5') ? '3.11.0' : '3.14.0'
+                             end
+
   # Coverage generation
   c.after(:suite) do
     RSpec::Puppet::Coverage.report!

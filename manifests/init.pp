@@ -418,8 +418,10 @@ class jenkins(
   $plugin_dir = "${localstatedir}/plugins"
   $job_dir = "${localstatedir}/jobs"
 
+  # lint:ignore:anchor_resource
   anchor {'jenkins::begin':}
   anchor {'jenkins::end':}
+  # lint:endignore
 
   if $install_java {
     include java

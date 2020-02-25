@@ -196,7 +196,7 @@ class jenkins::slave (
     default => regsubst($tool_locations, ':', '=', 'G'),
   }
 
-  if $install_java and ($::osfamily != 'Darwin') {
+  if $install_java and ($facts['os']['family'] != 'Darwin') {
     # Currently the puppetlabs/java module doesn't support installing Java on
     # Darwin
     include java
@@ -204,7 +204,7 @@ class jenkins::slave (
   }
 
   # customizations based on the OS family
-  case $::osfamily {
+  case $facts['os']['family'] {
     'Debian': {
       $defaults_location = $jenkins::params::sysconfdir
 
@@ -245,7 +245,7 @@ class jenkins::slave (
           mode    => '0755',
           owner   => 'root',
           group   => 'root',
-          content => template("${module_name}/${service_name}.${::osfamily}.erb"),
+          content => template("${module_name}/${service_name}.${facts['os']['family']}.erb"),
           notify  => Service[$service_name],
         }
       }

@@ -59,6 +59,7 @@ module Puppet
           rescue StandardError
             # Nothing really to do about it, failing means no version which will
             # result in a new plugin if needed
+            nil
           end
         end
         plugins

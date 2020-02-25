@@ -2,24 +2,14 @@ require 'spec_helper'
 
 describe 'jenkins::sysconfig' do
   let(:pre_condition) { 'include jenkins' }
-
   let(:title) { 'myprop' }
-
   let(:params) { { 'value' => 'myvalue' } }
 
-  on_supported_os.each do |os, facts|
+  on_supported_os.each do |os, os_facts|
     context "on #{os} " do
-      systemd_fact = case facts[:operatingsystemmajrelease]
-                     when '6'
-                       { systemd: false }
-                     else
-                       { systemd: true }
-                     end
-      let :facts do
-        facts.merge(systemd_fact)
-      end
+      let(:facts) { os_facts }
 
-      case facts[:os]['family']
+      case os_facts[:os]['family']
       when 'RedHat'
         describe 'on RedHat' do
           it do
