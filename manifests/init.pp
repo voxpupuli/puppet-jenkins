@@ -65,6 +65,9 @@
 #   * ``running`` (default)
 #   * ``stopped``
 #
+# @param service_restart
+#   Whether to restart the service on config_hash and plugins
+#
 # @param service_provider
 #   Override ``Service[jenkins]`` resource provider
 #
@@ -301,6 +304,7 @@ class jenkins(
   Boolean $manage_service                         = true,
   Boolean $service_enable                         = $jenkins::params::service_enable,
   Enum['running', 'stopped'] $service_ensure      = $jenkins::params::service_ensure,
+  Boolean $service_restart                        = $jenkins::params::service_restart,
   Optional[String] $service_provider              = $jenkins::params::service_provider,
   Hash $config_hash                               = {},
   Hash $plugin_hash                               = {},
