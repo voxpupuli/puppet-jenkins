@@ -1,15 +1,23 @@
 require 'spec_helper'
-require 'facter/jenkins'
 
-describe Puppet::Jenkins::Facts do
-  describe '.plugins_str' do
-    subject(:plugins_str) { described_class.plugins_str }
+describe 'jenkins_plugins', type: :fact do
+  subject { Facter.value(:jenkins_plugins) }
 
-    let(:plugins) { {} }
+  let(:plugins) { {} }
 
-    before do
-      Puppet::Jenkins::Plugins.should_receive(:available).and_return(plugins)
-    end
+  before do
+    Facter.clear
+    Facter.loadfacts
+    allow(Puppet::Jenkins::Plugins).to receive(:available).and_return(plugins)
+    Facter.fact(:kernel).stub(:value).and_return(kernel)
+  end
+
+  after { Facter.clear }
+
+  context 'on Linux' do
+    let(:kernel) { 'Linux' }
+
+    after { expect(Puppet::Jenkins::Plugins).to have_received(:available) }
 
     context 'with no plugins' do
       it { is_expected.to be_instance_of String }
@@ -40,44 +48,11 @@ describe Puppet::Jenkins::Facts do
     end
   end
 
-  describe 'jenkins_plugins fact', type: :fact do
-    subject(:plugins) { fact.value }
+  context 'on FreeBSD' do
+    let(:kernel) { 'FreeBSD' }
 
-    let(:fact) { Facter.fact(:jenkins_plugins) }
+    after { expect(Puppet::Jenkins::Plugins).not_to have_received(:available) }
 
-    before do
-      Facter.fact(:kernel).stub(:value).and_return(kernel)
-      described_class.install
-    end
-
-    after do
-      Facter.clear
-      Facter.clear_messages
-    end
-
-    context 'on Linux' do
-      let(:kernel) { 'Linux' }
-
-      context 'with no plugins' do
-        it { is_expected.to be_empty }
-      end
-
-      context 'with plugins' do
-        plugins_str = 'ant 1.2, git 2.0.1'
-        let(:plugins_str) { plugins_str }
-
-        before do
-          described_class.should_receive(:plugins_str).and_return(plugins_str)
-        end
-
-        it { is_expected.to eql(plugins_str) }
-      end
-    end
-
-    context 'on FreeBSD' do
-      let(:kernel) { 'FreeBSD' }
-
-      it { is_expected.to be_nil }
-    end
+    it { is_expected.to be_nil }
   end
 end
