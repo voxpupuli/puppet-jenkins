@@ -238,8 +238,6 @@ describe 'jenkins_credentials' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
               'google-oauth-plugin',
-              'credentials',
-              'structs',
               'oauth-credentials',
             ]: }
 
@@ -277,8 +275,6 @@ describe 'jenkins_credentials' do
           pp = base_manifest + <<-EOS
             jenkins::plugin { [
               'google-oauth-plugin',
-              'credentials',
-              'structs',
               'oauth-credentials',
             ]: }
 
