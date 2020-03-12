@@ -318,7 +318,7 @@ describe 'jenkins_credentials' do
               'browserstack-integration'
             ]: }
 
-            jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813'
+            jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
               ensure      => 'present',
               description => 'browserstack credentials',
               impl        => 'BrowserStackCredentials',
