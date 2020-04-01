@@ -23,8 +23,8 @@ class jenkins::cli {
   }
 
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
-  $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
-  $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
+  $download_jar = "wget http://localhost:${jenkins::port}/jnlpJars/jenkins-cli.jar -O ${jar}.downloading"
+  $move_jar = "mv ${jar}.downloading ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
   $cli_tries = $jenkins::cli_tries
   $cli_try_sleep = $jenkins::cli_try_sleep
@@ -36,7 +36,7 @@ class jenkins::cli {
     creates => $jar,
   }
   ~> exec { 'jenkins-cli' :
-    command     => "${extract_jar} && ${move_jar} && ${remove_dir}",
+    command     => "${download_jar} && ${move_jar}",
     path        => ['/bin', '/usr/bin'],
     cwd         => '/tmp',
     refreshonly => true,
