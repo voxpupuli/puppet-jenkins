@@ -33,6 +33,8 @@ By participating in this project you agree to abide by its terms.
 
 Please be prepared to repeat some of these steps as our contributors review your code.
 
+Also consider sending in your profile code that calls this component module as an acceptance test or provide it via an issue. This helps reviewers a lot to test your use case and prevents future regressions!
+
 ## Writing proper commits - short version
 
 * Make commits of logical units.
@@ -230,14 +232,14 @@ simple tests against it after applying the module. You can run this
 with:
 
 ```sh
-bundle exec rake acceptance
+bundle exec rake beaker
 ```
 
 This will run the tests on the module's default nodeset. You can override the
 nodeset used, e.g.,
 
 ```sh
-BEAKER_set=centos-7-x64 bundle exec rake acceptance
+BEAKER_set=centos-7-x64 bundle exec rake beaker
 ```
 
 There are default rake tasks for the various acceptance test modules, e.g.,
@@ -264,10 +266,9 @@ The following strings are known to work:
 
 * ubuntu1604
 * ubuntu1804
-* debian8
+* ubuntu2004
 * debian9
 * debian10
-* centos6
 * centos7
 * centos8
 
