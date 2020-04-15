@@ -23,7 +23,7 @@ class jenkins::cli {
   }
 
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
-  $download_jar = 'wget https://localhost/jnlpJars/jenkins-cli.jar -O /tmp/jenkins-cli.jar'
+  $download_jar = 'wget http://127.0.0.1:${jenkins::port}${jenkins::prefix}/jnlpJars/jenkins-cli.jar -O /tmp/jenkins-cli.jar'
   $move_jar = "mv /tmp/jenkins-cli.jar ${jar}"
   $cli_tries = $jenkins::cli_tries
   $cli_try_sleep = $jenkins::cli_try_sleep
