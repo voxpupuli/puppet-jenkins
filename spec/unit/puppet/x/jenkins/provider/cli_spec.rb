@@ -11,13 +11,15 @@ describe Puppet::X::Jenkins::Provider::Cli do
   NetError = Puppet::X::Jenkins::Provider::Cli::NetError
   UnknownError = Puppet::X::Jenkins::Provider::Cli::UnknownError
 
-  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS].freeze
+  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS, <<-EOS].freeze
     anonymous is missing the Overall/Read permission
   EOS
     You must authenticate to access this Jenkins.
     Use --username/--password/--password-file parameters or login command.
   EOS
     anonymous is missing the Overall/RunScripts permission
+  EOS
+    anonymous is missing the Overall/Administer permission
   EOS
 
   CLI_NET_ERRORS = [<<-EOS, <<-EOS].freeze
