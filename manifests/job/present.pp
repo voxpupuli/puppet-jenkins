@@ -65,9 +65,9 @@ define jenkins::job::present(
   $job_dir            = "${jenkins::job_dir}/${jobname}"
   $config_path        = "${job_dir}/config.xml"
 
-  # Bring variables from Class['::jenkins'] into local scope.
+  # Bring variables from Class['jenkins'] into local scope.
   $cli_tries          = $jenkins::cli_tries
-  $cli_try_sleep   = $jenkins::cli_try_sleep
+  $cli_try_sleep      = $jenkins::cli_try_sleep
 
   Exec {
     logoutput   => false,
@@ -80,18 +80,20 @@ define jenkins::job::present(
   $cat_config = "cat \"${tmp_config_path}\""
   $create_job = "${jenkins_cli} create-job \"${jobname}\""
   exec { "jenkins create-job ${jobname}":
-    command => "${cat_config} | ${create_job}",
-    creates => [$config_path, "${job_dir}/builds"],
+    command     => "${cat_config} | ${create_job}",
+    creates     => [$config_path, "${job_dir}/builds"],
+    environment => $jenkins::cli::cmd_environment,
   }
 
   if $replace {
     # Use Jenkins CLI to update the job if it already exists
     $update_job = "${jenkins_cli} update-job ${jobname}"
     exec { "jenkins update-job ${jobname}":
-      command => "${cat_config} | ${update_job}",
-      onlyif  => "test -e ${config_path}",
-      unless  => "${difftool} ${config_path} ${tmp_config_path}",
-      notify  => Exec['reload-jenkins'],
+      command     => "${cat_config} | ${update_job}",
+      onlyif      => "test -e ${config_path}",
+      unless      => "${difftool} ${config_path} ${tmp_config_path}",
+      notify      => Exec['reload-jenkins'],
+      environment => $jenkins::cli::cmd_environment,
     }
   }
 

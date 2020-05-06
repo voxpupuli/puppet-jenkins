@@ -401,7 +401,9 @@ class jenkins(
     # Username / Password auth (needed for AD and other Auth Realms)
     if $_use_new_cli {
       if !empty($cli_password) {
-        $_cli_auth_arg = "-auth '${cli_username}:${cli_password}'"
+        # username and password passed as environment variables to prevent showing in ps output
+        # so setting cli_auth_arg to empty string
+        $_cli_auth_arg = ''
       } elsif !empty($cli_password_file) {
         $_cli_auth_arg = "-auth '@${cli_password_file}'"
       } else {

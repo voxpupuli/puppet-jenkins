@@ -28,9 +28,14 @@ define jenkins::cli::exec(
   )
 
   if $unless {
-    $environment_run = [ "HELPER_CMD=eval ${jenkins::cli_helper::helper_cmd}" ]
+    $environment_run = delete_undef_values(
+      flatten([
+        $jenkins::cli::cmd_environment,
+        "HELPER_CMD=eval ${jenkins::cli_helper::helper_cmd}",
+      ])
+    )
   } else {
-    $environment_run = undef
+    $environment_run = $jenkins::cli::cmd_environment
   }
 
   exec { $title:
