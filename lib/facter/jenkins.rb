@@ -12,3 +12,8 @@ Facter.add(:jenkins_plugins) do
     plugins.keys.sort.map { |plugin| "#{plugin} #{plugins[plugin][:plugin_version]}" }.join(', ')
   end
 end
+Facter.add(:jenkins_version) do
+    setcode do
+        Facter::Util::Resolution.exec("rpm -qa|grep jenkins|cut -d'-' -f2")
+    end
+end
