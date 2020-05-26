@@ -22,9 +22,10 @@ class jenkins::cli {
         -> Anchor['jenkins::end']
   }
 
-  $jar = "${jenkins::libdir}/jenkins-cli.jar"
-  $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
-  $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
+
+  $jar = "${jenkins::libdir}/cli-${::jenkins_version}.jar"
+  $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/lib/cli-${jenkins_version}.jar"
+  $move_jar = "mv WEB-INF/lib/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
   $cli_tries = $jenkins::cli_tries
   $cli_try_sleep = $jenkins::cli_try_sleep
