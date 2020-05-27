@@ -24,7 +24,7 @@ describe 'jenkins' do
           it { is_expected.to contain_exec('jenkins-cli') }
           it { is_expected.to contain_exec('reload-jenkins').with_command(%r{http://localhost:9000}) }
           it { is_expected.to contain_exec('reload-jenkins').with_command(%r{-i\s'/path/to/key'}) }
-          it { is_expected.to contain_exec('reload-jenkins').that_requires('File[/path/to/libdir/jenkins-cli.jar]') }
+          it { is_expected.to contain_exec('reload-jenkins').that_requires('File[/path/to/libdir/cli.jar]') }
           it { is_expected.to contain_exec('safe-restart-jenkins') }
           it { is_expected.to contain_jenkins__sysconfig('HTTP_PORT').with_value('9000') }
 
