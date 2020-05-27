@@ -25,7 +25,6 @@ class jenkins::cli {
 
   $jar = "${jenkins::libdir}/cli.jar"
   $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/lib/"
-  #$extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/lib/cli-${jenkins_version}.jar"
   $move_jar = "mv WEB-INF/lib/cli-*.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
   $cli_tries = $jenkins::cli_tries
