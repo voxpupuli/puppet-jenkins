@@ -7,7 +7,7 @@ describe 'jenkins::cli::exec' do
     context "on #{os}" do
       let(:facts) { os_facts }
       let(:libdir) { facts[:os]['family'] == 'Debian' ? '/usr/share/jenkins' : '/usr/lib/jenkins' }
-      let(:helper_cmd) { "/bin/cat #{libdir}/puppet_helper.groovy | /usr/bin/java -jar #{libdir}/cli.jar -s http://127.0.0.1:8080 groovy =" }
+      let(:helper_cmd) { "/bin/cat #{libdir}/puppet_helper.groovy | /usr/bin/java -jar #{libdir}/jenkins-cli.jar -s http://127.0.0.1:8080 groovy =" }
 
       describe 'relationships' do
         it do

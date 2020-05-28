@@ -282,7 +282,7 @@ security policy are configured in the correct order. For example:
     ADMIN_PASSWORD='<%= admin_user_password %>'
     ADMIN_FULLNAME='<%= admin_user_full_name %>'
     ADMIN_SSH_KEY='<%= admin_ssh_keyfile %>'
-    JENKINS_CLI='<%= jenkins_libdir %>/cli.jar'
+    JENKINS_CLI='<%= jenkins_libdir %>/jenkins-cli.jar'
     PUPPET_HELPER='<%= jenkins_libdir %>/puppet_helper.groovy'
     HELPER="java -jar $JENKINS_CLI -s http://127.0.0.1:8080 groovy $PUPPET_HELPER"
     DONEFILE='<%= jenkins_libdir %>/jenkins-bootstrap.done'

@@ -44,7 +44,7 @@ shared_context 'jenkins' do
       }
 
       class { '::jenkins::cli::config':
-        cli_jar           => '#{libdir}/cli.jar',
+        cli_jar           => '#{libdir}/jenkins-cli.jar',
         puppet_helper     => '#{libdir}/puppet_helper.groovy',
         cli_remoting_free => true,
       }

@@ -27,10 +27,6 @@ define jenkins::credentials (
   include jenkins
   include jenkins::cli_helper
 
-  #just for tests, temporary
-  jenkins::plugin { 'ssh-credentials': }
-  jenkins::plugin { 'gitlab-plugin': }
-
   Class['jenkins::cli_helper']
     -> Jenkins::Credentials[$title]
       -> Anchor['jenkins::end']

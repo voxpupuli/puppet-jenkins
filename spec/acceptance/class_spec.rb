@@ -20,7 +20,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file("#{LIBDIR}/cli.jar") do
+    describe file("#{LIBDIR}/jenkins-cli.jar") do
       it { is_expected.to be_file }
       it { is_expected.to be_readable.by('owner') }
       it { is_expected.to be_writable.by('owner') }

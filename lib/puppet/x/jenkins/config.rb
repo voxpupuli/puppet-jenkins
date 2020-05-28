@@ -11,7 +11,7 @@ class Puppet::X::Jenkins::Config
   class UnknownConfig < ArgumentError; end
 
   DEFAULTS = {
-    cli_jar: '/usr/lib/jenkins/cli.jar',
+    cli_jar: '/usr/lib/jenkins/jenkins-cli.jar',
     url: 'http://localhost:8080',
     ssh_private_key: nil,
     puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',

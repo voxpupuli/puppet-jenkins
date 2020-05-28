@@ -166,10 +166,10 @@
 #   * Only applies to plugins installed via the UpdateCenter
 #
 # @param cli
-#   install ``cli.jar`` CLI utility
+#   install ``jenkins-cli.jar`` CLI utility
 #
 #   * force installation of the jenkins CLI jar to
-#   ``$libdir/cli/cli.jar``
+#   ``$libdir/cli/jenkins-cli.jar``
 #   * the cli is automatically installed when needed by components that use it,
 #     such as the user and credentials types, and the security class
 #   * CLI installation (both implicit and explicit) requires the ``unzip``
