@@ -33,6 +33,7 @@ def bootstrapUsers = [
 <% end -%>
 ]
 
+<% if @_authentication_realm == 'hudson.security.HudsonPrivateSecurityRealm' -%>
 if (currentRealm == 'hudson.security.HudsonPrivateSecurityRealm') {
   println "--> Jenkins Local Security Realm already configured (HudsonPrivateSecurityRealm)"
 } else {
@@ -41,7 +42,7 @@ if (currentRealm == 'hudson.security.HudsonPrivateSecurityRealm') {
   instance.setSecurityRealm(hudsonRealm)
   println "--> Done configuring Jenkins Local Security Realm"
 }
-
+<% end -%>
 
 bootstrapUsers.each { user ->
 
