@@ -338,7 +338,6 @@ class jenkins (
   Hash $job_hash                                  = {},
   Hash $user_hash                                 = {},
   Hash $bootstrapuser_hash                        = {},
-  String $authentication_realm                    = $jenkins::params::authentication_realm,
   Boolean $configure_firewall                     = false,
   Boolean $install_java                           = $jenkins::params::install_java,
   Optional[String] $repo_proxy                    = undef,

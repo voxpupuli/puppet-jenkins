@@ -18,7 +18,6 @@ class jenkins::params {
   $manage_bootstrapping  = true
   $purge_bootstrapping   = false
   $jenkins_sshd_port     = undef
-  $authentication_realm  = 'hudson.security.HudsonPrivateSecurityRealm'
 
   $manage_datadirs = true
   $localstatedir   = '/var/lib/jenkins'

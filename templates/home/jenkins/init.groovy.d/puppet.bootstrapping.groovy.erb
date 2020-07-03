@@ -14,7 +14,9 @@ import hudson.security.HudsonPrivateSecurityRealm.Details
 
 // Code
 def instance = Jenkins.getInstance()
-def currentRealm = instance.getSecurityRealm().getClass().getName()
+def originalRealm = instance.getSecurityRealm()
+def originalRealmName = originalRealm.getClass().getName()
+def restoreRealm = false
 
 // bootstrap users
 def bootstrapUsers = [
@@ -33,16 +35,7 @@ def bootstrapUsers = [
 <% end -%>
 ]
 
-<% if @_authentication_realm == 'hudson.security.HudsonPrivateSecurityRealm' -%>
-if (currentRealm == 'hudson.security.HudsonPrivateSecurityRealm') {
-  println "--> Jenkins Local Security Realm already configured (HudsonPrivateSecurityRealm)"
-} else {
-  println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm)"
-  def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-  instance.setSecurityRealm(hudsonRealm)
-  println "--> Done configuring Jenkins Local Security Realm"
-}
-<% end -%>
+def currentRealmName = null
 
 bootstrapUsers.each { user ->
 
@@ -66,6 +59,18 @@ bootstrapUsers.each { user ->
   def userObject = hudson.model.User.get(username,false)
   if (userObject == null) {
     println "--> creating new user '${username}'"
+
+    currentRealmName = instance.getSecurityRealm().getClass().getName()
+    if (currentRealmName == 'hudson.security.HudsonPrivateSecurityRealm') {
+      println "--> Jenkins Security Realm already configured (${currentRealmName})"
+    } else {
+      println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm) to bootstrap security realm"
+      def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+      instance.setSecurityRealm(hudsonRealm)
+      restoreRealm = true
+      println "--> Done configuring Jenkins Local Security Realm"
+    }
+
     userObject = instance.getSecurityRealm().createAccount(username,password)
   } else {
     println "--> using existing user '${username}'"
@@ -101,3 +106,11 @@ bootstrapUsers.each { user ->
 println "--> Saving Config"
 instance.save()
 println "--> Done Saving Config"
+
+if (restoreRealm) {
+  println "--> Restoring Security Realm (${originalRealmName})"
+  instance.setSecurityRealm(originalRealm)
+  println "--> Saving Config"
+  instance.save()
+  println "--> Done Saving Config"
+}
