@@ -35,8 +35,6 @@ def bootstrapUsers = [
 <% end -%>
 ]
 
-def currentRealmName = null
-
 bootstrapUsers.each { user ->
 
   // User config
@@ -60,16 +58,11 @@ bootstrapUsers.each { user ->
   if (userObject == null) {
     println "--> creating new user '${username}'"
 
-    currentRealmName = instance.getSecurityRealm().getClass().getName()
-    if (currentRealmName == 'hudson.security.HudsonPrivateSecurityRealm') {
-      println "--> Jenkins Security Realm already configured (${currentRealmName})"
-    } else {
-      println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm) to bootstrap security realm"
-      def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-      instance.setSecurityRealm(hudsonRealm)
-      restoreRealm = true
-      println "--> Done configuring Jenkins Local Security Realm"
-    }
+    println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm) to bootstrap security realm"
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    instance.setSecurityRealm(hudsonRealm)
+    restoreRealm = true
+    println "--> Done configuring Jenkins Local Security Realm"
 
     userObject = instance.getSecurityRealm().createAccount(username,password)
   } else {
