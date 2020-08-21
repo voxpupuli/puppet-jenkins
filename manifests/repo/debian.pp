@@ -1,7 +1,7 @@
 # Class: jenkins::repo::debian
 #
 class jenkins::repo::debian (
-  String $gpg_key_id = '150FDE3F7787E7D11EF4E12A9B7D32F2D50582E6',
+  String $gpg_key_id = '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5',
 ) {
   assert_private()
 
