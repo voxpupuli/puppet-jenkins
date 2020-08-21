@@ -227,7 +227,7 @@ class jenkins::slave (
       $manage_user_home = true
       $sysv_init        = '/etc/init.d/jenkins-slave'
 
-      if $::systemd {
+      if $facts['systemd'] {
         jenkins::systemd { 'jenkins-slave':
           user   => $slave_user,
           libdir => $slave_home,
