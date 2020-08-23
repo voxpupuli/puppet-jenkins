@@ -528,6 +528,9 @@ RSpec/RepeatedDescription:
 RSpec/NestedGroups:
   Enabled: False
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
 # this is broken on ruby1.9
 Layout/IndentHeredoc:
   Enabled: False
@@ -543,4 +546,7 @@ Style/FormatStringToken:
 # This is useful, but sometimes a little too picky about where unit tests files
 # are located.
 RSpec/FilePath:
+  Enabled: false
+
+RSpec/MessageSpies:
   Enabled: false
