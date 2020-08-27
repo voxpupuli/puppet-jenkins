@@ -1,14 +1,19 @@
+# @summary Manage the state of an installed plugin
 #
-# config_filename = undef
+# This can be used to manage the state of individual plugins. Note that it does
+# no dependency management and that's all up to the user. This is particularly
+# important to remember when also purging plugins.
+#
+# @param config_filename
 #   Name of the config file for this plugin.
 #
-# config_content = undef
+# @param config_content
 #   Content of the config file for this plugin. It is up to the caller to
 #   create this content from a template or any other mean.
 #
-# update_url = undef
+# @param update_url
 #
-# source = undef
+# @param source
 #   Direct URL from which to download plugin without modification.  This is
 #   particularly useful for development and testing of plugins which may not be
 #   hosted in the typical Jenkins' plugin directory structure.  E.g.,
