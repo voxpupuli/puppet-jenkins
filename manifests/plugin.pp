@@ -20,12 +20,16 @@
 #
 #   https://example.org/myplugin.hpi
 #
+# @param extension
+#   When no source is given, this extension is used
+#
 define jenkins::plugin(
   Optional[String] $version         = undef,
   Optional[String] $config_filename = undef,
   Optional[String] $config_content  = undef,
   Optional[String] $update_url      = undef,
   Optional[String] $source          = undef,
+  Enum['hpi', 'jpi'] $extension     = 'hpi',
   Optional[String] $digest_string   = undef,
   Boolean $manage_config            = false,
   Boolean $enabled                  = true,
@@ -99,7 +103,7 @@ define jenkins::plugin(
 
   # if $source is specified, it overrides any other URL construction
   $download_url = $source ? {
-    undef   => "${base_url}${name}.hpi",
+    undef   => "${base_url}${name}.${extension}",
     default => $source,
   }
 
