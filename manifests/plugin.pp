@@ -35,13 +35,6 @@ define jenkins::plugin(
   Boolean $enabled                  = true,
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
-  # no worky
-  Any $timeout                      = undef,
-  # deprecated
-  Any $plugin_dir                   = undef,
-  Any $username                     = undef,
-  Any $group                        = undef,
-  Any $create_user                  = undef,
 ) {
 
   include jenkins
@@ -56,23 +49,6 @@ define jenkins::plugin(
     $plugindir = File[$jenkins::plugin_dir]
   } else {
     $plugindir = undef
-  }
-
-  if $timeout {
-    warning('jenkins::plugin::timeout presently has effect')
-  }
-
-  if $plugin_dir {
-    warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
-  }
-  if $username {
-    warning('jenkins::plugin::username is deprecated and has no effect -- see jenkins::user')
-  }
-  if $group {
-    warning('jenkins::plugin::group is deprecated and has no effect -- see jenkins::group')
-  }
-  if $create_user {
-    warning('jenkins::plugin::create_user is deprecated and has no effect')
   }
 
   include jenkins
