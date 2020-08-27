@@ -18,11 +18,11 @@ describe 'jenkins class', order: :defined do
     "#{PDIR}/c"
   ].freeze
 
-  shared_examples 'has_git_plugin' do
-    describe file("#{PDIR}/git.hpi") do
+  shared_examples 'has_plugin' do |plugin|
+    describe file("#{PDIR}/#{plugin}.hpi") do
       it { is_expected.to be_file }
     end
-    describe file("#{PDIR}/git") do
+    describe file("#{PDIR}/#{plugin}") do
       it { is_expected.to be_directory }
     end
   end
@@ -51,53 +51,71 @@ describe 'jenkins class', order: :defined do
 
     apply2(pp)
 
-    it_behaves_like 'has_git_plugin'
+    it_behaves_like 'has_plugin', 'git'
   end
 
   describe 'plugin downgrade' do
-    before(:all) do
-      pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-        purge_plugins     => true,
-      }
+    describe 'jquery3-api plugin' do
+      describe 'installs version 3.5.1-1' do
+        pp = <<-EOS
+        class {'jenkins':
+          cli_remoting_free => true,
+          purge_plugins     => true,
+        }
 
-      jenkins::plugin {'git-plugin':
-        name    => 'git',
-        version => '2.3.4',
-      }
-      EOS
+        # dependencies to prevent them from being purged
+        jenkins::plugin { ['jdk-tool', 'trilead-api']:
+          extension => 'jpi',
+        }
 
-      apply(pp, catch_failures: true)
-      apply(pp, catch_changes: true)
-    end
+        # actual plugin
+        jenkins::plugin { 'jquery3-api':
+          version => '3.5.1-1',
+        }
+        EOS
 
-    context 'downgrade' do
-      git_version =
-        it 'downgrades git version' do
-          pp = <<-EOS
-          package{'unzip':
-            ensure => present
-          }
-          class {'jenkins':
-            cli_remoting_free => true,
-            purge_plugins     => true,
-          }
-
-          jenkins::plugin {'git-plugin':
-            name    => 'git',
-            version => '1.0',
-          }
-          EOS
-
-          apply(pp, catch_failures: true)
-          apply(pp, catch_changes: true)
-
-          # Find the version of the installed git plugin
-          git_version = shell("unzip -p #{PDIR}/git.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'").stdout.strip
-          git_version.should eq('1.0')
+        it 'works with no error' do
+          apply_manifest(pp, catch_failures: true)
         end
-      it_behaves_like 'has_git_plugin'
+        it 'works idempotently' do
+          apply_manifest(pp, catch_changes: true)
+        end
+      end
+
+      describe 'downgrades to 3.4.1-10' do
+        pp = <<-EOS
+        package{'unzip':
+          ensure => present
+        }
+        class {'jenkins':
+          cli_remoting_free => true,
+          purge_plugins     => true,
+        }
+
+        # dependencies to prevent them from being purged
+        jenkins::plugin { ['jdk-tool', 'trilead-api']:
+          extension => 'jpi',
+        }
+
+        # actual plugin
+        jenkins::plugin { 'jquery3-api':
+          version => '3.4.1-10',
+        }
+        EOS
+
+        it 'works with no error' do
+          apply_manifest(pp, catch_failures: true)
+        end
+        it 'works idempotently' do
+          apply_manifest(pp, catch_changes: true)
+        end
+      end
+
+      describe command("unzip -p #{PDIR}/jquery3-api.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'") do
+        its(:stdout) { is_expected.to eq("3.4.1-10\n") }
+      end
+
+      it_behaves_like 'has_plugin', 'jquery3-api'
     end
   end
 
@@ -112,9 +130,14 @@ describe 'jenkins class', order: :defined do
           purge_plugins     => true,
         }
 
-        jenkins::plugin {'git-plugin':
-          name    => 'git',
-          version => '2.3.4',
+        # dependencies to prevent them from being purged
+        jenkins::plugin { ['jdk-tool', 'trilead-api']:
+          extension => 'jpi',
+        }
+
+        # Actual plugin
+        jenkins::plugin { 'jquery3-api':
+          version => '3.5.1-1',
         }
         EOS
 
@@ -122,7 +145,7 @@ describe 'jenkins class', order: :defined do
         apply(pp, catch_changes: true)
       end
 
-      it_behaves_like 'has_git_plugin'
+      it_behaves_like 'has_plugin', 'jquery3-api'
 
       (DIRS + FILES).each do |f|
         describe file(f) do
@@ -141,9 +164,14 @@ describe 'jenkins class', order: :defined do
           purge_plugins     => false,
         }
 
-        jenkins::plugin {'git-plugin':
-          name    => 'git',
-          version => '2.3.4',
+        # dependencies to prevent them from being purged
+        jenkins::plugin { ['jdk-tool', 'trilead-api']:
+          extension => 'jpi',
+        }
+
+        # Actual plugin
+        jenkins::plugin { 'jquery3-api':
+          version => '3.5.1-1',
         }
         EOS
 
@@ -151,7 +179,7 @@ describe 'jenkins class', order: :defined do
         apply(pp, catch_changes: true)
       end
 
-      it_behaves_like 'has_git_plugin'
+      it_behaves_like 'has_plugin', 'jquery3-api'
 
       DIRS.each do |f|
         describe file(f) do
