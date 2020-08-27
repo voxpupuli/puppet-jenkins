@@ -4,6 +4,9 @@
 # no dependency management and that's all up to the user. This is particularly
 # important to remember when also purging plugins.
 #
+# @param version
+#   The version to ensure
+#
 # @param config_filename
 #   Name of the config file for this plugin. Note config_content must also be
 #   set.
@@ -24,6 +27,23 @@
 #
 # @param extension
 #   When no source is given, this extension is used
+#
+# @param digest_string
+#   An optional digest string to verify integrity. The digest_type parameter
+#   describes content of this string. It's passed to puppet-archive to verify
+#   the downloaded plugin.
+#
+# @param digest_type
+#   This parameter describes the content of digest_string. It's passed to
+#   puppet-archive to verify the downloaded plugin.
+#
+# @param enabled
+#   Ensure whether the plugin is enabled or not. Disabled plugins are still
+#   installed.
+#
+# @param pin
+#   Pin the plugin to a specific version. This prevents the updater from
+#   updating it.
 #
 define jenkins::plugin(
   Optional[String] $version         = undef,
