@@ -2,7 +2,6 @@
 class jenkins::plugin::git (
 # lint:endignore
   $version            = 0,
-  $manage_config      = false,
   $config_filename    = 'hudson.plugins.git.GitSCM.xml',
   $config_content     = undef,
   $git_name           = 'Jenkins',
@@ -18,7 +17,6 @@ class jenkins::plugin::git (
 
   jenkins::plugin { 'git':
     version         => $version,
-    manage_config   => $manage_config,
     config_filename => $config_filename,
     config_content  => $real_content,
   }

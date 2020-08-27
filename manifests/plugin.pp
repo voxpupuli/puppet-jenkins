@@ -5,11 +5,13 @@
 # important to remember when also purging plugins.
 #
 # @param config_filename
-#   Name of the config file for this plugin.
+#   Name of the config file for this plugin. Note config_content must also be
+#   set.
 #
 # @param config_content
 #   Content of the config file for this plugin. It is up to the caller to
-#   create this content from a template or any other mean.
+#   create this content from a template or any other mean. config_filename must
+#   also be set.
 #
 # @param update_url
 #
@@ -31,7 +33,6 @@ define jenkins::plugin(
   Optional[String] $source          = undef,
   Enum['hpi', 'jpi'] $extension     = 'hpi',
   Optional[String] $digest_string   = undef,
-  Boolean $manage_config            = false,
   Boolean $enabled                  = true,
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
@@ -191,8 +192,8 @@ define jenkins::plugin(
     before  => $notify,
   }
 
-  if $manage_config {
-    if $config_filename == undef or $config_content == undef {
+  if $config_filename {
+    if $config_content == undef {
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
