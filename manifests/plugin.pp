@@ -45,7 +45,7 @@
 #   Pin the plugin to a specific version. This prevents the updater from
 #   updating it.
 #
-define jenkins::plugin(
+define jenkins::plugin (
   Optional[String] $version         = undef,
   Optional[String] $config_filename = undef,
   Optional[String] $config_content  = undef,
@@ -57,7 +57,6 @@ define jenkins::plugin(
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
 ) {
-
   include jenkins
 
   if $jenkins::manage_service {
@@ -85,7 +84,7 @@ define jenkins::plugin(
     #   puppet 3 and puppet 4 interpret '\\' differently.
     # * We can't use double quotes without a variable interpolation or
     #   lint complains.
-    $empty    = ''
+    $empty    = '' # lint:ignore:empty_string_assignment
     $escver   = regsubst ($version, '\+', "${empty}\\\\+", 'G')
     $search   = "^${name} ${escver}$"
   }
@@ -141,15 +140,14 @@ define jenkins::plugin(
     }
     $inverse_plugin     = "${name}.${inverse_plugin_ext}"
 
-    file {[
-      "${jenkins::plugin_dir}/${inverse_plugin}",
-      "${jenkins::plugin_dir}/${inverse_plugin}.disabled",
-      "${jenkins::plugin_dir}/${inverse_plugin}.pinned",
-    ]:
-      ensure => absent,
-      before => Archive[$plugin],
+    file { [
+        "${jenkins::plugin_dir}/${inverse_plugin}",
+        "${jenkins::plugin_dir}/${inverse_plugin}.disabled",
+        "${jenkins::plugin_dir}/${inverse_plugin}.pinned",
+      ]:
+        ensure => absent,
+        before => Archive[$plugin],
     }
-
 
     # Allow plugins that are already installed to be enabled/disabled.
     file { "${jenkins::plugin_dir}/${plugin}.disabled":
@@ -184,7 +182,7 @@ define jenkins::plugin(
       $checksum_type   = undef
     }
 
-    exec{"force ${plugin}-${version}":
+    exec { "force ${plugin}-${version}":
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
@@ -217,7 +215,7 @@ define jenkins::plugin(
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
-    file {"${jenkins::localstatedir}/${config_filename}":
+    file { "${jenkins::localstatedir}/${config_filename}":
       ensure  => file,
       content => $config_content,
       owner   => $jenkins::user,
