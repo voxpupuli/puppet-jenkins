@@ -101,16 +101,10 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     config = Puppet::X::Jenkins::Config.new(catalog)
 
     puppet_helper = config[:puppet_helper]
-    cli_remoting_free = config[:cli_remoting_free]
 
-    if cli_remoting_free
-      cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
-      cli_cmd = ['groovy', '='] + [command]
-      options[:tmpfile_as_param] = true
-    else
-      cli_pre_cmd = []
-      cli_cmd = ['groovy', puppet_helper] + [command]
-    end
+    cli_pre_cmd = ['/bin/cat', puppet_helper, '|']
+    cli_cmd = ['groovy', '='] + [command]
+    options[:tmpfile_as_param] = true
 
     cli_pre_cmd.flatten!
     cli_cmd.flatten!
@@ -177,7 +171,6 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     cli_password             = config[:cli_password]
     cli_password_file        = config[:cli_password_file]
     cli_password_file_exists = config[:cli_password_file_exists]
-    cli_remoting_free        = config[:cli_remoting_free]
 
     base_cmd = cli_pre_cmd + [
       command(:java),
@@ -190,30 +183,16 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     cli_cmd.flatten!
 
     auth_cmd = nil
-    # If we have a ssh cli key file, we use that in old and new syntax
+    # If we have a ssh cli key file, we use that
     if !ssh_private_key.nil?
-      auth_cmd = if cli_remoting_free
-                   base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
-                 else
-                   base_cmd + ['-i', ssh_private_key] + [command]
-                 end
+      raise 'cli_username must be set' if cli_username.nil? || cli_username.empty?
+      auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
     # we have a prepared username:password file, just use it
     elsif cli_password_file_exists
-      if cli_remoting_free
-        auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-      else
-        # For legacy jenkins, we can only read the provided password file
-        # parse it and assume Jenkins 2.46.2++ content
-        (user, pass) = File.open(cli_password_file).read.split("\n").select { |x| x =~ %r{(^\S+:\S+$)} }[0].split(':')
-        auth_cmd = base_cmd + ['-username', user, '-password', pass] + [command]
-      end
+      auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
     # we have username and password, then we create the password file and use it
     elsif !cli_username.nil? && !cli_password.nil?
-      auth_cmd = if cli_remoting_free
-                   base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-                 else
-                   base_cmd + ['-username', cli_username, '-password', cli_password] + [command]
-                 end
+      auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
     end
     auth_cmd.flatten! unless auth_cmd.nil?
 

@@ -16,6 +16,7 @@ describe 'jenkins' do
           let(:params) do
             { cli: true,
               cli_ssh_keyfile: '/path/to/key',
+              cli_username: 'myuser',
               libdir: '/path/to/libdir',
               config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
           end

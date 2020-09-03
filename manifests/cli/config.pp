@@ -17,7 +17,6 @@ class jenkins::cli::config(
   Optional[String] $cli_password                  = undef,
   Optional[String] $cli_password_file             = '/tmp/jenkins_credentials_for_puppet',
   Boolean $cli_password_file_exists               = false,
-  Optional[Boolean] $cli_remoting_free            = undef,
   Optional[String] $ssh_private_key_content       = undef,
 ) {
 
