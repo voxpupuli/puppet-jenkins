@@ -39,10 +39,7 @@ describe 'jenkins class', order: :defined do
 
   context 'default parameters' do
     pp = <<-EOS
-    class {'jenkins':
-      cli_remoting_free => true,
-    }
-
+    include jenkins
     jenkins::plugin {'git-plugin':
       name    => 'git',
       version => '2.3.4',
@@ -59,8 +56,7 @@ describe 'jenkins class', order: :defined do
       describe 'installs version 3.5.1-1' do
         pp = <<-EOS
         class {'jenkins':
-          cli_remoting_free => true,
-          purge_plugins     => true,
+          purge_plugins => true,
         }
 
         # dependencies to prevent them from being purged
@@ -88,8 +84,7 @@ describe 'jenkins class', order: :defined do
           ensure => present
         }
         class {'jenkins':
-          cli_remoting_free => true,
-          purge_plugins     => true,
+          purge_plugins => true,
         }
 
         # dependencies to prevent them from being purged
@@ -126,8 +121,7 @@ describe 'jenkins class', order: :defined do
       it 'works with no errors' do
         pp = <<-EOS
         class {'jenkins':
-          cli_remoting_free => true,
-          purge_plugins     => true,
+          purge_plugins => true,
         }
 
         # dependencies to prevent them from being purged
@@ -160,8 +154,7 @@ describe 'jenkins class', order: :defined do
       it 'works with no errors' do
         pp = <<-EOS
         class {'jenkins':
-          cli_remoting_free => true,
-          purge_plugins     => false,
+          purge_plugins => false,
         }
 
         # dependencies to prevent them from being purged

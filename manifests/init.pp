@@ -175,12 +175,6 @@
 #   * CLI installation (both implicit and explicit) requires the ``unzip``
 #   command
 #
-# @param cli_remoting_free
-#   Weather to use the new Jenkins CLI introduced in Jenkins 2.54 and Jenkins
-#   2.46.2 LTS and later (see https://issues.jenkins-ci.org/browse/JENKINS-41745)
-#   Can be true, false or undef. When undef, then heuristics will be used based
-#   on $repo, $lts and $version.
-#
 # @param cli_ssh_keyfile
 #   Provides the location of an ssh private key file to make authenticated
 #   connections to the Jenkins CLI.
@@ -317,7 +311,6 @@ class jenkins(
   Optional[String] $cli_username                  = undef,
   Optional[String] $cli_password                  = undef,
   Optional[String] $cli_password_file             = undef,
-  Optional[Boolean] $cli_remoting_free            = undef,
   Integer $cli_tries                              = $jenkins::params::cli_tries,
   Integer $cli_try_sleep                          = $jenkins::params::cli_try_sleep,
   Integer $port                                   = $jenkins::params::port,
@@ -340,75 +333,21 @@ class jenkins(
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
   }
 
-  ## determine if we must use the new CLI
-  if $cli_remoting_free == undef {
-    notice("INFO: Using the automatic detection of new cli mode (See https://issues.jenkins-ci.org/browse/JENKINS-41745), use \$::jenkins::cli_remoting_free=(true|false) to enable or disable explicitly")
-    # Heuristics (default)
-    # We try to "guess" if a new CLI version of jenkins is
-    # in use. If we can be sure, we enable new CLI mode automatically.
-    # If not, we keep the old way and print a hint about
-    # the explicit mode (this is true for custom repo setups,
-    # that do not mirror the Jenkins repo, but release jenkins
-    # versions based on repo stages and not pinning in puppet)
-    if $repo {
-      if $lts {
-        # we use a LTS version, so new cli is included in 2.46.2
-        if $version == 'latest' {
-          $_use_new_cli = true
-        } elsif $version == 'installed' {
-          $_use_new_cli = false
-        } elsif $version =~ /\d+\.\d+/ and versioncmp($version,'2.46.2') >= 0 {
-          $_use_new_cli = true
-        } else {
-          $_use_new_cli = false
-        }
-      } else {
-        # we use a regular version, so new cli is included in 2.54
-        if $version == 'latest' {
-          $_use_new_cli = true
-        } elsif $version == 'installed' {
-          $_use_new_cli = false
-        } elsif $version =~ /\d+\.\d+/ and versioncmp($version,'2.54') >= 0 {
-          $_use_new_cli = true
-        } else {
-          $_use_new_cli = false
-        }
-      }
-    } else {
-      # Repo not managed, so we do not know if it is a LTS or regular version
-      if $version =~ /\d+\.\d+/ and versioncmp($version,'2.54') >= 0 {
-        $_use_new_cli = true
-      } else {
-        $_use_new_cli = false
-      }
-    }
-  } else {
-    $_use_new_cli = str2bool($cli_remoting_free)
-  }
-
   # Construct the cli auth argument used in cli and cli_helper
   if $cli_ssh_keyfile {
     # SSH key auth
-    if $_use_new_cli {
-      if empty($cli_username) {
-        fail('ERROR: Latest remoting free CLI (see https://issues.jenkins-ci.org/browse/JENKINS-41745) needs username for SSH Access (\$::jenkins::cli_username)')
-      }
-      $_cli_auth_arg = "-i '${cli_ssh_keyfile}' -ssh -user '${cli_username}'"
-    } else {
-      $_cli_auth_arg = "-i '${cli_ssh_keyfile}'"
+    if empty($cli_username) {
+      fail('ERROR: Latest remoting free CLI (see https://issues.jenkins-ci.org/browse/JENKINS-41745) needs username for SSH Access (\$::jenkins::cli_username)')
     }
+    $_cli_auth_arg = "-i '${cli_ssh_keyfile}' -ssh -user '${cli_username}'"
   } elsif !empty($cli_username) {
     # Username / Password auth (needed for AD and other Auth Realms)
-    if $_use_new_cli {
-      if !empty($cli_password) {
-        $_cli_auth_arg = "-auth '${cli_username}:${cli_password}'"
-      } elsif !empty($cli_password_file) {
-        $_cli_auth_arg = "-auth '@${cli_password_file}'"
-      } else {
-        fail('ERROR: Need cli_password or cli_password_file if cli_username is specified')
-      }
+    if !empty($cli_password) {
+      $_cli_auth_arg = "-auth '${cli_username}:${cli_password}'"
+    } elsif !empty($cli_password_file) {
+      $_cli_auth_arg = "-auth '@${cli_password_file}'"
     } else {
-      fail('ERROR: Due to https://issues.jenkins-ci.org/browse/JENKINS-12543 username and password mode are only supported for the non-remoting CLI mode (see https://issues.jenkins-ci.org/browse/JENKINS-41745)')
+      fail('ERROR: Need cli_password or cli_password_file if cli_username is specified')
     }
   } else {
     # default = no auth

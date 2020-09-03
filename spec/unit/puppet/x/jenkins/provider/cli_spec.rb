@@ -34,6 +34,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       Facter.add(:jenkins_url) { setcode { 'http://localhost:11' } }
       Facter.add(:jenkins_ssh_private_key) { setcode { 'fact.id_rsa' } }
       Facter.add(:jenkins_puppet_helper) { setcode { 'fact.groovy' } }
+      Facter.add(:jenkins_cli_username) { setcode { 'myuser' } }
       Facter.add(:jenkins_cli_tries) { setcode { 22 } }
       Facter.add(:jenkins_cli_try_sleep) { setcode { 33 } }
     end
@@ -220,7 +221,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     shared_examples 'uses default values' do
       it 'uses default values' do
         expect(described_class).to receive(:cli).with(
-          ['groovy', '/usr/lib/jenkins/puppet_helper.groovy', 'foo'], {}, []
+          ['groovy', '=', 'foo'],
+          { tmpfile_as_param: true },
+          ['/bin/cat', '/usr/lib/jenkins/puppet_helper.groovy', '|']
         )
 
         described_class.clihelper('foo')
@@ -230,7 +233,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     shared_examples 'uses fact values' do
       it 'uses fact values' do
         expect(described_class).to receive(:cli).with(
-          ['groovy', 'fact.groovy', 'foo'], {}, []
+          ['groovy', '=', 'foo'],
+          { tmpfile_as_param: true },
+          ['/bin/cat', 'fact.groovy', '|']
         )
 
         described_class.clihelper('foo')
@@ -240,9 +245,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
         expect(described_class).to receive(:cli).with(
-          ['groovy', 'cat.groovy', 'foo'],
-          { catalog: catalog },
-          []
+          ['groovy', '=', 'foo'],
+          { catalog: catalog, tmpfile_as_param: true },
+          ['/bin/cat', 'cat.groovy', '|']
         )
 
         described_class.clihelper('foo', catalog: catalog)
@@ -392,6 +397,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
             cli_jar: 'cat.jar',
             url: 'http://localhost:111',
             ssh_private_key: 'cat.id_rsa',
+            cli_username: 'myuser',
             cli_tries: 222,
             cli_try_sleep: 333
           )
@@ -433,6 +439,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         before do
           jenkins = Puppet::Type.type(:component).new(
             name: 'jenkins::cli::config',
+            cli_username: 'myuser',
             ssh_private_key: 'cat.id_rsa'
           )
           catalog.add_resource jenkins
@@ -455,7 +462,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
             ).and_raise(AuthError, error)
 
             expect(described_class.superclass).to receive(:execute).with(
-              'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa foo',
+              'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa -ssh -user myuser foo',
               failonfail: true, combine: true
             )
 
@@ -468,7 +475,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
             )
 
             expect(described_class.superclass).to receive(:execute).with(
-              'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa foo',
+              'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa -ssh -user myuser foo',
               failonfail: true, combine: true
             )
 

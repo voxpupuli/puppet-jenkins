@@ -40,7 +40,6 @@ setup.  The parameters used to override default values are:
 * `cli_password`
 * `cli_password_file`
 * `cli_password_file_exists`
-* `cli_remoting_free`
 
 An example for a secured jenkins (e.g. ad connected) for LTS version
 newer then 2.46.2 (e.g. 2.60.1)
@@ -49,7 +48,6 @@ newer then 2.46.2 (e.g. 2.60.1)
 class { 'jenkins::cli::config':
   cli_username      => 'puppet',
   cli_password_file => 'thisisanactivedirectorypassword',
-  cli_remoting_free => true,
   cli_tries         => 3,
   cli_try_sleep     => 1,
 }
@@ -64,7 +62,6 @@ Note: The file /root/password_file_for_puppet with content
 class { 'jenkins::cli::config':
   cli_username             => 'puppet',
   cli_password_file        => '/root/password_file_for_puppet',
-  cli_remoting_free        => true,
   cli_password_file_exists => true,
   cli_tries                => 3,
   cli_try_sleep            => 1,

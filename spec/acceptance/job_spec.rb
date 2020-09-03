@@ -32,9 +32,7 @@ EOS
   context 'create' do
     it 'works with no errors' do
       pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-      }
+      include jenkins
 
       # the historical assumption is that this will work without cli => true
       # set on the jenkins class
@@ -63,18 +61,14 @@ EOS
   context 'no replace' do
     it 'does not replace an existing job' do
       pp_create = <<-EOS
-        class {'jenkins':
-          cli_remoting_free => true,
-        }
+        include jenkins
         jenkins::job {'test-noreplace-job':
           config => \'#{test_build_job.gsub('<description>test job</description>', '<description>do not overwrite me</description>')}\',
         }
       EOS
 
       pp_update = <<-EOS
-        class {'jenkins':
-          cli_remoting_free => true,
-        }
+        include jenkins
         jenkins::job {'test-noreplace-job':
           config  => \'#{test_build_job}\',
           replace => false,
@@ -98,9 +92,7 @@ EOS
     pending('Parameter $enabled is now deprecated, no need to test')
     it 'works with no errors' do
       pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-      }
+      include jenkins
 
       jenkins::job { 'test-build-job':
         config  => \'#{test_build_job}\',
@@ -129,10 +121,7 @@ EOS
       # create a test job so it can be deleted; job creation is not what
       # we're intending to be testing here
       pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-      }
-
+      include jenkins
       jenkins::job { 'test-build-job':
         config => \'#{test_build_job}\',
       }
@@ -142,10 +131,7 @@ EOS
 
       # test job deletion
       pp = <<-EOS
-      class {'jenkins':
-        cli_remoting_free => true,
-      }
-
+      include jenkins
       jenkins::job { 'test-build-job':
         ensure => 'absent',
         config => \'#{test_build_job}\',

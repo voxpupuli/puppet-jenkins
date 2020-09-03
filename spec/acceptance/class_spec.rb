@@ -6,8 +6,7 @@ describe 'jenkins class' do
   context 'default parameters' do
     pp = <<-EOS
     class {'jenkins':
-      cli_remoting_free => true,
-      cli               => true,
+      cli => true,
     }
     EOS
 
@@ -66,8 +65,7 @@ describe 'jenkins class' do
   context 'executors' do
     pp = <<-EOS
     class {'jenkins':
-      executors         => 42,
-      cli_remoting_free => true,
+      executors => 42,
     }
     EOS
 
@@ -92,8 +90,7 @@ describe 'jenkins class' do
   context 'slaveagentport' do
     pp = <<-EOS
       class {'jenkins':
-        slaveagentport    => 7777,
-        cli_remoting_free => true,
+        slaveagentport => 7777,
       }
       EOS
 
