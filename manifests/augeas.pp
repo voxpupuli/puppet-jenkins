@@ -52,9 +52,8 @@ define jenkins::augeas (
   case $plugin {
     true: {
       jenkins::plugin {$name:
-        version       => $plugin_version,
-        manage_config => false,
-        before        => Augeas["jenkins::augeas: ${name}"],
+        version => $plugin_version,
+        before  => Augeas["jenkins::augeas: ${name}"],
       }
     }
     false: {
@@ -62,9 +61,8 @@ define jenkins::augeas (
     }
     default: {
       jenkins::plugin {$plugin:
-        version       => $plugin_version,
-        manage_config => false,
-        before        => Augeas["jenkins::augeas: ${name}"],
+        version => $plugin_version,
+        before  => Augeas["jenkins::augeas: ${name}"],
       }
     }
   }

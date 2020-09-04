@@ -65,12 +65,7 @@ describe 'jenkins::augeas' do
           }
         end
 
-        it do
-          is_expected.to contain_jenkins__plugin('myplug').with(
-            version: '0.1',
-            manage_config: false
-          )
-        end
+        it { is_expected.to contain_jenkins__plugin('myplug').with(version: '0.1') }
       end
 
       #-------------------------------------------------------------------------------

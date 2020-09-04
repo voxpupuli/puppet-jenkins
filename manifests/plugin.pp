@@ -4,12 +4,17 @@
 # no dependency management and that's all up to the user. This is particularly
 # important to remember when also purging plugins.
 #
+# @param version
+#   The version to ensure
+#
 # @param config_filename
-#   Name of the config file for this plugin.
+#   Name of the config file for this plugin. Note config_content must also be
+#   set.
 #
 # @param config_content
 #   Content of the config file for this plugin. It is up to the caller to
-#   create this content from a template or any other mean.
+#   create this content from a template or any other mean. config_filename must
+#   also be set.
 #
 # @param update_url
 #
@@ -23,7 +28,24 @@
 # @param extension
 #   When no source is given, this extension is used
 #
-define jenkins::plugin(
+# @param digest_string
+#   An optional digest string to verify integrity. The digest_type parameter
+#   describes content of this string. It's passed to puppet-archive to verify
+#   the downloaded plugin.
+#
+# @param digest_type
+#   This parameter describes the content of digest_string. It's passed to
+#   puppet-archive to verify the downloaded plugin.
+#
+# @param enabled
+#   Ensure whether the plugin is enabled or not. Disabled plugins are still
+#   installed.
+#
+# @param pin
+#   Pin the plugin to a specific version. This prevents the updater from
+#   updating it.
+#
+define jenkins::plugin (
   Optional[String] $version         = undef,
   Optional[String] $config_filename = undef,
   Optional[String] $config_content  = undef,
@@ -31,19 +53,10 @@ define jenkins::plugin(
   Optional[String] $source          = undef,
   Enum['hpi', 'jpi'] $extension     = 'hpi',
   Optional[String] $digest_string   = undef,
-  Boolean $manage_config            = false,
   Boolean $enabled                  = true,
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
-  # no worky
-  Any $timeout                      = undef,
-  # deprecated
-  Any $plugin_dir                   = undef,
-  Any $username                     = undef,
-  Any $group                        = undef,
-  Any $create_user                  = undef,
 ) {
-
   include jenkins
 
   if $jenkins::manage_service {
@@ -56,23 +69,6 @@ define jenkins::plugin(
     $plugindir = File[$jenkins::plugin_dir]
   } else {
     $plugindir = undef
-  }
-
-  if $timeout {
-    warning('jenkins::plugin::timeout presently has effect')
-  }
-
-  if $plugin_dir {
-    warning('jenkins::plugin::plugin_dir is deprecated and has no effect -- see jenkins::localstatedir')
-  }
-  if $username {
-    warning('jenkins::plugin::username is deprecated and has no effect -- see jenkins::user')
-  }
-  if $group {
-    warning('jenkins::plugin::group is deprecated and has no effect -- see jenkins::group')
-  }
-  if $create_user {
-    warning('jenkins::plugin::create_user is deprecated and has no effect')
   }
 
   include jenkins
@@ -88,7 +84,7 @@ define jenkins::plugin(
     #   puppet 3 and puppet 4 interpret '\\' differently.
     # * We can't use double quotes without a variable interpolation or
     #   lint complains.
-    $empty    = ''
+    $empty    = '' # lint:ignore:empty_string_assignment
     $escver   = regsubst ($version, '\+', "${empty}\\\\+", 'G')
     $search   = "^${name} ${escver}$"
   }
@@ -144,15 +140,14 @@ define jenkins::plugin(
     }
     $inverse_plugin     = "${name}.${inverse_plugin_ext}"
 
-    file {[
-      "${jenkins::plugin_dir}/${inverse_plugin}",
-      "${jenkins::plugin_dir}/${inverse_plugin}.disabled",
-      "${jenkins::plugin_dir}/${inverse_plugin}.pinned",
-    ]:
-      ensure => absent,
-      before => Archive[$plugin],
+    file { [
+        "${jenkins::plugin_dir}/${inverse_plugin}",
+        "${jenkins::plugin_dir}/${inverse_plugin}.disabled",
+        "${jenkins::plugin_dir}/${inverse_plugin}.pinned",
+      ]:
+        ensure => absent,
+        before => Archive[$plugin],
     }
-
 
     # Allow plugins that are already installed to be enabled/disabled.
     file { "${jenkins::plugin_dir}/${plugin}.disabled":
@@ -187,7 +182,7 @@ define jenkins::plugin(
       $checksum_type   = undef
     }
 
-    exec{"force ${plugin}-${version}":
+    exec { "force ${plugin}-${version}":
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
@@ -215,12 +210,12 @@ define jenkins::plugin(
     before  => $notify,
   }
 
-  if $manage_config {
-    if $config_filename == undef or $config_content == undef {
+  if $config_filename {
+    if $config_content == undef {
       fail 'To deploy config file for plugin, you need to specify both $config_filename and $config_content'
     }
 
-    file {"${jenkins::localstatedir}/${config_filename}":
+    file { "${jenkins::localstatedir}/${config_filename}":
       ensure  => file,
       content => $config_content,
       owner   => $jenkins::user,
