@@ -33,8 +33,10 @@ describe 'jenkins_credentials' do
 
       context 'ConduitCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pending('puppet_helper.groovy implementation missing, see https://github.com/jenkinsci/puppet-jenkins/issues/753')
           pp = base_manifest + <<-EOS
+            jenkins::plugin { 'phabricator-plugin':
+            }
+
             jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
               ensure      => 'present',
               description => 'phabricator-jenkins-conduit',
@@ -53,10 +55,7 @@ describe 'jenkins_credentials' do
         # trying to match anything other than the id this way might match other
         # credentials
         describe file('/var/lib/jenkins/credentials.xml') do
-          it {
-            pending('puppet_helper.groovy implementation missing, see https://github.com/jenkinsci/puppet-jenkins/issues/753')
-            is_expected.to contain '<id>002224bd-60cb-49f3-a314-d0f73f82233d</id>'
-          }
+          it { is_expected.to contain '<id>002224bd-60cb-49f3-a314-d0f73f82233d</id>' }
         end
       end
 

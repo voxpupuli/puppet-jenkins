@@ -509,6 +509,12 @@ class Actions {
           info['private_key'] = cred.privateKey
           info['passphrase'] = cred.passphrase?.plainText
           break
+        case 'com.uber.jenkins.phabricator.credentials.ConduitCredentialsImpl':
+          info['scope'] = CredentialsScope.GLOBAL
+          info['url'] = cred.getUrl()
+          info['description'] = cred.description
+          info['token'] = cred.getToken().plainText
+          break
         case 'com.dabsquared.gitlabjenkins.connection.GitLabApiTokenImpl':
           info['api_token'] = cred.apiToken.plainText
           info['description'] = cred.description
@@ -666,6 +672,17 @@ class Actions {
           conf['access_key'],
           conf['secret_key'],
           conf['description'],
+        )
+        break
+      case 'ConduitCredentialsImpl':
+        util.requirePlugin('phabricator-plugin')
+
+        cred = this.class.classLoader.loadClass('com.uber.jenkins.phabricator.credentials.ConduitCredentialsImpl').newInstance(
+          conf['id'],
+          conf['url'],
+          null,
+          conf['description'],
+          conf['token'],
         )
         break
       case 'GitLabApiTokenImpl':
