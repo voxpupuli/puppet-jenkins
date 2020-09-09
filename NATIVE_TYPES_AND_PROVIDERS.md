@@ -381,34 +381,6 @@ jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
 }
 ```
 
-### `GoogleRobotPrivateKeyCredentials`
-
-Using this credential type requires that the jenkins `google-oauth-plugin` plugin
-has been installed.
-
-```puppet
-jenkins_credentials { '587690b0-f793-44e6-bc46-889cce58fb71':
-  ensure   => 'present',
-  impl     => 'GoogleRobotPrivateKeyCredentials',
-  json_key => @END
-  {
-    "client_email": "random@developer.gserviceaccount.com",
-    "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-  }
-  | END
-  ,
-}
-```
-or
-```
-jenkins_credentials { '2f867d0d-e0c7-48a6-a355-1d4fd2ac6c22':
-  ensure        => 'present',
-  impl          => 'GoogleRobotPrivateKeyCredentials',
-  email_address => 'random@developer.gserviceaccount.com',
-  p12_key       => 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg==',
-}
-```
-
 ### `jenkins_job`
 
 ```

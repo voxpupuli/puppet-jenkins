@@ -33,7 +33,6 @@ describe Puppet::Type.type(:jenkins_credentials) do
                         :FileCredentialsImpl,
                         :AWSCredentialsImpl,
                         :GitLabApiTokenImpl,
-                        :GoogleRobotPrivateKeyCredentials,
                         :BrowserStackCredentials
                       ]
     end
@@ -52,10 +51,7 @@ describe Puppet::Type.type(:jenkins_credentials) do
       :key_store_impl,
       :secret_key,
       :access_key,
-      :api_token,
-      :email_address,
-      :p12_key,
-      :json_key
+      :api_token
     ].each do |property|
       describe property.to_s do
         context 'attrtype' do
