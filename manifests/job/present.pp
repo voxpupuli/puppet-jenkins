@@ -4,14 +4,12 @@
 # @param config The content of the jenkins job config file
 # @param config_file Jenkins job config file (file on disk)
 # @param jobname The name of the jenkins job
-# @param enabled Deprecated parameter (will have no effect if set)
 # @param replace Whether or not to replace the job if it already exists.
 #
 define jenkins::job::present (
   Optional[String] $config      = undef,
   Optional[String] $config_file = undef,
   String $jobname               = $title,
-  Any $enabled                  = undef,
   String $difftool              = '/usr/bin/diff -b -q',
   Boolean $replace              = true,
 ) {
@@ -92,10 +90,5 @@ define jenkins::job::present (
       unless  => "${difftool} ${config_path} ${tmp_config_path}",
       notify  => Exec['reload-jenkins'],
     }
-  }
-
-  # Deprecation warning if $enabled is set
-  if $enabled != undef {
-    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
   }
 }
