@@ -61,21 +61,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
             "api_token": "tokens for days"
         },
         {
-          "id": "587690b0-f793-44e6-bc46-889cce58fb71",
-          "domain": null,
-          "scope": null,
-          "impl": "GoogleRobotPrivateKeyCredentials",
-          "json_key": "{\\\"client_email\\\":\\\"random@developer.gserviceaccount.com\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\n...\\\\n-----END PRIVATE KEY-----\\\\n\\\"}"
-        },
-        {
-          "id": "2f867d0d-e0c7-48a6-a355-1d4fd2ac6c22",
-          "domain": null,
-          "scope": null,
-          "impl": "GoogleRobotPrivateKeyCredentials",
-          "email_address": "random@developer.gserviceaccount.com",
-          "p12_key": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCg=="
-        },
-        {
           "id": "562fa23d-a441-4cab-997f-58df6e245813",
           "domain": null,
           "scope": null,
@@ -89,7 +74,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
   let(:credentials) { JSON.parse(credentials_list_json_raw) }
 
-  shared_examples 'a provider from example hash 1' do
+  shared_examples 'a provider from example hash UsernamePasswordCredentialsImpl' do
     it do
       cred = credentials[0]
 
@@ -116,16 +101,13 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 2' do
+  shared_examples 'a provider from example hash BasicSSHUserPrivateKey' do
     it do
       cred = credentials[1]
 
@@ -152,16 +134,13 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 3' do
+  shared_examples 'a provider from example hash StringCredentialsImpl' do
     it do
       cred = credentials[2]
 
@@ -188,16 +167,13 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 4' do
+  shared_examples 'a provider from example hash FileCredentialsImpl' do
     it do
       cred = credentials[3]
 
@@ -224,16 +200,13 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         secret_key
         access_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 5' do
+  shared_examples 'a provider from example hash AWSCredentialsImpl' do
     it do
       cred = credentials[4]
 
@@ -259,16 +232,13 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         key_store_impl
         content
         file_name
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 6' do
+  shared_examples 'a provider from example hash GitLabApiTokenImpl' do
     it do
       cred = credentials[5]
 
@@ -295,83 +265,15 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         file_name
         secret_key
         access_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
     end
   end
 
-  shared_examples 'a provider from example hash 7' do
+  shared_examples 'a provider from example hash BrowserStackCredentials' do
     it do
-      cred = credentials[5]
-
-      expect(provider.name).to eq cred['id']
-      expect(provider.ensure).to eq :present
-      %w[
-        domain
-        scope
-        impl
-        json_key
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
-      end
-
-      %w[
-        username
-        password
-        private_key
-        passphrase
-        source
-        key_store_impl
-        content
-        file_name
-        secret_key
-        access_key
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq :absent
-      end
-    end
-  end
-
-  shared_examples 'a provider from example hash 8' do
-    it do
-      cred = credentials[5]
-
-      expect(provider.name).to eq cred['id']
-      expect(provider.ensure).to eq :present
-      %w[
-        domain
-        scope
-        impl
-        email_address
-        p12_key
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq cred[k].nil? ? :undef : cred[k]
-      end
-
-      %w[
-        username
-        password
-        private_key
-        passphrase
-        source
-        key_store_impl
-        content
-        file_name
-        secret_key
-        access_key
-      ].each do |k|
-        expect(provider.public_send(k.to_sym)).to eq :absent
-      end
-    end
-  end
-
-  shared_examples 'a provider from example hash 9' do
-    it do
-      cred = credentials[8]
+      cred = credentials[6]
 
       expect(provider.name).to eq cred['id']
       expect(provider.ensure).to eq :present
@@ -394,9 +296,6 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         content
         file_name
         secret_key
-        email_address
-        p12_key
-        json_key
       ].each do |k|
         expect(provider.public_send(k.to_sym)).to eq :absent
       end
@@ -417,7 +316,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       context 'first instance returned' do
-        it_behaves_like 'a provider from example hash 1' do
+        it_behaves_like 'a provider from example hash UsernamePasswordCredentialsImpl' do
           let(:provider) do
             described_class.instances[0]
           end
@@ -425,7 +324,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       context 'second instance returned' do
-        it_behaves_like 'a provider from example hash 2' do
+        it_behaves_like 'a provider from example hash BasicSSHUserPrivateKey' do
           let(:provider) do
             described_class.instances[1]
           end
@@ -433,7 +332,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       end
 
       context 'third instance returned' do
-        it_behaves_like 'a provider from example hash 3' do
+        it_behaves_like 'a provider from example hash StringCredentialsImpl' do
           let(:provider) do
             described_class.instances[2]
           end
@@ -483,19 +382,19 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   #
 
   describe '::from_hash' do
-    it_behaves_like 'a provider from example hash 1' do
+    it_behaves_like 'a provider from example hash UsernamePasswordCredentialsImpl' do
       let(:provider) do
         described_class.send :from_hash, credentials[0]
       end
     end
 
-    it_behaves_like 'a provider from example hash 2' do
+    it_behaves_like 'a provider from example hash BasicSSHUserPrivateKey' do
       let(:provider) do
         described_class.send :from_hash, credentials[1]
       end
     end
 
-    it_behaves_like 'a provider from example hash 3' do
+    it_behaves_like 'a provider from example hash StringCredentialsImpl' do
       let(:provider) do
         described_class.send :from_hash, credentials[2]
       end
