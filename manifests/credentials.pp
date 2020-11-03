@@ -22,14 +22,13 @@ define jenkins::credentials (
   String $private_key_or_path       = '',
   Enum['present', 'absent'] $ensure = 'present',
   String $uuid                      = '',
-){
-
+) {
   include jenkins
   include jenkins::cli_helper
 
   Class['jenkins::cli_helper']
-    -> Jenkins::Credentials[$title]
-      -> Anchor['jenkins::end']
+  -> Jenkins::Credentials[$title]
+  -> Anchor['jenkins::end']
 
   case $ensure {
     'present': {

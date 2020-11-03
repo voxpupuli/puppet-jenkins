@@ -1,9 +1,11 @@
-# This class should be considered private
+# @summary Set up a systemd service and migrate from sysv if applicable
 #
 # This type handles setting up a systemd service and, if applicable, managing
 # the transition from a sysv -> systemd service without leaving zombie services
 # running.
-define jenkins::systemd(
+#
+# @api private
+define jenkins::systemd (
   Any $user,
   Any $libdir,
 ) {

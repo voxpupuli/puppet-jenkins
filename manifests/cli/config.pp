@@ -1,12 +1,10 @@
-# == Class: jenkins::cli::config
-#
 # This class provides configuration values to override defaults and fact data
 # for PuppetX::Jenkins::Provider::Clihelper based providers.
 #
 # Default and fact data is managed internal to the
 # PuppetX::Jenkins::Provider::Clihelper class for compatiblity with the puppet
 # resource face.  No defaults should be set in this classes definition.
-class jenkins::cli::config(
+class jenkins::cli::config (
   Optional[Stdlib::Absolutepath] $cli_jar         = undef,
   Optional[String] $url                           = undef,
   Optional[Stdlib::Absolutepath] $ssh_private_key = undef,
@@ -19,7 +17,6 @@ class jenkins::cli::config(
   Boolean $cli_password_file_exists               = false,
   Optional[String] $ssh_private_key_content       = undef,
 ) {
-
   if str2bool($facts['is_pe']) {
     $gem_provider = 'pe_gem'
     # lint:ignore:legacy_facts
@@ -84,5 +81,4 @@ class jenkins::cli::config(
       }
     }
   }
-
 }

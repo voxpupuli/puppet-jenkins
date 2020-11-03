@@ -1,5 +1,5 @@
-# Class: jenkins::service
-#
+# @summary Manage the Jenkins service
+# @api private
 class jenkins::service {
   assert_private()
 
@@ -10,5 +10,4 @@ class jenkins::service {
     hasstatus  => true,
     hasrestart => true,
   }
-
 }

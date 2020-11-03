@@ -284,7 +284,7 @@
 #       version: '2.16.0'
 #     # /support-core deps
 #
-class jenkins(
+class jenkins (
   String $version                                 = $jenkins::params::version,
   Boolean $lts                                    = $jenkins::params::lts,
   Boolean $repo                                   = $jenkins::params::repo,
@@ -328,7 +328,6 @@ class jenkins(
   String $default_plugins_host                    = $jenkins::params::default_plugins_host,
   Boolean $purge_plugins                          = $jenkins::params::purge_plugins,
 ) inherits jenkins::params {
-
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
   }
@@ -358,8 +357,8 @@ class jenkins(
   $job_dir = "${localstatedir}/jobs"
 
   # lint:ignore:anchor_resource
-  anchor {'jenkins::begin':}
-  anchor {'jenkins::end':}
+  anchor { 'jenkins::begin': }
+  anchor { 'jenkins::end': }
   # lint:endignore
 
   if $install_java {
@@ -389,7 +388,7 @@ class jenkins(
 
   if $manage_service {
     include jenkins::service
-    if empty($default_plugins){
+    if empty($default_plugins) {
       notice(sprintf('INFO: make sure you install the following plugins with your code using this module: %s',join($jenkins::params::default_plugins,','))) # lint:ignore:140chars
     }
 
@@ -402,8 +401,8 @@ class jenkins(
       # jenkins::config manages the jenkins user resource, which is autorequired
       # by the file resource for the run wrapper.
       Class['jenkins::config']
-        -> Jenkins::Systemd['jenkins']
-          -> Anchor['jenkins::end']
+      -> Jenkins::Systemd['jenkins']
+      -> Anchor['jenkins::end']
     }
   }
 
@@ -423,8 +422,8 @@ class jenkins(
     }
 
     Class['jenkins::cli']
-      -> Jenkins::Cli::Exec['set_num_executors']
-        -> Class['jenkins::jobs']
+    -> Jenkins::Cli::Exec['set_num_executors']
+    -> Class['jenkins::jobs']
   }
 
   if ($slaveagentport != undef) {
@@ -434,39 +433,39 @@ class jenkins(
     }
 
     Class['jenkins::cli']
-      -> Jenkins::Cli::Exec['set_slaveagent_port']
-        -> Class['jenkins::jobs']
+    -> Jenkins::Cli::Exec['set_slaveagent_port']
+    -> Class['jenkins::jobs']
   }
 
   if $manage_service {
     Anchor['jenkins::begin']
     -> Class['jenkins::user_setup']
-      -> Class[$jenkins_package_class]
-        -> Class['jenkins::config']
-          -> Class['jenkins::plugins']
-            ~> Class['jenkins::service']
-              -> Class['jenkins::jobs']
-                -> Anchor['jenkins::end']
+    -> Class[$jenkins_package_class]
+    -> Class['jenkins::config']
+    -> Class['jenkins::plugins']
+    ~> Class['jenkins::service']
+    -> Class['jenkins::jobs']
+    -> Anchor['jenkins::end']
   }
 
   if $install_java {
     Anchor['jenkins::begin']
-      -> Class['java']
-        -> Class[$jenkins_package_class]
-          -> Anchor['jenkins::end']
+    -> Class['java']
+    -> Class[$jenkins_package_class]
+    -> Anchor['jenkins::end']
   }
 
   if $repo_ {
     Anchor['jenkins::begin']
-      -> Class['jenkins::repo']
-        -> Class['jenkins::package']
-          -> Anchor['jenkins::end']
+    -> Class['jenkins::repo']
+    -> Class['jenkins::package']
+    -> Anchor['jenkins::end']
   }
 
   if ($configure_firewall and $manage_service) {
     Class['jenkins::service']
-      -> Class['jenkins::firewall']
-        -> Anchor['jenkins::end']
+    -> Class['jenkins::firewall']
+    -> Anchor['jenkins::end']
   }
 }
 # vim: ts=2 et sw=2 autoindent

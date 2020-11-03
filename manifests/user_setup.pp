@@ -1,18 +1,14 @@
-# This class should be considered private
-#
-# It will optionally create the jenkins user and make sure all
-# directories have proper permissions setup.
+# @summary Optionally create the jenkins user and make sure all directories
+#   have proper permissions setup.
 #
 # By having this in a separate class that is managed before
 # installing the package, we can effectivly override the
 # default local dir that is otherwise possibly created by
 # the package.
 #
+# @api private
 class jenkins::user_setup {
-
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   $dir_params = {
     ensure => directory,
@@ -26,18 +22,18 @@ class jenkins::user_setup {
   # old conditional behavior of jenkins::plugin
   if $jenkins::manage_user {
     ensure_resource('user', $jenkins::user, {
-      ensure     => present,
-      gid        => $jenkins::group,
-      home       => $jenkins::localstatedir,
-      managehome => false,
-      system     => true,
+        ensure     => present,
+        gid        => $jenkins::group,
+        home       => $jenkins::localstatedir,
+        managehome => false,
+        system     => true,
     })
   }
 
   if $jenkins::manage_group {
     ensure_resource('group', $jenkins::group, {
-      ensure => present,
-      system => true,
+        ensure => present,
+        system => true,
     })
   }
 
@@ -56,5 +52,4 @@ class jenkins::user_setup {
     ensure_resource('file', $jenkins::plugin_dir, $plugin_dir_params)
     ensure_resource('file', $jenkins::job_dir, $dir_params)
   }
-
 }

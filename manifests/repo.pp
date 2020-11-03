@@ -1,7 +1,6 @@
-#
-# jenkins::repo handles pulling in the platform specific repo classes
-#
-class jenkins::repo(
+# @summary Pull in the platform specific repo classes
+# @api private
+class jenkins::repo (
   Stdlib::Httpurl $base_url = 'https://pkg.jenkins.io',
   String $gpg_key_filename = 'jenkins.io.key',
 ) {
@@ -9,7 +8,6 @@ class jenkins::repo(
 
   if $jenkins::repo {
     case $facts['os']['family'] {
-
       'RedHat', 'Linux': {
         contain jenkins::repo::el
       }

@@ -18,8 +18,8 @@ class jenkins::cli {
   # resource relationships being scattered throughout this module.
   if $jenkins::manage_service {
     Class['jenkins::service']
-      -> Class['jenkins::cli']
-        -> Anchor['jenkins::end']
+    -> Class['jenkins::cli']
+    -> Anchor['jenkins::end']
   }
 
   $jar = "${jenkins::libdir}/jenkins-cli.jar"
@@ -56,10 +56,10 @@ class jenkins::cli {
   # The jenkins cli command with required parameter(s)
   $cmd = join(
     delete_undef_values([
-      'java',
-      "-jar ${jar}",
-      "-s http://localhost:${port}${prefix}",
-      $jenkins::_cli_auth_arg,
+        'java',
+        "-jar ${jar}",
+        "-s http://localhost:${port}${prefix}",
+        $jenkins::_cli_auth_arg,
     ]),
     ' '
   )

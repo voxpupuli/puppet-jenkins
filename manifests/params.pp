@@ -1,6 +1,5 @@
-# Class: jenkins::params
-#
-#
+# @summary Default parameters
+# @api private
 class jenkins::params {
   $version               = 'installed'
   $lts                   = true
