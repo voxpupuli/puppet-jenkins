@@ -48,10 +48,9 @@ define jenkins::augeas (
   include jenkins
   include jenkins::cli
 
-
   case $plugin {
     true: {
-      jenkins::plugin {$name:
+      jenkins::plugin { $name:
         version => $plugin_version,
         before  => Augeas["jenkins::augeas: ${name}"],
       }
@@ -60,7 +59,7 @@ define jenkins::augeas (
       # do nothing
     }
     default: {
-      jenkins::plugin {$plugin:
+      jenkins::plugin { $plugin:
         version => $plugin_version,
         before  => Augeas["jenkins::augeas: ${name}"],
       }
@@ -68,12 +67,12 @@ define jenkins::augeas (
   }
 
   if $restart {
-      $notify_exec = 'safe-restart-jenkins'
+    $notify_exec = 'safe-restart-jenkins'
   } else {
-      $notify_exec = 'reload-jenkins'
+    $notify_exec = 'reload-jenkins'
   }
 
-  augeas {"jenkins::augeas: ${name}":
+  augeas { "jenkins::augeas: ${name}":
     incl      => "${jenkins::localstatedir}/${config_filename}",
     lens      => 'Xml.lns',
     context   => regsubst("/files${jenkins::localstatedir}/${config_filename}/${context}", '\/{2,}', '/', 'G'),
@@ -82,5 +81,4 @@ define jenkins::augeas (
     changes   => $changes,
     show_diff => $show_diff,
   }
-
 }

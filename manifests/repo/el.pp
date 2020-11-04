@@ -1,5 +1,5 @@
-# Class: jenkins::repo::el
-#
+# @summary Set up the yum repo on Red Hat-based distros
+# @api private
 class jenkins::repo::el {
   assert_private()
 
@@ -9,7 +9,7 @@ class jenkins::repo::el {
     $baseurl = "${jenkins::repo::base_url}/redhat/"
   }
 
-  yumrepo {'jenkins':
+  yumrepo { 'jenkins':
     descr    => 'Jenkins',
     baseurl  => $baseurl,
     gpgcheck => 1,

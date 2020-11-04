@@ -1,5 +1,5 @@
-# This class should be considered private
-#
+# @summary Wire up the configuration
+# @api private
 class jenkins::config {
   assert_private()
 
@@ -10,6 +10,4 @@ class jenkins::config {
     $jenkins::config_hash
   )
   create_resources('jenkins::sysconfig', $config_hash)
-
-
 }

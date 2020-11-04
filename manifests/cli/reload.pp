@@ -1,7 +1,5 @@
-# Class: jenkins::cli::reload
-#
-# Command Jenkins to reload config.xml via the CLI.
-#
+# @summary Command Jenkins to reload config.xml via the CLI.
+# @api private
 class jenkins::cli::reload {
   assert_private()
 

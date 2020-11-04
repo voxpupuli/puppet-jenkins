@@ -1,7 +1,6 @@
-#
-# jenkins::firewall class integrates with the puppetlabs-firewall module for
-# opening the port to Jenkins automatically
-#
+# @summary Integrate with the puppetlabs-firewall module for opening the port
+#   to Jenkins automatically
+# @api private
 class jenkins::firewall {
   assert_private()
 

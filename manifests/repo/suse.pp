@@ -1,5 +1,5 @@
-# Class: jenkins::repo::suse
-#
+# @summary Set up the Zypper repo on SUSE-based distros
+# @api private
 class jenkins::repo::suse {
   assert_private()
 
@@ -9,7 +9,7 @@ class jenkins::repo::suse {
     $baseurl = "${jenkins::repo::base_url}/opensuse/"
   }
 
-  zypprepo {'jenkins':
+  zypprepo { 'jenkins':
     descr    => 'Jenkins',
     baseurl  => $baseurl,
     gpgcheck => 1,

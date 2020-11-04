@@ -144,7 +144,6 @@ class jenkins::slave (
   Boolean $delete_existing_clients        = false,
   Any $java_cmd                           = '/usr/bin/java',
 ) inherits jenkins::params {
-
   if versioncmp($version, '3.0') < 0 {
     $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
   } else {
@@ -336,6 +335,6 @@ class jenkins::slave (
 
   if $manage_slave_user and $manage_client_jar {
     User['jenkins-slave_user']
-      -> Archive['get_swarm_client']
+    -> Archive['get_swarm_client']
   }
 }

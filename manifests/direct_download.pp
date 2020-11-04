@@ -1,7 +1,6 @@
-#
-# Support for directly downloading a package file - for when no repository
-# is available
-#
+# @summary Support for directly downloading a package file - for when no
+#   repository is available
+# @api private
 class jenkins::direct_download {
   assert_private()
 

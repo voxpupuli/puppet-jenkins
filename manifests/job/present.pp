@@ -1,5 +1,5 @@
-# Creates or updates a jenkins build job
-# This define should be considered private.
+# @summary Creates or updates a jenkins build job
+# @api private
 #
 # @param config The content of the jenkins job config file
 # @param config_file Jenkins job config file (file on disk)
@@ -7,15 +7,14 @@
 # @param enabled Deprecated parameter (will have no effect if set)
 # @param replace Whether or not to replace the job if it already exists.
 #
-define jenkins::job::present(
+define jenkins::job::present (
   Optional[String] $config      = undef,
   Optional[String] $config_file = undef,
   String $jobname               = $title,
   Any $enabled                  = undef,
   String $difftool              = '/usr/bin/diff -b -q',
   Boolean $replace              = true,
-){
-
+) {
   include jenkins::cli
   include jenkins::cli::reload
 
