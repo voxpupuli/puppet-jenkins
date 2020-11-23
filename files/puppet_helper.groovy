@@ -823,6 +823,17 @@ class Actions {
         ]
         break
 
+      //  Open ID
+      case 'org.jenkinsci.plugins.oic.OicSecurityRealm':
+        config = [
+          setSecurityRealm: [
+            (className): [
+              realm.@serviceName
+            ],
+          ],
+        ]
+        break
+
       // constructor with no arguments
       // "Delegate to servlet container"
       case 'hudson.security.LegacySecurityRealm':
@@ -830,8 +841,8 @@ class Actions {
         config = [
           setSecurityRealm: [
             (realm.getClass().getName()): [],
-         ],
-       ]
+        ],
+      ]
     }
 
     def builder = new groovy.json.JsonBuilder(config)
