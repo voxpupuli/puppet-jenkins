@@ -288,7 +288,7 @@ class jenkins::slave (
         }
       }
     }
-    default: { }
+    default: {}
   }
 
   #a Add jenkins slave user if necessary.
