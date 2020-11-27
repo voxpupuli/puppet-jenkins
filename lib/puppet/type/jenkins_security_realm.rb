@@ -14,28 +14,27 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_security_realm) do
     desc 'List of arguments to security realm class constructor'
 
     def insync?(is)
-      _is_insync = true
+      is_insync = true
       reason = ''
 
-      is.each.with_index { |val,index|
+      is.each.with_index do |val, index|
         item_is_not_insync = false
-        
-        if val == :undef 
+        if val == :undef
           item_is_not_insync = true if should[index].class != NilClass
           reason = 'undef/nil'
-        elsif should[index].class == String && should[index].start_with?('Boolean:') 
-          item_is_not_insync = true if should[index].gsub(/Boolean:/, '') != val.to_s
+        elsif should[index].class == String && should[index].start_with?('Boolean:')
+          item_is_not_insync = true if should[index].gsub(%r{Boolean:}, '') != val.to_s
           reason = 'Boolean'
         elsif val != should[index]
           item_is_not_insync = true
           reason = 'N-EQ'
         end
 
-        debug( "Type jenkins_security_realm. Arguments NOT insync? Index: #{index} - is: '#{val}' - should: '#{should[index]}' - reason: #{reason}" ) if item_is_not_insync
-        _is_insync = false if item_is_not_insync
-      }
+        debug("Type jenkins_security_realm. Arguments NOT insync? Index: #{index} - is: '#{val}' - should: '#{should[index]}' - reason: #{reason}") if item_is_not_insync
+        is_insync = false if item_is_not_insync
+      end
 
-      _is_insync
+      is_insync
     end
   end
 
