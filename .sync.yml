@@ -6,3 +6,5 @@ Gemfile:
       - gem: 'retries'
 spec/spec_helper.rb:
   spec_overrides: "require 'rspec/its'"
+.github/workflows/ci.yml:
+  pidfile_workaround: CentOS
