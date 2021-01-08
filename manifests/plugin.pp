@@ -71,8 +71,6 @@ define jenkins::plugin (
     $plugindir = undef
   }
 
-  include jenkins
-
   if $version {
     $plugins_host = $update_url ? {
       undef   => $jenkins::default_plugins_host,
@@ -194,9 +192,18 @@ define jenkins::plugin (
       proxy_server    => $jenkins::proxy::url,
       cleanup         => false,
       extract         => false,
+      user            => $jenkins::user,
+      group           => $jenkins::group,
       require         => $plugindir,
       notify          => $notify,
     }
+
+    exec { "${plugin} permissions":
+      command   => "chown ${jenkins::user}:${jenkins::group} ${jenkins::plugin_dir}/${plugin}",
+      path      => '/usr/sbin:/usr/bin:/bin:/sbin',
+      subscribe => Archive[$plugin],
+    }
+
     $archive_require = Archive[$plugin]
   } else {
     $archive_require = undef
