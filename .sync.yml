@@ -1,9 +1,4 @@
 ---
-.travis.yml:
-  secure: "cQdjbcwx+q/ArSkOtnxMYmlsWnJmyNEz7IUmpSx3F/z1ntX75/J3mJYFgYuvrOw2IbmmuwgVPofBpJjJajkhGOpaywOjKA6PgxKzSEu6e/q5CXJwMLnsDhHqY6X9bdGF5TU/DUkNzxBQlI7uDyk3yBVAACzLGMTCFksoztdlIbI="
-  docker_sets:
-    - set: ubuntu1604-64
-    - set: centos7-64
 Gemfile:
   optional:
     ':test':
@@ -11,3 +6,5 @@ Gemfile:
       - gem: 'retries'
 spec/spec_helper.rb:
   spec_overrides: "require 'rspec/its'"
+.github/workflows/ci.yml:
+  pidfile_workaround: CentOS

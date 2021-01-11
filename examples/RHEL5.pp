@@ -1,8 +1,7 @@
 node default {
-
   # requires stschulte/rpmkey
 
-  package {'java-1.7.0-openjdk.x86_64':
+  package { 'java-1.7.0-openjdk.x86_64':
     ensure => 'present',
   }
 
@@ -13,7 +12,7 @@ node default {
     ensure => present,
     source => 'http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key',
   }
-  -> class {'jenkins':
+  -> class { 'jenkins':
     install_java => false,
     cli          => true,
   }
