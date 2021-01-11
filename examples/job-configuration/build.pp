@@ -3,7 +3,6 @@ class jenkins::job::build (
 # lint:endignore
   $config   = undef,
   $jobname  = $title,
-  $enabled  = 1,
   $ensure   = 'present',
 ) {
   if $config == undef {
@@ -15,7 +14,6 @@ class jenkins::job::build (
   jenkins::job { 'build':
     ensure  => $ensure,
     jobname => $jobname,
-    enabled => $enabled,
     config  => $real_content,
   }
 }

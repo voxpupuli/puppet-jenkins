@@ -88,34 +88,6 @@ EOS
     end
   end
 
-  context 'disable' do
-    pending('Parameter $enabled is now deprecated, no need to test')
-    it 'works with no errors' do
-      pp = <<-EOS
-      include jenkins
-
-      jenkins::job { 'test-build-job':
-        config  => \'#{test_build_job}\',
-        enabled => false,
-      }
-      EOS
-
-      # Run it twice and test for idempotency
-      apply(pp, catch_failures: true)
-      # XXX idempotency is broken with at least jenkins 1.613
-      # apply(pp, :catch_changes => true)
-    end
-
-    describe file('/var/lib/jenkins/jobs/test-build-job/config.xml') do
-      it { is_expected.to be_file }
-      it { is_expected.to be_owned_by 'jenkins' }
-      it { is_expected.to be_grouped_into 'jenkins' }
-      it { is_expected.to be_mode 644 }
-      it { is_expected.to contain '<description>test job</description>' }
-      it { is_expected.to contain '<command>/usr/bin/true</command>' }
-    end
-  end # deprecated param enabled
-
   context 'delete' do
     it 'works with no errors' do
       # create a test job so it can be deleted; job creation is not what

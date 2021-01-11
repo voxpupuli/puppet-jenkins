@@ -6,7 +6,6 @@
 # @param template Path to a puppet template() resource containing the Jenkins XML job description.
 #     Will override 'config' if set
 # @param jobname the name of the jenkins job
-# @param enabled deprecated parameter (will have no effect if set)
 # @param ensure choose 'absent' to ensure the job is removed
 # @param difftool Provide a command to execute to compare Jenkins job files
 # @param replace
@@ -16,15 +15,10 @@ define jenkins::job (
   Optional[String] $source                  = undef,
   Optional[Stdlib::Absolutepath] $template  = undef,
   String $jobname                           = $title,
-  Any $enabled                              = undef,
   Enum['present', 'absent'] $ensure         = 'present',
   String $difftool                          = '/usr/bin/diff -b -q',
   Boolean $replace                          = true
 ) {
-  if $enabled {
-    warning("You set \$enabled to ${enabled}, this parameter is now deprecated, nothing will change whatever is its value")
-  }
-
   include jenkins::cli
 
   Class['jenkins::cli']
@@ -49,7 +43,6 @@ define jenkins::job (
     jenkins::job::present { $title:
       config   => $realconfig,
       jobname  => $jobname,
-      enabled  => $enabled,
       difftool => $difftool,
       replace  => $replace,
     }

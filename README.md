@@ -79,14 +79,6 @@ Build jobs can be managed using the `jenkins::job` define
   }
 ```
 
-#### Disabling a build job
-```puppet
-  jenkins::job { 'test-build-job':
-    enabled => 0,
-    config  => template("${templates}/test-build-job.xml.erb"),
-  }
-```
-
 #### Removing an existing build job
 ```puppet
   jenkins::job { 'test-build-job':
