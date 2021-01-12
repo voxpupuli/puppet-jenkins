@@ -6,7 +6,7 @@ module Puppet
       return File.expand_path('~jenkins')
     rescue ArgumentError
       # The Jenkins user doesn't exist!
-      return nil
+      return '/var/lib/jenkins'
     end
 
     # @return [String] Full path to the Jenkins user's plugin directory

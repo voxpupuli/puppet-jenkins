@@ -10,7 +10,7 @@ describe Puppet::Jenkins do
         File.should_receive(:expand_path).and_raise(ArgumentError)
       end
 
-      it { is_expected.to be_nil }
+      it { is_expected.to eql '/var/lib/jenkins' }
     end
 
     context 'when a jenkins user does exist' do
