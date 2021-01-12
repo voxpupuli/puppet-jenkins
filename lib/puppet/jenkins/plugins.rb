@@ -55,7 +55,8 @@ module Puppet
           begin
             manifest = manifest_data(File.read(manifest, encoding: 'UTF-8'))
             plugins[plugin] = manifest if manifest
-          rescue StandardError
+          rescue StandardError => e
+            Puppet.warning("Failed to read Jenkins plugin manifest #{manifest}: #{e}")
             # Nothing really to do about it, failing means no version which will
             # result in a new plugin if needed
             nil
