@@ -69,10 +69,7 @@ module Puppet
       #
       # @return [Boolean] T
       def self.exists?
-        home = Puppet::Jenkins.home_dir
-        return false if home.nil?
-        return false unless File.directory? Puppet::Jenkins.plugins_dir
-        true
+        !Puppet::Jenkins.home_dir.nil? && File.directory?(Puppet::Jenkins.plugins_dir)
       end
     end
   end
