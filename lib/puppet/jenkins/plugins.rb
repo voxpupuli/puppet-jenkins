@@ -53,7 +53,7 @@ module Puppet
 
           manifest = File.join(plugin_dir, 'META-INF', 'MANIFEST.MF')
           begin
-            manifest = manifest_data(File.read(manifest))
+            manifest = manifest_data(File.read(manifest, encoding: 'UTF-8'))
             plugins[plugin] = manifest if manifest
           rescue StandardError
             # Nothing really to do about it, failing means no version which will
