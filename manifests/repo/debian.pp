@@ -10,6 +10,8 @@ class jenkins::repo::debian
   include ::apt
 
   $pkg_host = 'https://pkg.jenkins.io'
+  $pkg_key_id = '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5'
+  $pkg_key_source = "${pkg_host}/debian/jenkins-io.key"
 
   ensure_packages(['apt-transport-https'])
 
@@ -22,8 +24,8 @@ class jenkins::repo::debian
         'src' => false,
       },
       key      => {
-        'id'     => '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5',
-        'source' => "${pkg_host}/debian/jenkins-ci.org.key",
+        'id'     => "${pkg_key_id}",
+        'source' => "${pkg_key_source}",
       },
       require  => Package['apt-transport-https'],
       notify   => Exec['apt_update'],
@@ -38,8 +40,8 @@ class jenkins::repo::debian
         'src' => false,
       },
       key      => {
-        'id'     => '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5',
-        'source' => "${pkg_host}/debian/jenkins-ci.org.key",
+        'id'     => "${pkg_key_id}",
+        'source' => "${pkg_key_source}",
       },
       require  => Package['apt-transport-https'],
       notify   => Exec['apt_update'],
