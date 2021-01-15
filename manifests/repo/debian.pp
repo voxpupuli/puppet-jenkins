@@ -17,7 +17,7 @@ class jenkins::repo::debian
 
   $pkg_host = 'https://pkg.jenkins.io'
   $pkg_key_id = '62A9756BFD780C377CF24BA8FCEF32E745F2C3D5'
-  $pkg_key_source = "${pkg_host}/${location}/jenkins-io.key"
+  $pkg_key_source = "${pkg_host}/${location}/jenkins.io.key"
 
   ensure_packages(['apt-transport-https'])
 
