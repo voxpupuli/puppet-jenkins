@@ -67,6 +67,6 @@ if [ -n "$TOOL_LOCATIONS" ]; then
 fi
 
 [[ -n "$OTHER_ARGS" ]] &&
-  SLAVE_ARGS+=("$OTHER_ARGS")
+  SLAVE_ARGS+=($OTHER_ARGS)
 
 $JAVA "${SLAVE_ARGS[@]}"
