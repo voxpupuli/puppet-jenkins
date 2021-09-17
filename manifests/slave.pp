@@ -218,7 +218,7 @@ class jenkins::slave (
     }
   }
 
-  case $::kernel {
+  case $facts['kernel'] {
     'Linux': {
       $service_name     = 'jenkins-slave'
       $defaults_user    = 'root'
