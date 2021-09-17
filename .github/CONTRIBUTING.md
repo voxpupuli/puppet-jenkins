@@ -25,7 +25,7 @@ By participating in this project you agree to abide by its terms.
 
 * Fork the repo.
 * Create a separate branch for your change.
-* We only take pull requests with passing tests, and documentation. [travis-ci](http://travis-ci.org) runs the tests for us. You can also execute them locally. This is explained [in a later section](#the-test-matrix).
+* We only take pull requests with passing tests, and documentation. [GitHub Actions](https://docs.github.com/en/actions) run the tests for us. You can also execute them locally. This is explained [in a later section](#the-test-matrix).
 * Checkout [our docs](https://voxpupuli.org/docs/reviewing_pr/) we use to review a module and the [official styleguide](https://puppet.com/docs/puppet/6.0/style_guide.html). They provide some guidance for new code that might help you before you submit a pull request.
 * Add a test for your change. Only refactoring and documentation changes require no new tests. If you are adding functionality or fixing a bug, please add a test.
 * Squash your commits down into logical components. Make sure to rebase against our current master.
@@ -232,33 +232,7 @@ simple tests against it after applying the module. You can run this
 with:
 
 ```sh
-bundle exec rake beaker
-```
-
-This will run the tests on the module's default nodeset. You can override the
-nodeset used, e.g.,
-
-```sh
-BEAKER_set=centos-7-x64 bundle exec rake beaker
-```
-
-There are default rake tasks for the various acceptance test modules, e.g.,
-
-```sh
-bundle exec rake beaker:centos-7-x64
-bundle exec rake beaker:ssh:centos-7-x64
-```
-
-If you don't want to have to recreate the virtual machine every time you can
-use `BEAKER_destroy=no` and `BEAKER_provision=no`. On the first run you will at
-least need `BEAKER_provision` set to yes (the default). The Vagrantfile for the
-created virtual machines will be in `.vagrant/beaker_vagrant_files`.
-
-Beaker also supports docker containers. We also use that in our automated CI
-pipeline at [travis-ci](http://travis-ci.org). To use that instead of Vagrant:
-
-```sh
-PUPPET_INSTALL_TYPE=agent BEAKER_IS_PE=no BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_debug=true BEAKER_setfile=debian10-64{hypervisor=docker} BEAKER_destroy=yes bundle exec rake beaker
+BEAKER_setfile=debian10-x64 bundle exec rake beaker
 ```
 
 You can replace the string `debian10` with any common operating system.
@@ -272,11 +246,7 @@ The following strings are known to work:
 * centos7
 * centos8
 
-The easiest way to debug in a docker container is to open a shell:
-
-```sh
-docker exec -it -u root ${container_id_or_name} bash
-```
+For more information and tips & tricks, see [voxpupuli-acceptance's documentation](https://github.com/voxpupuli/voxpupuli-acceptance#running-tests).
 
 The source of this file is in our [modulesync_config](https://github.com/voxpupuli/modulesync_config/blob/master/moduleroot/.github/CONTRIBUTING.md.erb)
 repository.
