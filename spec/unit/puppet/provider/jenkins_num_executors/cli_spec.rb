@@ -5,8 +5,8 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:get_num_executors).
-          with(nil) { 42 }
+        allow(described_class).to receive(:get_num_executors).
+          with(nil).and_return(42)
       end
 
       it 'returns the correct number of instances' do
@@ -24,10 +24,13 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
       it 'passes it on ::get_num_executors' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:get_num_executors).
-          with(catalog) { 42 }
+        allow(described_class).to receive(:get_num_executors).
+          with(catalog).and_return(42)
 
         described_class.instances(catalog)
+
+        expect(described_class).to have_received(:get_num_executors).
+          with(catalog)
       end
     end
   end # ::instanes
@@ -37,8 +40,9 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
       provider = described_class.new
       provider.create
 
-      expect(provider).to receive(:set_num_executors).with(no_args)
+      allow(provider).to receive(:set_num_executors)
       provider.flush
+      expect(provider).to have_received(:set_num_executors).with(no_args)
     end
 
     it 'fails' do
@@ -56,11 +60,13 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
 
   describe '::get_num_executors' do
     it do
-      expect(described_class).to receive(:clihelper).
-        with(['get_num_executors'], catalog: nil) { 42 }
+      allow(described_class).to receive(:clihelper).
+        with(['get_num_executors'], catalog: nil).and_return(42)
 
       n = described_class.send :get_num_executors
       expect(n).to eq 42
+      expect(described_class).to have_received(:clihelper).
+        with(['get_num_executors'], catalog: nil)
     end
   end # ::get_num_executors
 
@@ -68,9 +74,11 @@ describe Puppet::Type.type(:jenkins_num_executors).provider(:cli) do
     it do
       provider = described_class.new(name: 42)
 
-      expect(described_class).to receive(:clihelper).with(['set_num_executors', 42])
+      allow(described_class).to receive(:clihelper)
 
       provider.send :set_num_executors
+
+      expect(described_class).to have_received(:clihelper).with(['set_num_executors', 42])
     end
   end # #set_jenkins_instance
 end

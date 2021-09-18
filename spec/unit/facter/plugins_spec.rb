@@ -17,7 +17,10 @@ describe 'jenkins_plugins', type: :fact do
   context 'on Linux' do
     let(:kernel) { 'Linux' }
 
-    after { expect(Puppet::Jenkins::Plugins).to have_received(:available) }
+    it do
+      subject
+      expect(Puppet::Jenkins::Plugins).to have_received(:available)
+    end
 
     context 'with no plugins' do
       it { is_expected.to be_instance_of String }
@@ -51,8 +54,10 @@ describe 'jenkins_plugins', type: :fact do
   context 'on FreeBSD' do
     let(:kernel) { 'FreeBSD' }
 
-    after { expect(Puppet::Jenkins::Plugins).not_to have_received(:available) }
-
     it { is_expected.to be_nil }
+    it do
+      subject
+      expect(Puppet::Jenkins::Plugins).not_to have_received(:available)
+    end
   end
 end

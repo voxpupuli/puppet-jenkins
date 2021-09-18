@@ -56,8 +56,8 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:job_list_json).
-          with(nil) { job_list_json_info }
+        allow(described_class).to receive(:job_list_json).
+          with(nil).and_return(job_list_json_info)
       end
 
       it 'returns the correct number of instances' do
@@ -87,10 +87,13 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       it 'passes it on ::get_job_list' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:job_list_json).
-          with(kind_of(Puppet::Resource::Catalog)) { job_list_json_info }
+        allow(described_class).to receive(:job_list_json).
+          with(kind_of(Puppet::Resource::Catalog)).and_return(job_list_json_info)
 
         described_class.instances(catalog)
+
+        expect(described_class).to have_received(:job_list_json).
+          with(kind_of(Puppet::Resource::Catalog))
       end
     end
   end # ::instanes
@@ -109,18 +112,20 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new
       provider.ensure = :present
 
-      expect(provider).to receive(:exists?) { false }
-      expect(provider).to receive(:create_job)
+      allow(provider).to receive(:exists?).and_return(false)
+      allow(provider).to receive(:create_job)
       provider.flush
+      expect(provider).to have_received(:create_job)
     end
 
     it 'calls update_job when replacing' do
       provider = described_class.new
       provider.ensure = :present
 
-      expect(provider).to receive(:exists?) { true }
-      expect(provider).to receive(:update_job)
+      allow(provider).to receive(:exists?).and_return(true)
+      allow(provider).to receive(:update_job)
       provider.flush
+      expect(provider).to have_received(:update_job)
     end
 
     it 'doesn\'t calls update_job when not replacing' do
@@ -128,17 +133,19 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.ensure = :present
       provider.replace = false
 
-      expect(provider).to receive(:exists?) { true }
-      expect(provider).not_to receive(:update_job)
+      allow(provider).to receive(:exists?).and_return(true)
+      allow(provider).to receive(:update_job)
       provider.flush
+      expect(provider).not_to have_received(:update_job)
     end
 
     it 'calls delete_job' do
       provider = described_class.new
       provider.destroy
 
-      expect(provider).to receive(:delete_job)
+      allow(provider).to receive(:delete_job)
       provider.flush
+      expect(provider).to have_received(:delete_job)
     end
   end # #flush
 
@@ -148,37 +155,49 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
   describe '::list_jobs' do
     it do
-      expect(described_class).to receive(:cli).with(
+      allow(described_class).to receive(:cli).with(
         ['list-jobs'],
         catalog: nil
-      ) { list_jobs_output }
+      ).and_return(list_jobs_output)
 
       ret = described_class.send :list_jobs
       expect(ret).to eq %w[foo bar]
+      expect(described_class).to have_received(:cli).with(
+        ['list-jobs'],
+        catalog: nil
+      )
     end
   end # ::list_jobs
 
   describe '::get_job' do
     it do
-      expect(described_class).to receive(:cli).with(
+      allow(described_class).to receive(:cli).with(
         ['get-job', 'foo'],
         catalog: nil
-      ) { foo_xml }
+      ).and_return(foo_xml)
 
       ret = described_class.send :get_job, 'foo'
       expect(ret).to eq foo_xml
+      expect(described_class).to have_received(:cli).with(
+        ['get-job', 'foo'],
+        catalog: nil
+      )
     end
   end # ::get_job
 
   describe '::job_enabled' do
     it do
-      expect(described_class).to receive(:clihelper).with(
+      allow(described_class).to receive(:clihelper).with(
         %w[job_enabled foo],
         catalog: nil
-      ) { 'true' }
+      ).and_return('true')
 
       ret = described_class.send :job_enabled, 'foo'
       expect(ret).to eq true
+      expect(described_class).to have_received(:clihelper).with(
+        %w[job_enabled foo],
+        catalog: nil
+      )
     end
   end # ::job_enabled
 
@@ -189,12 +208,13 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         config: foo_xml
       )
 
-      expect(described_class).to receive(:cli).with(
+      allow(described_class).to receive(:cli)
+
+      provider.send :create_job
+      expect(described_class).to have_received(:cli).with(
         ['create-job', 'foo'],
         stdin: foo_xml
       )
-
-      provider.send :create_job
     end
   end # #create_job
 
@@ -205,12 +225,14 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         config: foo_xml
       )
 
-      expect(described_class).to receive(:cli).with(
+      allow(described_class).to receive(:cli)
+
+      provider.send :update_job
+
+      expect(described_class).to have_received(:cli).with(
         ['update-job', 'foo'],
         stdin: foo_xml
       )
-
-      provider.send :update_job
     end
   end # #update_job
 
@@ -221,11 +243,13 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         config: foo_xml
       )
 
-      expect(described_class).to receive(:cli).with(
-        ['delete-job', 'foo']
-      )
+      allow(described_class).to receive(:cli)
 
       provider.send :delete_job
+
+      expect(described_class).to have_received(:cli).with(
+        ['delete-job', 'foo']
+      )
     end
   end # #delete_job
 end

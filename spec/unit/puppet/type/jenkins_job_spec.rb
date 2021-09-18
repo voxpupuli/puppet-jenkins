@@ -39,19 +39,20 @@ describe Puppet::Type.type(:jenkins_job) do
             Puppet[:show_diff] = cfg
             resource[:show_diff] = param
             resource[:loglevel] = 'debug'
+            allow(property).to receive(:diff)
           end
 
           if cfg && param
             it 'displays a diff' do
               property.stub(:diff).and_return('foo')
-              expect(property).to receive(:diff).once
               property.change_to_s('foo', 'bar')
+              expect(property).to have_received(:diff).once
             end
           else
             it 'does not display a diff' do
               property.stub(:diff)
-              expect(property).not_to receive :diff
               property.change_to_s('foo', 'bar')
+              expect(property).not_to have_received :diff
             end
           end
         end

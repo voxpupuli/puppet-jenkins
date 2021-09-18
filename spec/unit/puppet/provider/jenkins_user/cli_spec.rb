@@ -63,8 +63,8 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:user_info_all).
-          with(nil) { user_info }
+        allow(described_class).to receive(:user_info_all).
+          with(nil).and_return(user_info)
       end
 
       it 'returns the correct number of instances' do
@@ -72,18 +72,20 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       end
 
       context 'first instance returned' do
+        let(:provider) do
+          described_class.instances[0]
+        end
+
         it_behaves_like 'a provider from example hash 1' do
-          let(:provider) do
-            described_class.instances[0]
-          end
         end
       end
 
       context 'second instance returned' do
+        let(:provider) do
+          described_class.instances[1]
+        end
+
         it_behaves_like 'a provider from example hash 2' do
-          let(:provider) do
-            described_class.instances[1]
-          end
         end
       end
     end
@@ -92,10 +94,13 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       it 'passes it on ::user_info_all' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:user_info_all).
-          with(catalog) { user_info }
+        allow(described_class).to receive(:user_info_all).
+          with(catalog).and_return(user_info)
 
         described_class.instances(catalog)
+
+        expect(described_class).to have_received(:user_info_all).
+          with(catalog)
       end
     end
   end # ::instanes
@@ -113,23 +118,26 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       provider = described_class.new
       provider.create
 
-      expect(provider).to receive(:user_update)
+      allow(provider).to receive(:user_update)
       provider.flush
+      expect(provider).to have_received(:user_update)
     end
 
     it 'calls delete_user' do
       provider = described_class.new
       provider.destroy
 
-      expect(provider).to receive(:delete_user)
+      allow(provider).to receive(:delete_user)
       provider.flush
+      expect(provider).to have_received(:delete_user)
     end
 
     it 'calls delete_user' do
       provider = described_class.new
 
-      expect(provider).to receive(:delete_user)
+      allow(provider).to receive(:delete_user)
       provider.flush
+      expect(provider).to have_received(:delete_user)
     end
   end # #flush
 
@@ -164,10 +172,11 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   describe '::user_info_all' do
     # not isolated from ::from_hash in the interests of staying DRY
     it do
-      expect(described_class).to receive(:clihelper).with(['user_info_all']) { user_info_json }
+      allow(described_class).to receive(:clihelper).with(['user_info_all']).and_return(user_info_json)
 
       raw = described_class.send :user_info_all
       expect(raw).to eq user_info
+      expect(described_class).to have_received(:clihelper).with(['user_info_all'])
     end
   end # ::user_info_all
 
@@ -179,12 +188,14 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     it do
       provider = described_class.send :from_hash, user_info[0]
 
-      expect(described_class).to receive(:clihelper).with(
+      allow(described_class).to receive(:clihelper)
+
+      provider.send :user_update
+
+      expect(described_class).to have_received(:clihelper).with(
         ['user_update'],
         stdinjson: mutable_user_info
       )
-
-      provider.send :user_update
     end
   end # #user_update
 
@@ -192,11 +203,13 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
     it do
       provider = described_class.send :from_hash, user_info[0]
 
-      expect(described_class).to receive(:clihelper).with(
-        %w[delete_user test]
-      )
+      allow(described_class).to receive(:clihelper)
 
       provider.send :delete_user
+
+      expect(described_class).to have_received(:clihelper).with(
+        %w[delete_user test]
+      )
     end
   end # #delete_update
 end

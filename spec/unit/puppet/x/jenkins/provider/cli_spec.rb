@@ -76,12 +76,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       provider = described_class.new(name: 'test')
 
-      expect(described_class).to receive(:instances).
-        with(catalog) { [provider] }
+      allow(described_class).to receive(:instances).
+        with(catalog).and_return([provider])
 
       described_class.prefetch(resource.name => resource)
 
       expect(resource.provider).to eq provider
+      expect(described_class).to have_received(:instances).
+        with(catalog)
     end
 
     it 'does not break an existing resource/provider association' do
@@ -91,12 +93,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
       provider = described_class.new(name: 'test')
       resource.provider = provider
 
-      expect(described_class).to receive(:instances).
-        with(catalog) { [provider] }
+      allow(described_class).to receive(:instances).
+        with(catalog).and_return([provider])
 
       described_class.prefetch(resource.name => resource)
 
       expect(resource.provider).to eq provider
+      expect(described_class).to have_received(:instances).
+        with(catalog)
     end
   end # ::prefetch
 
@@ -169,8 +173,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps ::cli class method' do
-      expect(described_class).to receive(:cli).with('foo', {})
+      allow(described_class).to receive(:cli)
       provider.cli('foo', {})
+      expect(described_class).to have_received(:cli).with('foo', {})
     end
 
     it 'extracts the catalog from the resource' do
@@ -179,11 +184,13 @@ describe Puppet::X::Jenkins::Provider::Cli do
       resource.provider = provider
       catalog.add_resource resource
 
-      expect(described_class).to receive(:cli).with(
-        'foo', catalog: catalog
-      )
+      allow(described_class).to receive(:cli)
 
       provider.cli('foo', {})
+
+      expect(described_class).to have_received(:cli).with(
+        'foo', catalog: catalog
+      )
     end
   end # #cli
 
@@ -199,8 +206,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps ::clihelper class method' do
-      expect(described_class).to receive(:clihelper).with('foo', {})
+      allow(described_class).to receive(:clihelper)
       provider.clihelper('foo', {})
+      expect(described_class).to have_received(:clihelper).with('foo', {})
     end
 
     it 'extracts the catalog from the resource' do
@@ -209,48 +217,56 @@ describe Puppet::X::Jenkins::Provider::Cli do
       resource.provider = provider
       catalog.add_resource resource
 
-      expect(described_class).to receive(:clihelper).with(
-        'foo', catalog: catalog
-      )
+      allow(described_class).to receive(:clihelper)
 
       provider.clihelper('foo', {})
+
+      expect(described_class).to have_received(:clihelper).with(
+        'foo', catalog: catalog
+      )
     end
   end # #clihelper
 
   describe '::clihelper' do
     shared_examples 'uses default values' do
       it 'uses default values' do
-        expect(described_class).to receive(:cli).with(
+        allow(described_class).to receive(:cli)
+
+        described_class.clihelper('foo')
+
+        expect(described_class).to have_received(:cli).with(
           ['groovy', '=', 'foo'],
           { tmpfile_as_param: true },
           ['/bin/cat', '/usr/lib/jenkins/puppet_helper.groovy', '|']
         )
-
-        described_class.clihelper('foo')
       end
     end # uses default values
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
-        expect(described_class).to receive(:cli).with(
+        allow(described_class).to receive(:cli)
+
+        described_class.clihelper('foo')
+
+        expect(described_class).to have_received(:cli).with(
           ['groovy', '=', 'foo'],
           { tmpfile_as_param: true },
           ['/bin/cat', 'fact.groovy', '|']
         )
-
-        described_class.clihelper('foo')
       end
     end # uses fact values
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
-        expect(described_class).to receive(:cli).with(
+        allow(described_class).to receive(:cli)
+
+        described_class.clihelper('foo', catalog: catalog)
+
+        expect(described_class).to have_received(:cli).with(
           ['groovy', '=', 'foo'],
           { catalog: catalog, tmpfile_as_param: true },
           ['/bin/cat', 'cat.groovy', '|']
         )
-
-        described_class.clihelper('foo', catalog: catalog)
       end
     end # uses catalog values
 
@@ -259,8 +275,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps ::cli class method' do
-      expect(described_class).to receive(:cli)
+      allow(described_class).to receive(:cli)
       described_class.clihelper('foo')
+      expect(described_class).to have_received(:cli)
     end
 
     context 'no catalog' do
@@ -323,34 +340,40 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
     shared_examples 'uses default values' do
       it 'uses default values' do
-        expect(described_class.superclass).to receive(:execute).with(
+        allow(described_class.superclass).to receive(:execute)
+
+        described_class.cli('foo')
+
+        expect(described_class.superclass).to have_received(:execute).with(
           'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
           failonfail: true, combine: true
         )
-
-        described_class.cli('foo')
       end
     end # uses default values
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
-        expect(described_class.superclass).to receive(:execute).with(
+        allow(described_class.superclass).to receive(:execute)
+
+        described_class.cli('foo')
+
+        expect(described_class.superclass).to have_received(:execute).with(
           'java -jar fact.jar -s http://localhost:11 -logger WARNING foo',
           failonfail: true, combine: true
         )
-
-        described_class.cli('foo')
       end
     end # uses fact values
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
-        expect(described_class.superclass).to receive(:execute).with(
+        allow(described_class.superclass).to receive(:execute)
+
+        described_class.cli('foo', catalog: catalog)
+
+        expect(described_class.superclass).to have_received(:execute).with(
           'java -jar cat.jar -s http://localhost:111 -logger WARNING foo',
           failonfail: true, combine: true
         )
-
-        described_class.cli('foo', catalog: catalog)
       end
     end # uses catalog values
 
@@ -359,8 +382,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps the superclasses ::execute method' do
-      expect(described_class.superclass).to receive(:execute)
+      allow(described_class.superclass).to receive(:execute)
       described_class.cli('foo')
+      expect(described_class.superclass).to have_received(:execute)
     end
 
     context 'no catalog' do
@@ -421,7 +445,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'without ssh_private_key' do
         CLI_AUTH_ERRORS.each do |error|
           it 'does not retry cli on AuthError exception' do
-            expect(described_class.superclass).to receive(:execute).with(
+            allow(described_class.superclass).to receive(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
               failonfail: true, combine: true
             ).and_raise(AuthError, error)
@@ -446,40 +470,41 @@ describe Puppet::X::Jenkins::Provider::Cli do
         end
 
         it 'tries cli without auth first' do
-          expect(described_class.superclass).to receive(:execute).with(
+          allow(described_class.superclass).to receive(:execute)
+
+          described_class.cli('foo', catalog: catalog)
+
+          expect(described_class.superclass).to have_received(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
           )
-
-          described_class.cli('foo', catalog: catalog)
         end
 
         CLI_AUTH_ERRORS.each do |error|
           it 'retries cli on AuthError exception' do
-            expect(described_class.superclass).to receive(:execute).with(
+            allow(described_class.superclass).to receive(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
               failonfail: true, combine: true
             ).and_raise(AuthError, error)
 
-            expect(described_class.superclass).to receive(:execute).with(
+            allow(described_class.superclass).to receive(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa -ssh -user myuser foo',
               failonfail: true, combine: true
             )
 
             described_class.cli('foo', catalog: catalog)
-
             # and it should remember that auth is required
-            expect(described_class.superclass).not_to receive(:execute).with(
+            described_class.cli('foo', catalog: catalog)
+
+            expect(described_class.superclass).to have_received(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
               failonfail: true, combine: true
-            )
+            ).once
 
-            expect(described_class.superclass).to receive(:execute).with(
+            expect(described_class.superclass).to have_received(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING -i cat.id_rsa -ssh -user myuser foo',
               failonfail: true, combine: true
-            )
-
-            described_class.cli('foo', catalog: catalog)
+            ).twice
           end
         end
       end # with ssh_private_key
@@ -489,7 +514,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'without ssh_private_key' do
         CLI_NET_ERRORS.each do |error|
           it 'does not retry cli on AuthError exception' do
-            expect(described_class.superclass).to receive(:execute).with(
+            allow(described_class.superclass).to receive(:execute).with(
               'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
               failonfail: true, combine: true
             ).exactly(30).times.and_raise(NetError, error)
@@ -512,7 +537,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class.superclass).to receive(:execute).with(
+          allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
           ).exactly(30).times.and_raise(UnknownError, 'foo')
@@ -528,7 +553,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class.superclass).to receive(:execute).with(
+          allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
           ).exactly(2).times.and_raise(UnknownError, 'foo')
@@ -545,7 +570,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class.superclass).to receive(:execute).with(
+          allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
           ).exactly(3).times.and_raise(UnknownError, 'foo')
@@ -563,7 +588,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class.superclass).to receive(:execute).with(
+          allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
           ).exactly(2).times.and_raise(UnknownError, 'foo')
@@ -582,9 +607,11 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class).to receive(:with_retries).with(hash_including(max_sleep_seconds: 2))
+          allow(described_class).to receive(:with_retries)
 
           described_class.cli('foo', catalog: catalog)
+
+          expect(described_class).to have_received(:with_retries).with(hash_including(max_sleep_seconds: 2))
         end
 
         it 'from catalog value' do
@@ -594,9 +621,11 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class).to receive(:with_retries).with(hash_including(max_sleep_seconds: 3))
+          allow(described_class).to receive(:with_retries)
 
           described_class.cli('foo', catalog: catalog)
+
+          expect(described_class).to have_received(:with_retries).with(hash_including(max_sleep_seconds: 3))
         end
 
         it 'from fact' do
@@ -607,9 +636,11 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class).to receive(:with_retries).with(hash_including(max_sleep_seconds: 4))
+          allow(described_class).to receive(:with_retries)
 
           described_class.cli('foo', catalog: catalog)
+
+          expect(described_class).to have_received(:with_retries).with(hash_including(max_sleep_seconds: 4))
         end
 
         it 'from catalog overriding fact' do
@@ -621,9 +652,11 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(described_class).to receive(:with_retries).with(hash_including(max_sleep_seconds: 3))
+          allow(described_class).to receive(:with_retries)
 
           described_class.cli('foo', catalog: catalog)
+
+          expect(described_class).to have_received(:with_retries).with(hash_including(max_sleep_seconds: 3))
         end
       end
     end # should retry cli on UnknownError
@@ -653,21 +686,23 @@ describe Puppet::X::Jenkins::Provider::Cli do
       it 'generates a temp file with json output' do
         tmp = instance_double('Template')
 
-        expect(Tempfile).to receive(:open) { tmp }
-        expect(tmp).to receive(:write).with(a_json_doc(realm_oauth))
-        expect(tmp).to receive(:flush)
-        expect(tmp).to receive(:close)
-        expect(tmp).to receive(:unlink)
-        expect(tmp).to receive(:path) { '/dne.tmp' }
+        allow(Tempfile).to receive(:open).and_return(tmp)
+        allow(tmp).to receive(:write).with(a_json_doc(realm_oauth))
+        allow(tmp).to receive(:flush)
+        allow(tmp).to receive(:close)
+        allow(tmp).to receive(:unlink)
+        allow(tmp).to receive(:path).and_return('/dne.tmp')
 
-        expect(described_class.superclass).to receive(:execute).with(
+        allow(described_class.superclass).to receive(:execute)
+
+        described_class.cli('foo', stdinjson: realm_oauth)
+
+        expect(described_class.superclass).to have_received(:execute).with(
           'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
           failonfail: true,
           combine: true,
           stdinfile: '/dne.tmp'
         )
-
-        described_class.cli('foo', stdinjson: realm_oauth)
       end
     end # options with :stdinjson
 
@@ -675,21 +710,23 @@ describe Puppet::X::Jenkins::Provider::Cli do
       it 'generates a temp file with stdin string' do
         tmp = instance_double('Template')
 
-        expect(Tempfile).to receive(:open) { tmp }
-        expect(tmp).to receive(:write).with('bar')
-        expect(tmp).to receive(:flush)
-        expect(tmp).to receive(:close)
-        expect(tmp).to receive(:unlink)
-        expect(tmp).to receive(:path) { '/dne.tmp' }
+        allow(Tempfile).to receive(:open).and_return(tmp)
+        allow(tmp).to receive(:write).with('bar')
+        allow(tmp).to receive(:flush)
+        allow(tmp).to receive(:close)
+        allow(tmp).to receive(:unlink)
+        allow(tmp).to receive(:path).and_return('/dne.tmp')
 
-        expect(described_class.superclass).to receive(:execute).with(
+        allow(described_class.superclass).to receive(:execute)
+
+        described_class.cli('foo', stdin: 'bar')
+
+        expect(described_class.superclass).to have_received(:execute).with(
           'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
           failonfail: true,
           combine: true,
           stdinfile: '/dne.tmp'
         )
-
-        described_class.cli('foo', stdin: 'bar')
       end
     end # options with :stdin
   end # ::cli

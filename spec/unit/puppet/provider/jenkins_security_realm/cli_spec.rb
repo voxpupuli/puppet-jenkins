@@ -47,8 +47,8 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:get_security_realm).
-          with(nil) { realm_oauth }
+        allow(described_class).to receive(:get_security_realm).
+          with(nil).and_return(realm_oauth)
       end
 
       it 'returns the correct number of instances' do
@@ -67,10 +67,13 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       it 'passes it on ::get_security_realm' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:get_security_realm).
-          with(catalog) { realm_oauth }
+        allow(described_class).to receive(:get_security_realm).
+          with(catalog).and_return(realm_oauth)
 
         described_class.instances(catalog)
+
+        expect(described_class).to have_received(:get_security_realm).
+          with(catalog)
       end
     end
   end # ::instanes
@@ -80,23 +83,26 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       provider = described_class.new
       provider.create
 
-      expect(provider).to receive(:set_jenkins_instance)
+      allow(provider).to receive(:set_jenkins_instance)
       provider.flush
+      expect(provider).to have_received(:set_jenkins_instance)
     end
 
     it 'calls set_security_none' do
       provider = described_class.new
       provider.destroy
 
-      expect(provider).to receive(:set_security_none)
+      allow(provider).to receive(:set_security_none)
       provider.flush
+      expect(provider).to have_received(:set_security_none)
     end
 
     it 'calls set_security_none' do
       provider = described_class.new
 
-      expect(provider).to receive(:set_security_none)
+      allow(provider).to receive(:set_security_none)
       provider.flush
+      expect(provider).to have_received(:set_security_none)
     end
   end # #flush
 
@@ -129,13 +135,17 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   describe '::get_security_realm' do
     # not isolated from ::from_hash in the interests of staying DRY
     it do
-      expect(described_class).to receive(:clihelper).with(
+      allow(described_class).to receive(:clihelper).with(
         ['get_security_realm'],
         catalog: nil
-      ) { realm_oauth_json }
+      ).and_return(realm_oauth_json)
 
       raw = described_class.send :get_security_realm
       expect(raw).to eq realm_oauth
+      expect(described_class).to have_received(:clihelper).with(
+        ['get_security_realm'],
+        catalog: nil
+      )
     end
   end # ::get_security_realm
 
@@ -143,12 +153,14 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.send :from_hash, realm_oauth
 
-      expect(described_class).to receive(:clihelper).with(
+      allow(described_class).to receive(:clihelper)
+
+      provider.send :set_jenkins_instance
+
+      expect(described_class).to have_received(:clihelper).with(
         ['set_jenkins_instance'],
         stdinjson: realm_oauth
       )
-
-      provider.send :set_jenkins_instance
     end
   end # #set_jenkins_instance
 
@@ -156,12 +168,14 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       provider = described_class.new(name: 'test')
 
-      expect(described_class).to receive(:clihelper).with(
+      allow(described_class).to receive(:clihelper)
+
+      provider.send :set_security_none
+
+      expect(described_class).to have_received(:clihelper).with(
         ['set_jenkins_instance'],
         stdinjson: realm_none
       )
-
-      provider.send :set_security_none
     end
   end # #set_security_none
 end
