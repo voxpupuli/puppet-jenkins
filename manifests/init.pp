@@ -284,6 +284,9 @@
 #       version: '2.16.0'
 #     # /support-core deps
 #
+# @param systemd_type
+#   Define a systemd unit type
+#
 class jenkins (
   String $version                                 = $jenkins::params::version,
   Boolean $lts                                    = $jenkins::params::lts,
@@ -327,6 +330,7 @@ class jenkins (
   Array $default_plugins                          = $jenkins::params::default_plugins,
   String $default_plugins_host                    = $jenkins::params::default_plugins_host,
   Boolean $purge_plugins                          = $jenkins::params::purge_plugins,
+  Enum['simple', 'forking'] $systemd_type         = $jenkins::params::systemd_type,
 ) inherits jenkins::params {
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')

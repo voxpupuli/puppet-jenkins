@@ -51,9 +51,10 @@ describe 'jenkins' do
             end
             it do
               is_expected.to contain_systemd__unit_file('jenkins.service').
-                that_notifies('Service[jenkins]')
+                that_notifies('Service[jenkins]').with_content(/^Type=simple/)
             end
           end
+
         when '6'
           context 'EL 6' do
             it do
@@ -73,6 +74,27 @@ describe 'jenkins' do
                 enable: false
               )
             end
+          end
+        end
+      end
+      if os_facts[:os]['release']['major'].to_i >= 7
+        context 'with jenkins version 2.312' do
+          let(:facts) { os_facts.merge!({ jenkins_version: '2.312' }) }
+
+          it do
+            is_expected.to contain_systemd__unit_file('jenkins.service').
+              with_content(%r{^Type=forking})
+          end
+        end
+      end
+
+      if os_facts[:os]['release']['major'].to_i >= 7
+        context 'with jenkins version 2.313' do
+          let(:facts) { os_facts.merge!({ jenkins_version: '2.313' }) }
+
+          it do
+            is_expected.to contain_systemd__unit_file('jenkins.service').
+              with_content(%r{^Type=simple})
           end
         end
       end

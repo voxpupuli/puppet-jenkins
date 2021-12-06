@@ -4,7 +4,7 @@ Requires=network.target
 After=network.target
 
 [Service]
-Type=forking
+Type=<%= scope['jenkins::systemd_type']  %>
 User=<%= scope['jenkins::user'] %>
 Group=<%= scope['jenkins::group'] %>
 EnvironmentFile=<%= scope['jenkins::sysconfdir'] %>/jenkins
