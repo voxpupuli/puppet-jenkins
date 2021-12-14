@@ -261,78 +261,31 @@ describe 'jenkins::slave' do
       case os_facts[:os]['family']
       when 'RedHat'
         describe 'RedHat' do
-          case os_facts[:os]['release']['major']
-          when '6'
-            context 'sysv init' do
-              let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
-              let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
-              let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
+          let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
+          let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
+          let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
+          let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
 
-              it_behaves_like 'a jenkins::slave catalog'
-
-              it do
-                is_expected.to contain_file(slave_startup_script).
-                  that_notifies('Service[jenkins-slave]')
-              end
-
-              describe 'with slave_name' do
-                let(:params) { { slave_name: 'jenkins-slave' } }
-
-                it_behaves_like 'using slave_name'
-              end
-
-              it { is_expected.not_to contain_package('daemon') }
-
-              context '::jenkins & ::jenkins::slave should co-exist' do
-                let(:pre_condition) do
-                  <<-'EOS'
-                    include ::jenkins
-                    include ::jenkins::slave
-                  EOS
-                end
-
-                it { is_expected.to compile.with_all_deps }
-              end
-
-              describe 'with proxy_server' do
-                let(:params) { { proxy_server: 'https://foo' } }
-
-                it do
-                  is_expected.to contain_archive('get_swarm_client').with(
-                    proxy_server: 'https://foo'
-                  )
-                end
-              end
-            end # sysv init
-          when '7'
-            describe 'with systemd' do
-              let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
-              let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
-              let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
-              let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
-
-              it_behaves_like 'a jenkins::slave catalog'
-              it do
-                is_expected.to contain_file(slave_startup_script).
-                  that_notifies('Service[jenkins-slave]')
-              end
-              it do
-                is_expected.to contain_transition('stop jenkins-slave service').
-                  with_prior_to(["File[#{slave_sysv_file}]"])
-              end
-              it do
-                is_expected.to contain_file(slave_sysv_file).
-                  with(
-                    ensure: 'absent',
-                    selinux_ignore_defaults: true
-                  ).
-                  that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
-              end
-              it do
-                is_expected.to contain_systemd__unit_file('jenkins-slave.service').
-                  that_notifies('Service[jenkins-slave]')
-              end
-            end
+          it_behaves_like 'a jenkins::slave catalog'
+          it do
+            is_expected.to contain_file(slave_startup_script).
+              that_notifies('Service[jenkins-slave]')
+          end
+          it do
+            is_expected.to contain_transition('stop jenkins-slave service').
+              with_prior_to(["File[#{slave_sysv_file}]"])
+          end
+          it do
+            is_expected.to contain_file(slave_sysv_file).
+              with(
+                ensure: 'absent',
+                selinux_ignore_defaults: true
+              ).
+              that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
+          end
+          it do
+            is_expected.to contain_systemd__unit_file('jenkins-slave.service').
+              that_notifies('Service[jenkins-slave]')
           end
         end
       when 'Debian'
