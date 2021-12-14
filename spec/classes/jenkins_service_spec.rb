@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'jenkins' do
-  on_supported_os(supported_os: [{ 'operatingsystem' => 'CentOS' }]).each do |os, os_facts|
-    context "on #{os}" do
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}", if: os_facts[:osfamily] == 'RedHat' do
       let(:facts) { os_facts }
 
       context 'service' do
