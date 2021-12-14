@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'jenkins' do
-  on_supported_os(supported_os: [{ 'operatingsystem' => 'OpenSuSE' }]).each do |os, os_facts|
-    context "on #{os}" do
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}", if: os_facts[:osfamily] == 'Suse' do
       let(:facts) { os_facts }
 
       context 'repo::suse' do
