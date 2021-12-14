@@ -13,7 +13,7 @@ class jenkins::cli::config (
   Optional[Numeric] $cli_try_sleep                = undef,
   Optional[String] $cli_username                  = undef,
   Optional[String] $cli_password                  = undef,
-  Optional[String] $cli_password_file             = '/tmp/jenkins_credentials_for_puppet',
+  String $cli_password_file                       = '/tmp/jenkins_credentials_for_puppet',
   Boolean $cli_password_file_exists               = false,
   Optional[String] $ssh_private_key_content       = undef,
 ) {
