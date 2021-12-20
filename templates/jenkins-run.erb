@@ -55,7 +55,9 @@ JAVA_CMD="$JENKINS_JAVA_CMD $JENKINS_JAVA_OPTIONS -DJENKINS_HOME=$JENKINS_HOME -
 PARAMS=()
 PARAMS+=("--logfile=/var/log/jenkins/jenkins.log")
 PARAMS+=("--webroot=/var/cache/jenkins/war")
+<%- if scope['jenkins::systemd_type'] == 'forking' -%>
 PARAMS+=("--daemon")
+<%- end -%>
 
 [ -n "$JENKINS_PORT" ] && PARAMS+=("--httpPort=$JENKINS_PORT")
 [ -n "$JENKINS_LISTEN_ADDRESS" ] && PARAMS+=("--httpListenAddress=$JENKINS_LISTEN_ADDRESS")

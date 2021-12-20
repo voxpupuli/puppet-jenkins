@@ -39,7 +39,37 @@ describe 'jenkins' do
         end
         it do
           is_expected.to contain_systemd__unit_file('jenkins.service').
-            that_notifies('Service[jenkins]')
+            that_notifies('Service[jenkins]').with_content(%r{^Type=simple})
+        end
+
+        describe 'with jenkins 2.313' do
+          let(:facts) { super().merge(jenkins_version: '2.313') }
+
+          it do
+            is_expected.to contain_systemd__unit_file('jenkins.service').
+              with_content(%r{^Type=simple})
+          end
+
+          it do
+            is_expected.to contain_file(startup_script).without_content(
+              %r{^PARAMS\+=\("--daemon"\)}
+            )
+          end
+        end
+
+        describe 'with jenkins 2.312' do
+          let(:facts) { super().merge(jenkins_version: '2.312') }
+
+          it do
+            is_expected.to contain_systemd__unit_file('jenkins.service').
+              with_content(%r{^Type=forking})
+          end
+
+          it do
+            is_expected.to contain_file(startup_script).with_content(
+              %r{^PARAMS\+=\("--daemon"\)}
+            )
+          end
         end
       end
     end

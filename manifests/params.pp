@@ -30,6 +30,12 @@ class jenkins::params {
   ]
   $purge_plugins = false
 
+  if versioncmp(pick($facts['jenkins_version'], '2.313'), '2.313') >= 0 {
+    $systemd_type = 'simple'
+  } else {
+    $systemd_type = 'forking'
+  }
+
   case $facts['os']['family'] {
     'Debian': {
       $repo                 = true
