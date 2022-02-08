@@ -108,7 +108,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
     begin
       JSON.parse(raw)
     rescue JSON::ParserError
-      raise Puppet::Error, "unable to parse as JSON: #{raw}"
+      raise Puppet::Error, "unable to parse as JSON: {REDACTED}"
     end
   end
   private_class_method :credentials_list_json
