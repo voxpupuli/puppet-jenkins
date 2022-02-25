@@ -130,6 +130,8 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
                          false
                        end
 
+    # This Puppet.debug shows the JSON with changed credentials in plain text.
+    # ToDo: Remove this debug output OR mask the credentials
     Puppet.debug("#{sname} stdin:\n#{input}")
 
     # a tempfile block arg is not used to simplify mock testing :/
@@ -210,6 +212,8 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       handler: handler
     ) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
+      # This Puppet.debug shows the JSON wit all credentials in plain text.
+      # ToDo: Remove this debug output OR mask the credentials
       Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
       return result
     end

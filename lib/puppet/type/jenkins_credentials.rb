@@ -51,26 +51,152 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:password) do
     desc 'password - UsernamePasswordCredentialsImpl, CertificateCredentialsImpl'
+    def is_to_s(_current_value)
+      '[old password]'
+    end
+
+    def should_to_s(_new_value)
+      '[new password]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:private_key) do
     desc 'ssh private key string - BasicSSHUserPrivateKey'
+    def is_to_s(_current_value)
+      '[old ssh private key string]'
+    end
+
+    def should_to_s(_new_value)
+      '[new ssh private key string]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:access_key) do
     desc 'AWS access key - AWSCredentialsImpl, BrowserStackCredentials'
+    def is_to_s(_current_value)
+      '[old AWS access key]'
+    end
+
+    def should_to_s(_new_value)
+      '[new AWS access key]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:secret_key) do
     desc 'AWS secret key - AWSCredentialsImpl'
+    def is_to_s(_current_value)
+      '[old AWS secret key]'
+    end
+
+    def should_to_s(_new_value)
+      '[new AWS secret key]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:passphrase) do
     desc 'passphrase to unlock ssh private key - BasicSSHUserPrivateKey'
+    def is_to_s(_current_value)
+      '[old passphrase]'
+    end
+
+    def should_to_s(_new_value)
+      '[new passphrase]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:secret) do
     desc 'secret string - StringCredentialsImpl'
+    def is_to_s(_current_value)
+      '[old secret string]'
+    end
+
+    def should_to_s(_new_value)
+      '[new secret string]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:file_name) do
@@ -79,10 +205,52 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
 
   newproperty(:content) do
     desc 'content of file - FileCredentialsImpl, CertificateCredentialsImpl'
+    def is_to_s(_current_value)
+      '[old content]'
+    end
+
+    def should_to_s(_new_value)
+      '[new content]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:source) do
     desc 'content of file - CertificateCredentialsImpl'
+    def is_to_s(_current_value)
+      '[old content]'
+    end
+
+    def should_to_s(_new_value)
+      '[new content]'
+    end
+
+    def change_to_s(_current_value, _new_value)
+      begin
+        if _current_value == :absent
+          return "Added '#{name}' as #{should_to_s(_new_value)}"
+        elsif _new_value == :absent or _new_value == [:absent]
+          return "Removed '#{name}' from #{is_to_s(_current_value)}"
+        else
+          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
+        end
+      rescue Puppet::Error
+        raise
+      end
+    end
   end
 
   newproperty(:key_store_impl) do
