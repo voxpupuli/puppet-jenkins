@@ -68,8 +68,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -93,8 +91,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -118,8 +114,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -143,8 +137,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -168,8 +160,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -193,8 +183,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -222,8 +210,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
@@ -247,8 +233,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
         else
           return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
         end
-      rescue Puppet::Error
-        raise
       end
     end
   end
