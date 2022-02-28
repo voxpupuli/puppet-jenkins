@@ -60,14 +60,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -83,14 +81,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -106,14 +102,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -129,14 +123,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -152,14 +144,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -175,14 +165,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -202,14 +190,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
@@ -225,14 +211,12 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
     end
 
     def change_to_s(_current_value, _new_value)
-      begin
-        if _current_value == :absent
-          return "Added '#{name}' as #{should_to_s(_new_value)}"
-        elsif _new_value == :absent or _new_value == [:absent]
-          return "Removed '#{name}' from #{is_to_s(_current_value)}"
-        else
-          return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
-        end
+      if _current_value == :absent
+        return "Added '#{name}' as #{should_to_s(_new_value)}"
+      elsif _new_value == :absent or _new_value == [:absent]
+        return "Removed '#{name}' from #{is_to_s(_current_value)}"
+      else
+        return "Changed '#{name}' from #{is_to_s(_current_value)} to #{should_to_s(_new_value)}"
       end
     end
   end
