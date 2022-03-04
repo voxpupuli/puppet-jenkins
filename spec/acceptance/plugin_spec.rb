@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class', order: :defined do
-  # rubocop:todo RSpec/LeakyConstantDeclaration
-  PDIR = '/var/lib/jenkins/plugins' # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
-  # rubocop:enable RSpec/LeakyConstantDeclaration
+  PDIR = '/var/lib/jenkins/plugins'
 
   # files/directories to test plugin purging removal of unmanaged files
-  # rubocop:todo RSpec/LeakyConstantDeclaration
-  FILES = [ # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  FILES = [
     "#{PDIR}/a.hpi",
     "#{PDIR}/b.jpi",
     "#{PDIR}/c.txt",
@@ -17,14 +16,11 @@ describe 'jenkins class', order: :defined do
     "#{PDIR}/b/bar",
     "#{PDIR}/c/baz"
   ].freeze
-  # rubocop:enable RSpec/LeakyConstantDeclaration
-  # rubocop:todo RSpec/LeakyConstantDeclaration
-  DIRS = [ # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  DIRS = [
     "#{PDIR}/a",
     "#{PDIR}/b",
     "#{PDIR}/c"
   ].freeze
-  # rubocop:enable RSpec/LeakyConstantDeclaration
 
   shared_examples 'has_plugin' do |plugin|
     describe file("#{PDIR}/#{plugin}.hpi") do
@@ -200,3 +196,4 @@ describe 'jenkins class', order: :defined do
     end
   end
 end
+# rubocop:enable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock
