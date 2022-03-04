@@ -38,12 +38,12 @@
 define jenkins::augeas (
   String $config_filename,
   Variant[Array[String], String] $changes,
-  Optional[Variant[Array[String], String]] $onlyif         = undef,
-  Optional[String]                         $plugin_version = undef,
-  String                                   $context        = '/',
-  Variant[Boolean,String]                  $plugin         = false,
-  Boolean                                  $restart        = false,
-  Boolean                                  $show_diff      = true,
+  Optional[Variant[Array[String], String]] $onlyif = undef,
+  Optional[String] $plugin_version                 = undef,
+  String $context                                  = '/',
+  Variant[Boolean,String] $plugin                  = false,
+  Boolean $restart                                 = false,
+  Boolean $show_diff                               = true,
 ) {
   include jenkins
   include jenkins::cli
