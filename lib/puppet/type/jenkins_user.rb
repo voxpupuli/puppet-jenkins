@@ -24,7 +24,9 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_user) do
     desc "Unhashed or 'plain_text' API token that is digested to produce the public API token"
     validate do |value|
       # 32 char hex string
-      raise ArgumentError, "#{value} is not a 32char hex string" unless value =~ %r{^\h{32}$}
+      unless value =~ %r{^\h{32}$}
+        raise ArgumentError, "#{value} is not a 32char hex string"
+      end
     end
   end
 
