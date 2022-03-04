@@ -327,7 +327,7 @@ private key:
 ```puppet
     jenkins::credentials { 'github-deploy-key':
       password            => '',
-      private_key_or_path => hiera('::github_deploy_key'),
+      private_key_or_path => lookup('::github_deploy_key'),
     }
 ```
 
@@ -344,8 +344,8 @@ Jenkins console when managing an existing user's credentials.
 ```puppet
     jenkins::credentials { 'deploy-user':
       password            => '',
-      private_key_or_path => hiera('::deploy_key'),
-      uuid                => hiera('::deploy_credentials_uuid'),
+      private_key_or_path => lookup('::deploy_key'),
+      uuid                => lookup('::deploy_credentials_uuid'),
     }
 ```
 
