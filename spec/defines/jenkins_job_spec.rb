@@ -136,7 +136,7 @@ describe 'jenkins::job' do
       end
 
       describe 'with sourced config and blank regular config' do
-        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
+        let(:thesource) { File.expand_path('../fixtures/testjob.xml', __dir__) }
         let(:params) { { ensure: 'present', source: thesource, config: '' } }
 
         it do
