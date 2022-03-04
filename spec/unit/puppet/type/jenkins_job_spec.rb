@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
@@ -12,7 +14,7 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'show_diff' do
       it_behaves_like 'boolean parameter', :show_diff, true
     end
-  end # parameters
+  end
 
   describe 'properties' do
     describe 'ensure' do
@@ -60,25 +62,28 @@ describe Puppet::Type.type(:jenkins_job) do
 
       describe 'change_to_s change string' do
         context 'created' do
-          it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
+          it { expect(property.change_to_s(:absent, nil)).to eq 'created' }
         end
+
         context 'removed' do
           it { expect(property.change_to_s(nil, :absent)).to eq 'removed' }
         end
+
         context 'changed with replace' do
           it do
             expect(property.change_to_s('foo', 'bar')).
               to match(%r{content changed '{md5}\w+' to '{md5}\w+'})
           end
         end
+
         context 'changed without replace' do
           let(:resource) { described_class.new(name: 'foo', config: 'bar', replace: false) }
 
           it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
         end
-      end # change_to_s change string
-    end # config
-  end # properties
+      end
+    end
+  end
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
@@ -169,6 +174,6 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[1].source).to eq job
         expect(req[1].target).to eq folder2
       end
-    end # folders
-  end # autorequire
+    end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'json'
 
@@ -33,7 +35,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
           with(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#flush' do
     it 'calls set_slaveagent_port' do
@@ -52,7 +54,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
       expect { provider.flush }.
         to raise_error(Puppet::Error, %r{invalid :ensure value: absent})
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -69,7 +71,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
       expect(described_class).to have_received(:clihelper).
         with(['get_slaveagent_port'], catalog: nil)
     end
-  end # ::get_slaveagent_port
+  end
 
   describe '#set_jenkins_instance' do
     it do
@@ -81,5 +83,5 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
 
       expect(described_class).to have_received(:clihelper).with(['set_slaveagent_port', 42])
     end
-  end # #set_jenkins_instance
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins_plugins', type: :fact do
@@ -55,6 +57,7 @@ describe 'jenkins_plugins', type: :fact do
     let(:kernel) { 'FreeBSD' }
 
     it { is_expected.to be_nil }
+
     it do
       subject
       expect(Puppet::Jenkins::Plugins).not_to have_received(:available)

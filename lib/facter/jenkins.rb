@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # jenkins.rb
 #
 # Creates a fact 'jenkins_plugins' containing a comma-delimited string of all

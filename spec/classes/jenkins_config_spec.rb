@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins' do
@@ -26,6 +28,7 @@ describe 'jenkins' do
                      end
 
           it { is_expected.to have_jenkins__sysconfig_resource_count(expected.length) }
+
           expected.each do |var, value|
             it { is_expected.to contain_jenkins__sysconfig(var).with_value(value) }
           end

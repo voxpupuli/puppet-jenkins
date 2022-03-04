@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -7,11 +9,19 @@ require 'retries'
 require 'puppet/x/jenkins/provider/cli'
 
 describe Puppet::X::Jenkins::Provider::Cli do
-  AuthError = Puppet::X::Jenkins::Provider::Cli::AuthError
-  NetError = Puppet::X::Jenkins::Provider::Cli::NetError
-  UnknownError = Puppet::X::Jenkins::Provider::Cli::UnknownError
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  AuthError = Puppet::X::Jenkins::Provider::Cli::AuthError # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  NetError = Puppet::X::Jenkins::Provider::Cli::NetError # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  UnknownError = Puppet::X::Jenkins::Provider::Cli::UnknownError # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
 
-  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS, <<-EOS].freeze
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  CLI_AUTH_ERRORS = [<<-EOS, <<-EOS, <<-EOS, <<-EOS].freeze # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
     anonymous is missing the Overall/Read permission
   EOS
     You must authenticate to access this Jenkins.
@@ -22,7 +32,11 @@ describe Puppet::X::Jenkins::Provider::Cli do
     anonymous is missing the Overall/Administer permission
   EOS
 
-  CLI_NET_ERRORS = [<<-EOS, <<-EOS].freeze
+  # rubocop:todo Lint/MissingCopEnableDirective
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  # rubocop:enable Lint/MissingCopEnableDirective
+  CLI_NET_ERRORS = [<<-EOS, <<-EOS].freeze # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
     SEVERE: I/O error in channel CLI connection
   EOS
     java.net.SocketException: Connection reset
@@ -43,9 +57,9 @@ describe Puppet::X::Jenkins::Provider::Cli do
   before do
     Facter.clear
     # clear class level state
-    if described_class.class_variable_defined?(:@@cli_auth_required)
-      described_class.class_variable_set(:@@cli_auth_required, false)
-    end
+    # rubocop:todo Style/ClassVars
+    described_class.class_variable_set(:@@cli_auth_required, false) if described_class.class_variable_defined?(:@@cli_auth_required)
+    # rubocop:enable Style/ClassVars
     allow(described_class).to receive(:command).with(:java).and_return('java')
   end
 
@@ -102,7 +116,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
       expect(described_class).to have_received(:instances).
         with(catalog)
     end
-  end # ::prefetch
+  end
 
   describe '#create' do
     context ':ensure' do
@@ -114,7 +128,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.instance_variable_get(:@property_hash)[:ensure]).to eq :present
       end
     end
-  end # #create
+  end
 
   describe '#exists?' do
     context 'when :ensure is unset' do
@@ -137,7 +151,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.exists?).to eq true
       end
     end
-  end # #exists?'
+  end
 
   describe '#destroy' do
     context ':ensure' do
@@ -149,7 +163,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.instance_variable_get(:@property_hash)[:ensure]).to eq :absent
       end
     end
-  end # #destroy
+  end
 
   describe '#flush' do
     it 'clears @property_hash' do
@@ -159,7 +173,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       expect(provider.instance_variable_get(:@property_hash)).to eq({})
     end
-  end # #flush
+  end
 
   describe '#cli' do
     let(:provider) { described_class.new }
@@ -192,7 +206,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         'foo', catalog: catalog
       )
     end
-  end # #cli
+  end
 
   describe '#clihelper' do
     let(:provider) { described_class.new }
@@ -225,7 +239,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         'foo', catalog: catalog
       )
     end
-  end # #clihelper
+  end
 
   describe '::clihelper' do
     shared_examples 'uses default values' do
@@ -240,7 +254,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           ['/bin/cat', '/usr/lib/jenkins/puppet_helper.groovy', '|']
         )
       end
-    end # uses default values
+    end
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
@@ -254,7 +268,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           ['/bin/cat', 'fact.groovy', '|']
         )
       end
-    end # uses fact values
+    end
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
@@ -268,7 +282,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           ['/bin/cat', 'cat.groovy', '|']
         )
       end
-    end # uses catalog values
+    end
 
     it 'is a class method' do
       expect(described_class).to respond_to(:clihelper)
@@ -283,14 +297,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
     context 'no catalog' do
       context 'no facts' do
         include_examples 'uses default values'
-      end # no facts
+      end
 
       context 'with facts' do
         include_context 'facts'
 
         include_examples 'uses fact values'
-      end # with facts
-    end # no catalog
+      end
+    end
 
     context 'with catalog' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -298,14 +312,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'no jenkins::cli::config class' do
         context 'no facts' do
           include_examples 'uses default values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses fact values'
-        end # with facts
-      end # no jenkins::cli::config class
+        end
+      end
 
       context 'with jenkins::cli::config class' do
         before do
@@ -319,16 +333,16 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         context 'no facts' do
           include_examples 'uses catalog values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses catalog values'
-        end # with facts
-      end # with jenkins::cli::config class
-    end # with catalog
-  end # ::clihelper
+        end
+      end
+    end
+  end
 
   describe '::cli' do
     before do
@@ -349,7 +363,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           failonfail: true, combine: true
         )
       end
-    end # uses default values
+    end
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
@@ -362,7 +376,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           failonfail: true, combine: true
         )
       end
-    end # uses fact values
+    end
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
@@ -375,7 +389,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           failonfail: true, combine: true
         )
       end
-    end # uses catalog values
+    end
 
     it 'is a class method' do
       expect(described_class).to respond_to(:cli)
@@ -390,14 +404,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
     context 'no catalog' do
       context 'no facts' do
         include_examples 'uses default values'
-      end # no facts
+      end
 
       context 'with facts' do
         include_context 'facts'
 
         include_examples 'uses fact values'
-      end # with facts
-    end # no catalog
+      end
+    end
 
     context 'with catalog' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -405,14 +419,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'no jenkins::cli::config class' do
         context 'no facts' do
           include_examples 'uses default values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses fact values'
-        end # with facts
-      end # no jenkins::cli::config class
+        end
+      end
 
       context 'with jenkins::cli::config class' do
         before do
@@ -431,15 +445,15 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         context 'no facts' do
           include_examples 'uses catalog values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses catalog values'
-        end # with facts
-      end # with jenkins::cli::config class
-    end # with catalog
+        end
+      end
+    end
 
     context 'auth failure' do
       context 'without ssh_private_key' do
@@ -507,8 +521,8 @@ describe Puppet::X::Jenkins::Provider::Cli do
             ).twice
           end
         end
-      end # with ssh_private_key
-    end # auth failure
+      end
+    end
 
     context 'network failure' do
       context 'without ssh_private_key' do
@@ -525,7 +539,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         end
       end
       # without ssh_private_key
-    end # network failure
+    end
 
     context 'when UnknownError exception' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -556,7 +570,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
-          ).exactly(2).times.and_raise(UnknownError, 'foo')
+          ).twice.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')
@@ -591,12 +605,12 @@ describe Puppet::X::Jenkins::Provider::Cli do
           allow(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
-          ).exactly(2).times.and_raise(UnknownError, 'foo')
+          ).twice.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')
         end
-      end # n times
+      end
 
       context 'waiting up to n seconds' do
         # this isn't behavioral testing because we don't want to either wait
@@ -659,7 +673,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           expect(described_class).to have_received(:with_retries).with(hash_including(max_sleep_seconds: 3))
         end
       end
-    end # should retry cli on UnknownError
+    end
 
     context 'options with :stdinjson' do
       RSpec::Matchers.define :a_json_doc do |x|
@@ -704,7 +718,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           stdinfile: '/dne.tmp'
         )
       end
-    end # options with :stdinjson
+    end
 
     context 'options with :stdin' do
       it 'generates a temp file with stdin string' do
@@ -728,6 +742,6 @@ describe Puppet::X::Jenkins::Provider::Cli do
           stdinfile: '/dne.tmp'
         )
       end
-    end # options with :stdin
-  end # ::cli
+    end
+  end
 end

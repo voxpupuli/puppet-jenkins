@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../jenkins'
 
 module Puppet::X::Jenkins::Util
@@ -18,7 +20,7 @@ module Puppet::X::Jenkins::Util
 
     case data
     when Hash
-      data.each_with_object({}) do |(k, v), h|
+      data.each_with_object({}) do |(k, v), h|  # rubocop:disable Style/HashTransformValues
         h[k] = iterate(v, &block)
       end
     when Array

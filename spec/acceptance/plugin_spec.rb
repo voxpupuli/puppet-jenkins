@@ -1,10 +1,15 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class', order: :defined do
-  PDIR = '/var/lib/jenkins/plugins'.freeze
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  PDIR = '/var/lib/jenkins/plugins' # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
+  # rubocop:enable RSpec/LeakyConstantDeclaration
 
   # files/directories to test plugin purging removal of unmanaged files
-  FILES = [
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  FILES = [ # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
     "#{PDIR}/a.hpi",
     "#{PDIR}/b.jpi",
     "#{PDIR}/c.txt",
@@ -12,16 +17,20 @@ describe 'jenkins class', order: :defined do
     "#{PDIR}/b/bar",
     "#{PDIR}/c/baz"
   ].freeze
-  DIRS = [
+  # rubocop:enable RSpec/LeakyConstantDeclaration
+  # rubocop:todo RSpec/LeakyConstantDeclaration
+  DIRS = [ # rubocop:todo Lint/ConstantDefinitionInBlock, RSpec/LeakyConstantDeclaration
     "#{PDIR}/a",
     "#{PDIR}/b",
     "#{PDIR}/c"
   ].freeze
+  # rubocop:enable RSpec/LeakyConstantDeclaration
 
   shared_examples 'has_plugin' do |plugin|
     describe file("#{PDIR}/#{plugin}.hpi") do
       it { is_expected.to be_file }
     end
+
     describe file("#{PDIR}/#{plugin}") do
       it { is_expected.to be_directory }
     end
@@ -32,6 +41,7 @@ describe 'jenkins class', order: :defined do
       shell("mkdir -p #{DIRS.join(' ')}")
       shell("touch #{FILES.join(' ')}")
     end
+
     after(:context) do
       shell("rm -rf #{DIRS.join(' ')} #{FILES.join(' ')}")
     end
@@ -73,6 +83,7 @@ describe 'jenkins class', order: :defined do
         it 'works with no error' do
           apply_manifest(pp, catch_failures: true)
         end
+
         it 'works idempotently' do
           apply_manifest(pp, catch_changes: true)
         end
@@ -101,6 +112,7 @@ describe 'jenkins class', order: :defined do
         it 'works with no error' do
           apply_manifest(pp, catch_failures: true)
         end
+
         it 'works idempotently' do
           apply_manifest(pp, catch_changes: true)
         end
@@ -146,7 +158,7 @@ describe 'jenkins class', order: :defined do
           it { is_expected.not_to exist }
         end
       end
-    end # true
+    end
 
     context 'false' do
       include_context 'plugin_test_files'
@@ -185,6 +197,6 @@ describe 'jenkins class', order: :defined do
           it { is_expected.to be_file }
         end
       end
-    end # false
-  end # plugin purging
+    end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/jenkins/plugins'
 
@@ -163,6 +165,7 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
 
       it { is_expected.to be_instance_of Hash }
+
       it 'has the right number of keys' do
         expect(data.keys.size).to be(18)
       end

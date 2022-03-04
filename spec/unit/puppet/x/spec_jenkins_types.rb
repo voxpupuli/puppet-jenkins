@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 shared_examples 'generic namevar' do |name|
@@ -6,10 +8,10 @@ shared_examples 'generic namevar' do |name|
   it 'is the namevar' do
     expect(described_class.key_attributes).to eq [name]
   end
-end # generic namevar
+end
 
 shared_examples 'generic ensurable' do |*allowed|
-  allowed ||= [:present, :absent]
+  allowed ||= %i[present absent]
 
   context 'attrtype' do
     it { expect(described_class.attrtype(:ensure)).to eq :property }
@@ -28,7 +30,7 @@ shared_examples 'generic ensurable' do |*allowed|
   end
 
   allowed.each do |value|
-    it "should support #{value} as a value to :ensure" do
+    it "supports #{value} as a value to :ensure" do
       expect { described_class.new(name: 'nobody', ensure: value) }.not_to raise_error
     end
   end
@@ -36,7 +38,7 @@ shared_examples 'generic ensurable' do |*allowed|
   it 'rejects unknown values' do
     expect { described_class.new(name: 'nobody', ensure: :foo) }.to raise_error(Puppet::Error)
   end
-end # generic ensurable
+end
 
 shared_examples 'validated property' do |param, default, allowed|
   context 'attrtype' do
@@ -44,7 +46,7 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 
   allowed.each do |value|
-    it "should support #{value} as a value" do
+    it "supports #{value} as a value" do
       expect { described_class.new(:name => 'nobody', param => value) }.
         not_to raise_error
     end
@@ -56,7 +58,7 @@ shared_examples 'validated property' do |param, default, allowed|
       expect(resource.should(param)).to be_nil
     end
   else
-    it "should default to #{default}" do
+    it "defaults to #{default}" do
       resource = described_class.new(name: 'nobody')
       expect(resource.should(param)).to eq default
     end
@@ -66,7 +68,7 @@ shared_examples 'validated property' do |param, default, allowed|
     expect { described_class.new(:name => 'nobody', param => :foo) }.
       to raise_error(Puppet::Error)
   end
-end # validated property
+end
 
 shared_examples 'boolean parameter' do |param, _default|
   it 'does not allow non-boolean values' do
@@ -74,7 +76,7 @@ shared_examples 'boolean parameter' do |param, _default|
       described_class.new(:name => 'foo', param => 'unknown')
     end.to raise_error Puppet::ResourceError, %r{Valid values are true, false}
   end
-end # boolean parameter
+end
 
 shared_examples 'boolean property' do |param, default|
   it 'does not allow non-boolean values' do
@@ -84,7 +86,7 @@ shared_examples 'boolean property' do |param, default|
   end
 
   it_behaves_like 'validated property', param, default, [true, false]
-end # boolean property
+end
 
 shared_examples 'array_matching property' do |_param|
   context 'attrtype' do
@@ -102,7 +104,7 @@ shared_examples 'array_matching property' do |_param|
     resource = described_class.new(name: 'test', arguments: value)
     expect(resource[:arguments]).to eq value
   end
-end # array_matching property
+end
 
 shared_examples 'autorequires cli resources' do
   before { Facter.clear }
@@ -353,7 +355,7 @@ shared_examples 'autorequires cli resources' do
     expect(req[0].source).to eq helper_resource
     expect(req[0].target).to eq resource
   end
-end # when autorequiring resources
+end
 
 shared_examples 'autorequires all jenkins_user resources' do
   it 'autorequires single jenkins_user' do
@@ -398,7 +400,7 @@ shared_examples 'autorequires all jenkins_user resources' do
     expect(req[1].source).to eq moe
     expect(req[1].target).to eq resource
   end
-end # autorequires all jenkins_user resources
+end
 
 shared_examples 'autorequires jenkins_security_realm resource' do
   it 'autorequires jenkins_security_realm resource' do
@@ -419,7 +421,7 @@ shared_examples 'autorequires jenkins_security_realm resource' do
     expect(req[0].source).to eq required
     expect(req[0].target).to eq resource
   end
-end # autorequires jenkins_security_realm resource
+end
 
 shared_examples 'autorequires jenkins_authorization_strategy resource' do
   it 'autorequires jenkins_authorization_strategy resource' do
@@ -440,4 +442,4 @@ shared_examples 'autorequires jenkins_authorization_strategy resource' do
     expect(req[0].source).to eq required
     expect(req[0].target).to eq resource
   end
-end # autorequires jenkins_authorization_strategy resource
+end

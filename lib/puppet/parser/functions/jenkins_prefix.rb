@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module Puppet::Parser::Functions
   newfunction(:jenkins_prefix, type: :rvalue, doc: <<-'ENDHEREDOC') do |_args|
@@ -7,7 +8,7 @@ module Puppet::Parser::Functions
     Example:
 
         $prefix = jenkins_prefix()
-    ENDHEREDOC
+  ENDHEREDOC
 
     config_hash = lookupvar('::jenkins::config_hash')
     if config_hash && \

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/property/boolean'
 require 'puppet/parameter/boolean'
 require 'puppet/util/diff'
@@ -30,6 +32,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
         'removed'
       else
         return 'left unchanged' if @resource[:replace] == false
+
         if Puppet[:show_diff] && resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
@@ -40,7 +43,7 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
               d2.write(newvalue)
               d2.flush
 
-              send @resource[:loglevel], "\n" + diff(d1.path, d2.path)
+              send @resource[:loglevel], "\n#{diff(d1.path, d2.path)}"
 
               d2.close
               d2.unlink
@@ -71,10 +74,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
   end
 
   # require all authentication & authorization related types
-  [
-    :jenkins_user,
-    :jenkins_security_realm,
-    :jenkins_authorization_strategy
+  %i[
+    jenkins_user
+    jenkins_security_realm
+    jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
       catalog.resources.select do |r|
@@ -105,4 +108,4 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
       end
     end
   end
-end # Puppet::X::Jenkins::Type::Cli.newtype
+end

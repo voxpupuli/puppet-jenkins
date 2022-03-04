@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
@@ -29,6 +31,7 @@ describe 'jenkins class' do
 
     describe file("#{SYSCONFDIR}/jenkins") do
       it { is_expected.to be_file }
+
       if fact('osfamily') == 'Debian'
         it { is_expected.to contain 'AJP_PORT="-1"' }
       else
@@ -46,9 +49,11 @@ describe 'jenkins class' do
         it { is_expected.to be_file }
         it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }
       end
+
       describe file('/etc/init.d/jenkins') do
         it { is_expected.not_to exist }
       end
+
       describe service('jenkins') do
         it { is_expected.to be_running.under('systemd') }
       end
@@ -56,11 +61,12 @@ describe 'jenkins class' do
       describe file('/etc/systemd/system/jenkins.service') do
         it { is_expected.not_to exist }
       end
+
       describe file('/etc/init.d/jenkins') do
         it { is_expected.to be_file }
       end
     end
-  end # default parameters
+  end
 
   context 'executors' do
     pp = <<-EOS
@@ -85,14 +91,14 @@ describe 'jenkins class' do
     describe file('/var/lib/jenkins/config.xml') do
       it { is_expected.to contain '  <numExecutors>42</numExecutors>' }
     end
-  end # executors
+  end
 
   context 'slaveagentport' do
     pp = <<-EOS
       class {'jenkins':
         slaveagentport => 7777,
       }
-      EOS
+    EOS
 
     apply2(pp)
 
@@ -110,5 +116,5 @@ describe 'jenkins class' do
     describe file('/var/lib/jenkins/config.xml') do
       it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
     end
-  end # slaveagentport
+  end
 end

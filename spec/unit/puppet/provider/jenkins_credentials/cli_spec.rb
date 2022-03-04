@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -320,7 +322,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           described_class.instances[0]
         end
 
-        it_behaves_like 'a provider from example hash UsernamePasswordCredentialsImpl' do
+        it_behaves_like 'a provider from example hash UsernamePasswordCredentialsImpl' do # rubocop:todo Lint/EmptyBlock
         end
       end
 
@@ -329,7 +331,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           described_class.instances[1]
         end
 
-        it_behaves_like 'a provider from example hash BasicSSHUserPrivateKey' do
+        it_behaves_like 'a provider from example hash BasicSSHUserPrivateKey' do # rubocop:todo Lint/EmptyBlock
         end
       end
 
@@ -338,7 +340,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           described_class.instances[2]
         end
 
-        it_behaves_like 'a provider from example hash StringCredentialsImpl' do
+        it_behaves_like 'a provider from example hash StringCredentialsImpl' do # rubocop:todo Lint/EmptyBlock
         end
       end
     end
@@ -356,7 +358,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
           with(kind_of(Puppet::Resource::Catalog))
       end
     end
-  end # ::instanes
+  end
 
   describe '#flush' do
     it 'calls credentials_update' do
@@ -384,7 +386,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider.flush
       expect(provider).to have_received(:credentials_delete_id)
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -408,7 +410,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         described_class.send :from_hash, credentials[2]
       end
     end
-  end # ::from_hash
+  end
 
   describe '::to_hash' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -418,7 +420,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(info).to eq credentials[0]
     end
-  end # ::to_hash
+  end
 
   describe '::credentials_list_json' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -435,7 +437,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         catalog: nil
       )
     end
-  end # ::credentials_list_json
+  end
 
   describe '#credentials_update_json' do
     RSpec::Matchers.define :a_json_doc do |x|
@@ -453,7 +455,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         stdinjson: credentials[0]
       )
     end
-  end # #credentials_update_json
+  end
 
   describe '#credentials_delete_id' do
     it do
@@ -463,8 +465,8 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       provider.send :credentials_delete_id
       expect(described_class).to have_received(:clihelper).with(
-        ['credentials_delete_id', '9b07d668-a87e-4877-9407-ae05056e32ac']
+        %w[credentials_delete_id 9b07d668-a87e-4877-9407-ae05056e32ac]
       )
     end
-  end # #credentials_delete_id
+  end
 end
