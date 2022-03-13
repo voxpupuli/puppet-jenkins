@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
+# rubocop:disable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class', order: :defined do
-  PDIR = '/var/lib/jenkins/plugins'.freeze
+  PDIR = '/var/lib/jenkins/plugins'
 
   # files/directories to test plugin purging removal of unmanaged files
   FILES = [
@@ -22,6 +26,7 @@ describe 'jenkins class', order: :defined do
     describe file("#{PDIR}/#{plugin}.hpi") do
       it { is_expected.to be_file }
     end
+
     describe file("#{PDIR}/#{plugin}") do
       it { is_expected.to be_directory }
     end
@@ -32,6 +37,7 @@ describe 'jenkins class', order: :defined do
       shell("mkdir -p #{DIRS.join(' ')}")
       shell("touch #{FILES.join(' ')}")
     end
+
     after(:context) do
       shell("rm -rf #{DIRS.join(' ')} #{FILES.join(' ')}")
     end
@@ -73,6 +79,7 @@ describe 'jenkins class', order: :defined do
         it 'works with no error' do
           apply_manifest(pp, catch_failures: true)
         end
+
         it 'works idempotently' do
           apply_manifest(pp, catch_changes: true)
         end
@@ -101,6 +108,7 @@ describe 'jenkins class', order: :defined do
         it 'works with no error' do
           apply_manifest(pp, catch_failures: true)
         end
+
         it 'works idempotently' do
           apply_manifest(pp, catch_changes: true)
         end
@@ -146,7 +154,7 @@ describe 'jenkins class', order: :defined do
           it { is_expected.not_to exist }
         end
       end
-    end # true
+    end
 
     context 'false' do
       include_context 'plugin_test_files'
@@ -185,6 +193,7 @@ describe 'jenkins class', order: :defined do
           it { is_expected.to be_file }
         end
       end
-    end # false
-  end # plugin purging
+    end
+  end
 end
+# rubocop:enable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock

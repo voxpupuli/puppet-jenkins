@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins' do
@@ -37,10 +39,12 @@ describe 'jenkins' do
               is_expected.to contain_file(startup_script).
                 that_notifies('Service[jenkins]')
             end
+
             it do
               is_expected.to contain_transition('stop jenkins service').
                 with_prior_to(["File[#{sysv_file}]"])
             end
+
             it do
               is_expected.to contain_file(sysv_file).
                 with(
@@ -49,6 +53,7 @@ describe 'jenkins' do
                 ).
                 that_comes_before('Systemd::Unit_file[jenkins.service]')
             end
+
             it do
               is_expected.to contain_systemd__unit_file('jenkins.service').
                 that_notifies('Service[jenkins]')

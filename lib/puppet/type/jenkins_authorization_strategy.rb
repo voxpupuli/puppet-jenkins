@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
@@ -31,4 +33,4 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_authorization_strategy) do
       end
     end
   end
-end # Puppet::X::Jenkins::Type::Cli.newtype
+end

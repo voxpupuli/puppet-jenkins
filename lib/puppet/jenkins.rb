@@ -1,12 +1,13 @@
+# frozen_string_literal: true
 
 module Puppet
   module Jenkins
     # @return [String] Full path to the Jenkins user's home directory
     def self.home_dir
-      return File.expand_path('~jenkins')
+      File.expand_path('~jenkins')
     rescue ArgumentError
       # The Jenkins user doesn't exist!
-      return nil
+      nil
     end
 
     # @return [String] Full path to the Jenkins user's plugin directory

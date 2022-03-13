@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::sysconfig' do
@@ -6,7 +8,7 @@ describe 'jenkins::sysconfig' do
   let(:params) { { 'value' => 'myvalue' } }
 
   on_supported_os.each do |os, os_facts|
-    context "on #{os} " do
+    context "on #{os}" do # rubocop:todo RSpec/EmptyExampleGroup
       let(:facts) { os_facts }
 
       case os_facts[:os]['family']

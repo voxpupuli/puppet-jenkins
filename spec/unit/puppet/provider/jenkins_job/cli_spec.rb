@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -6,28 +8,28 @@ require 'json'
 describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   let(:list_jobs_output) { "foo\nbar\n" }
   let(:foo_xml) do
-    <<-EOS
-<?xml version="1.0" encoding="UTF-8"?><project>
-  <actions/>
-  <description/>
-  <keepDependencies>false</keepDependencies>
-  <properties>
-    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
-      <autoRebuild>false</autoRebuild>
-      <rebuildDisabled>false</rebuildDisabled>
-    </com.sonyericsson.rebuild.RebuildSettings>
-  </properties>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders/>
-  <publishers/>
-  <buildWrappers/>
-</project>
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?><project>
+        <actions/>
+        <description/>
+        <keepDependencies>false</keepDependencies>
+        <properties>
+          <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+            <autoRebuild>false</autoRebuild>
+            <rebuildDisabled>false</rebuildDisabled>
+          </com.sonyericsson.rebuild.RebuildSettings>
+        </properties>
+        <scm class="hudson.scm.NullSCM"/>
+        <canRoam>true</canRoam>
+        <disabled>false</disabled>
+        <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+        <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+        <triggers/>
+        <concurrentBuild>false</concurrentBuild>
+        <builders/>
+        <publishers/>
+        <buildWrappers/>
+      </project>
     EOS
   end
   let(:bar_xml) do
@@ -64,7 +66,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         expect(described_class.instances.size).to eq 2
       end
 
-      context 'first instance returned' do
+      context 'first instance returned' do # rubocop:todo RSpec/MultipleMemoizedHelpers
         let(:provider) do
           described_class.instances[0]
         end
@@ -73,7 +75,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         it { expect(provider.enable).to eq true }
       end
 
-      context 'second instance returned' do
+      context 'second instance returned' do # rubocop:todo RSpec/MultipleMemoizedHelpers
         let(:provider) do
           described_class.instances[1]
         end
@@ -96,7 +98,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
           with(kind_of(Puppet::Resource::Catalog))
       end
     end
-  end # ::instanes
+  end
 
   describe '#create' do
     it 'does nothing' do
@@ -105,7 +107,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.create
       expect(provider.ensure).to eq :absent
     end
-  end # #create
+  end
 
   describe '#flush' do
     it 'calls create_job' do
@@ -147,7 +149,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
       expect(provider).to have_received(:delete_job)
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -167,23 +169,23 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         catalog: nil
       )
     end
-  end # ::list_jobs
+  end
 
   describe '::get_job' do
     it do
       allow(described_class).to receive(:cli).with(
-        ['get-job', 'foo'],
+        %w[get-job foo],
         catalog: nil
       ).and_return(foo_xml)
 
       ret = described_class.send :get_job, 'foo'
       expect(ret).to eq foo_xml
       expect(described_class).to have_received(:cli).with(
-        ['get-job', 'foo'],
+        %w[get-job foo],
         catalog: nil
       )
     end
-  end # ::get_job
+  end
 
   describe '::job_enabled' do
     it do
@@ -199,7 +201,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         catalog: nil
       )
     end
-  end # ::job_enabled
+  end
 
   describe '#create_job' do
     it do
@@ -212,11 +214,11 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
       provider.send :create_job
       expect(described_class).to have_received(:cli).with(
-        ['create-job', 'foo'],
+        %w[create-job foo],
         stdin: foo_xml
       )
     end
-  end # #create_job
+  end
 
   describe '#update_job' do
     it do
@@ -230,11 +232,11 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.send :update_job
 
       expect(described_class).to have_received(:cli).with(
-        ['update-job', 'foo'],
+        %w[update-job foo],
         stdin: foo_xml
       )
     end
-  end # #update_job
+  end
 
   describe '#delete_job' do
     it do
@@ -248,8 +250,8 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.send :delete_job
 
       expect(described_class).to have_received(:cli).with(
-        ['delete-job', 'foo']
+        %w[delete-job foo]
       )
     end
-  end # #delete_job
+  end
 end

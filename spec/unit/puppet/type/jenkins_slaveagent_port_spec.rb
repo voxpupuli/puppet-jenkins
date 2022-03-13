@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
@@ -8,13 +10,13 @@ describe Puppet::Type.type(:jenkins_slaveagent_port) do
     describe 'name' do
       it_behaves_like 'generic namevar', :name
     end
-  end # parameters
+  end
 
   describe 'properties' do
     describe 'ensure' do
       it_behaves_like 'generic ensurable', :present
     end
-  end # properties
+  end
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'

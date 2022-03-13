@@ -41,7 +41,7 @@ define jenkins::augeas (
   Optional[Variant[Array[String], String]] $onlyif = undef,
   Optional[String] $plugin_version                 = undef,
   String $context                                  = '/',
-  Optional[Variant[Boolean,String]] $plugin        = false,
+  Variant[Boolean,String] $plugin                  = false,
   Boolean $restart                                 = false,
   Boolean $show_diff                               = true,
 ) {

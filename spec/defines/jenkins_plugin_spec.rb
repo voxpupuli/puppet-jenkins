@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::plugin' do
@@ -19,6 +21,7 @@ describe 'jenkins::plugin' do
           ).that_requires("File[#{pdir}]").
             that_notifies('Service[jenkins]')
         end
+
         it do
           is_expected.to contain_file("#{pdir}/#{title}.hpi").with(
             owner: 'jenkins',
@@ -36,6 +39,7 @@ describe 'jenkins::plugin' do
             source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi"
           )
         end
+
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
       end
 
@@ -58,6 +62,7 @@ describe 'jenkins::plugin' do
       end
 
       describe 'with name and version' do
+        # rubocop:todo RSpec/RepeatedExampleGroupDescription
         describe 'where name & version are a substring of another plugin' do
           let(:params) { { version: '1.2.3' } }
 
@@ -66,7 +71,9 @@ describe 'jenkins::plugin' do
           it { is_expected.to contain_archive('myplug.hpi') }
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
+        # rubocop:enable RSpec/RepeatedExampleGroupDescription
 
+        # rubocop:todo RSpec/RepeatedExampleGroupDescription
         describe 'where name & version are a substring of another plugin' do
           let(:params) { { version: '1.2.3' } }
 
@@ -75,6 +82,7 @@ describe 'jenkins::plugin' do
           it { is_expected.to contain_archive('myplug.hpi') }
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
+        # rubocop:enable RSpec/RepeatedExampleGroupDescription
 
         describe 'where version is a substring of the already installed plugin' do
           let(:params) { { version: '1.2.3' } }
@@ -102,13 +110,14 @@ describe 'jenkins::plugin' do
           it { is_expected.not_to contain_archive('myplug.hpi') }
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
-      end # 'with name and version'
+      end
 
       describe 'with enabled is false' do
         let(:params) { { enabled: false } }
 
         it { is_expected.to contain_archive('myplug.hpi') }
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
+
         it do
           is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
             ensure: 'present',
@@ -125,6 +134,7 @@ describe 'jenkins::plugin' do
 
         it { is_expected.to contain_archive('myplug.hpi') }
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
+
         it do
           is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
             ensure: 'absent'
@@ -175,7 +185,7 @@ describe 'jenkins::plugin' do
         let(:title) { 'git' }
 
         context 'by default' do
-          context 'with a version' do
+          context 'with a version' do # rubocop:todo RSpec/MultipleMemoizedHelpers
             let(:version) { '1.3.3.7' }
             let(:params) { { version: version } }
             let(:expected_url) do
@@ -197,7 +207,7 @@ describe 'jenkins::plugin' do
         context 'with a custom update_url' do
           let(:update_url) { 'http://rspec' }
 
-          context 'without a version' do
+          context 'without a version' do # rubocop:todo RSpec/MultipleMemoizedHelpers
             let(:params) { { update_url: update_url } }
             let(:expected_url) do
               "#{update_url}/latest/#{title}.hpi"
@@ -206,7 +216,7 @@ describe 'jenkins::plugin' do
             include_examples 'execute the right fetch command'
           end
 
-          context 'with a version' do
+          context 'with a version' do # rubocop:todo RSpec/MultipleMemoizedHelpers
             let(:version) { '1.2.3' }
             let(:params) { { update_url: update_url, version: version } }
             let(:expected_url) do
@@ -252,8 +262,8 @@ describe 'jenkins::plugin' do
 
             it { is_expected.to compile.and_raise_error(%r{source}) }
           end
-        end # validate_string
-      end # source
+        end
+      end
 
       context 'pinned file' do
         let(:title) { 'foo' }
@@ -278,16 +288,18 @@ describe 'jenkins::plugin' do
                 that_notifies('Service[jenkins]')
             end
           end
+
           context 'with pin => false' do
             let(:params) { { pin: false } }
 
             it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
           end
+
           context 'with default pin param' do
             it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
           end
         end
-      end # pinned file extension name
+      end
 
       describe 'purge plugins' do
         context 'true' do
@@ -313,7 +325,7 @@ describe 'jenkins::plugin' do
 
           it { is_expected.not_to contain_file("#{pdir}/#{title}") }
         end
-      end # purge plugins
+      end
 
       describe 'deprecated params' do
         %w[
@@ -326,7 +338,7 @@ describe 'jenkins::plugin' do
             pending('rspec-puppet support for testing warning()')
           end
         end
-      end # deprecated params
+      end
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 # Note, rspec-puppet determines the class name from the top level describe
@@ -80,7 +82,7 @@ describe 'jenkins' do
           end
         end
 
-        context '(default)' do
+        context '(default)' do # rubocop:todo RSpec/EmptyExampleGroup
           case os_facts[:os]['family']
           when 'Debian'
             it do
@@ -136,10 +138,11 @@ describe 'jenkins' do
               unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]'
             )
           end
+
           it { is_expected.to contain_jenkins__cli__exec('set_num_executors').that_requires('Class[jenkins::cli]') }
           it { is_expected.to contain_jenkins__cli__exec('set_num_executors').that_comes_before('Class[jenkins::jobs]') }
         end
-      end # executors =>
+      end
 
       describe 'slaveagentport =>' do
         context 'undef' do
@@ -156,10 +159,11 @@ describe 'jenkins' do
               unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]"
             )
           end
+
           it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
           it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_comes_before('Class[jenkins::jobs]') }
         end
-      end # slaveagentport =>
+      end
 
       describe 'manage_user =>' do
         context '(default)' do
@@ -177,7 +181,7 @@ describe 'jenkins' do
 
           it { is_expected.not_to contain_user('jenkins') }
         end
-      end # manage_user =>
+      end
 
       describe 'manage_service =>' do
         context '(default)' do
@@ -194,7 +198,7 @@ describe 'jenkins' do
           it { is_expected.not_to contain_class 'jenkins::service' }
           it { is_expected.not_to contain_service 'jenkins' }
         end
-      end # manage_service =>
+      end
 
       describe 'user =>' do
         context '(default)' do
@@ -222,7 +226,7 @@ describe 'jenkins' do
             )
           end
         end
-      end # user =>
+      end
 
       describe 'manage_group =>' do
         context '(default)' do
@@ -240,7 +244,7 @@ describe 'jenkins' do
 
           it { is_expected.not_to contain_group('jenkins') }
         end
-      end # manage_group =>
+      end
 
       describe 'group =>' do
         context '(default)' do
@@ -262,7 +266,7 @@ describe 'jenkins' do
             )
           end
         end
-      end # group =>
+      end
 
       describe 'manages state dirs' do
         [
@@ -279,7 +283,7 @@ describe 'jenkins' do
             )
           end
         end
-      end # manages state dirs
+      end
 
       describe 'with default plugins' do
         it { is_expected.to contain_jenkins__plugin 'credentials' }
@@ -324,7 +328,7 @@ describe 'jenkins' do
               without('notify')
           end
         end
-      end # purge_plugins
+      end
     end
   end
 end

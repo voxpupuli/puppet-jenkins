@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::user', type: :define do
@@ -14,6 +16,7 @@ describe 'jenkins::user', type: :define do
           is_expected.to contain_jenkins__user('foo').
             that_requires('Class[jenkins::cli_helper]')
         end
+
         it do
           is_expected.to contain_jenkins__user('foo').
             that_comes_before('Anchor[jenkins::end]')

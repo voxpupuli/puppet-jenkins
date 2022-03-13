@@ -5,17 +5,17 @@
 # PuppetX::Jenkins::Provider::Clihelper class for compatiblity with the puppet
 # resource face.  No defaults should be set in this classes definition.
 class jenkins::cli::config (
-  Optional[Stdlib::Absolutepath] $cli_jar         = undef,
-  Optional[String] $url                           = undef,
-  Optional[Stdlib::Absolutepath] $ssh_private_key = undef,
-  Optional[Stdlib::Absolutepath] $puppet_helper   = undef,
-  Optional[Integer] $cli_tries                    = undef,
-  Optional[Numeric] $cli_try_sleep                = undef,
-  Optional[String] $cli_username                  = undef,
-  Optional[String] $cli_password                  = undef,
-  Optional[String] $cli_password_file             = '/tmp/jenkins_credentials_for_puppet',
-  Boolean $cli_password_file_exists               = false,
-  Optional[String] $ssh_private_key_content       = undef,
+  Optional[Stdlib::Absolutepath] $cli_jar                  = undef,
+  Optional[String]               $url                      = undef,
+  Optional[Stdlib::Absolutepath] $ssh_private_key          = undef,
+  Optional[Stdlib::Absolutepath] $puppet_helper            = undef,
+  Optional[Integer]              $cli_tries                = undef,
+  Optional[Numeric]              $cli_try_sleep            = undef,
+  Optional[String]               $cli_username             = undef,
+  Optional[String]               $cli_password             = undef,
+  String                         $cli_password_file        = '/tmp/jenkins_credentials_for_puppet',
+  Boolean                        $cli_password_file_exists = false,
+  Optional[String]               $ssh_private_key_content  = undef,
 ) {
   if str2bool($facts['is_pe']) {
     $gem_provider = 'pe_gem'
