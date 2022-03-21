@@ -36,10 +36,20 @@ class jenkins::params {
     $systemd_type = 'forking'
   }
 
+  if $facts['os']['family'] == 'Archlinux' {
+    $libdir = '/usr/share/java/jenkins/'
+  } elsif versioncmp(pick($facts['jenkins_version'], '2.332.1'), '2.332.1') >= 0 {
+    $libdir = '/usr/share/java'
+  } else {
+    $libdir = $facts['os']['family'] ? {
+      'Debian' => '/usr/share/jenkins',
+      default  => '/usr/lib/jenkins',
+    }
+  }
+
   case $facts['os']['family'] {
     'Debian': {
       $repo                 = true
-      $libdir               = '/usr/share/jenkins'
       $package_provider     = 'dpkg'
       $service_provider     = undef
       $sysconfdir           = '/etc/default'
@@ -50,7 +60,6 @@ class jenkins::params {
     }
     'RedHat': {
       $repo                 = true
-      $libdir               = '/usr/lib/jenkins'
       $package_provider     = 'rpm'
       $sysconfdir           = '/etc/sysconfig'
       $config_hash_defaults = {
@@ -74,7 +83,6 @@ class jenkins::params {
     }
     'Archlinux': {
       $repo                 = false
-      $libdir               = '/usr/share/java/jenkins/'
       $package_provider     = 'pacman'
       $service_provider     = undef
       $sysconfdir           = '/etc/conf.d'
@@ -87,7 +95,6 @@ class jenkins::params {
     }
     default: {
       $repo                 = true
-      $libdir               = '/usr/lib/jenkins'
       $package_provider     = undef
       $service_provider     = undef
       $sysconfdir           = '/etc/sysconfig'

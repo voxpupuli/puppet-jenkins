@@ -17,20 +17,26 @@ Facter.add(:jenkins_version) do
   confine kernel: 'Linux'
 
   setcode do
-    libdir = case Facter.value('os.family')
-             when 'Debian'
-               '/usr/share/jenkins'
-             when 'Archlinux'
-               '/usr/share/java/jenkins'
-             else
-               '/usr/lib/jenkins'
-             end
-    war = libdir + '/jenkins.war'
+    libdirs = [
+      '/usr/share/java',
+      '/usr/share/java/jenkins',
+      '/usr/share/jenkins',
+      '/usr/lib/jenkins'
+    ]
 
-    if Facter::Util::Resolution.which('java') and File.exist?(war)
-      Facter::Util::Resolution.exec(
-        'java -jar %s --version' % [war]
-      )
+    if Facter::Util::Resolution.which('java')
+      version = nil
+
+      libdirs.each do |libdir|
+        war = format('%s/jenkins.war', libdir)
+        next unless File.exist?(war)
+        next if version
+
+        version = Facter::Util::Resolution.exec(
+          format('java -jar %s --version', war)
+        )
+      end
+      version
     end
   end
 end
