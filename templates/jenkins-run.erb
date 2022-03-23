@@ -69,7 +69,13 @@ PARAMS+=("--daemon")
 [ -n "$JENKINS_HANDLER_STARTUP" ] && PARAMS+=("--handlerCountStartup=$JENKINS_HANDLER_STARTUP")
 [ -n "$JENKINS_HANDLER_MAX" ] && PARAMS+=("--handlerCountMax=$JENKINS_HANDLER_MAX")
 [ -n "$JENKINS_HANDLER_IDLE" ] && PARAMS+=("--handlerCountMaxIdle=$JENKINS_HANDLER_IDLE")
-[ -n "$JENKINS_ARGS" ] && PARAMS+=("$JENKINS_ARGS")
+if [ -n "$JENKINS_ARGS" ]
+then
+  for separate_arg in $JENKINS_ARGS
+  do
+    PARAMS+=("$separate_arg")
+  done
+fi
 
 if [ "$JENKINS_ENABLE_ACCESS_LOG" = "yes" ]; then
   PARAMS+=("--accessLoggerClassName=winstone.accesslog.SimpleAccessLogger")
