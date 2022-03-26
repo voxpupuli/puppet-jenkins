@@ -169,8 +169,8 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps ::cli class method' do
-      expect(described_class).to receive(:cli).with('foo', {})
-      provider.cli('foo', {})
+      expect(described_class).to receive(:cli).with('foo', key: 'value')
+      provider.cli('foo', key: 'value')
     end
 
     it 'extracts the catalog from the resource' do
@@ -199,8 +199,8 @@ describe Puppet::X::Jenkins::Provider::Cli do
     end
 
     it 'wraps ::clihelper class method' do
-      expect(described_class).to receive(:clihelper).with('foo', {})
-      provider.clihelper('foo', {})
+      expect(described_class).to receive(:clihelper).with('foo', key: 'value')
+      provider.clihelper('foo', key: 'value')
     end
 
     it 'extracts the catalog from the resource' do
