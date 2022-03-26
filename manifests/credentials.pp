@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Type jenkins::credentials
-#
-# Jenkins credentials (via the CloudBees Credentials plugin
-#
+# @summary Jenkins credentials via the CloudBees Credentials plugin
 define jenkins::credentials (
   String $password,
   String $description               = 'Managed by Puppet',

@@ -1,7 +1,5 @@
-# Class: jenkins::cli
-#
-# Allow Jenkins commands to be issued from the command line
-#
+# @summary Allow Jenkins commands to be issued from the command line
+# @api private
 class jenkins::cli {
   assert_private()
 

@@ -1,7 +1,4 @@
-# Class jenkins::cli_helper
-#
-# A helper script for creating resources via the Jenkins cli
-#
+# @summary A helper script for creating resources via the Jenkins cli
 class jenkins::cli_helper {
   include jenkins
   include jenkins::cli

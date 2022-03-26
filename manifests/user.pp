@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Type jenkins::user
-#
-# A Jenkins user account
+# @summary Manage Jenkins user accounts
 #
 define jenkins::user (
   Pattern[/^[^@]+@[^@]+$/] $email,

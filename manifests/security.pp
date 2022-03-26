@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Class jenkins::security
-#
-# Jenkins security configuration
+# @summary Jenkins security configuration
 #
 class jenkins::security (
   String $security_model,
