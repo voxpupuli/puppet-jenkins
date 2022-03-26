@@ -4,10 +4,10 @@ require 'puppet/x/jenkins/config'
 
 describe Puppet::X::Jenkins::Config do
   DEFAULTS = {
-    cli_jar: '/usr/lib/jenkins/jenkins-cli.jar',
+    cli_jar: '/usr/share/java/jenkins-cli.jar',
     url: 'http://localhost:8080',
     ssh_private_key: nil,
-    puppet_helper: '/usr/lib/jenkins/puppet_helper.groovy',
+    puppet_helper: '/usr/share/java/puppet_helper.groovy',
     cli_tries: 30,
     cli_try_sleep: 2
   }.freeze

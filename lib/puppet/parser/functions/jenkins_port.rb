@@ -10,12 +10,6 @@ module Puppet::Parser::Functions
     ENDHEREDOC
 
     config_hash = lookupvar('::jenkins::config_hash')
-    if config_hash && \
-       config_hash['HTTP_PORT'] && \
-       config_hash['HTTP_PORT']['value']
-      return config_hash['HTTP_PORT']['value']
-    else
-      return 8080
-    end
+    config_hash&.dig('JENKINS_PORT', 'value') || 8080
   end
 end

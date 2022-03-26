@@ -19,7 +19,7 @@ describe 'jenkins class' do
       }
     end
 
-    describe file("#{LIBDIR}/jenkins-cli.jar") do
+    describe file('/usr/share/java/jenkins-cli.jar') do
       it { is_expected.to be_file }
       it { is_expected.to be_readable.by('owner') }
       it { is_expected.to be_writable.by('owner') }
@@ -27,38 +27,14 @@ describe 'jenkins class' do
       it { is_expected.to be_readable.by('others') }
     end
 
-    describe file("#{SYSCONFDIR}/jenkins") do
+    describe file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf') do
       it { is_expected.to be_file }
-      if fact('osfamily') == 'Debian'
-        it { is_expected.to contain 'AJP_PORT="-1"' }
-      else
-        it { is_expected.to contain 'JENKINS_AJP_PORT="-1"' }
-      end
+      it { is_expected.to contain 'Environment=' }
     end
 
     describe service('jenkins') do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
-    end
-
-    if fact('osfamily') == 'RedHat' && SYSTEMD
-      describe file('/etc/systemd/system/jenkins.service') do
-        it { is_expected.to be_file }
-        it { is_expected.to contain "ExecStart=#{libdir}/jenkins-run" }
-      end
-      describe file('/etc/init.d/jenkins') do
-        it { is_expected.not_to exist }
-      end
-      describe service('jenkins') do
-        it { is_expected.to be_running.under('systemd') }
-      end
-    else
-      describe file('/etc/systemd/system/jenkins.service') do
-        it { is_expected.not_to exist }
-      end
-      describe file('/etc/init.d/jenkins') do
-        it { is_expected.to be_file }
-      end
     end
   end # default parameters
 

@@ -60,7 +60,9 @@ EOS
   context 'ensure =>' do
     context 'present' do
       it 'works with no errors' do
-        pp = base_manifest + <<-EOS
+        pp = <<-EOS
+          include jenkins
+          include jenkins::cli::config
           jenkins_job { 'foo':
             ensure => present,
             config => \'#{test_build_job}\',
@@ -82,7 +84,9 @@ EOS
 
     context 'absent' do
       it 'works with no errors and idempotently' do
-        pp = base_manifest + <<-EOS
+        pp = <<-EOS
+          include jenkins
+          include jenkins::cli::config
           jenkins_job { 'foo':
             ensure => absent,
           }
@@ -100,7 +104,9 @@ EOS
 
   context 'cloudbees-folder plugin' do
     let(:manifest) do
-      base_manifest + <<-EOS
+      <<-EOS
+        include jenkins
+        include jenkins::cli::config
         jenkins::plugin { 'cloudbees-folder': }
       EOS
     end

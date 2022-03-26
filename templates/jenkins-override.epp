@@ -1,0 +1,5 @@
+<%| Hash[String, Struct[{value => Any}]] $environment |-%>
+[Service]
+<% $environment.each |$key, $entry| { -%>
+Environment="<%= $key %>=<%= $entry['value'] %>"
+<% } -%>

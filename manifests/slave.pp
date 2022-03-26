@@ -204,17 +204,17 @@ class jenkins::slave (
 
   # customizations based on the OS family
   case $facts['os']['family'] {
-    'Debian': {
-      $defaults_location = $jenkins::params::sysconfdir
-
-      ensure_packages(['daemon'])
-      Package['daemon'] -> Service['jenkins-slave']
+    'Archlinux': {
+      $defaults_location = '/etc/conf.d'
     }
     'Darwin': {
       $defaults_location = $slave_home
     }
+    'Debian': {
+      $defaults_location = '/etc/default'
+    }
     default: {
-      $defaults_location = $jenkins::params::sysconfdir
+      $defaults_location = '/etc/sysconfig'
     }
   }
 

@@ -18,7 +18,7 @@ describe 'jenkins' do
               cli_ssh_keyfile: '/path/to/key',
               cli_username: 'myuser',
               libdir: '/path/to/libdir',
-              config_hash: { 'HTTP_PORT' => { 'value' => '9000' } } }
+              config_hash: { 'JENKINS_PORT' => { 'value' => '9000' } } }
           end
 
           it { is_expected.to contain_class('jenkins::cli') }
@@ -27,7 +27,6 @@ describe 'jenkins' do
           it { is_expected.to contain_exec('reload-jenkins').with_command(%r{-i\s'/path/to/key'}) }
           it { is_expected.to contain_exec('reload-jenkins').that_requires('File[/path/to/libdir/jenkins-cli.jar]') }
           it { is_expected.to contain_exec('safe-restart-jenkins') }
-          it { is_expected.to contain_jenkins__sysconfig('HTTP_PORT').with_value('9000') }
 
           describe 'jenkins::cli' do
             describe 'relationships' do
