@@ -5,6 +5,9 @@ class jenkins::params {
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
+    'javax-activation-api', # implied by all plugin
+    'javax-mail-api', # implied by all plugins
+    'sshd', # implied by structs
     'structs', # required by credentials plugin
   ]
 
