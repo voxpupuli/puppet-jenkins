@@ -224,29 +224,17 @@ class jenkins::slave (
       $defaults_user    = 'root'
       $defaults_group   = 'root'
       $manage_user_home = true
-      $sysv_init        = '/etc/init.d/jenkins-slave'
 
-      if $facts['systemd'] {
-        jenkins::systemd { 'jenkins-slave':
-          user   => $slave_user,
-          libdir => $slave_home,
-        }
-      } else {
-        file { "${slave_home}/${service_name}-run":
-          content => template("${module_name}/${service_name}-run.erb"),
-          owner   => $slave_user,
-          mode    => '0755',
-          notify  => Service[$service_name],
-        }
+      file { "${slave_home}/${service_name}-run":
+        content => template("${module_name}/${service_name}-run.erb"),
+        owner   => $slave_user,
+        mode    => '0755',
+        notify  => Service[$service_name],
+      }
 
-        file { $sysv_init:
-          ensure  => 'file',
-          mode    => '0755',
-          owner   => 'root',
-          group   => 'root',
-          content => template("${module_name}/${service_name}.${facts['os']['family']}.erb"),
-          notify  => Service[$service_name],
-        }
+      systemd::unit_file { "${service_name}.service":
+        content => template("${module_name}/${service_name}.service.erb"),
+        notify  => Service[$service_name],
       }
     }
     'Darwin': {

@@ -10,25 +10,12 @@ describe 'jenkins::slave class' do
 
     apply2(pp)
 
-    if SYSTEMD
-      describe file('/etc/systemd/system/jenkins-slave.service') do
-        it { is_expected.to be_file }
-        it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
-      end
-      describe file('/etc/init.d/jenkins-slave') do
-        it { is_expected.not_to exist }
-      end
-      describe service('jenkins-slave') do
-        it { is_expected.to be_running.under('systemd') }
-      end
-    else
-      describe file('/etc/systemd/system/jenkins-slave.service') do
-        it { is_expected.not_to exist }
-      end
-      describe file('/etc/init.d/jenkins-slave') do
-        it { is_expected.to be_file }
-        it { is_expected.to be_mode 755 }
-      end
+    describe file('/etc/systemd/system/jenkins-slave.service') do
+      it { is_expected.to be_file }
+      it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
+    end
+    describe service('jenkins-slave') do
+      it { is_expected.to be_running }
     end
 
     describe file("#{SYSCONFDIR}/jenkins-slave") do
