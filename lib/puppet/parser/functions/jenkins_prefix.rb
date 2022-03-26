@@ -15,7 +15,7 @@ module Puppet::Parser::Functions
        config_hash['PREFIX']['value']
       return config_hash['PREFIX']['value']
     else
-      return lookupvar('::jenkins::params::prefix')
+      return ''
     end
   end
 end

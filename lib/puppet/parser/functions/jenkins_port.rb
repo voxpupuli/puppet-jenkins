@@ -15,7 +15,7 @@ module Puppet::Parser::Functions
        config_hash['HTTP_PORT']['value']
       return config_hash['HTTP_PORT']['value']
     else
-      return lookupvar('::jenkins::params::port')
+      return 8080
     end
   end
 end

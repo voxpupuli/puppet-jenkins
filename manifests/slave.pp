@@ -135,7 +135,7 @@ class jenkins::slave (
   Boolean $disable_ssl_verification       = false,
   Boolean $disable_clients_unique_id      = false,
   Any $labels                             = undef,
-  Any $install_java                       = $jenkins::params::install_java,
+  Any $install_java                       = true,
   Boolean $manage_client_jar              = true,
   Enum['running', 'stopped'] $ensure      = 'running',
   Boolean $enable                         = true,
