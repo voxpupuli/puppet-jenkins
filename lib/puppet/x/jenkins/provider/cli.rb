@@ -72,28 +72,28 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
-  def clihelper(command, options = nil)
+  def clihelper(command, options = {})
     if resource && resource.catalog
-      options ||= {}
       options[:catalog] ||= resource.catalog
     end
 
-    args = []
-    args << command
-    args << options unless options.nil?
-    self.class.clihelper(*args)
+    if options.empty? # Ruby < 2.7 hack
+      self.class.clihelper(command)
+    else
+      self.class.clihelper(command, **options)
+    end
   end
 
-  def cli(command, options = nil)
+  def cli(command, options = {})
     if resource && resource.catalog
-      options ||= {}
       options[:catalog] ||= resource.catalog
     end
 
-    args = []
-    args << command
-    args << options unless options.nil?
-    self.class.cli(*args)
+    if options.empty? # Ruby < 2.7 hack
+      self.class.cli(command)
+    else
+      self.class.cli(command, **options)
+    end
   end
 
   def self.clihelper(command, options = {})
@@ -268,9 +268,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     begin
       if tmpfile_as_param && options.key?(:stdinfile)
-        return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), options)
+        return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), **options)
       end
-      return superclass.execute([cmd].flatten.join(' '), options)
+      return superclass.execute([cmd].flatten.join(' '), **options)
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
         raise AuthError, e.message, e.backtrace if e.message.match(error)
