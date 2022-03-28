@@ -1,4 +1,4 @@
-# This class create a new jenkins job given a name and config xml
+# @summary Manage Jenkins jobs given a name and config xml
 #
 # @param config The content of the jenkins job config file (required)
 # @param source Path to a puppet file() resource containing the Jenkins XML job description.
