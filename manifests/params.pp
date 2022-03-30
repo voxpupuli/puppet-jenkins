@@ -1,34 +1,12 @@
 # @summary Default parameters
 # @api private
 class jenkins::params {
-  $version               = 'installed'
-  $lts                   = true
-  $direct_download       = undef
-  $service_enable        = true
-  $service_ensure        = 'running'
-  $install_java          = true
-  $swarm_version         = '2.2'
-  $default_plugins_host  = 'https://updates.jenkins.io'
-  $port                  = 8080
-  $prefix                = ''
-  $cli_tries             = 10
-  $cli_try_sleep         = 10
-  $package_cache_dir     = '/var/cache/jenkins_pkgs'
-  $package_name          = 'jenkins'
-
-  $manage_datadirs = true
-  $localstatedir   = '/var/lib/jenkins'
-
-  $manage_user  = true
-  $user         = 'jenkins'
-  $manage_group = true
-  $group        = 'jenkins'
+  $swarm_version = '2.2'
   $_java_args   = '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false'
   $default_plugins = [
     'credentials', # required by puppet_helper.groovy
     'structs', # required by credentials plugin
   ]
-  $purge_plugins = false
 
   if versioncmp(pick($facts['jenkins_version'], '2.313'), '2.313') >= 0 {
     $systemd_type = 'simple'
