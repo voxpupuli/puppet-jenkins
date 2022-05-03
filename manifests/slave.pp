@@ -229,6 +229,7 @@ class jenkins::slave (
         content => template("${module_name}/${service_name}-run.erb"),
         owner   => $slave_user,
         mode    => '0755',
+        seltype => 'bin_t',
         notify  => Service[$service_name],
       }
 
