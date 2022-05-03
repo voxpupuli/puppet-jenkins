@@ -264,24 +264,11 @@ describe 'jenkins::slave' do
           let(:slave_runtime_file) { '/etc/sysconfig/jenkins-slave' }
           let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
           let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
-          let(:slave_sysv_file) { '/etc/init.d/jenkins-slave' }
 
           it_behaves_like 'a jenkins::slave catalog'
           it do
             is_expected.to contain_file(slave_startup_script).
               that_notifies('Service[jenkins-slave]')
-          end
-          it do
-            is_expected.to contain_transition('stop jenkins-slave service').
-              with_prior_to(["File[#{slave_sysv_file}]"])
-          end
-          it do
-            is_expected.to contain_file(slave_sysv_file).
-              with(
-                ensure: 'absent',
-                selinux_ignore_defaults: true
-              ).
-              that_comes_before('Systemd::Unit_file[jenkins-slave.service]')
           end
           it do
             is_expected.to contain_systemd__unit_file('jenkins-slave.service').
@@ -291,7 +278,7 @@ describe 'jenkins::slave' do
       when 'Debian'
         describe 'Debian' do
           let(:slave_runtime_file) { '/etc/default/jenkins-slave' }
-          let(:slave_service_file) { '/etc/init.d/jenkins-slave' }
+          let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
 
           it_behaves_like 'a jenkins::slave catalog'
 
@@ -299,11 +286,6 @@ describe 'jenkins::slave' do
             let(:params) { { slave_name: 'jenkins-slave' } }
 
             it_behaves_like 'using slave_name'
-          end
-
-          it do
-            is_expected.to contain_package('daemon').
-              that_comes_before('Service[jenkins-slave]')
           end
         end
       when 'Darwin'
@@ -320,8 +302,6 @@ describe 'jenkins::slave' do
 
             it_behaves_like 'using slave_name'
           end
-
-          it { is_expected.not_to contain_package('daemon') }
         end
       end
     end

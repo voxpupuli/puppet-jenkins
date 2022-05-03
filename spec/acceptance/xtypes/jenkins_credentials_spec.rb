@@ -7,7 +7,9 @@ describe 'jenkins_credentials' do
     context 'present' do
       context 'UsernamePasswordCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins_credentials { '9b07d668-a87e-4877-9407-ae05056e32ac':
               ensure      => 'present',
               description => 'foo',
@@ -33,7 +35,9 @@ describe 'jenkins_credentials' do
 
       context 'ConduitCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { 'phabricator-plugin':
             }
 
@@ -61,7 +65,9 @@ describe 'jenkins_credentials' do
 
       context 'BasicSSHUserPrivateKey' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             # At least on EL7 version 1.0.4 is shipped and ssh-credentials
             # needs >= 1.0.5. 1.0.8 is the latests at the time of writing.
             jenkins::plugin { 'trilead-api':
@@ -96,7 +102,9 @@ describe 'jenkins_credentials' do
 
       context 'StringCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
               pin => true,
             }
@@ -125,7 +133,9 @@ describe 'jenkins_credentials' do
 
       context 'FileCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
               pin => true,
             }
@@ -156,7 +166,9 @@ describe 'jenkins_credentials' do
       context 'AWSCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { [
               'jackson2-api',
               'aws-java-sdk',
@@ -194,7 +206,9 @@ describe 'jenkins_credentials' do
       context 'GitLabApiTokenImpl' do
         it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
               'matrix-project',
@@ -240,7 +254,8 @@ describe 'jenkins_credentials' do
       context 'BrowserStackCredentials' do
         it 'works with no errors and idempotently' do
           pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
             jenkins::plugin { [
               'jackson2-api',
               'credentials-binding',
@@ -278,7 +293,9 @@ describe 'jenkins_credentials' do
     context 'absent' do
       context 'StringCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { 'plain-credentials': }
 
             jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
@@ -305,7 +322,9 @@ describe 'jenkins_credentials' do
 
       context 'FileCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pp = base_manifest + <<-EOS
+          pp = <<-EOS
+            include jenkins
+            include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
               pin => true,
             }

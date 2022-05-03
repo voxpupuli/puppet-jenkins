@@ -4,14 +4,6 @@ configure_beaker
 
 shared_context 'jenkins' do
   # rspec examples are not available as variables to serverspec describe blocks
-  LIBDIR = case fact 'osfamily'
-           when 'RedHat'
-             '/usr/lib/jenkins'
-           when 'Debian'
-             '/usr/share/jenkins'
-           when 'Archlinux'
-             '/usr/share/java/jenkins/'
-           end
   SYSCONFDIR = case fact 'osfamily'
                when 'RedHat'
                  '/etc/sysconfig'
@@ -20,18 +12,6 @@ shared_context 'jenkins' do
                when 'Archlinux'
                  '/etc/conf.d'
                end
-
-  let(:libdir) { LIBDIR }
-
-  let(:base_manifest) do
-    <<-EOS
-      include jenkins
-      class { 'jenkins::cli::config':
-        cli_jar       => '#{libdir}/jenkins-cli.jar',
-        puppet_helper => '#{libdir}/puppet_helper.groovy',
-      }
-    EOS
-  end
 end
 
 def apply(pp, options = {})
@@ -56,14 +36,3 @@ def apply2(pp)
     on(hosts, 'facter --json jenkins_plugins')
   end
 end
-
-# probe stolen from:
-# https://github.com/camptocamp/puppet-systemd/blob/master/lib/facter/systemd.rb#L26
-#
-# See these issues for an explination of why this is nessicary rather than
-# using fact() from beaker-facter in the DSL:
-#
-# https://tickets.puppetlabs.com/browse/BKR-1040
-# https://tickets.puppetlabs.com/browse/BKR-1041
-#
-SYSTEMD = shell('ps -p 1 -o comm=').stdout =~ %r{systemd}

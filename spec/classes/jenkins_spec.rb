@@ -63,39 +63,6 @@ describe 'jenkins' do
         it { is_expected.not_to contain_class 'jenkins::firewall' }
       end
 
-      describe 'sysconfdir =>' do
-        var = case os_facts[:os]['family']
-              when 'Debian'
-                'JAVA_ARGS'
-              when 'Redhat', 'Suse'
-                'JENKINS_JAVA_OPTIONS'
-              end
-
-        context '/foo/bar', if: var do
-          let(:params) { { sysconfdir: '/foo/bar' } }
-
-          it do
-            is_expected.to contain_file_line("Jenkins sysconfig setting #{var}").
-              with_path('/foo/bar/jenkins')
-          end
-        end
-
-        context '(default)' do
-          case os_facts[:os]['family']
-          when 'Debian'
-            it do
-              is_expected.to contain_file_line('Jenkins sysconfig setting JAVA_ARGS').
-                with_path('/etc/default/jenkins')
-            end
-          when 'RedHat', 'Suse'
-            it do
-              is_expected.to contain_file_line('Jenkins sysconfig setting JENKINS_JAVA_OPTIONS').
-                with_path('/etc/sysconfig/jenkins')
-            end
-          end
-        end
-      end
-
       describe 'manage_datadirs =>' do
         context 'false' do
           let(:params) { { manage_datadirs: false } }

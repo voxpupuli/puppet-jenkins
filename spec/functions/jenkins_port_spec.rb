@@ -19,7 +19,7 @@ describe 'jenkins_port' do
         let(:pre_condition) do
           <<-ENDPUPPET
           class { 'jenkins':
-            config_hash => {'HTTP_PORT' => {'value' => '1337'}},
+            config_hash => {'JENKINS_PORT' => {'value' => '1337'}},
           }
           ENDPUPPET
         end

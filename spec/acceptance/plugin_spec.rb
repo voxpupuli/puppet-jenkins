@@ -61,7 +61,6 @@ describe 'jenkins class', order: :defined do
 
         # dependencies to prevent them from being purged
         jenkins::plugin { ['jdk-tool', 'trilead-api']:
-          extension => 'jpi',
         }
 
         # actual plugin
@@ -89,7 +88,6 @@ describe 'jenkins class', order: :defined do
 
         # dependencies to prevent them from being purged
         jenkins::plugin { ['jdk-tool', 'trilead-api']:
-          extension => 'jpi',
         }
 
         # actual plugin
@@ -126,7 +124,6 @@ describe 'jenkins class', order: :defined do
 
         # dependencies to prevent them from being purged
         jenkins::plugin { ['jdk-tool', 'trilead-api']:
-          extension => 'jpi',
         }
 
         # Actual plugin
@@ -159,7 +156,6 @@ describe 'jenkins class', order: :defined do
 
         # dependencies to prevent them from being purged
         jenkins::plugin { ['jdk-tool', 'trilead-api']:
-          extension => 'jpi',
         }
 
         # Actual plugin

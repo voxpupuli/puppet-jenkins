@@ -9,5 +9,9 @@ class jenkins::config {
     $jenkins::params::config_hash_defaults,
     $jenkins::config_hash
   )
-  create_resources('jenkins::sysconfig', $config_hash)
+
+  systemd::dropin_file { 'puppet-overrides.conf':
+    unit    => 'jenkins.service',
+    content => epp("${module_name}/jenkins-override.epp", { 'environment' => $config_hash }),
+  }
 }
