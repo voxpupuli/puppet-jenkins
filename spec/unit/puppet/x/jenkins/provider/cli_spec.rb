@@ -531,7 +531,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           expect(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/share/java/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
-          ).exactly(2).times.and_raise(UnknownError, 'foo')
+          ).twice.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')
@@ -566,7 +566,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           expect(described_class.superclass).to receive(:execute).with(
             'java -jar /usr/share/java/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
             failonfail: true, combine: true
-          ).exactly(2).times.and_raise(UnknownError, 'foo')
+          ).twice.and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')
@@ -658,7 +658,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(tmp).to receive(:flush)
         expect(tmp).to receive(:close)
         expect(tmp).to receive(:unlink)
-        expect(tmp).to receive(:path) { '/dne.tmp' }
+        expect(tmp).to receive(:path).and_return('/dne.tmp')
 
         expect(described_class.superclass).to receive(:execute).with(
           'java -jar /usr/share/java/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',
@@ -680,7 +680,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(tmp).to receive(:flush)
         expect(tmp).to receive(:close)
         expect(tmp).to receive(:unlink)
-        expect(tmp).to receive(:path) { '/dne.tmp' }
+        expect(tmp).to receive(:path).and_return('/dne.tmp')
 
         expect(described_class.superclass).to receive(:execute).with(
           'java -jar /usr/share/java/jenkins-cli.jar -s http://localhost:8080 -logger WARNING foo',

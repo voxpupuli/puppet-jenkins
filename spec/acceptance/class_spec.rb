@@ -66,7 +66,7 @@ describe 'jenkins class' do
       class {'jenkins':
         slaveagentport => 7777,
       }
-      EOS
+    EOS
 
     apply2(pp)
 

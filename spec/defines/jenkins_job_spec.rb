@@ -19,6 +19,7 @@ describe 'jenkins::job' do
           is_expected.to contain_jenkins__job('myjob').
             that_requires('Class[jenkins::cli]')
         end
+
         it do
           is_expected.to contain_jenkins__job('myjob').
             that_comes_before('Anchor[jenkins::end]')
@@ -72,22 +73,22 @@ describe 'jenkins::job' do
       end
 
       describe 'with unformatted config' do
-        unformatted_config = <<eos
-<xml version='1.0' encoding='UTF-8'>
- <notselfclosing></notselfclosing>
- <notempty>...</notempty>
- <anotherempty></anotherempty>
- <quotes>&quot;...&quot;</quotes>
-</xml>
-eos
-        formatted_config = <<eos
-<xml version="1.0" encoding="UTF-8">
- <notselfclosing/>
- <notempty>...</notempty>
- <anotherempty/>
- <quotes>"..."</quotes>
-</xml>
-eos
+        unformatted_config = <<~EOS
+          <xml version='1.0' encoding='UTF-8'>
+           <notselfclosing></notselfclosing>
+           <notempty>...</notempty>
+           <anotherempty></anotherempty>
+           <quotes>&quot;...&quot;</quotes>
+          </xml>
+        EOS
+        formatted_config = <<~EOS
+          <xml version="1.0" encoding="UTF-8">
+           <notselfclosing/>
+           <notempty>...</notempty>
+           <anotherempty/>
+           <quotes>"..."</quotes>
+          </xml>
+        EOS
 
         let(:params) do
           {

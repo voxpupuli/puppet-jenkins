@@ -100,6 +100,7 @@ describe 'jenkins::cli::config' do
                   group: nil
                 )
               end
+
               it { is_expected.to contain_file('/dne').with_content('foo') }
             end # as non-root user
 
@@ -117,6 +118,7 @@ describe 'jenkins::cli::config' do
                   group: 'jenkins'
                 )
               end
+
               it { is_expected.to contain_file('/dne').with_content('foo') }
             end # as root
           end # when ssh_private_key is also set

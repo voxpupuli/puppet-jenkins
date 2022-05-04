@@ -103,6 +103,7 @@ describe 'jenkins' do
               unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]'
             )
           end
+
           it { is_expected.to contain_jenkins__cli__exec('set_num_executors').that_requires('Class[jenkins::cli]') }
           it { is_expected.to contain_jenkins__cli__exec('set_num_executors').that_comes_before('Class[jenkins::jobs]') }
         end
@@ -123,6 +124,7 @@ describe 'jenkins' do
               unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]"
             )
           end
+
           it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
           it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_comes_before('Class[jenkins::jobs]') }
         end

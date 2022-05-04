@@ -34,6 +34,7 @@ describe 'jenkins' do
                 is_expected.to contain_class('jenkins::cli').
                   that_requires('Class[jenkins::service]')
               end
+
               it do
                 is_expected.to contain_class('jenkins::cli').
                   that_comes_before('Anchor[jenkins::end]')

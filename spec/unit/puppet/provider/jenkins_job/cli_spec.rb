@@ -6,28 +6,28 @@ require 'json'
 describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   let(:list_jobs_output) { "foo\nbar\n" }
   let(:foo_xml) do
-    <<-EOS
-<?xml version="1.0" encoding="UTF-8"?><project>
-  <actions/>
-  <description/>
-  <keepDependencies>false</keepDependencies>
-  <properties>
-    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
-      <autoRebuild>false</autoRebuild>
-      <rebuildDisabled>false</rebuildDisabled>
-    </com.sonyericsson.rebuild.RebuildSettings>
-  </properties>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders/>
-  <publishers/>
-  <buildWrappers/>
-</project>
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?><project>
+        <actions/>
+        <description/>
+        <keepDependencies>false</keepDependencies>
+        <properties>
+          <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+            <autoRebuild>false</autoRebuild>
+            <rebuildDisabled>false</rebuildDisabled>
+          </com.sonyericsson.rebuild.RebuildSettings>
+        </properties>
+        <scm class="hudson.scm.NullSCM"/>
+        <canRoam>true</canRoam>
+        <disabled>false</disabled>
+        <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+        <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+        <triggers/>
+        <concurrentBuild>false</concurrentBuild>
+        <builders/>
+        <publishers/>
+        <buildWrappers/>
+      </project>
     EOS
   end
   let(:bar_xml) do
@@ -109,7 +109,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new
       provider.ensure = :present
 
-      expect(provider).to receive(:exists?) { false }
+      expect(provider).to receive(:exists?).and_return(false)
       expect(provider).to receive(:create_job)
       provider.flush
     end
@@ -118,7 +118,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider = described_class.new
       provider.ensure = :present
 
-      expect(provider).to receive(:exists?) { true }
+      expect(provider).to receive(:exists?).and_return(true)
       expect(provider).to receive(:update_job)
       provider.flush
     end
@@ -128,7 +128,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.ensure = :present
       provider.replace = false
 
-      expect(provider).to receive(:exists?) { true }
+      expect(provider).to receive(:exists?).and_return(true)
       expect(provider).not_to receive(:update_job)
       provider.flush
     end
@@ -161,7 +161,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   describe '::get_job' do
     it do
       expect(described_class).to receive(:cli).with(
-        ['get-job', 'foo'],
+        %w[get-job foo],
         catalog: nil
       ) { foo_xml }
 
@@ -175,7 +175,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       expect(described_class).to receive(:clihelper).with(
         %w[job_enabled foo],
         catalog: nil
-      ) { 'true' }
+      ).and_return('true')
 
       ret = described_class.send :job_enabled, 'foo'
       expect(ret).to eq true
@@ -190,7 +190,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       )
 
       expect(described_class).to receive(:cli).with(
-        ['create-job', 'foo'],
+        %w[create-job foo],
         stdin: foo_xml
       )
 
@@ -206,7 +206,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       )
 
       expect(described_class).to receive(:cli).with(
-        ['update-job', 'foo'],
+        %w[update-job foo],
         stdin: foo_xml
       )
 
@@ -222,7 +222,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       )
 
       expect(described_class).to receive(:cli).with(
-        ['delete-job', 'foo']
+        %w[delete-job foo]
       )
 
       provider.send :delete_job

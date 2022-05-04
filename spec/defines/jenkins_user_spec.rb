@@ -14,6 +14,7 @@ describe 'jenkins::user', type: :define do
           is_expected.to contain_jenkins__user('foo').
             that_requires('Class[jenkins::cli_helper]')
         end
+
         it do
           is_expected.to contain_jenkins__user('foo').
             that_comes_before('Anchor[jenkins::end]')

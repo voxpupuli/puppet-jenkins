@@ -25,6 +25,7 @@ describe 'jenkins' do
             end
           end
         end
+
         context 'unmanaged' do
           let(:params) do
             {

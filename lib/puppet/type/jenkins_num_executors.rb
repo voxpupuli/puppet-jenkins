@@ -23,10 +23,10 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_num_executors) do
   end
 
   # require all authentication & authorization related types
-  [
-    :jenkins_user,
-    :jenkins_security_realm,
-    :jenkins_authorization_strategy
+  %i[
+    jenkins_user
+    jenkins_security_realm
+    jenkins_authorization_strategy
   ].each do |type|
     autorequire(type) do
       catalog.resources.select do |r|

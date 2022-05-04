@@ -446,7 +446,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider = described_class.send :from_hash, credentials[0]
 
       expect(described_class).to receive(:clihelper).with(
-        ['credentials_delete_id', '9b07d668-a87e-4877-9407-ae05056e32ac']
+        %w[credentials_delete_id 9b07d668-a87e-4877-9407-ae05056e32ac]
       )
 
       provider.send :credentials_delete_id

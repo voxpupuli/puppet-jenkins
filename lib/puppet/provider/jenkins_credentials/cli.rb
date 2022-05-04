@@ -45,27 +45,27 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
       ensure: :present
     }
 
-    [:impl, :domain, :scope].each { |k| copy_key(params, info, k) }
+    %i[impl domain scope].each { |k| copy_key(params, info, k) }
 
     case info['impl']
     when 'UsernamePasswordCredentialsImpl'
-      [:description, :username, :password].each { |k| copy_key(params, info, k) }
+      %i[description username password].each { |k| copy_key(params, info, k) }
     when 'BasicSSHUserPrivateKey'
-      [:description, :username, :private_key, :passphrase].each { |k| copy_key(params, info, k) }
+      %i[description username private_key passphrase].each { |k| copy_key(params, info, k) }
     when 'StringCredentialsImpl'
-      [:description, :secret].each { |k| copy_key(params, info, k) }
+      %i[description secret].each { |k| copy_key(params, info, k) }
     when 'FileCredentialsImpl'
-      [:description, :file_name, :content].each { |k| copy_key(params, info, k) }
+      %i[description file_name content].each { |k| copy_key(params, info, k) }
     when 'CertificateCredentialsImpl'
-      [:description, :password, :key_store_implementation].each { |k| copy_key(params, info, k) }
+      %i[description password key_store_implementation].each { |k| copy_key(params, info, k) }
     when 'AWSCredentialsImpl'
-      [:description, :secret_key, :access_key].each { |k| copy_key(params, info, k) }
+      %i[description secret_key access_key].each { |k| copy_key(params, info, k) }
     when 'BrowserStackCredentials'
-      [:description, :username, :access_key].each { |k| copy_key(params, info, k) }
+      %i[description username access_key].each { |k| copy_key(params, info, k) }
     when 'GitLabApiTokenImpl'
-      [:description, :api_token].each { |k| copy_key(params, info, k) }
+      %i[description api_token].each { |k| copy_key(params, info, k) }
     when 'ConduitCredentialsImpl'
-      [:description, :token, :url].each { |k| copy_key(params, info, k) }
+      %i[description token url].each { |k| copy_key(params, info, k) }
 
       ksi = info['key_store_impl']
       params['key_store_impl'] = ksi

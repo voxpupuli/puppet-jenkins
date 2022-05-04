@@ -20,38 +20,38 @@ describe Puppet::Type.type(:jenkins_credentials) do
     end
 
     describe 'scope' do
-      it_behaves_like 'validated property', :scope, :GLOBAL, [:GLOBAL, :SYSTEM]
+      it_behaves_like 'validated property', :scope, :GLOBAL, %i[GLOBAL SYSTEM]
     end
 
     describe 'impl' do
       it_behaves_like 'validated property', :impl,
                       :UsernamePasswordCredentialsImpl,
-                      [
-                        :UsernamePasswordCredentialsImpl,
-                        :BasicSSHUserPrivateKey,
-                        :StringCredentialsImpl,
-                        :FileCredentialsImpl,
-                        :AWSCredentialsImpl,
-                        :GitLabApiTokenImpl,
-                        :BrowserStackCredentials
+                      %i[
+                        UsernamePasswordCredentialsImpl
+                        BasicSSHUserPrivateKey
+                        StringCredentialsImpl
+                        FileCredentialsImpl
+                        AWSCredentialsImpl
+                        GitLabApiTokenImpl
+                        BrowserStackCredentials
                       ]
     end
 
     # unvalidated properties
-    [
-      :description,
-      :username,
-      :password,
-      :private_key,
-      :passphrase,
-      :secret,
-      :file_name,
-      :content,
-      :source,
-      :key_store_impl,
-      :secret_key,
-      :access_key,
-      :api_token
+    %i[
+      description
+      username
+      password
+      private_key
+      passphrase
+      secret
+      file_name
+      content
+      source
+      key_store_impl
+      secret_key
+      access_key
+      api_token
     ].each do |property|
       describe property.to_s do
         context 'attrtype' do

@@ -172,8 +172,8 @@ describe 'jenkins::augeas' do
       # `    `---'`---'`---'`---^`    `---'    |---'`---^`    `---^` ' '
       #                                        |
       {
-        true    => 'safe-restart-jenkins',
-        false   => 'reload-jenkins'
+        true => 'safe-restart-jenkins',
+        false => 'reload-jenkins'
       }.each do |pval, expected|
         describe "with param restart set to '#{pval}' (#{pval.class})" do
           let(:params) do

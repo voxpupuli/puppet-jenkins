@@ -11,11 +11,11 @@ describe 'jenkins' do
           it { is_expected.to contain_jenkins__plugin('credentials') }
 
           it do
-            is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf')
-              .with_content <<~CONFIG
+            is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf').
+              with_content <<~CONFIG
                 [Service]
                 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
-                CONFIG
+              CONFIG
           end
         end
 
@@ -23,12 +23,12 @@ describe 'jenkins' do
           let(:params) { { config_hash: { 'AJP_PORT' => { 'value' => '1234' } } } }
 
           it do
-            is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf')
-              .with_content <<~CONFIG
+            is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf').
+              with_content <<~CONFIG
                 [Service]
                 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
                 Environment="AJP_PORT=1234"
-                CONFIG
+              CONFIG
           end
         end
       end

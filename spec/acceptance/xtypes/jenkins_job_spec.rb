@@ -4,53 +4,53 @@ require 'spec_helper_acceptance'
 # on existing state as a performance optimization.
 describe 'jenkins_job', order: :defined do
   let(:test_build_job) do
-    example = <<'EOS'
-<?xml version='1.0' encoding='UTF-8'?>
-<project>
-  <actions/>
-  <description>test job</description>
-  <keepDependencies>false</keepDependencies>
-  <properties/>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>/usr/bin/true</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
-EOS
+    example = <<~'EOS'
+      <?xml version='1.0' encoding='UTF-8'?>
+      <project>
+        <actions/>
+        <description>test job</description>
+        <keepDependencies>false</keepDependencies>
+        <properties/>
+        <scm class="hudson.scm.NullSCM"/>
+        <canRoam>true</canRoam>
+        <disabled>false</disabled>
+        <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+        <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+        <triggers/>
+        <concurrentBuild>false</concurrentBuild>
+        <builders>
+          <hudson.tasks.Shell>
+            <command>/usr/bin/true</command>
+          </hudson.tasks.Shell>
+        </builders>
+        <publishers/>
+        <buildWrappers/>
+      </project>
+    EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
   end
 
   let(:test_folder_job) do
-    example = <<'EOS'
-<?xml version="1.0" encoding="UTF-8"?><com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@5.5">
-  <properties/>
-  <views>
-    <hudson.model.AllView>
-      <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../.."/>
-      <name>All</name>
-      <filterExecutors>false</filterExecutors>
-      <filterQueue>false</filterQueue>
-      <properties class="hudson.model.View$PropertyList"/>
-    </hudson.model.AllView>
-  </views>
-  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
-  <healthMetrics>
-    <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric/>
-  </healthMetrics>
-  <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
-</com.cloudbees.hudson.plugins.folder.Folder>
-EOS
+    example = <<~'EOS'
+      <?xml version="1.0" encoding="UTF-8"?><com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@5.5">
+        <properties/>
+        <views>
+          <hudson.model.AllView>
+            <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../.."/>
+            <name>All</name>
+            <filterExecutors>false</filterExecutors>
+            <filterQueue>false</filterQueue>
+            <properties class="hudson.model.View$PropertyList"/>
+          </hudson.model.AllView>
+        </views>
+        <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric/>
+        </healthMetrics>
+        <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+      </com.cloudbees.hudson.plugins.folder.Folder>
+    EOS
     # escape single quotes for puppet
     example.gsub("'", %q(\\\'))
   end

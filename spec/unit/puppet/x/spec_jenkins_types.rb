@@ -9,7 +9,7 @@ shared_examples 'generic namevar' do |name|
 end # generic namevar
 
 shared_examples 'generic ensurable' do |*allowed|
-  allowed ||= [:present, :absent]
+  allowed ||= %i[present absent]
 
   context 'attrtype' do
     it { expect(described_class.attrtype(:ensure)).to eq :property }
@@ -28,7 +28,7 @@ shared_examples 'generic ensurable' do |*allowed|
   end
 
   allowed.each do |value|
-    it "should support #{value} as a value to :ensure" do
+    it "supports #{value} as a value to :ensure" do
       expect { described_class.new(name: 'nobody', ensure: value) }.not_to raise_error
     end
   end
@@ -44,7 +44,7 @@ shared_examples 'validated property' do |param, default, allowed|
   end
 
   allowed.each do |value|
-    it "should support #{value} as a value" do
+    it "supports #{value} as a value" do
       expect { described_class.new(:name => 'nobody', param => value) }.
         not_to raise_error
     end
@@ -56,7 +56,7 @@ shared_examples 'validated property' do |param, default, allowed|
       expect(resource.should(param)).to be_nil
     end
   else
-    it "should default to #{default}" do
+    it "defaults to #{default}" do
       resource = described_class.new(name: 'nobody')
       expect(resource.should(param)).to eq default
     end

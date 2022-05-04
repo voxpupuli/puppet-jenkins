@@ -59,17 +59,20 @@ describe Puppet::Type.type(:jenkins_job) do
 
       describe 'change_to_s change string' do
         context 'created' do
-          it { expect(property.change_to_s(:absent, nil)) .to eq 'created' }
+          it { expect(property.change_to_s(:absent, nil)).to eq 'created' }
         end
+
         context 'removed' do
           it { expect(property.change_to_s(nil, :absent)).to eq 'removed' }
         end
+
         context 'changed with replace' do
           it do
             expect(property.change_to_s('foo', 'bar')).
               to match(%r{content changed '{md5}\w+' to '{md5}\w+'})
           end
         end
+
         context 'changed without replace' do
           let(:resource) { described_class.new(name: 'foo', config: 'bar', replace: false) }
 
