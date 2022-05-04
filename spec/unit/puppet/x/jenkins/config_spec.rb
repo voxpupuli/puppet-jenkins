@@ -35,7 +35,7 @@ describe Puppet::X::Jenkins::Config do
 
   shared_examples 'returns fact values' do |_param|
     it 'returns fact values' do
-      DEFAULTS.each do |k, _v|
+      DEFAULTS.each_key do |k|
         expect(config[k]).to eq Facter.value("jenkins_#{k}".to_sym)
       end
     end
@@ -45,8 +45,8 @@ describe Puppet::X::Jenkins::Config do
     it 'returns catalog values' do
       config = catalog.resource(:class, 'jenkins::cli::config')
 
-      DEFAULTS.each do |k, _v|
-        expect(config[k]).to eq config[k]
+      DEFAULTS.each_key do |k|
+        expect(config[k]).not_to be_nil
       end
     end
   end

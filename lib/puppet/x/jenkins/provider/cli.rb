@@ -23,7 +23,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   #
   # The subclass seems to function with an empty @commands and any value we try
   # to push in will get reselt by ::initvars.
-  def self.inherited(subclass)
+  def self.inherited(subclass) # rubocop:todo Lint/MissingSuper
     subclass.instance_variable_set(:@confine_collection, @confine_collection.dup)
   end
 
@@ -192,11 +192,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       raise 'cli_username must be set' if cli_username.nil? || cli_username.empty?
 
       auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
-    # we have a prepared username:password file, just use it
-    elsif cli_password_file_exists
-      auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-    # we have username and password, then we create the password file and use it
-    elsif !cli_username.nil? && !cli_password.nil?
+    # either we have a prepared username:password file, just use it
+    # or we have username and password, then we create the password file and use it
+    elsif cli_password_file_exists || (!cli_username.nil? && !cli_password.nil?)
       auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
     end
     auth_cmd&.flatten!

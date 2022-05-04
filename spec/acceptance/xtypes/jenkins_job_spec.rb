@@ -114,7 +114,8 @@ describe 'jenkins_job', order: :defined do
     context 'nested folders' do
       context 'create' do
         it 'works with no errors' do
-          pp = manifest + <<-EOS
+          pp = <<-EOS
+            #{manifest}
             jenkins_job { 'foo':
               ensure => present,
               config => \'#{test_folder_job}\',
@@ -159,7 +160,8 @@ describe 'jenkins_job', order: :defined do
 
       context 'delete' do
         it 'works with no errors and idempotently' do
-          pp = manifest + <<-EOS
+          pp = <<-EOS
+            #{manifest}
             jenkins_job { 'foo': ensure => absent }
             jenkins_job { 'foo/bar': ensure => absent }
             jenkins_job { 'foo/bar/baz': ensure => absent }
@@ -184,7 +186,8 @@ describe 'jenkins_job', order: :defined do
         skip # travis is running the beaker tests really slow...
         pending('CLI update-job command is unable to handle the conversion')
 
-        pp = manifest + <<-EOS
+        pp = <<-EOS
+          #{manifest}
           jenkins_job { 'foo':
             ensure => present,
             config => \'#{test_build_job}\',
@@ -193,7 +196,8 @@ describe 'jenkins_job', order: :defined do
 
         apply(pp, catch_failures: true)
 
-        pp = manifest + <<-EOS
+        pp = <<-EOS
+          #{manifest}
           jenkins_job { 'foo':
             ensure => present,
             config => \'#{test_folder_job}\',
@@ -203,7 +207,8 @@ describe 'jenkins_job', order: :defined do
         apply2(pp)
 
         # only for cleanup
-        pp = manifest + <<-EOS
+        pp = <<-EOS
+          #{manifest}
           jenkins_job { 'foo': ensure => absent }
         EOS
 
