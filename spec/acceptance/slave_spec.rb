@@ -14,9 +14,6 @@ describe 'jenkins::slave class' do
       it { is_expected.to be_file }
       it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
     end
-    describe service('jenkins-slave') do
-      it { is_expected.to be_running }
-    end
 
     describe file("#{SYSCONFDIR}/jenkins-slave") do
       it { is_expected.to be_file }
