@@ -67,15 +67,6 @@ describe 'jenkins::plugin' do
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
 
-        describe 'where name & version are a substring of another plugin' do
-          let(:params) { { version: '1.2.3' } }
-
-          let(:facts) { super().merge(jenkins_plugins: 'fooplug 1.4.5, bar-myplug 1.2.3.4') }
-
-          it { is_expected.to contain_archive('myplug.hpi') }
-          it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
-        end
-
         describe 'where version is a substring of the already installed plugin' do
           let(:params) { { version: '1.2.3' } }
 
