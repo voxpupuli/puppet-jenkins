@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::job' do
@@ -19,6 +21,7 @@ describe 'jenkins::job' do
           is_expected.to contain_jenkins__job('myjob').
             that_requires('Class[jenkins::cli]')
         end
+
         it do
           is_expected.to contain_jenkins__job('myjob').
             that_comes_before('Anchor[jenkins::end]')
@@ -72,22 +75,22 @@ describe 'jenkins::job' do
       end
 
       describe 'with unformatted config' do
-        unformatted_config = <<eos
-<xml version='1.0' encoding='UTF-8'>
- <notselfclosing></notselfclosing>
- <notempty>...</notempty>
- <anotherempty></anotherempty>
- <quotes>&quot;...&quot;</quotes>
-</xml>
-eos
-        formatted_config = <<eos
-<xml version="1.0" encoding="UTF-8">
- <notselfclosing/>
- <notempty>...</notempty>
- <anotherempty/>
- <quotes>"..."</quotes>
-</xml>
-eos
+        unformatted_config = <<~EOS
+          <xml version='1.0' encoding='UTF-8'>
+           <notselfclosing></notselfclosing>
+           <notempty>...</notempty>
+           <anotherempty></anotherempty>
+           <quotes>&quot;...&quot;</quotes>
+          </xml>
+        EOS
+        formatted_config = <<~EOS
+          <xml version="1.0" encoding="UTF-8">
+           <notselfclosing/>
+           <notempty>...</notempty>
+           <anotherempty/>
+           <quotes>"..."</quotes>
+          </xml>
+        EOS
 
         let(:params) do
           {
@@ -133,7 +136,7 @@ eos
       end
 
       describe 'with sourced config and blank regular config' do
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource, config: '' } }
 
         it do
@@ -144,7 +147,7 @@ eos
 
       describe 'with sourced config and regular config' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource, config: quotes } }
 
         it do
@@ -154,14 +157,14 @@ eos
       end
 
       describe 'with sourced config and no regular config' do
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource } }
 
         it { is_expected.to compile.and_raise_error(%r{(Must pass config|expects a value for parameter 'config')}) }
       end
 
       describe 'with templated config and blank regular config' do
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
 
         it do
@@ -172,7 +175,7 @@ eos
 
       describe 'with templated config and regular config' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
 
         it do
@@ -182,7 +185,7 @@ eos
       end
 
       describe 'with templated config and no regular config' do
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate } }
 
         it { is_expected.to compile.and_raise_error(%r{(Must pass config|expects a value for parameter 'config')}) }

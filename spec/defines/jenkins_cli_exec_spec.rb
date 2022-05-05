@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::cli::exec' do
@@ -6,13 +8,14 @@ describe 'jenkins::cli::exec' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
-      let(:helper_cmd) { "/bin/cat /usr/share/java/puppet_helper.groovy | /usr/bin/java -jar /usr/share/java/jenkins-cli.jar -s http://127.0.0.1:8080 groovy =" }
+      let(:helper_cmd) { '/bin/cat /usr/share/java/puppet_helper.groovy | /usr/bin/java -jar /usr/share/java/jenkins-cli.jar -s http://127.0.0.1:8080 groovy =' }
 
       describe 'relationships' do
         it do
           is_expected.to contain_jenkins__cli__exec('foo').
             that_requires('Class[jenkins::cli_helper]')
         end
+
         it do
           is_expected.to contain_jenkins__cli__exec('foo').
             that_comes_before('Anchor[jenkins::end]')
@@ -31,6 +34,7 @@ describe 'jenkins::cli::exec' do
               unless: nil
             )
           end
+
           it { is_expected.to contain_exec('foo').that_notifies('Class[jenkins::cli::reload]') }
         end
 
@@ -45,9 +49,10 @@ describe 'jenkins::cli::exec' do
               unless: nil
             )
           end
+
           it { is_expected.to contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
         end
-      end # title =>
+      end
 
       describe 'command =>' do
         context 'bar' do
@@ -88,7 +93,7 @@ describe 'jenkins::cli::exec' do
             )
           end
         end
-      end # command =>
+      end
 
       describe 'unless =>' do
         context 'bar' do
@@ -104,7 +109,7 @@ describe 'jenkins::cli::exec' do
             )
           end
         end
-      end # unless_cli_helper =>
+      end
     end
   end
 end

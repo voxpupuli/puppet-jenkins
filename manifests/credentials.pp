@@ -16,9 +16,9 @@
 define jenkins::credentials (
   String $password,
   String $description               = 'Managed by Puppet',
-  String $private_key_or_path       = '',
+  String $private_key_or_path       = '', # lint:ignore:params_empty_string_assignment
   Enum['present', 'absent'] $ensure = 'present',
-  String $uuid                      = '',
+  String $uuid                      = '', # lint:ignore:params_empty_string_assignment
 ) {
   include jenkins
   include jenkins::cli_helper

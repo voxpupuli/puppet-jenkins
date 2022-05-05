@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins_credentials' do
-  include_context 'jenkins'
-
   context 'ensure =>' do
     context 'present' do
       context 'UsernamePasswordCredentialsImpl' do
@@ -288,7 +288,7 @@ describe 'jenkins_credentials' do
           }
         end
       end
-    end # 'present' do
+    end
 
     context 'absent' do
       context 'StringCredentialsImpl' do
@@ -351,6 +351,6 @@ describe 'jenkins_credentials' do
           it { is_expected.not_to contain '<id>95bfe159-8bf0-4605-be20-47e201220e7</id>' }
         end
       end
-    end # 'absent' do
-  end # 'ensure =>' do
+    end
+  end
 end

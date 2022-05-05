@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'json'
 
@@ -73,7 +75,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
         described_class.instances(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#flush' do
     it 'calls set_jenkins_instance' do
@@ -98,7 +100,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       expect(provider).to receive(:set_security_none)
       provider.flush
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -114,7 +116,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       let(:info) { realm_none }
       let(:provider) { described_class.send(:from_hash, info) }
     end
-  end # ::from_hash
+  end
 
   describe '::to_hash' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -124,7 +126,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
 
       expect(info).to eq realm_oauth
     end
-  end # ::to_hash
+  end
 
   describe '::get_security_realm' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -137,7 +139,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       raw = described_class.send :get_security_realm
       expect(raw).to eq realm_oauth
     end
-  end # ::get_security_realm
+  end
 
   describe '#set_jenkins_instance' do
     it do
@@ -150,7 +152,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
 
       provider.send :set_jenkins_instance
     end
-  end # #set_jenkins_instance
+  end
 
   describe '#set_security_none' do
     it do
@@ -163,5 +165,5 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
 
       provider.send :set_security_none
     end
-  end # #set_security_none
+  end
 end

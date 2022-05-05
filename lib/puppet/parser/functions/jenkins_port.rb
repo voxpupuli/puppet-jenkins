@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module Puppet::Parser::Functions
   newfunction(:jenkins_port, type: :rvalue, doc: <<-'ENDHEREDOC') do |_args|
@@ -7,7 +8,7 @@ module Puppet::Parser::Functions
     Example:
 
         $port = jenkins_port()
-    ENDHEREDOC
+  ENDHEREDOC
 
     config_hash = lookupvar('::jenkins::config_hash')
     config_hash&.dig('JENKINS_PORT', 'value') || 8080

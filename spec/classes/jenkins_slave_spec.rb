@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::slave' do
@@ -12,6 +14,7 @@ describe 'jenkins::slave' do
             extract: false
           )
         end
+
         it { is_expected.to contain_file(slave_service_file) }
         it { is_expected.to contain_service('jenkins-slave').with(enable: true, ensure: 'running') }
         # Let the different platform blocks define  `slave_runtime_file` separately below
@@ -178,6 +181,7 @@ describe 'jenkins::slave' do
 
             it { is_expected.to contain_archive('get_swarm_client').with_source("#{source}/swarm-client-2.0-jar-with-dependencies.jar") }
           end
+
           context 'a version higher than 3.0' do
             let(:params) do
               {
@@ -213,6 +217,7 @@ describe 'jenkins::slave' do
             is_expected.to contain_file(slave_runtime_file).with_content(%r{^LABELS="unlimited blades"$})
           end
         end
+
         describe 'disable unique client id' do
           let(:params) do
             {
@@ -244,7 +249,7 @@ describe 'jenkins::slave' do
                 with_content(%r{^DELETE_EXISTING_CLIENTS=""$})
             end
           end
-        end # delete_existing_clients
+        end
 
         describe 'with a non-default $java_cmd' do
           java_cmd = '/usr/local/bin/java'
@@ -270,6 +275,7 @@ describe 'jenkins::slave' do
             is_expected.to contain_file(slave_startup_script).
               that_notifies('Service[jenkins-slave]')
           end
+
           it do
             is_expected.to contain_systemd__unit_file('jenkins-slave.service').
               that_notifies('Service[jenkins-slave]')

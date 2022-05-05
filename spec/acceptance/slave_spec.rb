@@ -1,9 +1,15 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins::slave class' do
-  include_context 'jenkins'
-
   context 'default parameters' do
+    sysconfdirs = {
+      'RedHat' => '/etc/sysconfig',
+      'Debian' => '/etc/default',
+      'Archlinux' => '/etc/conf.d',
+    }
+
     pp = <<-EOS
       include ::jenkins::slave
     EOS
@@ -14,11 +20,8 @@ describe 'jenkins::slave class' do
       it { is_expected.to be_file }
       it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
     end
-    describe service('jenkins-slave') do
-      it { is_expected.to be_running }
-    end
 
-    describe file("#{SYSCONFDIR}/jenkins-slave") do
+    describe file("#{sysconfdirs[fact('os.family')]}/jenkins-slave") do
       it { is_expected.to be_file }
       it { is_expected.to be_mode 600 }
     end
@@ -32,7 +35,7 @@ describe 'jenkins::slave class' do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
     end
-  end # default parameters
+  end
 
   context 'parameters' do
     before(:all) do
@@ -60,7 +63,7 @@ describe 'jenkins::slave class' do
         its(:args) { is_expected.to match %r{-passwordEnvVariable JENKINS_PASSWORD} }
         its(:args) { is_expected.not_to match %r{imapass} }
       end
-    end # username/password
+    end
 
     context 'disable_clients_unique_id' do
       context 'true' do
@@ -76,7 +79,7 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.to match %r{-disableClientsUniqueId} }
         end
-      end # true
+      end
 
       context 'false' do
         pp = <<-EOS
@@ -91,8 +94,8 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.not_to match %r{-disableClientsUniqueId} }
         end
-      end # false
-    end # disable_clients_unique_id
+      end
+    end
 
     context 'disable_ssl_verification' do
       context 'true' do
@@ -108,7 +111,7 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.to match %r{-disableSslVerification} }
         end
-      end # true
+      end
 
       context 'false' do
         pp = <<-EOS
@@ -123,8 +126,8 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.not_to match %r{-disableSslVerification} }
         end
-      end # false
-    end # disable_ssl_verification
+      end
+    end
 
     context 'delete_existing_clients' do
       context 'true' do
@@ -140,7 +143,7 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.to match %r{-deleteExistingClients} }
         end
-      end # true
+      end
 
       context 'false' do
         pp = <<-EOS
@@ -155,8 +158,8 @@ describe 'jenkins::slave class' do
           its(:user) { is_expected.to eq 'jenkins-slave' }
           its(:args) { is_expected.not_to match %r{-deleteExistingClients} }
         end
-      end # false
-    end # delete_existing_clients
+      end
+    end
 
     context 'labels' do
       context 'single label in string' do
@@ -203,7 +206,7 @@ describe 'jenkins::slave class' do
           its(:args) { is_expected.to match %r{-labels foo bar baz} }
         end
       end
-    end # labels
+    end
 
     context 'tool_locations' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
@@ -223,7 +226,7 @@ describe 'jenkins::slave class' do
           its(:args) { is_expected.to match %r{--toolLocation Java-1\.8=/usr/bin/java} }
         end
       end
-    end # tool_locations
+    end
 
     context 'tunnel' do
       tunnel = 'localhost:9000'
@@ -242,6 +245,6 @@ describe 'jenkins::slave class' do
           its(:args) { is_expected.to match %r{-tunnel localhost:9000} }
         end
       end
-    end # tunnel
-  end # parameters
+    end
+  end
 end

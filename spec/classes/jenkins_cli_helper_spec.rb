@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::cli_helper' do
@@ -11,6 +13,7 @@ describe 'jenkins::cli_helper' do
           is_expected.to contain_class('jenkins::cli_helper').
             that_requires('Class[jenkins::cli]')
         end
+
         it do
           is_expected.to contain_class('jenkins::cli_helper').
             that_comes_before('Anchor[jenkins::end]')

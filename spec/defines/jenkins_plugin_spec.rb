@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::plugin' do
@@ -19,6 +21,7 @@ describe 'jenkins::plugin' do
           ).that_requires("File[#{pdir}]").
             that_notifies('Service[jenkins]')
         end
+
         it do
           is_expected.to contain_file("#{pdir}/#{title}.hpi").with(
             owner: 'jenkins',
@@ -36,6 +39,7 @@ describe 'jenkins::plugin' do
             source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi"
           )
         end
+
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
       end
 
@@ -67,15 +71,6 @@ describe 'jenkins::plugin' do
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
 
-        describe 'where name & version are a substring of another plugin' do
-          let(:params) { { version: '1.2.3' } }
-
-          let(:facts) { super().merge(jenkins_plugins: 'fooplug 1.4.5, bar-myplug 1.2.3.4') }
-
-          it { is_expected.to contain_archive('myplug.hpi') }
-          it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
-        end
-
         describe 'where version is a substring of the already installed plugin' do
           let(:params) { { version: '1.2.3' } }
 
@@ -102,13 +97,14 @@ describe 'jenkins::plugin' do
           it { is_expected.not_to contain_archive('myplug.hpi') }
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
-      end # 'with name and version'
+      end
 
       describe 'with enabled is false' do
         let(:params) { { enabled: false } }
 
         it { is_expected.to contain_archive('myplug.hpi') }
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
+
         it do
           is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
             ensure: 'present',
@@ -125,6 +121,7 @@ describe 'jenkins::plugin' do
 
         it { is_expected.to contain_archive('myplug.hpi') }
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
+
         it do
           is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
             ensure: 'absent'
@@ -252,8 +249,8 @@ describe 'jenkins::plugin' do
 
             it { is_expected.to compile.and_raise_error(%r{source}) }
           end
-        end # validate_string
-      end # source
+        end
+      end
 
       context 'pinned file' do
         let(:title) { 'foo' }
@@ -278,16 +275,18 @@ describe 'jenkins::plugin' do
                 that_notifies('Service[jenkins]')
             end
           end
+
           context 'with pin => false' do
             let(:params) { { pin: false } }
 
             it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
           end
+
           context 'with default pin param' do
             it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
           end
         end
-      end # pinned file extension name
+      end
 
       describe 'purge plugins' do
         context 'true' do
@@ -313,7 +312,7 @@ describe 'jenkins::plugin' do
 
           it { is_expected.not_to contain_file("#{pdir}/#{title}") }
         end
-      end # purge plugins
+      end
 
       describe 'deprecated params' do
         %w[
@@ -326,7 +325,7 @@ describe 'jenkins::plugin' do
             pending('rspec-puppet support for testing warning()')
           end
         end
-      end # deprecated params
+      end
     end
   end
 end

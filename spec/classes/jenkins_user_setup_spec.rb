@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins' do
@@ -25,6 +27,7 @@ describe 'jenkins' do
             end
           end
         end
+
         context 'unmanaged' do
           let(:params) do
             {

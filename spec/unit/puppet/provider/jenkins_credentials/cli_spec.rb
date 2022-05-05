@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -350,7 +352,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         described_class.instances(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#flush' do
     it 'calls credentials_update' do
@@ -375,7 +377,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       expect(provider).to receive(:credentials_delete_id)
       provider.flush
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -399,7 +401,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
         described_class.send :from_hash, credentials[2]
       end
     end
-  end # ::from_hash
+  end
 
   describe '::to_hash' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -409,7 +411,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(info).to eq credentials[0]
     end
-  end # ::to_hash
+  end
 
   describe '::credentials_list_json' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -422,7 +424,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       raw = described_class.send :credentials_list_json
       expect(raw).to eq credentials[0]
     end
-  end # ::credentials_list_json
+  end
 
   describe '#credentials_update_json' do
     RSpec::Matchers.define :a_json_doc do |x|
@@ -439,17 +441,17 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       provider.send :credentials_update_json
     end
-  end # #credentials_update_json
+  end
 
   describe '#credentials_delete_id' do
     it do
       provider = described_class.send :from_hash, credentials[0]
 
       expect(described_class).to receive(:clihelper).with(
-        ['credentials_delete_id', '9b07d668-a87e-4877-9407-ae05056e32ac']
+        %w[credentials_delete_id 9b07d668-a87e-4877-9407-ae05056e32ac]
       )
 
       provider.send :credentials_delete_id
     end
-  end # #credentials_delete_id
+  end
 end

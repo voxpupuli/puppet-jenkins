@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider'
 require 'facter'
 
@@ -9,8 +11,10 @@ require_relative '../../jenkins/provider'
 class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # stdout/stderr indicates an authentication failure
   class AuthError < Puppet::ExecutionFailure; end
+
   # network / jenkins not ready for connections
   class NetError < Puppet::ExecutionFailure; end
+
   # any other execution error
   class UnknownError < Puppet::ExecutionFailure; end
 
@@ -19,7 +23,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   #
   # The subclass seems to function with an empty @commands and any value we try
   # to push in will get reselt by ::initvars.
-  def self.inherited(subclass)
+  def self.inherited(subclass) # rubocop:todo Lint/MissingSuper
     subclass.instance_variable_set(:@confine_collection, @confine_collection.dup)
   end
 
@@ -73,7 +77,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
   def clihelper(command, options = {})
-    if resource && resource.catalog
+    if resource&.catalog
       options[:catalog] ||= resource.catalog
     end
 
@@ -85,7 +89,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def cli(command, options = {})
-    if resource && resource.catalog
+    if resource&.catalog
       options[:catalog] ||= resource.catalog
     end
 
@@ -113,7 +117,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def self.cli(command, options = {}, cli_pre_cmd = [])
-    if options.nil? || !options.key?(:stdinjson) && !options.key?(:stdin)
+    if options.nil? || (!options.key?(:stdinjson) && !options.key?(:stdin))
       return execute_with_retry(command, options, cli_pre_cmd)
     end
 
@@ -140,7 +144,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     begin
       Etc.getpwnam('jenkins')
       FileUtils.chown 'jenkins', 'jenkins', tmp.path if tmpfile_as_param && File.exist?(tmp.path)
-    rescue
+    rescue StandardError
       FileUtils.chmod 0o644, tmp.path if tmpfile_as_param && File.exist?(tmp.path)
     end
     result = execute_with_retry(command, options, cli_pre_cmd)
@@ -186,15 +190,14 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     # If we have a ssh cli key file, we use that
     if !ssh_private_key.nil?
       raise 'cli_username must be set' if cli_username.nil? || cli_username.empty?
+
       auth_cmd = base_cmd + ['-i', ssh_private_key] + ['-ssh', '-user', cli_username] + [command]
-    # we have a prepared username:password file, just use it
-    elsif cli_password_file_exists
-      auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
-    # we have username and password, then we create the password file and use it
-    elsif !cli_username.nil? && !cli_password.nil?
+    # either we have a prepared username:password file, just use it
+    # or we have username and password, then we create the password file and use it
+    elsif cli_password_file_exists || (!cli_username.nil? && !cli_password.nil?)
       auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
     end
-    auth_cmd.flatten! unless auth_cmd.nil?
+    auth_cmd&.flatten!
 
     # retry on "unknown" execution errors but don't catch AuthErrors.  If an
     # AuthError has bubbled up to this level it means either an ssh_private_key
@@ -232,14 +235,14 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
 
     begin
       # try first with no auth
-      return execute_exceptionify(cli_cmd, options)
+      execute_exceptionify(cli_cmd, options)
     rescue AuthError
       # retry with auth
       Puppet.debug("#{sname} cli auth failure -- retrying with ssh_private_key")
       result = execute_exceptionify(auth_cmd, options)
       class_variable_set(:@@cli_auth_required, true)
       Puppet.debug("#{sname} cli_auth_required: #{class_variable_get(:@@cli_auth_required)}")
-      return result
+      result
     end
   end
   private_class_method :execute_with_auth
@@ -270,7 +273,8 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       if tmpfile_as_param && options.key?(:stdinfile)
         return superclass.execute([cmd, options[:stdinfile]].flatten.join(' '), **options)
       end
-      return superclass.execute([cmd].flatten.join(' '), **options)
+
+      superclass.execute([cmd].flatten.join(' '), **options)
     rescue Puppet::ExecutionFailure => e
       cli_auth_errors.each do |error|
         raise AuthError, e.message, e.backtrace if e.message.match(error)

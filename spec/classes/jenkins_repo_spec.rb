@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins' do
@@ -16,6 +18,7 @@ describe 'jenkins' do
               it { is_expected.not_to contain_class('jenkins::repo::debian') }
               it { is_expected.to contain_package('jenkins').that_requires('Yumrepo[jenkins]') }
             end
+
             describe 'repo => false' do
               let(:params) { { repo: false } }
 
