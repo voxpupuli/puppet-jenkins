@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::cli::config' do
@@ -11,7 +13,7 @@ describe 'jenkins::cli::config' do
 
           it { is_expected.to compile }
         end
-      end # validate_absolute_path
+      end
 
       shared_examples 'validate_integer' do |param|
         context 'integer' do
@@ -19,7 +21,7 @@ describe 'jenkins::cli::config' do
 
           it { is_expected.to compile }
         end
-      end # validate_integer
+      end
 
       shared_examples 'validate_numeric' do |param|
         context 'integer' do
@@ -33,7 +35,7 @@ describe 'jenkins::cli::config' do
 
           it { is_expected.to compile }
         end
-      end # validate_numeric
+      end
 
       shared_examples 'validate_string' do |param|
         context 'string' do
@@ -41,7 +43,7 @@ describe 'jenkins::cli::config' do
 
           it { is_expected.to compile }
         end
-      end # validate_string
+      end
 
       describe 'parameters' do
         context 'accept all params undef' do
@@ -102,7 +104,7 @@ describe 'jenkins::cli::config' do
               end
 
               it { is_expected.to contain_file('/dne').with_content('foo') }
-            end # as non-root user
+            end
 
             context 'as root' do
               let :facts do
@@ -120,10 +122,10 @@ describe 'jenkins::cli::config' do
               end
 
               it { is_expected.to contain_file('/dne').with_content('foo') }
-            end # as root
-          end # when ssh_private_key is also set
-        end # ssh_private_key_content
-      end # parameters
+            end
+          end
+        end
+      end
 
       describe 'package gem provider' do
         context 'is_pe fact' do
@@ -142,8 +144,8 @@ describe 'jenkins::cli::config' do
 
             it { is_expected.to contain_package('retries').with(provider: 'gem') }
           end
-        end # 'is_pe fact' do
-      end # 'package gem provider' do
+        end
+      end
     end
   end
 end

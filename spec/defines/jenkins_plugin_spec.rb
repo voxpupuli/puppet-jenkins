@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::plugin' do
@@ -95,7 +97,7 @@ describe 'jenkins::plugin' do
           it { is_expected.not_to contain_archive('myplug.hpi') }
           it { is_expected.to contain_file('/var/lib/jenkins/plugins/myplug.hpi') }
         end
-      end # 'with name and version'
+      end
 
       describe 'with enabled is false' do
         let(:params) { { enabled: false } }
@@ -247,8 +249,8 @@ describe 'jenkins::plugin' do
 
             it { is_expected.to compile.and_raise_error(%r{source}) }
           end
-        end # validate_string
-      end # source
+        end
+      end
 
       context 'pinned file' do
         let(:title) { 'foo' }
@@ -284,7 +286,7 @@ describe 'jenkins::plugin' do
             it { is_expected.to contain_file("#{pdir}/foo.hpi.pinned").without_ensure }
           end
         end
-      end # pinned file extension name
+      end
 
       describe 'purge plugins' do
         context 'true' do
@@ -310,7 +312,7 @@ describe 'jenkins::plugin' do
 
           it { is_expected.not_to contain_file("#{pdir}/#{title}") }
         end
-      end # purge plugins
+      end
 
       describe 'deprecated params' do
         %w[
@@ -323,7 +325,7 @@ describe 'jenkins::plugin' do
             pending('rspec-puppet support for testing warning()')
           end
         end
-      end # deprecated params
+      end
     end
   end
 end

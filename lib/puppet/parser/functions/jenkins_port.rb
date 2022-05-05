@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Puppet::Parser::Functions
   newfunction(:jenkins_port, type: :rvalue, doc: <<-'ENDHEREDOC') do |_args|
     Return the configurad Jenkins port value

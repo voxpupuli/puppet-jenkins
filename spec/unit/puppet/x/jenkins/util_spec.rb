@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 require 'puppet/x/jenkins/util'
@@ -39,7 +41,7 @@ describe Puppet::X::Jenkins::Util do
                                                   ],
                                                   f: 1)
     end
-  end # unundef
+  end
 
   describe '::undefize' do
     it 'converts nil values to :undef' do
@@ -58,7 +60,7 @@ describe Puppet::X::Jenkins::Util do
                                                    ],
                                                    f: 1)
     end
-  end # undefize
+  end
 
   describe '::iterate' do
     it 'does not transform without block' do
@@ -81,5 +83,5 @@ describe Puppet::X::Jenkins::Util do
                                                         ],
                                                         f: 5)
     end
-  end # iterate
+  end
 end

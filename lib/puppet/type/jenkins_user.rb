@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_user) do
@@ -40,4 +42,4 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_user) do
   newproperty(:password) do
     desc 'Password for HudsonPrivateSecurityRealm'
   end
-end # Puppet::X::Jenkins::Type::Cli.newtype
+end

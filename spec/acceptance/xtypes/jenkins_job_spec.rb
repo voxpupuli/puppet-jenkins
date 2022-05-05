@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 # a fixed order is required in order to cleanup created jobs -- we are relying
@@ -78,7 +80,7 @@ describe 'jenkins_job', order: :defined do
         it { is_expected.to be_mode 644 }
         it { is_expected.to contain '<description>test job</description>' }
       end
-    end # 'present' do
+    end
 
     context 'absent' do
       it 'works with no errors and idempotently' do
@@ -97,8 +99,8 @@ describe 'jenkins_job', order: :defined do
       describe file('/var/lib/jenkins/jobs/foo/config.xml') do
         it { is_expected.not_to exist }
       end
-    end # 'absent' do
-  end # 'ensure =>' do
+    end
+  end
 
   context 'cloudbees-folder plugin' do
     let(:manifest) do
@@ -153,7 +155,7 @@ describe 'jenkins_job', order: :defined do
           it { is_expected.to be_mode 644 }
           it { is_expected.to contain '<description>test job</description>' }
         end
-      end # create
+      end
 
       context 'delete' do
         it 'works with no errors and idempotently' do
@@ -174,8 +176,8 @@ describe 'jenkins_job', order: :defined do
         ].each do |config|
           describe file(config) { it { is_expected.not_to exist } }
         end
-      end # delete
-    end # nested folders
+      end
+    end
 
     context 'convert existing job to folder' do
       it 'works with no errors' do
@@ -207,6 +209,6 @@ describe 'jenkins_job', order: :defined do
 
         apply2(pp)
       end
-    end # convert existing job to folder
-  end # cloudbees-folder
-end # jenkins_job
+    end
+  end
+end

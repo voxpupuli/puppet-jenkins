@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -98,7 +100,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
         described_class.instances(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#api_token_public=' do
     it 'is read only (fail)' do
@@ -106,7 +108,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       expect { provider.api_token_public = 'foo' }.to raise_error(Puppet::Error, %r{api_token_public is read-only})
     end
-  end # #api_token_public=
+  end
 
   describe '#flush' do
     it 'calls user_update' do
@@ -131,7 +133,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       expect(provider).to receive(:delete_user)
       provider.flush
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -149,7 +151,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
         described_class.send :from_hash, user_info[1]
       end
     end
-  end # ::from_hash
+  end
 
   describe '::to_hash' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -159,7 +161,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       expect(info).to eq mutable_user_info
     end
-  end # ::to_hash
+  end
 
   describe '::user_info_all' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -169,7 +171,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       raw = described_class.send :user_info_all
       expect(raw).to eq user_info
     end
-  end # ::user_info_all
+  end
 
   describe '#user_update' do
     RSpec::Matchers.define :a_json_doc do |x|
@@ -186,7 +188,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       provider.send :user_update
     end
-  end # #user_update
+  end
 
   describe '#delete_user' do
     it do
@@ -198,5 +200,5 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       provider.send :delete_user
     end
-  end # #delete_update
+  end
 end

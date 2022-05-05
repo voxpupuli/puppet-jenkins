@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::cli::exec' do
@@ -50,7 +52,7 @@ describe 'jenkins::cli::exec' do
 
           it { is_expected.to contain_exec('bar').that_notifies('Class[jenkins::cli::reload]') }
         end
-      end # title =>
+      end
 
       describe 'command =>' do
         context 'bar' do
@@ -91,7 +93,7 @@ describe 'jenkins::cli::exec' do
             )
           end
         end
-      end # command =>
+      end
 
       describe 'unless =>' do
         context 'bar' do
@@ -107,7 +109,7 @@ describe 'jenkins::cli::exec' do
             )
           end
         end
-      end # unless_cli_helper =>
+      end
     end
   end
 end

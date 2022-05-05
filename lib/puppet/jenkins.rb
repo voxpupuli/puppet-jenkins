@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Puppet
   module Jenkins
     # @return [String] Full path to the Jenkins user's home directory

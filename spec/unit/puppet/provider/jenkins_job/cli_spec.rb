@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -93,7 +95,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
         described_class.instances(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#create' do
     it 'does nothing' do
@@ -102,7 +104,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.create
       expect(provider.ensure).to eq :absent
     end
-  end # #create
+  end
 
   describe '#flush' do
     it 'calls create_job' do
@@ -140,7 +142,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       expect(provider).to receive(:delete_job)
       provider.flush
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -156,7 +158,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       ret = described_class.send :list_jobs
       expect(ret).to eq %w[foo bar]
     end
-  end # ::list_jobs
+  end
 
   describe '::get_job' do
     it do
@@ -168,7 +170,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       ret = described_class.send :get_job, 'foo'
       expect(ret).to eq foo_xml
     end
-  end # ::get_job
+  end
 
   describe '::job_enabled' do
     it do
@@ -180,7 +182,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       ret = described_class.send :job_enabled, 'foo'
       expect(ret).to eq true
     end
-  end # ::job_enabled
+  end
 
   describe '#create_job' do
     it do
@@ -196,7 +198,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
       provider.send :create_job
     end
-  end # #create_job
+  end
 
   describe '#update_job' do
     it do
@@ -212,7 +214,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
       provider.send :update_job
     end
-  end # #update_job
+  end
 
   describe '#delete_job' do
     it do
@@ -227,5 +229,5 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
 
       provider.send :delete_job
     end
-  end # #delete_job
+  end
 end

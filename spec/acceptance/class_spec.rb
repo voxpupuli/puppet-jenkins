@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
@@ -34,7 +36,7 @@ describe 'jenkins class' do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
     end
-  end # default parameters
+  end
 
   context 'executors' do
     pp = <<-EOS
@@ -59,7 +61,7 @@ describe 'jenkins class' do
     describe file('/var/lib/jenkins/config.xml') do
       it { is_expected.to contain '  <numExecutors>42</numExecutors>' }
     end
-  end # executors
+  end
 
   context 'slaveagentport' do
     pp = <<-EOS
@@ -84,5 +86,5 @@ describe 'jenkins class' do
     describe file('/var/lib/jenkins/config.xml') do
       it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
     end
-  end # slaveagentport
+  end
 end

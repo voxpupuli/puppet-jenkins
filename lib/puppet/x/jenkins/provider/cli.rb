@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet/provider'
 require 'facter'
 
@@ -75,7 +77,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   # if the provider instance has a resource (which it should outside of
   # testing), add :catalog to the options hash so the caller doesn't have to
   def clihelper(command, options = {})
-    if resource && resource.catalog
+    if resource&.catalog
       options[:catalog] ||= resource.catalog
     end
 
@@ -87,7 +89,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
   end
 
   def cli(command, options = {})
-    if resource && resource.catalog
+    if resource&.catalog
       options[:catalog] ||= resource.catalog
     end
 
@@ -197,7 +199,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     elsif !cli_username.nil? && !cli_password.nil?
       auth_cmd = base_cmd + ['-auth', "@#{cli_password_file}"] + [command]
     end
-    auth_cmd.flatten! unless auth_cmd.nil?
+    auth_cmd&.flatten!
 
     # retry on "unknown" execution errors but don't catch AuthErrors.  If an
     # AuthError has bubbled up to this level it means either an ssh_private_key

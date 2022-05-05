@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_providers'
 
@@ -98,7 +100,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       expect(resource.provider).to eq provider
     end
-  end # ::prefetch
+  end
 
   describe '#create' do
     context ':ensure' do
@@ -110,7 +112,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.instance_variable_get(:@property_hash)[:ensure]).to eq :present
       end
     end
-  end # #create
+  end
 
   describe '#exists?' do
     context 'when :ensure is unset' do
@@ -133,7 +135,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.exists?).to eq true
       end
     end
-  end # #exists?'
+  end
 
   describe '#destroy' do
     context ':ensure' do
@@ -145,7 +147,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         expect(provider.instance_variable_get(:@property_hash)[:ensure]).to eq :absent
       end
     end
-  end # #destroy
+  end
 
   describe '#flush' do
     it 'clears @property_hash' do
@@ -155,7 +157,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       expect(provider.instance_variable_get(:@property_hash)).to eq({})
     end
-  end # #flush
+  end
 
   describe '#cli' do
     let(:provider) { described_class.new }
@@ -185,7 +187,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       provider.cli('foo', {})
     end
-  end # #cli
+  end
 
   describe '#clihelper' do
     let(:provider) { described_class.new }
@@ -215,7 +217,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
       provider.clihelper('foo', {})
     end
-  end # #clihelper
+  end
 
   describe '::clihelper' do
     shared_examples 'uses default values' do
@@ -228,7 +230,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.clihelper('foo')
       end
-    end # uses default values
+    end
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
@@ -240,7 +242,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.clihelper('foo')
       end
-    end # uses fact values
+    end
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
@@ -252,7 +254,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.clihelper('foo', catalog: catalog)
       end
-    end # uses catalog values
+    end
 
     it 'is a class method' do
       expect(described_class).to respond_to(:clihelper)
@@ -266,14 +268,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
     context 'no catalog' do
       context 'no facts' do
         include_examples 'uses default values'
-      end # no facts
+      end
 
       context 'with facts' do
         include_context 'facts'
 
         include_examples 'uses fact values'
-      end # with facts
-    end # no catalog
+      end
+    end
 
     context 'with catalog' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -281,14 +283,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'no jenkins::cli::config class' do
         context 'no facts' do
           include_examples 'uses default values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses fact values'
-        end # with facts
-      end # no jenkins::cli::config class
+        end
+      end
 
       context 'with jenkins::cli::config class' do
         before do
@@ -302,16 +304,16 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         context 'no facts' do
           include_examples 'uses catalog values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses catalog values'
-        end # with facts
-      end # with jenkins::cli::config class
-    end # with catalog
-  end # ::clihelper
+        end
+      end
+    end
+  end
 
   describe '::cli' do
     before do
@@ -330,7 +332,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.cli('foo')
       end
-    end # uses default values
+    end
 
     shared_examples 'uses fact values' do
       it 'uses fact values' do
@@ -341,7 +343,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.cli('foo')
       end
-    end # uses fact values
+    end
 
     shared_examples 'uses catalog values' do
       it 'uses catalog values' do
@@ -352,7 +354,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.cli('foo', catalog: catalog)
       end
-    end # uses catalog values
+    end
 
     it 'is a class method' do
       expect(described_class).to respond_to(:cli)
@@ -366,14 +368,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
     context 'no catalog' do
       context 'no facts' do
         include_examples 'uses default values'
-      end # no facts
+      end
 
       context 'with facts' do
         include_context 'facts'
 
         include_examples 'uses fact values'
-      end # with facts
-    end # no catalog
+      end
+    end
 
     context 'with catalog' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -381,14 +383,14 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'no jenkins::cli::config class' do
         context 'no facts' do
           include_examples 'uses default values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses fact values'
-        end # with facts
-      end # no jenkins::cli::config class
+        end
+      end
 
       context 'with jenkins::cli::config class' do
         before do
@@ -407,15 +409,15 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         context 'no facts' do
           include_examples 'uses catalog values'
-        end # no facts
+        end
 
         context 'with facts' do
           include_context 'facts'
 
           include_examples 'uses catalog values'
-        end # with facts
-      end # with jenkins::cli::config class
-    end # with catalog
+        end
+      end
+    end
 
     context 'auth failure' do
       context 'without ssh_private_key' do
@@ -482,8 +484,8 @@ describe Puppet::X::Jenkins::Provider::Cli do
             described_class.cli('foo', catalog: catalog)
           end
         end
-      end # with ssh_private_key
-    end # auth failure
+      end
+    end
 
     context 'network failure' do
       context 'without ssh_private_key' do
@@ -500,7 +502,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
         end
       end
       # without ssh_private_key
-    end # network failure
+    end
 
     context 'when UnknownError exception' do
       let(:catalog) { Puppet::Resource::Catalog.new }
@@ -571,7 +573,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')
         end
-      end # n times
+      end
 
       context 'waiting up to n seconds' do
         # this isn't behavioral testing because we don't want to either wait
@@ -626,7 +628,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           described_class.cli('foo', catalog: catalog)
         end
       end
-    end # should retry cli on UnknownError
+    end
 
     context 'options with :stdinjson' do
       RSpec::Matchers.define :a_json_doc do |x|
@@ -669,7 +671,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.cli('foo', stdinjson: realm_oauth)
       end
-    end # options with :stdinjson
+    end
 
     context 'options with :stdin' do
       it 'generates a temp file with stdin string' do
@@ -691,6 +693,6 @@ describe Puppet::X::Jenkins::Provider::Cli do
 
         described_class.cli('foo', stdin: 'bar')
       end
-    end # options with :stdin
-  end # ::cli
+    end
+  end
 end

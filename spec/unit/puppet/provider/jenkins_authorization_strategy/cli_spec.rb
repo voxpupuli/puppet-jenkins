@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'json'
 
@@ -76,7 +78,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
         described_class.instances(catalog)
       end
     end
-  end # ::instanes
+  end
 
   describe '#flush' do
     it 'calls set_jenkins_instance' do
@@ -101,7 +103,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       expect(provider).to receive(:set_strategy_unsecured)
       provider.flush
     end
-  end # #flush
+  end
 
   #
   # private methods
@@ -117,7 +119,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       let(:info) { strategy_unsecured }
       let(:provider) { described_class.send(:from_hash, info) }
     end
-  end # ::from_hash
+  end
 
   describe '::to_hash' do
     # not isolated from ::from_hash in the interests of staying DRY
@@ -127,7 +129,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
 
       expect(info).to eq strategy_oauth
     end
-  end # ::to_hash
+  end
 
   describe '::get_authorization_strategy' do
     it do
@@ -139,7 +141,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
       raw = described_class.send :get_authorization_strategy
       expect(raw).to eq strategy_oauth
     end
-  end # ::get_authorization_strategy
+  end
 
   describe '#set_jenkins_instance' do
     it do
@@ -152,7 +154,7 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
 
       provider.send :set_jenkins_instance
     end
-  end # #set_jenkins_instance
+  end
 
   describe '#set_strategy_unsecured' do
     it do
@@ -165,5 +167,5 @@ describe Puppet::Type.type(:jenkins_authorization_strategy).provider(:cli) do
 
       provider.send :set_strategy_unsecured
     end
-  end # #set_security_none
+  end
 end

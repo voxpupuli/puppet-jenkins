@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
@@ -12,7 +14,7 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'show_diff' do
       it_behaves_like 'boolean parameter', :show_diff, true
     end
-  end # parameters
+  end
 
   describe 'properties' do
     describe 'ensure' do
@@ -78,9 +80,9 @@ describe Puppet::Type.type(:jenkins_job) do
 
           it { expect(property.change_to_s('foo', 'bar')).to eq 'left unchanged' }
         end
-      end # change_to_s change string
-    end # config
-  end # properties
+      end
+    end
+  end
 
   describe 'autorequire' do
     it_behaves_like 'autorequires cli resources'
@@ -171,6 +173,6 @@ describe Puppet::Type.type(:jenkins_job) do
         expect(req[1].source).to eq job
         expect(req[1].target).to eq folder2
       end
-    end # folders
-  end # autorequire
+    end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::slave' do
@@ -247,7 +249,7 @@ describe 'jenkins::slave' do
                 with_content(%r{^DELETE_EXISTING_CLIENTS=""$})
             end
           end
-        end # delete_existing_clients
+        end
 
         describe 'with a non-default $java_cmd' do
           java_cmd = '/usr/local/bin/java'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'facter'
 
 require_relative '../jenkins'
@@ -22,8 +24,8 @@ class Puppet::X::Jenkins::Config
     cli_password_file: '/tmp/jenkins_credentials_for_puppet',
     cli_password_file_exists: false
   }.freeze
-  CONFIG_CLASS = 'jenkins::cli::config'.freeze
-  FACT_PREFIX = 'jenkins_'.freeze
+  CONFIG_CLASS = 'jenkins::cli::config'
+  FACT_PREFIX = 'jenkins_'
 
   def initialize(catalog = nil)
     @catalog = catalog

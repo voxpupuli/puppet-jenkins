@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'jenkins class', order: :defined do
-  PDIR = '/var/lib/jenkins/plugins'.freeze
+  PDIR = '/var/lib/jenkins/plugins'
 
   # files/directories to test plugin purging removal of unmanaged files
   FILES = [
@@ -147,7 +149,7 @@ describe 'jenkins class', order: :defined do
           it { is_expected.not_to exist }
         end
       end
-    end # true
+    end
 
     context 'false' do
       include_context 'plugin_test_files'
@@ -185,6 +187,6 @@ describe 'jenkins class', order: :defined do
           it { is_expected.to be_file }
         end
       end
-    end # false
-  end # plugin purging
+    end
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'jenkins::job' do
@@ -134,7 +136,7 @@ describe 'jenkins::job' do
       end
 
       describe 'with sourced config and blank regular config' do
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource, config: '' } }
 
         it do
@@ -145,7 +147,7 @@ describe 'jenkins::job' do
 
       describe 'with sourced config and regular config' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource, config: quotes } }
 
         it do
@@ -155,14 +157,14 @@ describe 'jenkins::job' do
       end
 
       describe 'with sourced config and no regular config' do
-        let(:thesource) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thesource) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', source: thesource } }
 
         it { is_expected.to compile.and_raise_error(%r{(Must pass config|expects a value for parameter 'config')}) }
       end
 
       describe 'with templated config and blank regular config' do
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
 
         it do
@@ -173,7 +175,7 @@ describe 'jenkins::job' do
 
       describe 'with templated config and regular config' do
         quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
 
         it do
@@ -183,7 +185,7 @@ describe 'jenkins::job' do
       end
 
       describe 'with templated config and no regular config' do
-        let(:thetemplate) { File.expand_path(File.dirname(__FILE__) + '/../fixtures/testjob.xml') }
+        let(:thetemplate) { File.expand_path("#{File.dirname(__FILE__)}/../fixtures/testjob.xml") }
         let(:params) { { ensure: 'present', template: thetemplate } }
 
         it { is_expected.to compile.and_raise_error(%r{(Must pass config|expects a value for parameter 'config')}) }

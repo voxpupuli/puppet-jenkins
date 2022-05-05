@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../puppet/x/jenkins/type/cli'
 
 Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
@@ -113,4 +115,4 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
       end
     end
   end
-end # Puppet::X::Jenkins::Type::Cli.newtype
+end
