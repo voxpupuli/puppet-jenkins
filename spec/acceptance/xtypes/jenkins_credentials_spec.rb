@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins_credentials' do
-  include_context 'jenkins'
-
   context 'ensure =>' do
     context 'present' do
       context 'UsernamePasswordCredentialsImpl' do

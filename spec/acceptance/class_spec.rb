@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
-  include_context 'jenkins'
-
   context 'default parameters' do
     pp = <<-EOS
     class {'jenkins':

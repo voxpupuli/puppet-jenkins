@@ -1,9 +1,13 @@
 require 'spec_helper_acceptance'
 
 describe 'jenkins::slave class' do
-  include_context 'jenkins'
-
   context 'default parameters' do
+    sysconfdirs = {
+      'RedHat' => '/etc/sysconfig',
+      'Debian' => '/etc/default',
+      'Archlinux' => '/etc/conf.d',
+    }
+
     pp = <<-EOS
       include ::jenkins::slave
     EOS
@@ -15,7 +19,7 @@ describe 'jenkins::slave class' do
       it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
     end
 
-    describe file("#{SYSCONFDIR}/jenkins-slave") do
+    describe file("#{sysconfdirs[fact('os.family')]}/jenkins-slave") do
       it { is_expected.to be_file }
       it { is_expected.to be_mode 600 }
     end

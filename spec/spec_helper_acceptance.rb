@@ -2,18 +2,6 @@ require 'voxpupuli/acceptance/spec_helper_acceptance'
 
 configure_beaker
 
-shared_context 'jenkins' do
-  # rspec examples are not available as variables to serverspec describe blocks
-  SYSCONFDIR = case fact 'osfamily'
-               when 'RedHat'
-                 '/etc/sysconfig'
-               when 'Debian'
-                 '/etc/default'
-               when 'Archlinux'
-                 '/etc/conf.d'
-               end
-end
-
 def apply(pp, options = {})
   options[:debug] = true if ENV.key?('PUPPET_DEBUG')
 

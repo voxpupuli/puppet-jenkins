@@ -55,8 +55,6 @@ EOS
     example.gsub("'", %q(\\\'))
   end
 
-  include_context 'jenkins'
-
   context 'ensure =>' do
     context 'present' do
       it 'works with no errors' do
