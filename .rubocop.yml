@@ -1,6 +1,27 @@
 ---
-# Managed by modulesync - DO NOT EDIT
-# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
-
 inherit_gem:
   voxpupuli-test: rubocop.yml
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
