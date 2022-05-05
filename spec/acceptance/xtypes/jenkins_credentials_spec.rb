@@ -38,6 +38,12 @@ describe 'jenkins_credentials' do
           pp = <<-EOS
             include jenkins
             include jenkins::cli::config
+
+            # Implied dependency; if not specified it's automatically
+            # downloaded but too old
+            jenkins::plugin { 'jaxb':
+            }
+
             jenkins::plugin { 'phabricator-plugin':
             }
 
@@ -69,9 +75,9 @@ describe 'jenkins_credentials' do
             include jenkins
             include jenkins::cli::config
             # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-            # needs >= 1.0.5. 1.0.8 is the latests at the time of writing.
+            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
             jenkins::plugin { 'trilead-api':
-              version => '1.0.8',
+              version => '1.57.v6e90e07157e1',
             }
 
             jenkins::plugin { 'ssh-credentials': }
@@ -165,19 +171,44 @@ describe 'jenkins_credentials' do
 
       context 'AWSCredentialsImpl' do
         it 'works with no errors and idempotently' do
-          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = <<-EOS
             include jenkins
             include jenkins::cli::config
             jenkins::plugin { [
-              'jackson2-api',
-              'aws-java-sdk',
-              'credentials-binding',
-              'workflow-step-api',
-              'ssh-credentials',
+              'apache-httpcomponents-client-4-api',
               'aws-credentials',
+              'aws-java-sdk',
+              'aws-java-sdk-cloudformation',
+              'aws-java-sdk-codebuild',
+              'aws-java-sdk-ec2',
+              'aws-java-sdk-ecr',
+              'aws-java-sdk-ecs',
+              'aws-java-sdk-elasticbeanstalk',
+              'aws-java-sdk-iam',
+              'aws-java-sdk-logs',
+              'aws-java-sdk-minimal',
+              'aws-java-sdk-ssm',
+              'caffeine-api',
+              'credentials-binding',
+              'jackson2-api',
+              'jaxb',
               'plain-credentials',
+              'snakeyaml-api',
+              'ssh-credentials',
+              'variant',
+              'workflow-step-api',
             ]: }
+
+            # At least on EL7 version 1.0.4 is shipped and ssh-credentials
+            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
+            jenkins::plugin { 'trilead-api':
+              version => '1.57.v6e90e07157e1',
+            }
+
+            # Version 1.75 is shipped >= 1.78 is needed by CloudBees AWS Credentials Plugin
+            jenkins::plugin { 'script-security':
+              version => '1158.v7c1b_73a_69a_08',
+            }
 
             jenkins_credentials { '34d75c64-61ff-4a28-bd40-cac3aafc7e3a':
               ensure      => 'present',
@@ -196,37 +227,67 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it {
-            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-            is_expected.to contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>'
-          }
+          it { is_expected.to contain '<id>34d75c64-61ff-4a28-bd40-cac3aafc7e3a</id>' }
         end
       end
 
       context 'GitLabApiTokenImpl' do
         it 'works with no errors and idempotently' do
-          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
           pp = <<-EOS
             include jenkins
             include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
-              'matrix-project',
-              'junit',
-              'script-security',
-              'workflow-api',
-              'workflow-step-api',
-              'workflow-scm-step',
+              'ace-editor',
+              'apache-httpcomponents-client-4-api',
+              'bootstrap5-api',
+              'caffeine-api',
+              'checks-api',
+              'cloudbees-folder',
+              'credentials-binding',
+              'display-url-api',
+              'durable-task',
+              'echarts-api',
+              'font-awesome-api',
               'git',
               'git-client',
-              'mailer',
-              'display-url-api',
-              'scm-api',
-              'ssh-credentials',
-              'apache-httpcomponents-client-4-api',
-              'jsch',
+              'git-server',
               'gitlab-plugin',
+              'jackson2-api',
+              'jaxb',
+              'jersey2-api',
+              'jquery3-api',
+              'jsch',
+              'junit',
+              'mailer',
+              'matrix-project',
+              'plain-credentials',
+              'plugin-util-api',
+              'popper2-api',
+              'scm-api',
+              'snakeyaml-api',
+              'ssh-credentials',
+              'variant',
+              'workflow-api',
+              'workflow-cps',
+              'workflow-cps-global-lib',
+              'workflow-durable-task-step',
+              'workflow-job',
+              'workflow-scm-step',
+              'workflow-step-api',
+              'workflow-support',
             ]: }
+
+            # Version 1.75 is shipped >= 1158 is needed by junit
+            jenkins::plugin { 'script-security':
+              version => '1158.v7c1b_73a_69a_08',
+            }
+
+            # At least on EL7 version 1.0.4 is shipped and ssh-credentials
+            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
+            jenkins::plugin { 'trilead-api':
+              version => '1.57.v6e90e07157e1',
+            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -244,37 +305,73 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it {
-            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-            is_expected.to contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>'
-          }
+          it { is_expected.to contain '<id>7e86e9fb-a8af-480f-b596-7191dc02bf38</id>' }
         end
       end
 
       context 'BrowserStackCredentials' do
-        it 'works with no errors and idempotently' do
-          pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-          pp = <<-EOS
-            include jenkins
-            jenkins::plugin { [
-              'jackson2-api',
-              'credentials-binding',
-              'workflow-step-api',
-              'ssh-credentials',
-              'plain-credentials',
-              'browserstack-integration'
-            ]: }
+        pp = <<-EOS
+          include jenkins
+          include jenkins::cli::config
+          jenkins::plugin { [
+            'ace-editor',
+            'apache-httpcomponents-client-4-api',
+            'bootstrap5-api',
+            'browserstack-integration',
+            'caffeine-api',
+            'checks-api',
+            'credentials-binding',
+            'display-url-api',
+            'durable-task',
+            'echarts-api',
+            'font-awesome-api',
+            'jackson2-api',
+            'jaxb',
+            'jquery3-api',
+            'junit',
+            'mailer',
+            'plain-credentials',
+            'plugin-util-api',
+            'popper2-api',
+            'scm-api',
+            'snakeyaml-api',
+            'ssh-credentials',
+            'workflow-api',
+            'workflow-basic-steps',
+            'workflow-cps',
+            'workflow-durable-task-step',
+            'workflow-job',
+            'workflow-scm-step',
+            'workflow-step-api',
+            'workflow-support',
+          ]: }
 
-            jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
-              ensure      => 'present',
-              description => 'browserstack credentials',
-              impl        => 'BrowserStackCredentials',
-              username    => 'whats this?',
-              secret_key  => 'you know I payed for this',
-            }
-          EOS
+          # Version 1.75 is shipped >= 1158 is needed by junit
+          jenkins::plugin { 'script-security':
+            version => '1158.v7c1b_73a_69a_08',
+          }
 
+          # At least on EL7 version 1.0.4 is shipped and ssh-credentials
+          # needs >= 1.0.13. 1.57 is the latests at the time of writing.
+          jenkins::plugin { 'trilead-api':
+            version => '1.57.v6e90e07157e1',
+          }
+
+          jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
+            ensure      => 'present',
+            description => 'browserstack credentials',
+            impl        => 'BrowserStackCredentials',
+            username    => 'whats this?',
+            secret_key  => 'you know I payed for this',
+          }
+        EOS
+
+        it 'works with no errors' do
           apply(pp, catch_failures: true)
+        end
+
+        it 'works idempotently' do
+          pending('secret key is not idempotent')
           apply(pp, catch_changes: true)
         end
 
@@ -282,10 +379,7 @@ describe 'jenkins_credentials' do
           # XXX need to properly compare the XML doc
           # trying to match anything other than the id this way might match other
           # credentails
-          it {
-            pending('jenkins plugin tests are not consistently failing or succeeding: https://github.com/voxpupuli/puppet-jenkins/issues/839')
-            is_expected.to contain '<id>562fa23d-a441-4cab-997f-58df6e245813</id>'
-          }
+          it { is_expected.to contain '<id>562fa23d-a441-4cab-997f-58df6e245813</id>' }
         end
       end
     end
