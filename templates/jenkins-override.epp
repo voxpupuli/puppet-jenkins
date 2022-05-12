@@ -1,5 +1,9 @@
-<%| Hash[String, Struct[{value => Any}]] $environment |-%>
+<%| Hash[String, Struct[{value => Any}]] $dropin_config |-%>
 [Service]
-<% $environment.each |$key, $entry| { -%>
+<% $dropin_config.each |$key, $entry| { -%>
+<% if $key =~ '^JENKINS' or $key =~ '^JAVA' { -%>
 Environment="<%= $key %>=<%= $entry['value'] %>"
+<% } else { -%>
+<%= $key %>=<%= $entry['value'] %>
+<% } -%>
 <% } -%>

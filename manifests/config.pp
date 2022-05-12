@@ -12,6 +12,6 @@ class jenkins::config {
 
   systemd::dropin_file { 'puppet-overrides.conf':
     unit    => 'jenkins.service',
-    content => epp("${module_name}/jenkins-override.epp", { 'environment' => $config_hash }),
+    content => epp("${module_name}/jenkins-override.epp", { 'dropin_config' => $config_hash }),
   }
 }
