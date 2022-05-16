@@ -10,11 +10,9 @@ describe 'jenkins::slave class' do
       'Archlinux' => '/etc/conf.d',
     }
 
-    pp = <<-EOS
-      include ::jenkins::slave
-    EOS
-
-    apply2(pp)
+    include_examples 'an idempotent resource' do
+      let(:manifest) { 'include jenkins::slave' }
+    end
 
     describe file('/etc/systemd/system/jenkins-slave.service') do
       it { is_expected.to be_file }
@@ -48,14 +46,16 @@ describe 'jenkins::slave class' do
     end
 
     context 'ui_user/ui_pass' do
-      pp = <<-EOS
-        class { ::jenkins::slave:
-          ui_user => 'imauser',
-          ui_pass => 'imapass',
-        }
-      EOS
-
-      apply2(pp)
+      include_examples 'an idempotent resource' do
+        let(:manifest) do
+          <<~PUPPET
+            class { 'jenkins::slave':
+              ui_user => 'imauser',
+              ui_pass => 'imapass',
+            }
+          PUPPET
+        end
+      end
 
       describe process('java') do
         its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -67,13 +67,15 @@ describe 'jenkins::slave class' do
 
     context 'disable_clients_unique_id' do
       context 'true' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            disable_clients_unique_id => true,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                disable_clients_unique_id => true,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -82,13 +84,15 @@ describe 'jenkins::slave class' do
       end
 
       context 'false' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            disable_clients_unique_id => false,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                disable_clients_unique_id => false,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -99,13 +103,15 @@ describe 'jenkins::slave class' do
 
     context 'disable_ssl_verification' do
       context 'true' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            disable_ssl_verification => true,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                disable_ssl_verification => true,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -114,13 +120,15 @@ describe 'jenkins::slave class' do
       end
 
       context 'false' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            disable_ssl_verification => false,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                disable_ssl_verification => false,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -131,13 +139,15 @@ describe 'jenkins::slave class' do
 
     context 'delete_existing_clients' do
       context 'true' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            delete_existing_clients => true,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                delete_existing_clients => true,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -146,13 +156,15 @@ describe 'jenkins::slave class' do
       end
 
       context 'false' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            delete_existing_clients => false,
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                delete_existing_clients => false,
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -163,13 +175,15 @@ describe 'jenkins::slave class' do
 
     context 'labels' do
       context 'single label in string' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            labels => 'foo',
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                labels => 'foo',
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -178,13 +192,15 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in string' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            labels => 'foo bar baz',
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                labels => 'foo bar baz',
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -193,13 +209,15 @@ describe 'jenkins::slave class' do
       end
 
       context 'multiple labels in array' do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            labels => ['foo', 'bar', 'baz'],
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                labels => ['foo', 'bar', 'baz'],
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -212,13 +230,15 @@ describe 'jenkins::slave class' do
       tool_locations = 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java'
 
       context tool_locations do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            tool_locations => '#{tool_locations}',
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                tool_locations => '#{tool_locations}',
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }
@@ -232,13 +252,15 @@ describe 'jenkins::slave class' do
       tunnel = 'localhost:9000'
 
       context tunnel do
-        pp = <<-EOS
-          class { ::jenkins::slave:
-            tunnel => '#{tunnel}',
-          }
-        EOS
-
-        apply2(pp)
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class { 'jenkins::slave':
+                tunnel => '#{tunnel}',
+              }
+            PUPPET
+          end
+        end
 
         describe process('java') do
           its(:user) { is_expected.to eq 'jenkins-slave' }

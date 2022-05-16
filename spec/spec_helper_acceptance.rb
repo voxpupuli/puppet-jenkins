@@ -9,15 +9,3 @@ def apply(pp, options = {})
 
   apply_manifest(pp, options)
 end
-
-# Run it twice and test for idempotency
-# And know value of custom fact during acceptance tests
-def apply2(pp)
-  it 'works with no error' do
-    apply_manifest(pp, catch_failures: true)
-  end
-
-  it 'works idempotently' do
-    apply_manifest(pp, catch_changes: true)
-  end
-end

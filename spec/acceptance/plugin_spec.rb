@@ -42,83 +42,77 @@ describe 'jenkins class', order: :defined do
   end
 
   context 'default parameters' do
-    pp = <<-EOS
-    include jenkins
-    jenkins::plugin {'git-plugin':
-      name    => 'git',
-      version => '2.3.4',
-    }
-    EOS
-
-    apply2(pp)
+    include_examples 'an idempotent resource' do
+      let(:manifest) do
+        <<~PUPPET
+          include jenkins
+          jenkins::plugin {'git-plugin':
+            name    => 'git',
+            version => '2.3.4',
+          }
+        PUPPET
+      end
+    end
 
     it_behaves_like 'has_plugin', 'git'
   end
 
   describe 'plugin downgrade' do
     describe 'jquery3-api plugin' do
-      describe 'installs version 3.6.0-3' do
-        pp = <<-EOS
-        class {'jenkins':
-          purge_plugins => true,
-        }
+      describe 'installs version 3.6.0-r3' do
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              class {'jenkins':
+                purge_plugins => true,
+              }
 
-        # dependencies to prevent them from being purged
-        jenkins::plugin { 'jdk-tool':
-        }
-        # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-        # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-        # Also makes sure it's consistently using hpi
-        jenkins::plugin { 'trilead-api':
-          version => '1.57.v6e90e07157e1',
-        }
+              # dependencies to prevent them from being purged
+              jenkins::plugin { 'jdk-tool':
+              }
+              # At least on EL7 version 1.0.4 is shipped and ssh-credentials
+              # needs >= 1.0.13. 1.57 is the latests at the time of writing.
+              # Also makes sure it's consistently using hpi
+              jenkins::plugin { 'trilead-api':
+                version => '1.57.v6e90e07157e1',
+              }
 
-        # actual plugin
-        jenkins::plugin { 'jquery3-api':
-          version => '3.6.0-3',
-        }
-        EOS
-
-        it 'works with no error' do
-          apply_manifest(pp, catch_failures: true)
-        end
-
-        it 'works idempotently' do
-          apply_manifest(pp, catch_changes: true)
+              # actual plugin
+              jenkins::plugin { 'jquery3-api':
+                version => '3.6.0-3',
+              }
+            PUPPET
+          end
         end
       end
 
       describe 'downgrades to 3.5.1-3' do
-        pp = <<-EOS
-        package{'unzip':
-          ensure => present
-        }
-        class {'jenkins':
-          purge_plugins => true,
-        }
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              package{'unzip':
+                ensure => present
+              }
+              class {'jenkins':
+                purge_plugins => true,
+              }
 
-        # dependencies to prevent them from being purged
-        jenkins::plugin { 'jdk-tool':
-        }
-        # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-        # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-        # Also makes sure it's consistently using hpi
-        jenkins::plugin { 'trilead-api':
-          version => '1.57.v6e90e07157e1',
-        }
+              # dependencies to prevent them from being purged
+              jenkins::plugin { 'jdk-tool':
+              }
+              # At least on EL7 version 1.0.4 is shipped and ssh-credentials
+              # needs >= 1.0.13. 1.57 is the latests at the time of writing.
+              # Also makes sure it's consistently using hpi
+              jenkins::plugin { 'trilead-api':
+                version => '1.57.v6e90e07157e1',
+              }
 
-        # actual plugin
-        jenkins::plugin { 'jquery3-api':
-          version => '3.5.1-3',
-        }
-        EOS
-
-        it 'works with no error' do
-          apply_manifest(pp, catch_failures: true)
-        end
-
-        it 'works idempotently' do
-          apply_manifest(pp, catch_changes: true)
+              # actual plugin
+              jenkins::plugin { 'jquery3-api':
+                version => '3.5.1-3',
+              }
+            PUPPET
+          end
         end
       end
 
