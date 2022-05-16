@@ -17,15 +17,7 @@ def apply2(pp)
     apply_manifest(pp, catch_failures: true)
   end
 
-  it 'gets custom fact on first run' do
-    on(hosts, 'facter --json jenkins_plugins')
-  end
-
   it 'works idempotently' do
     apply_manifest(pp, catch_changes: true)
-  end
-
-  it 'gets custom fact on second run' do
-    on(hosts, 'facter --json jenkins_plugins')
   end
 end
