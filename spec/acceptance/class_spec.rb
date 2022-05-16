@@ -36,6 +36,11 @@ describe 'jenkins class' do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
     end
+
+    describe process('java') do
+      it { is_expected.to be_running }
+      its(:args) { is_expected.to match(%r{-Djenkins\.install\.runSetupWizard=false}) }
+    end
   end
 
   context 'executors' do

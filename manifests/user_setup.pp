@@ -52,4 +52,17 @@ class jenkins::user_setup {
     ensure_resource('file', $jenkins::plugin_dir, $plugin_dir_params)
     ensure_resource('file', $jenkins::job_dir, $dir_params)
   }
+
+  # On Debian the service is started by default so it must be configured prior
+  # to installation which is why it's configured in this file rather than config.pp
+  $config_hash = merge(
+    $jenkins::params::config_hash_defaults,
+    $jenkins::config_hash
+  )
+
+  systemd::dropin_file { 'puppet-overrides.conf':
+    unit           => 'jenkins.service',
+    content        => epp("${module_name}/jenkins-override.epp", { 'environment' => $config_hash }),
+    notify_service => true,
+  }
 }
