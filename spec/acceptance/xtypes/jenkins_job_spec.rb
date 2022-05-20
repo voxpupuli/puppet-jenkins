@@ -181,38 +181,45 @@ describe 'jenkins_job', order: :defined do
       end
     end
 
-    context 'convert existing job to folder' do
-      it 'works with no errors' do
-        skip # travis is running the beaker tests really slow...
-        pending('CLI update-job command is unable to handle the conversion')
+    # 'CLI update-job command is unable to handle the conversion'
+    context 'convert existing job to folder', if: false do
+      describe 'setup' do
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              #{super()}
+              jenkins_job { 'foo':
+                ensure => present,
+                config => \'#{test_build_job}\',
+              }
+            PUPPET
+          end
+        end
+      end
 
-        pp = <<-EOS
-          #{manifest}
-          jenkins_job { 'foo':
-            ensure => present,
-            config => \'#{test_build_job}\',
-          }
-        EOS
+      describe 'conversion' do
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              #{super()}
+              jenkins_job { 'foo':
+                ensure => present,
+                config => \'#{test_folder_job}\',
+              }
+            PUPPET
+          end
+        end
+      end
 
-        apply(pp, catch_failures: true)
-
-        pp = <<-EOS
-          #{manifest}
-          jenkins_job { 'foo':
-            ensure => present,
-            config => \'#{test_folder_job}\',
-          }
-        EOS
-
-        apply2(pp)
-
-        # only for cleanup
-        pp = <<-EOS
-          #{manifest}
-          jenkins_job { 'foo': ensure => absent }
-        EOS
-
-        apply2(pp)
+      describe 'cleanup' do
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              #{super()}
+              jenkins_job { 'foo': ensure => absent }
+            PUPPET
+          end
+        end
       end
     end
   end

@@ -4,13 +4,15 @@ require 'spec_helper_acceptance'
 
 describe 'jenkins class' do
   context 'default parameters' do
-    pp = <<-EOS
-    class {'jenkins':
-      cli => true,
-    }
-    EOS
-
-    apply2(pp)
+    include_examples 'an idempotent resource' do
+      let(:manifest) do
+        <<~PUPPET
+          class {'jenkins':
+            cli => true,
+          }
+        PUPPET
+      end
+    end
 
     describe port(8080) do
       it {
@@ -36,16 +38,23 @@ describe 'jenkins class' do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
     end
+
+    describe process('java') do
+      it { is_expected.to be_running }
+      its(:args) { is_expected.to match(%r{-Djenkins\.install\.runSetupWizard=false}) }
+    end
   end
 
   context 'executors' do
-    pp = <<-EOS
-    class {'jenkins':
-      executors => 42,
-    }
-    EOS
-
-    apply2(pp)
+    include_examples 'an idempotent resource' do
+      let(:manifest) do
+        <<~PUPPET
+          class {'jenkins':
+            executors => 42,
+          }
+        PUPPET
+      end
+    end
 
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to
@@ -64,13 +73,15 @@ describe 'jenkins class' do
   end
 
   context 'slaveagentport' do
-    pp = <<-EOS
-      class {'jenkins':
-        slaveagentport => 7777,
-      }
-    EOS
-
-    apply2(pp)
+    include_examples 'an idempotent resource' do
+      let(:manifest) do
+        <<~PUPPET
+          class {'jenkins':
+            slaveagentport => 7777,
+          }
+        PUPPET
+      end
+    end
 
     describe port(8080) do
       # jenkins should already have been running so we shouldn't have to
