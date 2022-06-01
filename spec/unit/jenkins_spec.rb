@@ -9,7 +9,7 @@ describe Puppet::Jenkins do
 
     context "when a jenkins user doesn't exist" do
       before do
-        File.should_receive(:expand_path).and_raise(ArgumentError)
+        expect(File).to receive(:expand_path).and_raise(ArgumentError)
       end
 
       it { is_expected.to be_nil }
@@ -19,7 +19,7 @@ describe Puppet::Jenkins do
       let(:home) { '/rspec/jenkins' }
 
       before do
-        File.should_receive(:expand_path).and_return(home)
+        expect(File).to receive(:expand_path).and_return(home)
       end
 
       it { is_expected.to eql home }

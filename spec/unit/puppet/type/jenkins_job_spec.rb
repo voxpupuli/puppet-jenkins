@@ -45,13 +45,11 @@ describe Puppet::Type.type(:jenkins_job) do
 
           if cfg && param
             it 'displays a diff' do
-              property.stub(:diff).and_return('foo')
-              expect(property).to receive(:diff).once
+              expect(property).to receive(:diff).once.and_return('foo')
               property.change_to_s('foo', 'bar')
             end
           else
             it 'does not display a diff' do
-              property.stub(:diff)
               expect(property).not_to receive :diff
               property.change_to_s('foo', 'bar')
             end
