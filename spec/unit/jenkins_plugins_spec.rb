@@ -179,6 +179,6 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
 
     it { is_expected.to be_instance_of Hash }
     it { is_expected.to have_key('AdaptivePlugin') }
-    its(:size) { is_expected.to be 1 }
+    it { is_expected.to have_attributes(size: 1) }
   end
 end

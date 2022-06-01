@@ -2,9 +2,6 @@
 Gemfile:
   optional:
     ':test':
-      - gem: 'rspec-its'
       - gem: 'retries'
-spec/spec_helper.rb:
-  spec_overrides: "require 'rspec/its'"
 .rubocop.yml:
   unmanaged: true
