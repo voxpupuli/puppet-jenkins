@@ -1,5 +1,10 @@
-<%| Hash[String, Struct[{value => Any}]] $environment |-%>
+<%- | Hash[String, Struct[{value => Any}]] $environment,
+      Hash[String[1], String] $dropin_config = {}
+| -%>
 [Service]
 <% $environment.each |$key, $entry| { -%>
 Environment="<%= $key %>=<%= $entry['value'] %>"
+<% } -%>
+<% $dropin_config.each |$key, $value| { -%>
+<%= $key %>=<%= $value %>
 <% } -%>
