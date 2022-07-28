@@ -45,6 +45,9 @@
 #   Pin the plugin to a specific version. This prevents the updater from
 #   updating it.
 #
+# @param download_options
+#   Add options to Archive's curl
+#
 define jenkins::plugin (
   Optional[String] $version         = undef,
   Optional[String] $config_filename = undef,
@@ -56,6 +59,7 @@ define jenkins::plugin (
   Boolean $enabled                  = true,
   String $digest_type               = 'sha1',
   Boolean $pin                      = false,
+  Array $download_options           = ['--http1.1'],
 ) {
   include jenkins
 
@@ -186,17 +190,17 @@ define jenkins::plugin (
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
-      source            => $download_url,
-      path              => "${jenkins::plugin_dir}/${plugin}",
-      checksum_verify   => $checksum_verify,
-      checksum          => $checksum,
-      checksum_type     => $checksum_type,
-      proxy_server      => $jenkins::proxy::url,
-      cleanup           => false,
-      extract           => false,
-      require           => $plugindir,
-      notify            => $notify,
-      download_options  => '--http1.1'
+      source           => $download_url,
+      path             => "${jenkins::plugin_dir}/${plugin}",
+      checksum_verify  => $checksum_verify,
+      checksum         => $checksum,
+      checksum_type    => $checksum_type,
+      proxy_server     => $jenkins::proxy::url,
+      cleanup          => false,
+      extract          => false,
+      require          => $plugindir,
+      notify           => $notify,
+      download_options => $download_options,
     }
     $archive_require = Archive[$plugin]
   } else {
