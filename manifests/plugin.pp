@@ -45,17 +45,21 @@
 #   Pin the plugin to a specific version. This prevents the updater from
 #   updating it.
 #
+# @param download_options
+#   Add options to Archive's curl
+#
 define jenkins::plugin (
-  Optional[String] $version         = undef,
-  Optional[String] $config_filename = undef,
-  Optional[String] $config_content  = undef,
-  Optional[String] $update_url      = undef,
-  Optional[String] $source          = undef,
-  Enum['hpi', 'jpi'] $extension     = 'hpi',
-  Optional[String] $digest_string   = undef,
-  Boolean $enabled                  = true,
-  String $digest_type               = 'sha1',
-  Boolean $pin                      = false,
+  Optional[String] $version          = undef,
+  Optional[String] $config_filename  = undef,
+  Optional[String] $config_content   = undef,
+  Optional[String] $update_url       = undef,
+  Optional[String] $source           = undef,
+  Enum['hpi', 'jpi'] $extension      = 'hpi',
+  Optional[String] $digest_string    = undef,
+  Boolean $enabled                   = true,
+  String $digest_type                = 'sha1',
+  Boolean $pin                       = false,
+  Array[String[1]] $download_options = ($facts['os']['family'] == 'RedHat' and $facts['os']['release']['major'] == '7') ? { true => [], default => ['--http1.1'] },
 ) {
   include jenkins
 
@@ -186,16 +190,17 @@ define jenkins::plugin (
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
-      source          => $download_url,
-      path            => "${jenkins::plugin_dir}/${plugin}",
-      checksum_verify => $checksum_verify,
-      checksum        => $checksum,
-      checksum_type   => $checksum_type,
-      proxy_server    => $jenkins::proxy::url,
-      cleanup         => false,
-      extract         => false,
-      require         => $plugindir,
-      notify          => $notify,
+      source           => $download_url,
+      path             => "${jenkins::plugin_dir}/${plugin}",
+      checksum_verify  => $checksum_verify,
+      checksum         => $checksum,
+      checksum_type    => $checksum_type,
+      proxy_server     => $jenkins::proxy::url,
+      cleanup          => false,
+      extract          => false,
+      require          => $plugindir,
+      notify           => $notify,
+      download_options => $download_options,
     }
     $archive_require = Archive[$plugin]
   } else {
