@@ -186,16 +186,17 @@ define jenkins::plugin (
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
-      source          => $download_url,
-      path            => "${jenkins::plugin_dir}/${plugin}",
-      checksum_verify => $checksum_verify,
-      checksum        => $checksum,
-      checksum_type   => $checksum_type,
-      proxy_server    => $jenkins::proxy::url,
-      cleanup         => false,
-      extract         => false,
-      require         => $plugindir,
-      notify          => $notify,
+      source            => $download_url,
+      path              => "${jenkins::plugin_dir}/${plugin}",
+      checksum_verify   => $checksum_verify,
+      checksum          => $checksum,
+      checksum_type     => $checksum_type,
+      proxy_server      => $jenkins::proxy::url,
+      cleanup           => false,
+      extract           => false,
+      require           => $plugindir,
+      notify            => $notify,
+      download_options  => '--http1.1'
     }
     $archive_require = Archive[$plugin]
   } else {
