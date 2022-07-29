@@ -10,7 +10,6 @@ class jenkins::params {
     'javax-activation-api', # implied by all plugin
     'javax-mail-api', # implied by all plugins
     'sshd', # implied by structs
-    'ssh-credentials', # required by testsuite
     'structs', # required by credentials plugin
   ]
 

@@ -13,7 +13,7 @@
 define jenkins::job (
   String $config,
   Optional[String] $source                  = undef,
-  Optional[Stdlib::Absolutepath] $template  = undef,
+  Optional[String] $template                = undef,
   String $jobname                           = $title,
   Enum['present', 'absent'] $ensure         = 'present',
   String $difftool                          = '/usr/bin/diff -b -q',
