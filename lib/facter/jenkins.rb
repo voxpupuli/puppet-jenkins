@@ -8,8 +8,7 @@ require_relative '../puppet/jenkins/plugins'
 Facter.add(:jenkins_plugins) do
   confine kernel: 'Linux'
   setcode do
-    plugins = Puppet::Jenkins::Plugins.available
-    plugins.keys.sort.map { |plugin| "#{plugin} #{plugins[plugin][:plugin_version]}" }.join(', ')
+    Puppet::Jenkins::Plugins.available
   end
 end
 
