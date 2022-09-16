@@ -172,28 +172,27 @@ class jenkins::slave (
     Class['java'] -> Service['jenkins-slave']
   }
 
-  # customizations based on the OS family
-  case $facts['os']['family'] {
-    'Archlinux': {
-      $defaults_location = '/etc/conf.d'
-    }
-    'Darwin': {
-      $defaults_location = $slave_home
-    }
-    'Debian': {
-      $defaults_location = '/etc/default'
-    }
-    default: {
-      $defaults_location = '/etc/sysconfig'
-    }
-  }
-
   case $facts['kernel'] {
     'Linux': {
       $service_name     = 'jenkins-slave'
       $defaults_user    = 'root'
       $defaults_group   = 'root'
       $manage_user_home = true
+
+      $defaults_location = $facts['os']['family'] ? {
+        'Archlinux' => '/etc/conf.d',
+        'Debian'    => '/etc/default',
+        default     => '/etc/sysconfig',
+      }
+
+      file { "${defaults_location}/jenkins-slave":
+        ensure  => 'file',
+        mode    => '0600',
+        owner   => $defaults_user,
+        group   => $defaults_group,
+        content => template("${module_name}/jenkins-slave-defaults.erb"),
+        notify  => Service['jenkins-slave'],
+      }
 
       file { "${slave_home}/${service_name}-run":
         content => template("${module_name}/${service_name}-run.erb"),
@@ -254,15 +253,6 @@ class jenkins::slave (
       uid        => $slave_uid,
       groups     => $slave_groups,
     }
-  }
-
-  file { "${defaults_location}/jenkins-slave":
-    ensure  => 'file',
-    mode    => '0600',
-    owner   => $defaults_user,
-    group   => $defaults_group,
-    content => template("${module_name}/jenkins-slave-defaults.erb"),
-    notify  => Service['jenkins-slave'],
   }
 
   if ($manage_client_jar) {
