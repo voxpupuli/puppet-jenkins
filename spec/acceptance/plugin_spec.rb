@@ -67,14 +67,24 @@ describe 'jenkins class', order: :defined do
                 purge_plugins => true,
               }
 
-              # dependencies to prevent them from being purged
-              jenkins::plugin { 'jdk-tool':
+              # actual plugin
+              jenkins::plugin { 'jquery3-api':
+                version => '3.6.0-4',
               }
-              # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-              # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-              # Also makes sure it's consistently using hpi
-              jenkins::plugin { 'trilead-api':
-                version => '1.57.v6e90e07157e1',
+            PUPPET
+          end
+        end
+      end
+
+      describe 'downgrades to 3.6.0-3' do
+        include_examples 'an idempotent resource' do
+          let(:manifest) do
+            <<~PUPPET
+              package{'unzip':
+                ensure => present
+              }
+              class {'jenkins':
+                purge_plugins => true,
               }
 
               # actual plugin
@@ -86,38 +96,8 @@ describe 'jenkins class', order: :defined do
         end
       end
 
-      describe 'downgrades to 3.5.1-3' do
-        include_examples 'an idempotent resource' do
-          let(:manifest) do
-            <<~PUPPET
-              package{'unzip':
-                ensure => present
-              }
-              class {'jenkins':
-                purge_plugins => true,
-              }
-
-              # dependencies to prevent them from being purged
-              jenkins::plugin { 'jdk-tool':
-              }
-              # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-              # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-              # Also makes sure it's consistently using hpi
-              jenkins::plugin { 'trilead-api':
-                version => '1.57.v6e90e07157e1',
-              }
-
-              # actual plugin
-              jenkins::plugin { 'jquery3-api':
-                version => '3.5.1-3',
-              }
-            PUPPET
-          end
-        end
-      end
-
       describe command("unzip -p #{PDIR}/jquery3-api.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'") do
-        its(:stdout) { is_expected.to eq("3.5.1-3\n") }
+        its(:stdout) { is_expected.to eq("3.6.0-3\n") }
       end
 
       it_behaves_like 'has_plugin', 'jquery3-api'
@@ -134,19 +114,9 @@ describe 'jenkins class', order: :defined do
           purge_plugins => true,
         }
 
-        # dependencies to prevent them from being purged
-        jenkins::plugin { 'jdk-tool':
-        }
-        # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-        # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-        # Also makes sure it's consistently using hpi
-        jenkins::plugin { 'trilead-api':
-          version => '1.57.v6e90e07157e1',
-        }
-
         # Actual plugin
         jenkins::plugin { 'jquery3-api':
-          version => '3.6.0-3',
+          version => '3.6.0-4',
         }
         EOS
 
@@ -172,19 +142,9 @@ describe 'jenkins class', order: :defined do
           purge_plugins => false,
         }
 
-        # dependencies to prevent them from being purged
-        jenkins::plugin { 'jdk-tool':
-        }
-        # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-        # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-        # Also makes sure it's consistently using hpi
-        jenkins::plugin { 'trilead-api':
-          version => '1.57.v6e90e07157e1',
-        }
-
         # Actual plugin
         jenkins::plugin { 'jquery3-api':
-          version => '3.6.0-3',
+          version => '3.6.0-4',
         }
         EOS
 
