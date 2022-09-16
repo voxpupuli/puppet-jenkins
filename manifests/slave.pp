@@ -134,13 +134,13 @@ class jenkins::slave (
   Enum['normal', 'exclusive'] $slave_mode = 'normal',
   Boolean $disable_ssl_verification       = false,
   Boolean $disable_clients_unique_id      = false,
-  Any $labels                             = undef,
+  Array[String[1]] $labels                = [],
   Any $install_java                       = true,
   Boolean $manage_client_jar              = true,
   Enum['running', 'stopped'] $ensure      = 'running',
   Boolean $enable                         = true,
-  Any $java_args                          = undef,
-  Any $swarm_client_args                  = undef,
+  Array[String[1]] $java_args             = [],
+  Array[String[1]] $swarm_client_args     = [],
   Boolean $delete_existing_clients        = false,
   Any $java_cmd                           = '/usr/bin/java',
 ) inherits jenkins::params {
@@ -156,36 +156,6 @@ class jenkins::slave (
   }
   $quoted_ui_user = shellquote($ui_user)
   $quoted_ui_pass = shellquote($ui_pass)
-
-  if $labels {
-    if $labels =~ Array {
-      $_combined_labels = hiera_array('jenkins::slave::labels', $labels)
-      $_real_labels = join($_combined_labels, ' ')
-    }
-    else {
-      $_real_labels = $labels
-    }
-  }
-
-  if $java_args {
-    if $java_args =~ Array {
-      $_combined_java_args = hiera_array('jenkins::slave::java_args', $java_args)
-      $_real_java_args = join($_combined_java_args, ' ')
-    }
-    else {
-      $_real_java_args = $java_args
-    }
-  }
-
-  if $swarm_client_args {
-    if $swarm_client_args =~ Array {
-      $_combined_swarm_client_args = hiera_array('jenkins::slave::swarm_client_args', $swarm_client_args)
-      $_real_swarm_client_args = join($_combined_swarm_client_args, ' ')
-    }
-    else {
-      $_real_swarm_client_args = $swarm_client_args
-    }
-  }
 
   # the "public" API for tool_locations is a space seperated string in the
   # format "<name>:<path> [<name>:<path> ...]"

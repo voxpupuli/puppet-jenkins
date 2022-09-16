@@ -94,19 +94,6 @@ describe 'jenkins::slave' do
           end
         end
 
-        describe 'with java_args as a string' do
-          let(:args) { '-Xmx2g' }
-          let(:params) do
-            {
-              java_args: args
-            }
-          end
-
-          it 'sets java_args' do
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA_ARGS="#{args}"$})
-          end
-        end
-
         describe 'with java_args as an array' do
           let(:args) { ['-Xmx2g', '-Xms128m'] }
           let(:params) do
@@ -116,21 +103,7 @@ describe 'jenkins::slave' do
           end
 
           it 'converts java_args to a string' do
-            args_as_string = args.join ' '
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA_ARGS="#{args_as_string}"$})
-          end
-        end
-
-        describe 'with swarm_client_args as a string' do
-          let(:args) { '-disableSslVerification -disableClientsUniqueId' }
-          let(:params) do
-            {
-              swarm_client_args: args
-            }
-          end
-
-          it 'sets swarm_client_args' do
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{^OTHER_ARGS="#{args}"$})
+            is_expected.to contain_file(slave_runtime_file).with_content(%r{^JAVA_ARGS="-Xmx2g -Xms128m"$})
           end
         end
 
@@ -143,8 +116,7 @@ describe 'jenkins::slave' do
           end
 
           it 'converts swarm_client_args to a string' do
-            args_as_string = args.join ' '
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{^OTHER_ARGS="#{args_as_string}"$})
+            is_expected.to contain_file(slave_runtime_file).with_content(%r{^OTHER_ARGS="-disableSslVerification -disableClientsUniqueId"$})
           end
         end
 
@@ -203,18 +175,6 @@ describe 'jenkins::slave' do
 
           it 'sets LABEL as a string' do
             is_expected.to contain_file(slave_runtime_file).with_content(%r{^LABELS="hello world"$})
-          end
-        end
-
-        describe 'with LABELS as a string' do
-          let(:params) do
-            {
-              labels: ['unlimited blades']
-            }
-          end
-
-          it 'sets LABEL as a string' do
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{^LABELS="unlimited blades"$})
           end
         end
 

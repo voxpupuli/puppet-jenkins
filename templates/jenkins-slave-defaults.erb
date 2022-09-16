@@ -9,8 +9,8 @@ JAVA=<%= @java_cmd %>
 # arguments to pass to java
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-<% if @_real_java_args -%>
-JAVA_ARGS="<%= @_real_java_args -%>"
+<% if @java_args.any? -%>
+JAVA_ARGS="<%= @java_args.join(' ') -%>"
 <% end -%>
 
 # user id to be invoked as (otherwise will run as root; not wise!)
@@ -35,7 +35,7 @@ MAXOPENFILES=8192
 
 MASTER_URL="<%= @masterurl -%>"
 AUTO_DISCOVERY_ADDRESS="<%= @autodiscoveryaddress -%>"
-LABELS="<%= @_real_labels -%>"
+LABELS="<%= @labels.join(' ') -%>"
 
 EXECUTORS=<%= @executors -%>
 
@@ -51,7 +51,7 @@ TUNNEL="<%= @tunnel -%>"
 JENKINS_USERNAME=<%= @quoted_ui_user %>
 JENKINS_PASSWORD=<%= @quoted_ui_pass %>
 
-OTHER_ARGS="<%= @_real_swarm_client_args %>"
+OTHER_ARGS="<%= @swarm_client_args.join(' ') %>"
 
 # boolean; any value but 'true' is considered false
 DISABLE_CLIENTS_UNIQUE_ID="<%= 'true' if @disable_clients_unique_id -%>"
