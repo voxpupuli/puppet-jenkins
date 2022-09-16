@@ -1,3 +1,0 @@
----
-# Latest credentials plugin (1126) requires Jenkins 2.340 while LTS is 2.332
-jenkins::lts: false
