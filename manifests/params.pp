@@ -6,10 +6,11 @@ class jenkins::params {
     'JAVA_OPTS' => { value => '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false' },
   }
   $default_plugins = [
+    'bouncycastle-api', # required by instance-identity
     'credentials', # required by puppet_helper.groovy
+    'instance-identity', # implied by structs
     'javax-activation-api', # implied by all plugin
     'javax-mail-api', # implied by all plugins
-    'sshd', # implied by structs
     'structs', # required by credentials plugin
   ]
 
