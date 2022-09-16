@@ -171,14 +171,4 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
       end
     end
   end
-
-  describe '.plugins_from_updatecenter' do
-    subject(:plugins) { described_class.plugins_from_updatecenter(fixture) }
-
-    let(:fixture) { File.expand_path(File.join(__dir__, '..', 'fixtures', 'update-center.json')) }
-
-    it { is_expected.to be_instance_of Hash }
-    it { is_expected.to have_key('AdaptivePlugin') }
-    it { is_expected.to have_attributes(size: 1) }
-  end
 end
