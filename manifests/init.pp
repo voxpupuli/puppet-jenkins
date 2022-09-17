@@ -301,7 +301,7 @@ class jenkins (
   Optional[String] $cli_username                  = undef,
   Optional[String] $cli_password                  = undef,
   Optional[String] $cli_password_file             = undef,
-  Integer $cli_tries                              = 10,
+  Integer $cli_tries                              = 9,
   Integer $cli_try_sleep                          = 10,
   Integer $port                                   = 8080,
   Stdlib::Absolutepath $libdir                    = '/usr/share/java',
