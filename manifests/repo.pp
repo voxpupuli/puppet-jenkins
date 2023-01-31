@@ -3,7 +3,7 @@
 class jenkins::repo (
   Stdlib::Httpurl $base_url = 'https://pkg.jenkins.io',
   String $gpg_key_filename = 'jenkins.io.key',
-  Boolean $enabled = 1,
+  Boolean $enabled = true,
 ) {
   assert_private()
 
