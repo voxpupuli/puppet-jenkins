@@ -14,7 +14,7 @@ class jenkins::repo::el {
     baseurl  => $baseurl,
     gpgcheck => 1,
     gpgkey   => "${baseurl}${jenkins::repo::gpg_key_filename}",
-    enabled  => 1,
+    enabled  => $jenkins::repo::enabled,
     proxy    => $jenkins::repo_proxy,
   }
 }
