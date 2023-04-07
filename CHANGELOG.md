@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.1.0](https://github.com/voxpupuli/puppet-jenkins/tree/v3.1.0) (2023-04-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.0.0...v3.1.0)
+
+**Implemented enhancements:**
+
+- el repo enabled toggle added [\#1064](https://github.com/voxpupuli/puppet-jenkins/pull/1064) ([wimkorevaar](https://github.com/wimkorevaar))
+- bump puppet/systemd to \< 5.0.0 [\#1063](https://github.com/voxpupuli/puppet-jenkins/pull/1063) ([jhoblitt](https://github.com/jhoblitt))
+
+**Merged pull requests:**
+
+- Fix broken Apache-2 license [\#1062](https://github.com/voxpupuli/puppet-jenkins/pull/1062) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v3.0.0) (2022-09-16)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v2.0.0...v3.0.0)
