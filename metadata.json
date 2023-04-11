@@ -1,6 +1,6 @@
 {
   "name": "puppet-jenkins",
-  "version": "3.2.0",
+  "version": "3.2.1-rc0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
