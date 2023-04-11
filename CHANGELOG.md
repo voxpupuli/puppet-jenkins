@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.2.0](https://github.com/voxpupuli/puppet-jenkins/tree/v3.2.0) (2023-04-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.1.0...v3.2.0)
+
+**Implemented enhancements:**
+
+- Mark compatible with puppetlabs/apt 9 & puppetlabs/java 8 [\#1066](https://github.com/voxpupuli/puppet-jenkins/pull/1066) ([ekohl](https://github.com/ekohl))
+
 ## [v3.1.0](https://github.com/voxpupuli/puppet-jenkins/tree/v3.1.0) (2023-04-07)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.0.0...v3.1.0)
