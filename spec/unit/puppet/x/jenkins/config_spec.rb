@@ -56,7 +56,7 @@ describe Puppet::X::Jenkins::Config do
   # we are relying on a side effect of this method being to test features /
   # load libs
   describe '#initialize' do
-    it { expect(described_class.new).to be_kind_of described_class }
+    it { expect(described_class.new).to be_a described_class }
   end
 
   describe '#[]' do

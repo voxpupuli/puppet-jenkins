@@ -15,7 +15,7 @@ shared_examples 'confines to cli dependencies' do
     context 'feature :retries' do
       it do
         expect(confines).to include(
-          be_kind_of(Puppet::Confine::Feature).
+          be_a(Puppet::Confine::Feature).
           and(have_attributes(values: [:retries]))
         )
       end
@@ -24,7 +24,7 @@ shared_examples 'confines to cli dependencies' do
     context 'commands :java' do
       it do
         expect(confines).to include(
-          be_kind_of(Puppet::Confine::Exists).
+          be_a(Puppet::Confine::Exists).
           and(have_attributes(values: ['java']))
         )
       end

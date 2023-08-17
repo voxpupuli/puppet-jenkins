@@ -96,7 +96,7 @@ describe 'jenkins class', order: :defined do
         end
       end
 
-      describe command("unzip -p #{PDIR}/jquery3-api.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\\(.*\\\)/\\1/;tx;d;:x'") do
+      describe command("unzip -p #{PDIR}/jquery3-api.hpi META-INF/MANIFEST.MF | sed 's/Plugin-Version: \\(.*\\)/\\1/;tx;d;:x'") do
         its(:stdout) { is_expected.to eq("3.6.0-3\n") }
       end
 
