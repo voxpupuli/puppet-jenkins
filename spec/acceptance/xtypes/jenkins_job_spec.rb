@@ -6,7 +6,7 @@ require 'spec_helper_acceptance'
 # on existing state as a performance optimization.
 describe 'jenkins_job', order: :defined do
   let(:test_build_job) do
-    example = <<~'EOS'
+    example = <<~EOS
       <?xml version='1.0' encoding='UTF-8'?>
       <project>
         <actions/>
@@ -34,7 +34,7 @@ describe 'jenkins_job', order: :defined do
   end
 
   let(:test_folder_job) do
-    example = <<~'EOS'
+    example = <<~EOS
       <?xml version="1.0" encoding="UTF-8"?><com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@5.5">
         <properties/>
         <views>
@@ -65,7 +65,7 @@ describe 'jenkins_job', order: :defined do
           include jenkins::cli::config
           jenkins_job { 'foo':
             ensure => present,
-            config => \'#{test_build_job}\',
+            config => '#{test_build_job}',
           }
         EOS
 
@@ -118,17 +118,17 @@ describe 'jenkins_job', order: :defined do
             #{manifest}
             jenkins_job { 'foo':
               ensure => present,
-              config => \'#{test_folder_job}\',
+              config => '#{test_folder_job}',
             }
 
             jenkins_job { 'foo/bar':
               ensure => present,
-              config => \'#{test_folder_job}\',
+              config => '#{test_folder_job}',
             }
 
             jenkins_job { 'foo/bar/baz':
               ensure => present,
-              config => \'#{test_build_job}\',
+              config => '#{test_build_job}',
             }
           EOS
 
@@ -190,7 +190,7 @@ describe 'jenkins_job', order: :defined do
               #{super()}
               jenkins_job { 'foo':
                 ensure => present,
-                config => \'#{test_build_job}\',
+                config => '#{test_build_job}',
               }
             PUPPET
           end
@@ -204,7 +204,7 @@ describe 'jenkins_job', order: :defined do
               #{super()}
               jenkins_job { 'foo':
                 ensure => present,
-                config => \'#{test_folder_job}\',
+                config => '#{test_folder_job}',
               }
             PUPPET
           end
