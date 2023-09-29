@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v4.0.0) (2023-09-29)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.3.0...v4.0.0)
+
+**Breaking changes:**
+
+- Drop Ubuntu 18.04, add 20.04 and 22.04 support [\#1080](https://github.com/voxpupuli/puppet-jenkins/pull/1080) ([evgeni](https://github.com/evgeni))
+- Drop Puppet 6 support [\#1074](https://github.com/voxpupuli/puppet-jenkins/pull/1074) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add support for EL9, document Alma/Oracle/Rocky support [\#1081](https://github.com/voxpupuli/puppet-jenkins/pull/1081) ([evgeni](https://github.com/evgeni))
+- Allow puppetlabs/stdlib 9.x, puppetlabs/java 10.x, puppet/archive 7.x, puppet/zypprepo 5.x, puppet/systemd 6.x [\#1076](https://github.com/voxpupuli/puppet-jenkins/pull/1076) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v3.3.0](https://github.com/voxpupuli/puppet-jenkins/tree/v3.3.0) (2023-04-19)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.2.1...v3.3.0)
@@ -71,6 +85,7 @@ These should not affect the functionality of the module.
 - Should we include the puppet-jenkinstracking code? [\#110](https://github.com/voxpupuli/puppet-jenkins/issues/110)
 - The module should support FreeBSD 10 and pkgng [\#105](https://github.com/voxpupuli/puppet-jenkins/issues/105)
 - Install Java 11 JDK on Red Hat OSes [\#1054](https://github.com/voxpupuli/puppet-jenkins/pull/1054) ([ekohl](https://github.com/ekohl))
+- Install Java 11 on Red Hat OSes [\#1053](https://github.com/voxpupuli/puppet-jenkins/pull/1053) ([ekohl](https://github.com/ekohl))
 - Drop-in file systemd configuration [\#1044](https://github.com/voxpupuli/puppet-jenkins/pull/1044) ([jan-win1993](https://github.com/jan-win1993))
 - Allow up-to-date dependencies [\#1019](https://github.com/voxpupuli/puppet-jenkins/pull/1019) ([smortex](https://github.com/smortex))
 - puppet/archive: allow 5.x [\#1010](https://github.com/voxpupuli/puppet-jenkins/pull/1010) ([bastelfreak](https://github.com/bastelfreak))
@@ -133,7 +148,6 @@ These should not affect the functionality of the module.
 **Merged pull requests:**
 
 - Remove unused plugins\_from\_updatecenter [\#1056](https://github.com/voxpupuli/puppet-jenkins/pull/1056) ([ekohl](https://github.com/ekohl))
-- Install Java 11 on Red Hat OSes [\#1053](https://github.com/voxpupuli/puppet-jenkins/pull/1053) ([ekohl](https://github.com/ekohl))
 - Remove old RHEL 5 example [\#1052](https://github.com/voxpupuli/puppet-jenkins/pull/1052) ([ekohl](https://github.com/ekohl))
 - Remove PIDFile workaround and deprecated code [\#1045](https://github.com/voxpupuli/puppet-jenkins/pull/1045) ([ekohl](https://github.com/ekohl))
 - Fix acceptance tests [\#1041](https://github.com/voxpupuli/puppet-jenkins/pull/1041) ([ekohl](https://github.com/ekohl))
