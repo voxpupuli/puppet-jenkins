@@ -4,7 +4,7 @@ require 'spec_helper_acceptance'
 
 describe 'jenkins::job' do
   let(:test_build_job) do
-    example = <<~'EOS'
+    example = <<~EOS
       <?xml version='1.0' encoding='UTF-8'?>
       <project>
         <actions/>
@@ -39,7 +39,7 @@ describe 'jenkins::job' do
       # the historical assumption is that this will work without cli => true
       # set on the jenkins class
       jenkins::job { 'test-build-job':
-        config => \'#{test_build_job}\',
+        config => '#{test_build_job}',
       }
       EOS
 
@@ -65,14 +65,14 @@ describe 'jenkins::job' do
       pp_create = <<-EOS
         include jenkins
         jenkins::job {'test-noreplace-job':
-          config => \'#{test_build_job.gsub('<description>test job</description>', '<description>do not overwrite me</description>')}\',
+          config => '#{test_build_job.gsub('<description>test job</description>', '<description>do not overwrite me</description>')}',
         }
       EOS
 
       pp_update = <<-EOS
         include jenkins
         jenkins::job {'test-noreplace-job':
-          config  => \'#{test_build_job}\',
+          config  => '#{test_build_job}',
           replace => false,
         }
       EOS
@@ -97,7 +97,7 @@ describe 'jenkins::job' do
       pp = <<-EOS
       include jenkins
       jenkins::job { 'test-build-job':
-        config => \'#{test_build_job}\',
+        config => '#{test_build_job}',
       }
       EOS
 
@@ -108,7 +108,7 @@ describe 'jenkins::job' do
       include jenkins
       jenkins::job { 'test-build-job':
         ensure => 'absent',
-        config => \'#{test_build_job}\',
+        config => '#{test_build_job}',
       }
       EOS
 

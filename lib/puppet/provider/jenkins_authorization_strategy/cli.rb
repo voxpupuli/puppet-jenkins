@@ -76,7 +76,6 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
   end
   private_class_method :get_authorization_strategy
 
-  # rubocop:disable Naming/AccessorMethodName
   def set_jenkins_instance(input = nil)
     input ||= to_hash
 
@@ -91,5 +90,4 @@ Puppet::Type.type(:jenkins_authorization_strategy).provide(:cli, parent: Puppet:
     }
     set_jenkins_instance(input)
   end
-  # rubocop:enable Naming/AccessorMethodName
 end
