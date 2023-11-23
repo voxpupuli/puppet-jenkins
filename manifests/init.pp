@@ -325,7 +325,7 @@ class jenkins (
   if $cli_ssh_keyfile {
     # SSH key auth
     if empty($cli_username) {
-      fail('ERROR: Latest remoting free CLI (see https://issues.jenkins-ci.org/browse/JENKINS-41745) needs username for SSH Access (\$::jenkins::cli_username)')
+      fail('ERROR: Latest remoting free CLI (see https://issues.jenkins-ci.org/browse/JENKINS-41745) needs username for SSH Access (\$jenkins::cli_username)')
     }
     $_cli_auth_arg = "-i '${cli_ssh_keyfile}' -ssh -user '${cli_username}'"
   } elsif !empty($cli_username) {

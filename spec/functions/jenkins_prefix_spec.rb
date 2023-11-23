@@ -9,7 +9,7 @@ describe 'jenkins_prefix' do
 
       context 'with default parameters' do
         let(:pre_condition) do
-          'include ::jenkins'
+          'include jenkins'
         end
 
         it { is_expected.to run.with_params.and_return('') }

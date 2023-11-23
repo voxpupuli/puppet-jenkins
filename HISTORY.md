@@ -89,7 +89,7 @@
 * [#275](https://github.com/jenkinsci/puppet-jenkins/pull/275) - add .bundle to .gitignore
 * [#276](https://github.com/jenkinsci/puppet-jenkins/pull/276) - add log/ to .gitignore
 * [#277](https://github.com/jenkinsci/puppet-jenkins/pull/277) - add puppet 3.7.0 to travis matrix
-* [#278](https://github.com/jenkinsci/puppet-jenkins/pull/278) - remove unnecessary whitespace from $::jenkins::cli_helper::helper_cmd
+* [#278](https://github.com/jenkinsci/puppet-jenkins/pull/278) - remove unnecessary whitespace from $jenkins::cli_helper::helper_cmd
 * [#279](https://github.com/jenkinsci/puppet-jenkins/pull/279) - add metadata-json-lint to Gemfile & enable rake validate target
 * [#280](https://github.com/jenkinsci/puppet-jenkins/pull/280) - change puppetlabs/stdlib version dep to >= 4.6.0
 * [#282](https://github.com/jenkinsci/puppet-jenkins/pull/282) - Feature/puppet 4
