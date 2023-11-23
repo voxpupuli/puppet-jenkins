@@ -6,7 +6,7 @@ class jenkins::cli {
   include jenkins
 
   # XXX Classes/defines which include the jenkins::cli class assume that they
-  # can use the cli even if $::jenkins::cli == false.  This breaks the top
+  # can use the cli even if $jenkins::cli == false.  This breaks the top
   # level anchor pattern.  The cli param should either be deprecated and
   # essentially hardwired to true or attempting to use cli functionality
   # without this param set should fail; either option is a backwards
@@ -72,7 +72,7 @@ class jenkins::cli {
     require     => File[$jar],
   }
 
-  # jenkins::cli::reload should be included only after $::jenkins::cli::cmd is
+  # jenkins::cli::reload should be included only after $jenkins::cli::cmd is
   # defined
   include jenkins::cli::reload
 }
