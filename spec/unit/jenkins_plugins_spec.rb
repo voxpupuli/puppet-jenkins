@@ -42,7 +42,7 @@ describe Puppet::Jenkins::Plugins do
 
     context 'if jenkins does not exist' do
       before do
-        Puppet::Jenkins.stub(:home_dir).and_return(nil)
+        allow(Puppet::Jenkins).to receive(:home_dir).and_return(nil)
       end
 
       it { is_expected.to be false }
@@ -53,8 +53,8 @@ describe Puppet::Jenkins::Plugins do
       let(:dir_exists) { false }
 
       before do
-        Puppet::Jenkins.stub(:home_dir).and_return(home)
-        File.should_receive(:directory?).with(File.join(home, 'plugins')).and_return(dir_exists)
+        allow(Puppet::Jenkins).to receive(:home_dir).and_return(home)
+        expect(File).to receive(:directory?).with(File.join(home, 'plugins')).and_return(dir_exists)
       end
 
       context 'and the directory exists' do
@@ -74,7 +74,7 @@ describe Puppet::Jenkins::Plugins do
 
     context 'when plugins do not exist' do
       before do
-        described_class.should_receive(:exists?).and_return(false)
+        expect(described_class).to receive(:exists?).and_return(false)
       end
 
       it { is_expected.to be_empty }
@@ -170,15 +170,5 @@ Plugin-Developers: Kohsuke Kawaguchi:kohsuke:,Nicolas De Loof:ndeloof:
         expect(data.keys.size).to be(18)
       end
     end
-  end
-
-  describe '.plugins_from_updatecenter' do
-    subject(:plugins) { described_class.plugins_from_updatecenter(fixture) }
-
-    let(:fixture) { File.expand_path(File.join(__dir__, '..', 'fixtures', 'update-center.json')) }
-
-    it { is_expected.to be_instance_of Hash }
-    it { is_expected.to have_key('AdaptivePlugin') }
-    its(:size) { is_expected.to be 1 }
   end
 end

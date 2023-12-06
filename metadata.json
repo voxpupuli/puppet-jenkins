@@ -1,6 +1,6 @@
 {
   "name": "puppet-jenkins",
-  "version": "2.0.1-rc0",
+  "version": "4.0.0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
@@ -17,14 +17,38 @@
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Rocky",
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "AlmaLinux",
+      "operatingsystemrelease": [
+        "8",
+        "9"
       ]
     },
     {
@@ -45,40 +69,41 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "18.04"
+        "20.04",
+        "22.04"
       ]
     }
   ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.19.0 < 9.0.0"
+      "version_requirement": ">= 4.19.0 < 10.0.0"
     },
     {
       "name": "puppetlabs/apt",
-      "version_requirement": ">= 4.4.0 < 9.0.0"
+      "version_requirement": ">= 4.4.0 < 10.0.0"
     },
     {
       "name": "puppetlabs/java",
-      "version_requirement": ">= 1.0.1 < 8.0.0"
+      "version_requirement": ">= 1.0.1 < 11.0.0"
     },
     {
       "name": "puppet/zypprepo",
-      "version_requirement": ">= 2.0.0 < 5.0.0"
+      "version_requirement": ">= 2.0.0 < 6.0.0"
     },
     {
       "name": "puppet/archive",
-      "version_requirement": ">= 1.3.0 < 7.0.0"
+      "version_requirement": ">= 1.3.0 < 8.0.0"
     },
     {
       "name": "puppet/systemd",
-      "version_requirement": ">= 3.1.0 < 4.0.0"
+      "version_requirement": ">= 3.1.0 < 7.0.0"
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 6.1.0 < 8.0.0"
+      "version_requirement": ">= 7.0.0 < 8.0.0"
     }
   ]
 }

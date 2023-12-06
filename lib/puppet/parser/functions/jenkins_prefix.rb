@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Puppet::Parser::Functions
-  newfunction(:jenkins_prefix, type: :rvalue, doc: <<-'ENDHEREDOC') do |_args|
+  newfunction(:jenkins_prefix, type: :rvalue, doc: <<-ENDHEREDOC) do |_args|
     Return the configured Jenkins prefix value
     (corresponds to /etc/defaults/jenkins -> PREFIX)
 

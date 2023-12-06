@@ -11,7 +11,11 @@ describe 'jenkins_plugins', type: :fact do
     Facter.clear
     Facter.loadfacts
     allow(Puppet::Jenkins::Plugins).to receive(:available).and_return(plugins)
-    Facter.fact(:kernel).stub(:value).and_return(kernel)
+
+    overridden_kernel = kernel
+    Facter.add(:kernel, weight: 9999) do
+      setcode { overridden_kernel }
+    end
   end
 
   after { Facter.clear }

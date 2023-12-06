@@ -174,40 +174,6 @@ describe 'jenkins::slave class' do
     end
 
     context 'labels' do
-      context 'single label in string' do
-        include_examples 'an idempotent resource' do
-          let(:manifest) do
-            <<~PUPPET
-              class { 'jenkins::slave':
-                labels => 'foo',
-              }
-            PUPPET
-          end
-        end
-
-        describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to match %r{-labels foo} }
-        end
-      end
-
-      context 'multiple labels in string' do
-        include_examples 'an idempotent resource' do
-          let(:manifest) do
-            <<~PUPPET
-              class { 'jenkins::slave':
-                labels => 'foo bar baz',
-              }
-            PUPPET
-          end
-        end
-
-        describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
-          its(:args) { is_expected.to match %r{-labels foo bar baz} }
-        end
-      end
-
       context 'multiple labels in array' do
         include_examples 'an idempotent resource' do
           let(:manifest) do

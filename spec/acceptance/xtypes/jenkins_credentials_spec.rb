@@ -39,13 +39,15 @@ describe 'jenkins_credentials' do
             include jenkins
             include jenkins::cli::config
 
-            # Implied dependency; if not specified it's automatically
-            # downloaded but too old
-            jenkins::plugin { 'jaxb':
-            }
-
-            jenkins::plugin { 'phabricator-plugin':
-            }
+            jenkins::plugin { [
+              'command-launcher',
+              'jaxb',
+              'jdk-tool',
+              'mina-sshd-api-core',
+              'phabricator-plugin',
+              'sshd',
+              'trilead-api',
+            ]: }
 
             jenkins_credentials { '002224bd-60cb-49f3-a314-d0f73f82233d':
               ensure      => 'present',
@@ -74,13 +76,11 @@ describe 'jenkins_credentials' do
           pp = <<-EOS
             include jenkins
             include jenkins::cli::config
-            # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-            jenkins::plugin { 'trilead-api':
-              version => '1.57.v6e90e07157e1',
-            }
 
-            jenkins::plugin { 'ssh-credentials': }
+            jenkins::plugin { [
+              'ssh-credentials',
+              'trilead-api',
+            ]: }
 
             jenkins_credentials { 'a0469025-1202-4007-983d-0c62f230f1a7':
               ensure      => 'present',
@@ -183,32 +183,26 @@ describe 'jenkins_credentials' do
               'aws-java-sdk-ec2',
               'aws-java-sdk-ecr',
               'aws-java-sdk-ecs',
+              'aws-java-sdk-efs',
               'aws-java-sdk-elasticbeanstalk',
               'aws-java-sdk-iam',
               'aws-java-sdk-logs',
               'aws-java-sdk-minimal',
+              'aws-java-sdk-sns',
+              'aws-java-sdk-sqs',
               'aws-java-sdk-ssm',
               'caffeine-api',
               'credentials-binding',
               'jackson2-api',
               'jaxb',
               'plain-credentials',
+              'script-security',
               'snakeyaml-api',
               'ssh-credentials',
+              'trilead-api',
               'variant',
               'workflow-step-api',
             ]: }
-
-            # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-            jenkins::plugin { 'trilead-api':
-              version => '1.57.v6e90e07157e1',
-            }
-
-            # Version 1.75 is shipped >= 1.78 is needed by CloudBees AWS Credentials Plugin
-            jenkins::plugin { 'script-security':
-              version => '1158.v7c1b_73a_69a_08',
-            }
 
             jenkins_credentials { '34d75c64-61ff-4a28-bd40-cac3aafc7e3a':
               ensure      => 'present',
@@ -238,22 +232,23 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
-              'ace-editor',
               'apache-httpcomponents-client-4-api',
               'bootstrap5-api',
               'caffeine-api',
               'checks-api',
-              'cloudbees-folder',
+              'commons-lang3-api',
+              'commons-text-api',
               'credentials-binding',
               'display-url-api',
-              'durable-task',
               'echarts-api',
               'font-awesome-api',
               'git',
               'git-client',
-              'git-server',
               'gitlab-plugin',
+              'ionicons-api',
               'jackson2-api',
+              'jakarta-activation-api',
+              'jakarta-mail-api',
               'jaxb',
               'jersey2-api',
               'jquery3-api',
@@ -261,33 +256,23 @@ describe 'jenkins_credentials' do
               'junit',
               'mailer',
               'matrix-project',
+              'mina-sshd-api-common',
+              'mina-sshd-api-core',
               'plain-credentials',
               'plugin-util-api',
               'popper2-api',
               'scm-api',
+              'script-security',
               'snakeyaml-api',
               'ssh-credentials',
-              'variant',
+              'sshd',
+              'trilead-api',
               'workflow-api',
-              'workflow-cps',
-              'workflow-cps-global-lib',
-              'workflow-durable-task-step',
               'workflow-job',
               'workflow-scm-step',
               'workflow-step-api',
               'workflow-support',
             ]: }
-
-            # Version 1.75 is shipped >= 1158 is needed by junit
-            jenkins::plugin { 'script-security':
-              version => '1158.v7c1b_73a_69a_08',
-            }
-
-            # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-            # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-            jenkins::plugin { 'trilead-api':
-              version => '1.57.v6e90e07157e1',
-            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -320,11 +305,14 @@ describe 'jenkins_credentials' do
             'browserstack-integration',
             'caffeine-api',
             'checks-api',
+            'commons-lang3-api',
+            'commons-text-api',
             'credentials-binding',
             'display-url-api',
             'durable-task',
             'echarts-api',
             'font-awesome-api',
+            'ionicons-api',
             'jackson2-api',
             'jaxb',
             'jquery3-api',
@@ -334,8 +322,10 @@ describe 'jenkins_credentials' do
             'plugin-util-api',
             'popper2-api',
             'scm-api',
+            'script-security',
             'snakeyaml-api',
             'ssh-credentials',
+            'trilead-api',
             'workflow-api',
             'workflow-basic-steps',
             'workflow-cps',
@@ -345,17 +335,6 @@ describe 'jenkins_credentials' do
             'workflow-step-api',
             'workflow-support',
           ]: }
-
-          # Version 1.75 is shipped >= 1158 is needed by junit
-          jenkins::plugin { 'script-security':
-            version => '1158.v7c1b_73a_69a_08',
-          }
-
-          # At least on EL7 version 1.0.4 is shipped and ssh-credentials
-          # needs >= 1.0.13. 1.57 is the latests at the time of writing.
-          jenkins::plugin { 'trilead-api':
-            version => '1.57.v6e90e07157e1',
-          }
 
           jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
             ensure      => 'present',

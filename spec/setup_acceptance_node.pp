@@ -4,3 +4,10 @@ if versioncmp($facts['facterversion'], '4.0.0') < 0 and $facts['os']['family'] =
     ensure => 'installed',
   }
 }
+
+# jenkins::job::present needs diff
+if $facts['os']['family'] == 'RedHat' {
+  package { 'diffutils':
+    ensure => present,
+  }
+}

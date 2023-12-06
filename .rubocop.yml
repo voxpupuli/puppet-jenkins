@@ -1,4 +1,6 @@
 ---
+inherit_from: .rubocop_todo.yml
+
 inherit_gem:
   voxpupuli-test: rubocop.yml
 
