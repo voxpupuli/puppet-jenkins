@@ -33,7 +33,9 @@ define jenkins::job::present (
     $tmp_config_path = $config_file
   }
   else {
-    $tmp_config_path    = "/tmp/${jobname}-config.xml"
+    # in case of a cloudbees-folder element replace all '/' with underscore so only a file without subdirectory is created
+    $replaced_jobname      = regsubst($jobname, /\//, '_', 'G')
+    $tmp_config_path    = "/tmp/${replaced_jobname}-config.xml"
     #
     # When a Jenkins job is imported via the cli, Jenkins will
     # re-format the xml file based on its own internal rules.
