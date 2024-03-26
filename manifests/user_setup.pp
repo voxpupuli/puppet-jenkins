@@ -55,10 +55,7 @@ class jenkins::user_setup {
 
   # On Debian the service is started by default so it must be configured prior
   # to installation which is why it's configured in this file rather than config.pp
-  $config_hash = merge(
-    $jenkins::params::config_hash_defaults,
-    $jenkins::config_hash
-  )
+  $config_hash = $jenkins::params::config_hash_defaults + $jenkins::config_hash
 
   systemd::dropin_file { 'puppet-overrides.conf':
     unit           => 'jenkins.service',
