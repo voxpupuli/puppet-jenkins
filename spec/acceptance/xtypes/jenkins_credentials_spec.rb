@@ -308,6 +308,7 @@ describe 'jenkins_credentials' do
           include jenkins::cli::config
           jenkins::plugin { [
             'ace-editor',
+            'asm-api',
             'apache-httpcomponents-client-4-api',
             'bootstrap5-api',
             'browserstack-integration',
@@ -322,8 +323,12 @@ describe 'jenkins_credentials' do
             'font-awesome-api',
             'ionicons-api',
             'jackson2-api',
+            'jakarta-activation-api',
+            'jakarta-mail-api',
             'jaxb',
+            'joda-time-api',
             'jquery3-api',
+            'json-api',
             'junit',
             'mailer',
             'plain-credentials',
@@ -334,6 +339,7 @@ describe 'jenkins_credentials' do
             'snakeyaml-api',
             'ssh-credentials',
             'trilead-api',
+            'variant',
             'workflow-api',
             'workflow-basic-steps',
             'workflow-cps',
