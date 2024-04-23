@@ -40,11 +40,16 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
 
             jenkins::plugin { [
+              'apache-httpcomponents-client-4-api',
+              'caffeine-api',
               'command-launcher',
+              'gson-api',
               'jaxb',
               'jdk-tool',
+              'mina-sshd-api-common',
               'mina-sshd-api-core',
               'phabricator-plugin',
+              'script-security',
               'sshd',
               'trilead-api',
             ]: }
@@ -78,6 +83,7 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
 
             jenkins::plugin { [
+              'gson-api',
               'ssh-credentials',
               'variant',
               'trilead-api',
@@ -194,6 +200,7 @@ describe 'jenkins_credentials' do
               'aws-java-sdk-ssm',
               'caffeine-api',
               'credentials-binding',
+              'gson-api',
               'jackson2-api',
               'jaxb',
               'joda-time-api',
@@ -321,6 +328,7 @@ describe 'jenkins_credentials' do
             'durable-task',
             'echarts-api',
             'font-awesome-api',
+            'gson-api',
             'ionicons-api',
             'jackson2-api',
             'jakarta-activation-api',
