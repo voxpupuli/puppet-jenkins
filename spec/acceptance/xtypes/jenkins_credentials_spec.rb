@@ -8,7 +8,9 @@ describe 'jenkins_credentials' do
       context 'UsernamePasswordCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins_credentials { '9b07d668-a87e-4877-9407-ae05056e32ac':
               ensure      => 'present',
@@ -36,15 +38,22 @@ describe 'jenkins_credentials' do
       context 'ConduitCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
 
             jenkins::plugin { [
+              'apache-httpcomponents-client-4-api',
+              'caffeine-api',
               'command-launcher',
+              'gson-api',
               'jaxb',
               'jdk-tool',
+              'mina-sshd-api-common',
               'mina-sshd-api-core',
               'phabricator-plugin',
+              'script-security',
               'sshd',
               'trilead-api',
             ]: }
@@ -74,10 +83,13 @@ describe 'jenkins_credentials' do
       context 'BasicSSHUserPrivateKey' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
 
             jenkins::plugin { [
+              'gson-api',
               'ssh-credentials',
               'variant',
               'trilead-api',
@@ -110,10 +122,11 @@ describe 'jenkins_credentials' do
       context 'StringCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
@@ -141,10 +154,11 @@ describe 'jenkins_credentials' do
       context 'FileCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
@@ -173,7 +187,9 @@ describe 'jenkins_credentials' do
       context 'AWSCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins::plugin { [
               'apache-httpcomponents-client-4-api',
@@ -194,6 +210,7 @@ describe 'jenkins_credentials' do
               'aws-java-sdk-ssm',
               'caffeine-api',
               'credentials-binding',
+              'gson-api',
               'jackson2-api',
               'jaxb',
               'joda-time-api',
@@ -231,10 +248,13 @@ describe 'jenkins_credentials' do
       context 'GitLabApiTokenImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
+              'asm-api',
               'apache-httpcomponents-client-4-api',
               'bootstrap5-api',
               'caffeine-api',
@@ -248,14 +268,17 @@ describe 'jenkins_credentials' do
               'git',
               'git-client',
               'gitlab-plugin',
+              'gson-api',
               'ionicons-api',
               'jackson2-api',
               'jakarta-activation-api',
               'jakarta-mail-api',
               'jaxb',
               'jersey2-api',
+              'joda-time-api',
               'jquery3-api',
               'jsch',
+              'json-api',
               'junit',
               'mailer',
               'matrix-project',
@@ -270,6 +293,7 @@ describe 'jenkins_credentials' do
               'ssh-credentials',
               'sshd',
               'trilead-api',
+              'variant',
               'workflow-api',
               'workflow-job',
               'workflow-scm-step',
@@ -299,10 +323,13 @@ describe 'jenkins_credentials' do
 
       context 'BrowserStackCredentials' do
         pp = <<-EOS
-          include jenkins
+          class {'jenkins':
+            purge_plugins => true,
+          }
           include jenkins::cli::config
           jenkins::plugin { [
             'ace-editor',
+            'asm-api',
             'apache-httpcomponents-client-4-api',
             'bootstrap5-api',
             'browserstack-integration',
@@ -315,10 +342,15 @@ describe 'jenkins_credentials' do
             'durable-task',
             'echarts-api',
             'font-awesome-api',
+            'gson-api',
             'ionicons-api',
             'jackson2-api',
+            'jakarta-activation-api',
+            'jakarta-mail-api',
             'jaxb',
+            'joda-time-api',
             'jquery3-api',
+            'json-api',
             'junit',
             'mailer',
             'plain-credentials',
@@ -329,6 +361,7 @@ describe 'jenkins_credentials' do
             'snakeyaml-api',
             'ssh-credentials',
             'trilead-api',
+            'variant',
             'workflow-api',
             'workflow-basic-steps',
             'workflow-cps',
@@ -370,7 +403,9 @@ describe 'jenkins_credentials' do
       context 'StringCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials': }
 
@@ -399,10 +434,11 @@ describe 'jenkins_credentials' do
       context 'FileCredentialsImpl' do
         it 'works with no errors and idempotently' do
           pp = <<-EOS
-            include jenkins
+            class {'jenkins':
+              purge_plugins => true,
+            }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
