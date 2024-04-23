@@ -79,6 +79,7 @@ describe 'jenkins_credentials' do
 
             jenkins::plugin { [
               'ssh-credentials',
+              'variant',
               'trilead-api',
             ]: }
 
@@ -195,6 +196,8 @@ describe 'jenkins_credentials' do
               'credentials-binding',
               'jackson2-api',
               'jaxb',
+              'joda-time-api',
+              'json-api',
               'plain-credentials',
               'script-security',
               'snakeyaml-api',
