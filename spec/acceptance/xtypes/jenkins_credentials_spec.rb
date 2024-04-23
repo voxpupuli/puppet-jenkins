@@ -127,7 +127,6 @@ describe 'jenkins_credentials' do
             }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '150b2895-b0eb-4813-b8a5-3779690c063c':
@@ -160,7 +159,6 @@ describe 'jenkins_credentials' do
             }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
@@ -441,7 +439,6 @@ describe 'jenkins_credentials' do
             }
             include jenkins::cli::config
             jenkins::plugin { 'plain-credentials':
-              pin => true,
             }
 
             jenkins_credentials { '95bfe159-8bf0-4605-be20-47e201220e7c':
