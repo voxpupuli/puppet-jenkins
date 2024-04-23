@@ -235,6 +235,7 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
+              'asm-api',
               'apache-httpcomponents-client-4-api',
               'bootstrap5-api',
               'caffeine-api',
@@ -248,14 +249,17 @@ describe 'jenkins_credentials' do
               'git',
               'git-client',
               'gitlab-plugin',
+              'gson-api',
               'ionicons-api',
               'jackson2-api',
               'jakarta-activation-api',
               'jakarta-mail-api',
               'jaxb',
               'jersey2-api',
+              'joda-time-api',
               'jquery3-api',
               'jsch',
+              'json-api',
               'junit',
               'mailer',
               'matrix-project',
@@ -270,6 +274,7 @@ describe 'jenkins_credentials' do
               'ssh-credentials',
               'sshd',
               'trilead-api',
+              'variant',
               'workflow-api',
               'workflow-job',
               'workflow-scm-step',
