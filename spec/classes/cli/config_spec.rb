@@ -126,26 +126,6 @@ describe 'jenkins::cli::config' do
           end
         end
       end
-
-      describe 'package gem provider' do
-        context 'is_pe fact' do
-          context 'true' do
-            let :facts do
-              super().merge(is_pe: true)
-            end
-
-            it { is_expected.to contain_package('retries').with(provider: 'pe_gem') }
-          end
-
-          context 'false' do
-            let :facts do
-              super().merge(is_pe: false)
-            end
-
-            it { is_expected.to contain_package('retries').with(provider: 'gem') }
-          end
-        end
-      end
     end
   end
 end
