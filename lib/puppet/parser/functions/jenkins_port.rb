@@ -10,7 +10,7 @@ module Puppet::Parser::Functions
         $port = jenkins_port()
   ENDHEREDOC
 
-    config_hash = lookupvar('::jenkins::config_hash')
+    config_hash = lookupvar('jenkins::config_hash')
     config_hash&.dig('JENKINS_PORT', 'value') || 8080
   end
 end

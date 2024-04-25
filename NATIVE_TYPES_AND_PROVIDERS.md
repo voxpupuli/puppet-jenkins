@@ -114,11 +114,11 @@ master service to be running.  Most require the presence of
 sufficiently for all providers to function.
 
 ```
-class { '::jenkins':
+class { 'jenkins':
   install_java => true,
   cli          => true,
 }
-include ::jenkins::cli_helper
+include jenkins::cli_helper
 ```
 
 ### `puppetserver`
