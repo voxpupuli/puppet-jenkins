@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v5.0.0) (2024-05-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v4.0.0...v5.0.0)
+
+**Breaking changes:**
+
+- CentOS: Drop EoL 7/8 support [\#1106](https://github.com/voxpupuli/puppet-jenkins/pull/1106) ([bastelfreak](https://github.com/bastelfreak))
+- Use native Puppet instead of the retries Gem in the CLI provider, replacing try\_sleep parameter by exponential backoff [\#904](https://github.com/voxpupuli/puppet-jenkins/pull/904) ([ekohl](https://github.com/ekohl))
+
+**Implemented enhancements:**
+
+- update puppet-systemd upper bound to 8.0.0 [\#1102](https://github.com/voxpupuli/puppet-jenkins/pull/1102) ([TheMeier](https://github.com/TheMeier))
+- Add support for Puppet 8 [\#1095](https://github.com/voxpupuli/puppet-jenkins/pull/1095) ([evgeni](https://github.com/evgeni))
+- Add support for puppetlabs/java 11.x [\#1094](https://github.com/voxpupuli/puppet-jenkins/pull/1094) ([evgeni](https://github.com/evgeni))
+- replace deprecated `merge` function with native puppet [\#1092](https://github.com/voxpupuli/puppet-jenkins/pull/1092) ([zilchms](https://github.com/zilchms))
+- Remove legacy top-scope syntax [\#1084](https://github.com/voxpupuli/puppet-jenkins/pull/1084) ([smortex](https://github.com/smortex))
+- Add download option to jenkins module [\#1073](https://github.com/voxpupuli/puppet-jenkins/pull/1073) ([ekohl](https://github.com/ekohl))
+
 ## [v4.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v4.0.0) (2023-09-29)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.3.0...v4.0.0)
