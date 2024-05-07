@@ -295,11 +295,13 @@ describe 'jenkins_credentials' do
               'trilead-api',
               'variant',
               'workflow-api',
-              'workflow-job',
               'workflow-scm-step',
               'workflow-step-api',
               'workflow-support',
             ]: }
+            jenkins::plugin { 'workflow-job':
+              version => '1400.v7fd111b_ec82f'
+            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -366,11 +368,13 @@ describe 'jenkins_credentials' do
             'workflow-basic-steps',
             'workflow-cps',
             'workflow-durable-task-step',
-            'workflow-job',
             'workflow-scm-step',
             'workflow-step-api',
             'workflow-support',
           ]: }
+          jenkins::plugin { 'workflow-job':
+            version => '1400.v7fd111b_ec82f'
+          }
 
           jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
             ensure      => 'present',
