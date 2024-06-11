@@ -5,7 +5,7 @@ class jenkins::firewall {
   assert_private()
 
   firewall { '500 allow Jenkins inbound traffic':
-    action => 'accept',
+    jump   => 'accept',
     state  => 'NEW',
     dport  => [jenkins_port()],
     proto  => 'tcp',
