@@ -17,7 +17,7 @@ the module.**
     * [`jenkins_job`](#jenkins_job)
     * [`jenkins_num_executors`](#jenkins_num_executors)
     * [`jenkins_security_realm`](#jenkins_security_realm)
-    * [`jenkins_slaveagent_port`](#jenkins_slaveagent_port)
+    * [`jenkins_agent_port`](#jenkins_agent_port)
     * [`jenkins_user`](#jenkins_user)
 3. [TODO](#todo)
 
@@ -109,7 +109,7 @@ puppet resource --modulepath=/tmp/vagrant-puppet/modules-998ea1817cb4dea9c136a57
 ```
 
 All providers presently require `java`, the jenkins CLI jar, and the jenkins
-master service to be running.  Most require the presence of
+controller service to be running.  Most require the presence of
 `puppet_helper.groovy`.  The following puppet code snippet will prepare a node
 sufficiently for all providers to function.
 
@@ -492,10 +492,10 @@ jenkins_security_realm { 'hudson.security.PAMSecurityRealm':
 }
 ```
 
-### `jenkins_slaveagent_port`
+### `jenkins_agent_port`
 
 ```
-jenkins_slaveagent_port { 44444: # name is coerced to Integer
+jenkins_agent_port { 44444: # name is coerced to Integer
   ensure => 'present', # present is the only allowed value
 }
 ```

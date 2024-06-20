@@ -9,64 +9,64 @@ fail() {
 
 # mandatory input vars
 [[ -x "$JAVA" ]] || (fail "$JAVA is not executable")
-[[ -f "$JENKINS_SLAVE_JAR" ]] || (fail "$JENKINS_SLAVE_JAR not accessible")
+[[ -f "$JENKINS_AGENT_JAR" ]] || (fail "$JENKINS_AGENT_JAR not accessible")
 
-SLAVE_ARGS=()
+AGENT_ARGS=()
 
 [[ -n "$JAVA_ARGS" ]] &&
-  SLAVE_ARGS+=("$JAVA_ARGS")
+  AGENT_ARGS+=("$JAVA_ARGS")
 
-SLAVE_ARGS+=(-jar "$JENKINS_SLAVE_JAR")
+AGENT_ARGS+=(-jar "$JENKINS_AGENT_JAR")
 
-[[ -n "$JENKINS_SLAVE_MODE" ]] &&
-  SLAVE_ARGS+=(-mode "$JENKINS_SLAVE_MODE")
+[[ -n "$JENKINS_AGENT_MODE" ]] &&
+  AGENT_ARGS+=(-mode "$JENKINS_AGENT_MODE")
 
 [[ -n "$EXECUTORS" ]] &&
-  SLAVE_ARGS+=(-executors "$EXECUTORS")
+  AGENT_ARGS+=(-executors "$EXECUTORS")
 
 [[ -n "$JENKINS_USERNAME" ]] &&
-  SLAVE_ARGS+=(-username "$JENKINS_USERNAME")
+  AGENT_ARGS+=(-username "$JENKINS_USERNAME")
 
 [[ -n "$JENKINS_PASSWORD" ]] &&
-  SLAVE_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
+  AGENT_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
 
 [[ -n "$CLIENT_NAME" ]] &&
-  SLAVE_ARGS+=(-name "$CLIENT_NAME")
+  AGENT_ARGS+=(-name "$CLIENT_NAME")
 
-[[ -n "$MASTER_URL" ]] &&
-  SLAVE_ARGS+=(-master "$MASTER_URL")
+[[ -n "$controller_URL" ]] &&
+  AGENT_ARGS+=(-controller "$controller_URL")
 
 [[ -n "$LABELS" ]] &&
-  SLAVE_ARGS+=(-labels "$LABELS")
+  AGENT_ARGS+=(-labels "$LABELS")
 
 [[ -n "$FSROOT" ]] &&
-  SLAVE_ARGS+=(-fsroot "$FSROOT")
+  AGENT_ARGS+=(-fsroot "$FSROOT")
 
 [[ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]] &&
-  SLAVE_ARGS+=(-disableClientsUniqueId)
+  AGENT_ARGS+=(-disableClientsUniqueId)
 
 [[ "$DISABLE_SSL_VERIFICATION" == true ]] &&
-  SLAVE_ARGS+=(-disableSslVerification)
+  AGENT_ARGS+=(-disableSslVerification)
 
 [[ "$DELETE_EXISTING_CLIENTS" == true ]] &&
-  SLAVE_ARGS+=(-deleteExistingClients)
+  AGENT_ARGS+=(-deleteExistingClients)
 
 [[ -n "$DESCRIPTION" ]] &&
- SLAVE_ARGS+=(-description "$DESCRIPTION")
+ AGENT_ARGS+=(-description "$DESCRIPTION")
 
 [[ -n "$TUNNEL" ]] &&
- SLAVE_ARGS+=(-tunnel "$TUNNEL")
+ AGENT_ARGS+=(-tunnel "$TUNNEL")
 
 [[ -n "$AUTO_DISCOVERY_ADDRESS" ]] &&
-  SLAVE_ARGS+=(-autoDiscoveryAddress "$AUTO_DISCOVERY_ADDRESS")
+  AGENT_ARGS+=(-autoDiscoveryAddress "$AUTO_DISCOVERY_ADDRESS")
 
 if [ -n "$TOOL_LOCATIONS" ]; then
   for t in $TOOL_LOCATIONS; do
-    SLAVE_ARGS+=(--toolLocation "$t")
+    AGENT_ARGS+=(--toolLocation "$t")
   done
 fi
 
 [[ -n "$OTHER_ARGS" ]] &&
-  SLAVE_ARGS+=($OTHER_ARGS)
+  AGENT_ARGS+=($OTHER_ARGS)
 
-$JAVA "${SLAVE_ARGS[@]}"
+$JAVA "${AGENT_ARGS[@]}"

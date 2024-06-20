@@ -111,24 +111,24 @@ describe 'jenkins' do
         end
       end
 
-      describe 'slaveagentport =>' do
+      describe 'agentport =>' do
         context 'undef' do
-          it { is_expected.not_to contain_jenkins__cli__exec('set_slaveagent_port') }
+          it { is_expected.not_to contain_jenkins__cli__exec('set_agent_port') }
         end
 
         context '7777' do
           let(:port) { 7777 }
-          let(:params) { { slaveagentport: port } }
+          let(:params) { { agentport: port } }
 
           it do
-            is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').with(
-              command: ['set_slaveagent_port', port],
-              unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]"
+            is_expected.to contain_jenkins__cli__exec('set_agent_port').with(
+              command: ['set_agent_port', port],
+              unless: "[ $($HELPER_CMD get_agent_port) -eq #{port} ]"
             )
           end
 
-          it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_requires('Class[jenkins::cli]') }
-          it { is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').that_comes_before('Class[jenkins::jobs]') }
+          it { is_expected.to contain_jenkins__cli__exec('set_agent_port').that_requires('Class[jenkins::cli]') }
+          it { is_expected.to contain_jenkins__cli__exec('set_agent_port').that_comes_before('Class[jenkins::jobs]') }
         end
       end
 

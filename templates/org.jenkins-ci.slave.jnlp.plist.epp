@@ -2,76 +2,76 @@
 <!DOCTYPE plist PUBLIC "-/Apple/DTD PLIST 1.0/EN" "http:/www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <% if $jenkins::slave::quoted_ui_pass { -%>
+  <% if $jenkins::agent::quoted_ui_pass { -%>
   <key>EnvironmentVariables</key>
   <dict>
     <key>JENKINS_PASSWORD</key>
-    <string><%= $jenkins::slave::quoted_ui_pass -%></string>
+    <string><%= $jenkins::agent::quoted_ui_pass -%></string>
   </dict>
   <% } -%>
   <key>Label</key>
-  <string>org.jenkins-ci.slave.jnlp</string>
+  <string>org.jenkins-ci.agent.jnlp</string>
   <key>ProgramArguments</key>
   <array>
     <string>/usr/bin/java</string>
-    <% unless empty($jenkins::slave::java_args) { -%>
-    <string><%= join($jenkins::slave::java_args, ' ') -%></string>
+    <% unless empty($jenkins::agent::java_args) { -%>
+    <string><%= join($jenkins::agent::java_args, ' ') -%></string>
     <% } -%>
     <string>-jar</string>
-    <string><%= $jenkins::slave::slave_home -%>/<%= $jenkins::slave::client_jar -%></string>
-    <% if $jenkins::slave::slave_mode { -%>
+    <string><%= $jenkins::agent::agent_home -%>/<%= $jenkins::agent::client_jar -%></string>
+    <% if $jenkins::agent::agent_mode { -%>
     <string>-mode</string>
-    <string><%= $jenkins::slave::slave_mode -%></string>
+    <string><%= $jenkins::agent::agent_mode -%></string>
     <% } -%>
-    <% if $jenkins::slave::executors { -%>
+    <% if $jenkins::agent::executors { -%>
     <string>-executors</string>
-    <string><%= $jenkins::slave::executors -%></string>
+    <string><%= $jenkins::agent::executors -%></string>
     <% } -%>
-    <% if $jenkins::slave::quoted_ui_user { -%>
+    <% if $jenkins::agent::quoted_ui_user { -%>
     <string>-username</string>
-    <string><%= $jenkins::slave::quoted_ui_user -%></string>
+    <string><%= $jenkins::agent::quoted_ui_user -%></string>
     <% } -%>
-    <% if $jenkins::slave::quoted_ui_pass { -%>
+    <% if $jenkins::agent::quoted_ui_pass { -%>
     <string>-passwordEnvVariable</string>
     <string>JENKINS_PASSWORD</string>
     <% } -%>
-    <% if $jenkins::slave::slave_name { -%>
+    <% if $jenkins::agent::agent_name { -%>
     <string>-name</string>
-    <string><%= $jenkins::slave::slave_name -%></string>
+    <string><%= $jenkins::agent::agent_name -%></string>
     <% } -%>
-    <% if $jenkins::slave::masterurl { -%>
-    <string>-master</string>
-    <string><%= $jenkins::slave::masterurl -%></string>
+    <% if $jenkins::agent::controllerurl { -%>
+    <string>-controller</string>
+    <string><%= $jenkins::agent::controllerurl -%></string>
     <% } -%>
-    <% if $jenkins::slave::slave_home { -%>
+    <% if $jenkins::agent::agent_home { -%>
     <string>-fsroot</string>
-    <string><%= $jenkins::slave::slave_home -%></string>
+    <string><%= $jenkins::agent::agent_home -%></string>
     <% } -%>
-    <% if $jenkins::slave::disable_clients_unique_id { -%>
+    <% if $jenkins::agent::disable_clients_unique_id { -%>
     <string>-disableClientsUniqueId</string>
     <% } -%>
-    <% if $jenkins::slave::disable_ssl_verification { -%>
+    <% if $jenkins::agent::disable_ssl_verification { -%>
     <string>-disableSslVerification</string>
     <% } -%>
-    <% if $jenkins::slave::delete_existing_clients { -%>
+    <% if $jenkins::agent::delete_existing_clients { -%>
     <string>-deleteExistingClients</string>
     <% } -%>
-    <% if $jenkins::slave::description { -%>
+    <% if $jenkins::agent::description { -%>
     <string>-description</string>
-    <string><%= $jenkins::slave::description -%></string>
+    <string><%= $jenkins::agent::description -%></string>
     <% } -%>
-    <% if $jenkins::slave::autodiscoveryaddress { -%>
+    <% if $jenkins::agent::autodiscoveryaddress { -%>
     <string>-autoDiscoveryAddress</string>
-    <string><%= $jenkins::slave::autodiscoveryaddress -%></string>
+    <string><%= $jenkins::agent::autodiscoveryaddress -%></string>
     <% } -%>
-    <% if $jenkins::slave::_real_tool_locations { -%>
-    <% $jenkins::slave::_real_tool_locations.each |$location| { -%>
+    <% if $jenkins::agent::_real_tool_locations { -%>
+    <% $jenkins::agent::_real_tool_locations.each |$location| { -%>
     <string>-toolLocation</string>
     <string><%= $location -%></string>
     <% } -%>
     <% } -%>
-    <% unless empty($jenkins::slave::swarm_client_args) { -%>
-    <string><%= join($jenkins::slave::swarm_client_args, ' ') -%></string>
+    <% unless empty($jenkins::agent::swarm_client_args) { -%>
+    <string><%= join($jenkins::agent::swarm_client_args, ' ') -%></string>
     <% } -%>
   </array>
   <key>KeepAlive</key>
@@ -79,16 +79,16 @@
   <key>RunAtLoad</key>
   <true/>
   <key>UserName</key>
-  <string><%= $jenkins::slave::slave_user %></string>
+  <string><%= $jenkins::agent::agent_user %></string>
   <key>WorkingDirectory</key>
-  <string><%= $jenkins::slave::slave_home %></string>
+  <string><%= $jenkins::agent::agent_home %></string>
   <key>SessionCreate</key>
   <true/>
   <key>StandardInPath</key>
   <string>/dev/null</string>
   <key>StandardErrorPath</key>
-  <string>/var/log/jenkins/org.jenkins-ci.slave.jnlp.log</string>
+  <string>/var/log/jenkins/org.jenkins-ci.agent.jnlp.log</string>
   <key>StandardOutPath</key>
-  <string>/var/log/jenkins/org.jenkins-ci.slave.jnlp.log</string>
+  <string>/var/log/jenkins/org.jenkins-ci.agent.jnlp.log</string>
 </dict>
 </plist>
