@@ -92,12 +92,11 @@
 #   agent only nodes.
 #
 # [*swarm_client_args*]
-#   Swarm client arguments to add to agent command line. More info: https://github.com/jenkinsci/swarm-plugin/blob/controller/client/src/main/java/hudson/plugins/swarm/Options.java
+#   Swarm client arguments to add to agent command line. More info: https://github.com/jenkinsci/swarm-plugin/blob/master/client/src/main/java/hudson/plugins/swarm/Options.java
 #
 # [*java_cmd*]
 #   Path to the java command in ${defaults_location}/jenkins-agent. Defaults to '/usr/bin/java'
 #
-
 # === Examples
 #
 #  class { 'jenkins::agent':
