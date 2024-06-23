@@ -115,7 +115,7 @@
 class jenkins::agent (
   Optional[String] $agent_name            = undef,
   Optional[String] $description           = undef,
-  Optional[String] $controllerurl             = undef,
+  Optional[String] $controllerurl         = undef,
   Optional[String] $autodiscoveryaddress  = undef,
   Optional[String] $ui_user               = undef,
   Optional[String] $ui_pass               = undef,
