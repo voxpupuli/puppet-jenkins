@@ -33,8 +33,8 @@ AGENT_ARGS+=(-jar "$JENKINS_AGENT_JAR")
 [[ -n "$CLIENT_NAME" ]] &&
   AGENT_ARGS+=(-name "$CLIENT_NAME")
 
-[[ -n "$controller_URL" ]] &&
-  AGENT_ARGS+=(-controller "$controller_URL")
+[[ -n "$CONTROLLER_URL" ]] &&
+  AGENT_ARGS+=(-controller "$CONTROLLER_URL")
 
 [[ -n "$LABELS" ]] &&
   AGENT_ARGS+=(-labels "$LABELS")
