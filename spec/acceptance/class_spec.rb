@@ -95,7 +95,7 @@ describe 'jenkins class' do
     end
 
     describe file('/var/lib/jenkins/config.xml') do
-      it { is_expected.to contain '  <agentPort>7777</agentPort>' }
+      it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
     end
   end
 end
