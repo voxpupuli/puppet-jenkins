@@ -114,14 +114,12 @@ master service to be running.  Most require the presence of
 sufficiently for all providers to function.
 
 ```
-class { '::jenkins':
+class { 'jenkins':
   install_java => true,
   cli          => true,
 }
-include ::jenkins::cli_helper
+include jenkins::cli_helper
 ```
-
-The ruby gem `retries` is presently required by all providers.
 
 ### `puppetserver`
 
@@ -140,13 +138,6 @@ jruby-puppet: {
 ```
 
 See [SERVER-973](https://tickets.puppetlabs.com/browse/SERVER-973)
-
-Additionally, the `retries` gem is required.  This may be installed on the master by running:
-
-```
-/opt/puppetlabs/bin/puppetserver gem install retries
-```
-
 
 Types
 --

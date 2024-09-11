@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v5.0.0) (2024-05-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v4.0.0...v5.0.0)
+
+**Breaking changes:**
+
+- CentOS: Drop EoL 7/8 support [\#1106](https://github.com/voxpupuli/puppet-jenkins/pull/1106) ([bastelfreak](https://github.com/bastelfreak))
+- Use native Puppet instead of the retries Gem in the CLI provider, replacing try\_sleep parameter by exponential backoff [\#904](https://github.com/voxpupuli/puppet-jenkins/pull/904) ([ekohl](https://github.com/ekohl))
+
+**Implemented enhancements:**
+
+- update puppet-systemd upper bound to 8.0.0 [\#1102](https://github.com/voxpupuli/puppet-jenkins/pull/1102) ([TheMeier](https://github.com/TheMeier))
+- Add support for Puppet 8 [\#1095](https://github.com/voxpupuli/puppet-jenkins/pull/1095) ([evgeni](https://github.com/evgeni))
+- Add support for puppetlabs/java 11.x [\#1094](https://github.com/voxpupuli/puppet-jenkins/pull/1094) ([evgeni](https://github.com/evgeni))
+- replace deprecated `merge` function with native puppet [\#1092](https://github.com/voxpupuli/puppet-jenkins/pull/1092) ([zilchms](https://github.com/zilchms))
+- Remove legacy top-scope syntax [\#1084](https://github.com/voxpupuli/puppet-jenkins/pull/1084) ([smortex](https://github.com/smortex))
+- Add download option to jenkins module [\#1073](https://github.com/voxpupuli/puppet-jenkins/pull/1073) ([ekohl](https://github.com/ekohl))
+
 ## [v4.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v4.0.0) (2023-09-29)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v3.3.0...v4.0.0)
@@ -224,7 +242,7 @@ These should not affect the functionality of the module.
 - systemd jenkins master support on RedHat [\#694](https://github.com/voxpupuli/puppet-jenkins/pull/694) ([jhoblitt](https://github.com/jhoblitt))
 - fix slave systemd support [\#692](https://github.com/voxpupuli/puppet-jenkins/pull/692) ([jhoblitt](https://github.com/jhoblitt))
 - add swarm client systemd support [\#691](https://github.com/voxpupuli/puppet-jenkins/pull/691) ([jhoblitt](https://github.com/jhoblitt))
-- add ::jenkins::sysconfdir parameter [\#689](https://github.com/voxpupuli/puppet-jenkins/pull/689) ([jhoblitt](https://github.com/jhoblitt))
+- add jenkins::sysconfdir parameter [\#689](https://github.com/voxpupuli/puppet-jenkins/pull/689) ([jhoblitt](https://github.com/jhoblitt))
 - disable plugin pinning by default [\#688](https://github.com/voxpupuli/puppet-jenkins/pull/688) ([jhoblitt](https://github.com/jhoblitt))
 - add firewall module dependency info [\#676](https://github.com/voxpupuli/puppet-jenkins/pull/676) ([vinhut](https://github.com/vinhut))
 - Add support for gitlab api token credential - \#664 [\#667](https://github.com/voxpupuli/puppet-jenkins/pull/667) ([ripclawffb](https://github.com/ripclawffb))
@@ -245,7 +263,7 @@ These should not affect the functionality of the module.
 - Won't install alongside puppetlabs-mysql [\#623](https://github.com/voxpupuli/puppet-jenkins/issues/623)
 - uninitialized constant json when using Jenkins\_credentials provider [\#617](https://github.com/voxpupuli/puppet-jenkins/issues/617)
 - `jenkins_user` experimental password setting is broken [\#499](https://github.com/voxpupuli/puppet-jenkins/issues/499)
-- Ensure $::jenkins::localstatedir to Directory Breaks Filesystem's With Symlinked Mounts [\#403](https://github.com/voxpupuli/puppet-jenkins/issues/403)
+- Ensure $jenkins::localstatedir to Directory Breaks Filesystem's With Symlinked Mounts [\#403](https://github.com/voxpupuli/puppet-jenkins/issues/403)
 - repo::debian.pp does not work with apt module \>= 2.0.0 [\#402](https://github.com/voxpupuli/puppet-jenkins/issues/402)
 - Jenkins Plugin manifest are now readable since it has got some invalid byte sequence in US-ASCII [\#265](https://github.com/voxpupuli/puppet-jenkins/issues/265)
 - Default INFO logging makes jenkins cli output messages that are then … [\#907](https://github.com/voxpupuli/puppet-jenkins/pull/907) ([jhooyberghs](https://github.com/jhooyberghs))
@@ -302,7 +320,7 @@ These should not affect the functionality of the module.
 - setting security is not idempotent [\#673](https://github.com/voxpupuli/puppet-jenkins/issues/673)
 - 'digest\_type' default of 'sha1' is causing all plugins to install repeatedly [\#668](https://github.com/voxpupuli/puppet-jenkins/issues/668)
 - puppet\_helper.groovy throws an error with unsupported credentials [\#664](https://github.com/voxpupuli/puppet-jenkins/issues/664)
-- $::jenkins::libdir is undef in jenkins::cli class [\#654](https://github.com/voxpupuli/puppet-jenkins/issues/654)
+- $jenkins::libdir is undef in jenkins::cli class [\#654](https://github.com/voxpupuli/puppet-jenkins/issues/654)
 - Unsuccessful Installation [\#647](https://github.com/voxpupuli/puppet-jenkins/issues/647)
 - jenkins::plugins doesn't work properly with puppet 4.6.2 [\#637](https://github.com/voxpupuli/puppet-jenkins/issues/637)
 - Allow virtual jenkins host [\#630](https://github.com/voxpupuli/puppet-jenkins/issues/630)
@@ -440,7 +458,7 @@ These should not affect the functionality of the module.
 - jenkins-slave don't stop correctly [\#557](https://github.com/voxpupuli/puppet-jenkins/issues/557)
 - jenkins\_job broken by org.jenkinsci.plugins.workflow.job.WorkflowJob jobs [\#551](https://github.com/voxpupuli/puppet-jenkins/issues/551)
 - Parameter jenkins::slave::ui\_pass not enclosed in quotes. [\#542](https://github.com/voxpupuli/puppet-jenkins/issues/542)
-- ::jenkins::slave should not depend on ::jenkins [\#533](https://github.com/voxpupuli/puppet-jenkins/issues/533)
+- jenkins::slave should not depend on jenkins [\#533](https://github.com/voxpupuli/puppet-jenkins/issues/533)
 - slow unit test causing travis failures [\#517](https://github.com/voxpupuli/puppet-jenkins/issues/517)
 - jenkins:plugin can incorrectly believe a plugin is installed \(when it isn't\) [\#513](https://github.com/voxpupuli/puppet-jenkins/issues/513)
 - jenkins::plugin ignores version changes [\#512](https://github.com/voxpupuli/puppet-jenkins/issues/512)
@@ -497,7 +515,7 @@ These should not affect the functionality of the module.
 - Plugins specified by version number are not updated [\#445](https://github.com/voxpupuli/puppet-jenkins/issues/445)
 - Passing an array to jenkins::plugin [\#429](https://github.com/voxpupuli/puppet-jenkins/issues/429)
 - Unable to persist firewall rules: Execution of '/usr/libexec/iptables/iptables.init save' returned 1: [\#424](https://github.com/voxpupuli/puppet-jenkins/issues/424)
-- $::jenkins::port does not properly manage listening port [\#416](https://github.com/voxpupuli/puppet-jenkins/issues/416)
+- $jenkins::port does not properly manage listening port [\#416](https://github.com/voxpupuli/puppet-jenkins/issues/416)
 - Using Plugin Hash Exec Test for plugin Fails [\#410](https://github.com/voxpupuli/puppet-jenkins/issues/410)
 - jenkins::job::present issue [\#409](https://github.com/voxpupuli/puppet-jenkins/issues/409)
 - Using Direct URL for plug-ins restarts jenkins with every puppet run [\#408](https://github.com/voxpupuli/puppet-jenkins/issues/408)
@@ -518,7 +536,7 @@ These should not affect the functionality of the module.
 - replace centos-7-docker fakesystemd with classic flavor [\#550](https://github.com/voxpupuli/puppet-jenkins/pull/550) ([jhoblitt](https://github.com/jhoblitt))
 - travis puppet versions [\#549](https://github.com/voxpupuli/puppet-jenkins/pull/549) ([jhoblitt](https://github.com/jhoblitt))
 - fix beaker acceptance tests on Ubuntu [\#548](https://github.com/voxpupuli/puppet-jenkins/pull/548) ([jhoblitt](https://github.com/jhoblitt))
-- simplify ::jenkins::slave ordering logic [\#547](https://github.com/voxpupuli/puppet-jenkins/pull/547) ([jhoblitt](https://github.com/jhoblitt))
+- simplify jenkins::slave ordering logic [\#547](https://github.com/voxpupuli/puppet-jenkins/pull/547) ([jhoblitt](https://github.com/jhoblitt))
 - skip pending beaker tests [\#546](https://github.com/voxpupuli/puppet-jenkins/pull/546) ([jhoblitt](https://github.com/jhoblitt))
 - minor puppet\_helper.groovy cleanup [\#543](https://github.com/voxpupuli/puppet-jenkins/pull/543) ([jhoblitt](https://github.com/jhoblitt))
 - Improve spec speed [\#537](https://github.com/voxpupuli/puppet-jenkins/pull/537) ([petems](https://github.com/petems))
@@ -638,7 +656,7 @@ These should not affect the functionality of the module.
 * [#275](https://github.com/jenkinsci/puppet-jenkins/pull/275) - add .bundle to .gitignore
 * [#276](https://github.com/jenkinsci/puppet-jenkins/pull/276) - add log/ to .gitignore
 * [#277](https://github.com/jenkinsci/puppet-jenkins/pull/277) - add puppet 3.7.0 to travis matrix
-* [#278](https://github.com/jenkinsci/puppet-jenkins/pull/278) - remove unnecessary whitespace from $::jenkins::cli_helper::helper_cmd
+* [#278](https://github.com/jenkinsci/puppet-jenkins/pull/278) - remove unnecessary whitespace from $jenkins::cli_helper::helper_cmd
 * [#279](https://github.com/jenkinsci/puppet-jenkins/pull/279) - add metadata-json-lint to Gemfile & enable rake validate target
 * [#280](https://github.com/jenkinsci/puppet-jenkins/pull/280) - change puppetlabs/stdlib version dep to >= 4.6.0
 * [#282](https://github.com/jenkinsci/puppet-jenkins/pull/282) - Feature/puppet 4

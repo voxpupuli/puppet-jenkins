@@ -1,6 +1,6 @@
 {
   "name": "puppet-jenkins",
-  "version": "4.0.0",
+  "version": "5.0.1-rc0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
@@ -24,8 +24,6 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "7",
-        "8",
         "9"
       ]
     },
@@ -85,7 +83,7 @@
     },
     {
       "name": "puppetlabs/java",
-      "version_requirement": ">= 1.0.1 < 11.0.0"
+      "version_requirement": ">= 1.0.1 < 12.0.0"
     },
     {
       "name": "puppet/zypprepo",
@@ -97,13 +95,13 @@
     },
     {
       "name": "puppet/systemd",
-      "version_requirement": ">= 3.1.0 < 7.0.0"
+      "version_requirement": ">= 3.1.0 < 8.0.0"
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 7.0.0 < 8.0.0"
+      "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ]
 }

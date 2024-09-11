@@ -107,7 +107,10 @@ describe 'jenkins_job', order: :defined do
       <<-EOS
         include jenkins
         include jenkins::cli::config
-        jenkins::plugin { 'cloudbees-folder': }
+        jenkins::plugin { 'ionicons-api': }
+        jenkins::plugin { 'cloudbees-folder':
+          version => '6.897.vb_943ea_6b_a_08b_'
+        }
       EOS
     end
 

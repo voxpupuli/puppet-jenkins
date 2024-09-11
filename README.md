@@ -35,12 +35,12 @@ This module has been adjusted to support the new CLI.
 
 The CLI supports proper authentication with username and password. It's a
 requirement for supporting AD and OpenID authentications (there is no ssh key
-there). You can supply ```$::jenkins::cli_username``` and
-```$::jenkins::cli_password``` to use username / password based authentication.
+there). You can supply ```$jenkins::cli_username``` and
+```$jenkins::cli_password``` to use username / password based authentication.
 Then the puppet automation user can also reside in A.D
 
 Note: Jenkins requires a ssh username, so you must also provide
-```$::jenkins::cli_username``` for ssh. If you specify both username/password
+```$jenkins::cli_username``` for ssh. If you specify both username/password
 and ssh key file, SSH authentication is preferred.
 
 # Using puppet-jenkins

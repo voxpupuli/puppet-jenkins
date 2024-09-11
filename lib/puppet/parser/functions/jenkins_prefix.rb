@@ -10,7 +10,7 @@ module Puppet::Parser::Functions
         $prefix = jenkins_prefix()
   ENDHEREDOC
 
-    config_hash = lookupvar('::jenkins::config_hash')
+    config_hash = lookupvar('jenkins::config_hash')
     config_hash&.dig('PREFIX', 'value') || ''
   end
 end
