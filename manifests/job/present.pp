@@ -61,7 +61,9 @@ define jenkins::job::present (
     }
   }
 
-  $job_dir            = "${jenkins::job_dir}/${jobname}"
+  # in case of a cloudbees-folder element inserting sub-directory '/jobs' for every folder level so the existing config_path or job_dir/builds is found
+  $job_subdir_name    = regsubst($jobname, /\//, '/jobs/', 'G')
+  $job_dir            = "${jenkins::job_dir}/${job_subdir_name}"
   $config_path        = "${job_dir}/config.xml"
 
   # Bring variables from Class['::jenkins'] into local scope.
