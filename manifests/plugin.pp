@@ -59,7 +59,7 @@ define jenkins::plugin (
   Boolean $enabled                   = true,
   String $digest_type                = 'sha1',
   Boolean $pin                       = false,
-  Array[String[1]] $download_options = ($facts['os']['family'] == 'RedHat' and $facts['os']['release']['major'] == '7') ? { true => [], default => ['--http1.1'] },
+  Array[String[1]] $download_options = ['--http1.1'],
 ) {
   include jenkins
 
