@@ -16,7 +16,7 @@ class jenkins::repo::debian (
   apt::source { 'jenkins':
     location => $location,
     release  => 'binary/',
-    repos    => '',
+    repos    => 'main',
     include  => {
       'src' => false,
     },
