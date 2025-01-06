@@ -47,6 +47,7 @@ describe 'jenkins_credentials' do
               'apache-httpcomponents-client-4-api',
               'caffeine-api',
               'command-launcher',
+              'eddsa-api',
               'gson-api',
               'jaxb',
               'jdk-tool',
@@ -89,6 +90,7 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
 
             jenkins::plugin { [
+              'eddsa-api',
               'gson-api',
               'ssh-credentials',
               'variant',
@@ -194,22 +196,13 @@ describe 'jenkins_credentials' do
             jenkins::plugin { [
               'apache-httpcomponents-client-4-api',
               'aws-credentials',
-              'aws-java-sdk',
-              'aws-java-sdk-cloudformation',
-              'aws-java-sdk-codebuild',
               'aws-java-sdk-ec2',
-              'aws-java-sdk-ecr',
-              'aws-java-sdk-ecs',
-              'aws-java-sdk-efs',
-              'aws-java-sdk-elasticbeanstalk',
-              'aws-java-sdk-iam',
-              'aws-java-sdk-logs',
               'aws-java-sdk-minimal',
-              'aws-java-sdk-sns',
-              'aws-java-sdk-sqs',
-              'aws-java-sdk-ssm',
+              'aws-java-sdk2-core',
+              'aws-java-sdk2-ec2',
               'caffeine-api',
               'credentials-binding',
+              'eddsa-api',
               'gson-api',
               'jackson2-api',
               'jaxb',
@@ -264,6 +257,7 @@ describe 'jenkins_credentials' do
               'credentials-binding',
               'display-url-api',
               'echarts-api',
+              'eddsa-api',
               'font-awesome-api',
               'git',
               'git-client',
@@ -295,13 +289,11 @@ describe 'jenkins_credentials' do
               'trilead-api',
               'variant',
               'workflow-api',
+              'workflow-job',
               'workflow-scm-step',
               'workflow-step-api',
               'workflow-support',
             ]: }
-            jenkins::plugin { 'workflow-job':
-              version => '1400.v7fd111b_ec82f'
-            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -343,6 +335,7 @@ describe 'jenkins_credentials' do
             'display-url-api',
             'durable-task',
             'echarts-api',
+            'eddsa-api',
             'font-awesome-api',
             'gson-api',
             'ionicons-api',
@@ -368,13 +361,11 @@ describe 'jenkins_credentials' do
             'workflow-basic-steps',
             'workflow-cps',
             'workflow-durable-task-step',
+            'workflow-job',
             'workflow-scm-step',
             'workflow-step-api',
             'workflow-support',
           ]: }
-          jenkins::plugin { 'workflow-job':
-            version => '1400.v7fd111b_ec82f'
-          }
 
           jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
             ensure      => 'present',
