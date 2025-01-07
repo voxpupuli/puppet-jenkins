@@ -68,6 +68,12 @@
         "20.04",
         "22.04"
       ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "12"
+      ]
     }
   ],
   "dependencies": [
