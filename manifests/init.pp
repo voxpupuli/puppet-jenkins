@@ -214,22 +214,22 @@
 #   and plugins
 #
 # @param executors
-#   number of executors on the Jenkins master
+#   number of executors on the Jenkins controller
 #
-# @param slaveagentport
-#   jenkins slave agent
+# @param agentport
+#   jenkins agent agent
 #
 # @param manage_user
 #   manage the system jenkins user
 #
 # @param user
-#   system user that owns the jenkins master's files
+#   system user that owns the jenkins controller's files
 #
 # @param manage_group
 #   manage the system jenkins group
 #
 # @param group
-#   system group that owns the jenkins master's files
+#   system group that owns the jenkins controller's files
 #
 # @param default_plugins
 #   List of default plugins installed by this module
@@ -308,7 +308,7 @@ class jenkins (
   Boolean $manage_datadirs                        = true,
   Stdlib::Absolutepath $localstatedir             = '/var/lib/jenkins',
   Optional[Integer] $executors                    = undef,
-  Optional[Integer] $slaveagentport               = undef,
+  Optional[Integer] $agentport                    = undef,
   Boolean $manage_user                            = true,
   String $user                                    = 'jenkins',
   Boolean $manage_group                           = true,
@@ -418,14 +418,14 @@ class jenkins (
     -> Class['jenkins::jobs']
   }
 
-  if ($slaveagentport != undef) {
-    jenkins::cli::exec { 'set_slaveagent_port':
-      command => ['set_slaveagent_port', $slaveagentport],
-      unless  => "[ \$(\$HELPER_CMD get_slaveagent_port) -eq ${slaveagentport} ]",
+  if ($agentport != undef) {
+    jenkins::cli::exec { 'set_agent_port':
+      command => ['set_agent_port', $agentport],
+      unless  => "[ \$(\$HELPER_CMD get_agent_port) -eq ${agentport} ]",
     }
 
     Class['jenkins::cli']
-    -> Jenkins::Cli::Exec['set_slaveagent_port']
+    -> Jenkins::Cli::Exec['set_agent_port']
     -> Class['jenkins::jobs']
   }
 

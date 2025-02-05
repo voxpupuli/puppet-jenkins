@@ -2,8 +2,8 @@
 
 require_relative '../../puppet/x/jenkins/type/cli'
 
-Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_slaveagent_port) do
-  @doc = "Manage Jenkins' slave agent listening port"
+Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_agent_port) do
+  @doc = "Manage Jenkins' agent listening port"
 
   # the cli jar does not have an interface for plugin removal so the only
   # allowed ensure value is :present
