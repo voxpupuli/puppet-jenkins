@@ -98,4 +98,34 @@ describe 'jenkins class' do
       it { is_expected.to contain '  <slaveAgentPort>7777</slaveAgentPort>' }
     end
   end
+
+  context 'proxy' do
+    include_examples 'an idempotent resource' do
+      let(:manifest) do
+        <<~PUPPET
+          class {'jenkins':
+            proxy_host => '192.0.2.1',
+            proxy_port => 1234,
+            no_proxy_list => ['*'],
+          }
+        PUPPET
+      end
+    end
+
+    describe port(8080) do
+      # jenkins should already have been running so we shouldn't have to
+      # sleep
+      it { is_expected.to be_listening }
+    end
+
+    describe service('jenkins') do
+      it { is_expected.to be_running }
+      it { is_expected.to be_enabled }
+    end
+
+    describe file('/var/lib/jenkins/proxy.xml') do
+      it { is_expected.to contain '<name>192.0.2.1</name>' }
+      it { is_expected.to contain '<port>1234</port>' }
+    end
+  end
 end
