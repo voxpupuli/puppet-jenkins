@@ -1,11 +1,11 @@
 ---
 fixtures:
   repositories:
-    apt: "https://github.com/puppetlabs/puppetlabs-apt"
-    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib"
-    java: "https://github.com/puppetlabs/puppetlabs-java"
-    zypprepo: "https://github.com/voxpupuli/puppet-zypprepo.git"
-    archive: "https://github.com/voxpupuli/puppet-archive.git"
-    systemd: "https://github.com/voxpupuli/puppet-systemd"
-    yumrepo_core: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
+    apt: https://github.com/puppetlabs/puppetlabs-apt
+    archive: https://github.com/voxpupuli/puppet-archive.git
     augeas_core: https://github.com/puppetlabs/puppetlabs-augeas_core.git
+    java: https://github.com/puppetlabs/puppetlabs-java
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
+    systemd: https://github.com/voxpupuli/puppet-systemd
+    yumrepo_core: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
+    zypprepo: https://github.com/voxpupuli/puppet-zypprepo.git
