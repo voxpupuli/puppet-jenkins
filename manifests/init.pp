@@ -389,7 +389,7 @@ class jenkins (
       default     => '/usr/lib/jenkins',
     }
     file { "${old_libdir}/jenkins-run":
-      ensure  => absent,
+      ensure => absent,
     }
 
     file { '/etc/systemd/system/jenkins.service':
