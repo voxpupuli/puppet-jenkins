@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'unit/puppet/x/spec_jenkins_types'
 
-describe Puppet::Type.type(:jenkins_slaveagent_port) do
+describe Puppet::Type.type(:jenkins_agent_port) do
   before { Facter.clear }
 
   describe 'parameters' do
