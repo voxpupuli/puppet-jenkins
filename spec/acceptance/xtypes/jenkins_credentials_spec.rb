@@ -322,7 +322,6 @@ describe 'jenkins_credentials' do
           }
           include jenkins::cli::config
           jenkins::plugin { [
-            'ace-editor',
             'asm-api',
             'apache-httpcomponents-client-4-api',
             'bootstrap5-api',
