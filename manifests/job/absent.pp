@@ -19,7 +19,7 @@ define jenkins::job::absent (
 
   # Temp file to use as stdin for Jenkins CLI executable
   file { $tmp_config_path:
-    ensure  => absent,
+    ensure => absent,
   }
 
   # Delete the job
