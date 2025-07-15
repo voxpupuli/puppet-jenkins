@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v6.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v6.0.0) (2025-01-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v5.0.0...v6.0.0)
+
+**Breaking changes:**
+
+- Drop support for Ubuntu 20.04 [\#1119](https://github.com/voxpupuli/puppet-jenkins/pull/1119) ([evgeni](https://github.com/evgeni))
+- Drop EoL EL7 support [\#1112](https://github.com/voxpupuli/puppet-jenkins/pull/1112) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add support for Ubuntu 24.04 [\#1118](https://github.com/voxpupuli/puppet-jenkins/pull/1118) ([evgeni](https://github.com/evgeni))
+- Add support for Debian 12 [\#1117](https://github.com/voxpupuli/puppet-jenkins/pull/1117) ([evgeni](https://github.com/evgeni))
+- Support puppetlabs/apt 10.x; require \>= 9.2 [\#1116](https://github.com/voxpupuli/puppet-jenkins/pull/1116) ([evgeni](https://github.com/evgeni))
+- puppet/systemd: allow 8.x [\#1113](https://github.com/voxpupuli/puppet-jenkins/pull/1113) ([jay7x](https://github.com/jay7x))
+
+**Merged pull requests:**
+
+- Install Java 17 JDK in acceptance tests [\#1115](https://github.com/voxpupuli/puppet-jenkins/pull/1115) ([evgeni](https://github.com/evgeni))
+
 ## [v5.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v5.0.0) (2024-05-07)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v4.0.0...v5.0.0)

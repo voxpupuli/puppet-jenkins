@@ -1,6 +1,6 @@
 {
   "name": "puppet-jenkins",
-  "version": "5.0.1-rc0",
+  "version": "6.0.0",
   "author": "Vox Pupuli",
   "license": "Apache-2.0",
   "summary": "Manage the Jenkins continuous integration service with Puppet",
@@ -16,7 +16,6 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "7",
         "8",
         "9"
       ]
@@ -30,7 +29,6 @@
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "7",
         "8",
         "9"
       ]
@@ -67,8 +65,14 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "20.04",
-        "22.04"
+        "22.04",
+        "24.04"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "12"
       ]
     }
   ],
@@ -79,7 +83,7 @@
     },
     {
       "name": "puppetlabs/apt",
-      "version_requirement": ">= 4.4.0 < 10.0.0"
+      "version_requirement": ">= 9.2.0 < 11.0.0"
     },
     {
       "name": "puppetlabs/java",
@@ -95,12 +99,16 @@
     },
     {
       "name": "puppet/systemd",
-      "version_requirement": ">= 3.1.0 < 8.0.0"
+      "version_requirement": ">= 3.1.0 < 9.0.0"
     }
   ],
   "requirements": [
     {
       "name": "puppet",
+      "version_requirement": ">= 7.0.0 < 9.0.0"
+    },
+    {
+      "name": "openvox",
       "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ]

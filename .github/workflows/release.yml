@@ -4,15 +4,19 @@
 
 name: Release
 
+# yamllint disable-line rule:truthy
 on:
   push:
     tags:
       - '*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Release
-    uses: voxpupuli/gha-puppet/.github/workflows/release.yml@v2
+    uses: voxpupuli/gha-puppet/.github/workflows/release.yml@v3
     with:
       allowed_owner: 'voxpupuli'
     secrets:

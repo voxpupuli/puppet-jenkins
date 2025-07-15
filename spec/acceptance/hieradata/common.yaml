@@ -1,0 +1,4 @@
+---
+jenkins::service_override:
+  StartLimitIntervalSec: '0'
+  StartLimitBurst: '0'
