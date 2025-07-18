@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v6.1.0](https://github.com/voxpupuli/puppet-jenkins/tree/v6.1.0) (2025-07-18)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v6.0.0...v6.1.0)
+
+**Implemented enhancements:**
+
+- puppet/archive: Allow 8.x [\#1127](https://github.com/voxpupuli/puppet-jenkins/pull/1127) ([evgeni](https://github.com/evgeni))
+- metadata.json: Add OpenVox [\#1123](https://github.com/voxpupuli/puppet-jenkins/pull/1123) ([jstraw](https://github.com/jstraw))
+
 ## [v6.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v6.0.0) (2025-01-07)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v5.0.0...v6.0.0)
