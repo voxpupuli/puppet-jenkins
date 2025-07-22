@@ -20,8 +20,15 @@ class jenkins::repo::debian (
       'src' => false,
     },
     key      => {
-      'id'     => $gpg_key_id,
+      'name'   => 'jenkins.asc',
       'source' => "${location}/${jenkins::repo::gpg_key_filename}",
     },
+    notify   => Exec['check Jenkins OpenPGP key fingerprint'],
+  }
+
+  exec { 'check Jenkins OpenPGP key fingerprint':
+    command     => "/usr/bin/test \"$(/usr/bin/gpg --show-keys --with-colons /etc/apt/keyrings/jenkins.asc | /usr/bin/awk -F: '/^fpr/ {print \$10}' | head -n 1)\" = ${gpg_key_id}",
+    refreshonly => true,
+    require     => Apt::Source['jenkins'],
   }
 }
