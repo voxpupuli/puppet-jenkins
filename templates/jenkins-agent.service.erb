@@ -1,0 +1,17 @@
+[Unit]
+Description=Jenkins agent service
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=<%= scope['jenkins::agent::agent_user'] %>
+EnvironmentFile=<%= scope['jenkins::agent::defaults_location'] %>/jenkins-agent
+ExecStart=<%= scope['jenkins::agent::agent_home'] %>/jenkins-agent-run
+Restart=always
+RestartSec=60
+StartLimitInterval=0
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

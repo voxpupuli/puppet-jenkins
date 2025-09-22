@@ -72,12 +72,12 @@ describe 'jenkins class' do
     end
   end
 
-  context 'slaveagentport' do
+  context 'agentport' do
     include_examples 'an idempotent resource' do
       let(:manifest) do
         <<~PUPPET
           class {'jenkins':
-            slaveagentport => 7777,
+            agentport => 7777,
           }
         PUPPET
       end

@@ -1,4 +1,4 @@
-# defaults for jenkins slave swarm clients
+# defaults for jenkins agent swarm clients
 
 # XXX due to the use of conditional statements and variable interpolation,
 # this file can not be used in its current state as a systemd EnvironmentFile.
@@ -14,17 +14,17 @@ JAVA_ARGS="<%= @java_args.join(' ') -%>"
 <% end -%>
 
 # user id to be invoked as (otherwise will run as root; not wise!)
-JENKINS_SLAVE_USER=<%= @slave_user -%>
+JENKINS_AGENT_USER=<%= @agent_user -%>
 
 # location of the jenkins war file
-JENKINS_SLAVE_JAR="<%= @slave_home -%>/<%= @client_jar -%>"
+JENKINS_AGENT_JAR="<%= @agent_home -%>/<%= @client_jar -%>"
 
 # log location.  this may be a syslog facility.priority
-JENKINS_SLAVE_LOG=/var/log/jenkins-slave/jenkins-slave.log
+JENKINS_AGENT_LOG=/var/log/jenkins-agent/jenkins-agent.log
 
-# slave mode, can be either 'normal' (utilize this slave as much as possible)
+# agent mode, can be either 'normal' (utilize this agent as much as possible)
 # or 'exclusive' (leave this machine for tied jobs only).
-JENKINS_SLAVE_MODE=<%= @slave_mode -%>
+JENKINS_AGENT_MODE=<%= @agent_mode -%>
 
 # OS LIMITS SETUP
 #   comment this out to observe /etc/security/limits.conf
@@ -33,15 +33,15 @@ JENKINS_SLAVE_MODE=<%= @slave_mode -%>
 #   descriptors are forced to 1024 regardless of /etc/security/limits.conf
 MAXOPENFILES=8192
 
-MASTER_URL="<%= @masterurl -%>"
+CONTROLLER_URL="<%= @controllerurl -%>"
 AUTO_DISCOVERY_ADDRESS="<%= @autodiscoveryaddress -%>"
 LABELS="<%= @labels.join(' ') -%>"
 
 EXECUTORS=<%= @executors -%>
 
-CLIENT_NAME="<%= @slave_name -%>"
+CLIENT_NAME="<%= @agent_name -%>"
 
-FSROOT="<%= @slave_home -%>"
+FSROOT="<%= @agent_home -%>"
 
 DESCRIPTION="<%= @description -%>"
 
