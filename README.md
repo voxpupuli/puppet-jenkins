@@ -363,7 +363,7 @@ Jenkins security is not managed by puppet unless jenkins::security is defined.
 
 ### With librarian
 
-If you use [librarian-puppet](https://github.com/rodjek/librarian-puppet), add
+If you use [librarian-puppet](https://github.com/voxpupuli/librarian-puppet), add
 the following to your `Puppetfile`:
 
 ```ruby
