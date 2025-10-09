@@ -186,7 +186,7 @@ define jenkins::plugin (
       $checksum_type   = undef
     }
 
-    exec { "force ${plugin}-${version}":
+    exec { "force ${plugin}-${version}": # lint:ignore:exec_idempotency
       command => "/bin/rm -rf ${jenkins::plugin_dir}/${plugin}",
     }
     -> archive { $plugin:
