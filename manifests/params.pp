@@ -7,6 +7,8 @@ class jenkins::params {
   }
   $default_plugins = [
     'bouncycastle-api', # required by instance-identity
+    'commons-lang3-api', # required by credentials plugin
+    'commons-text-api', # required by credentials plugin
     'credentials', # required by puppet_helper.groovy
     'instance-identity', # implied by structs
     'javax-activation-api', # implied by all plugin
