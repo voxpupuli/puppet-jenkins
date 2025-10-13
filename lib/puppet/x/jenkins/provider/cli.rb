@@ -134,7 +134,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
                          false
                        end
 
-    Puppet.debug("#{sname} stdin:\n#{input}")
+    # This Puppet.debug shows the JSON with changed credentials in plain text.
+    # ToDo: Remove this debug output OR mask the credentials
+    # Puppet.debug("#{sname} stdin:\n#{input}")
 
     # a tempfile block arg is not used to simplify mock testing :/
     tmp = Tempfile.open(sname)
@@ -203,7 +205,9 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     # is required and we don't have one or that one we have was rejected.
     Puppet::Util::RetryAction.retry_action(retries: cli_tries, retry_exceptions: [UnknownError, NetError]) do
       result = execute_with_auth(cli_cmd, auth_cmd, options)
-      Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
+      # This Puppet.debug shows the JSON with all credentials in plain text.
+      # ToDo: Remove this debug output OR mask the credentials
+      # Puppet.debug("#{sname} command stdout:\n#{result}") unless result == ''
       return result
     end
   end
