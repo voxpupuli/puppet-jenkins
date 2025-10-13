@@ -54,10 +54,10 @@ class jenkins::cli {
   # The jenkins cli command with required parameter(s)
   $cmd = join(
     delete_undef_values([
-        'java',
-        "-jar ${jar}",
-        "-s http://localhost:${port}${prefix}",
-        $jenkins::_cli_auth_arg,
+      'java',
+      "-jar ${jar}",
+      "-s http://localhost:${port}${prefix}",
+      $jenkins::_cli_auth_arg,
     ]),
     ' '
   )

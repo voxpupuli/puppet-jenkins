@@ -22,18 +22,18 @@ class jenkins::user_setup {
   # old conditional behavior of jenkins::plugin
   if $jenkins::manage_user {
     ensure_resource('user', $jenkins::user, {
-        ensure     => present,
-        gid        => $jenkins::group,
-        home       => $jenkins::localstatedir,
-        managehome => false,
-        system     => true,
+      ensure     => present,
+      gid        => $jenkins::group,
+      home       => $jenkins::localstatedir,
+      managehome => false,
+      system     => true,
     })
   }
 
   if $jenkins::manage_group {
     ensure_resource('group', $jenkins::group, {
-        ensure => present,
-        system => true,
+      ensure => present,
+      system => true,
     })
   }
 
