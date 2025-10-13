@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v7.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v7.0.0) (2025-10-13)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v6.1.0...v7.0.0)
+
+**Breaking changes:**
+
+- Drop puppet, update openvox minimum version to 8.19 [\#1131](https://github.com/voxpupuli/puppet-jenkins/pull/1131) ([TheMeier](https://github.com/TheMeier))
+
+**Implemented enhancements:**
+
+- puppet/systemd: Allow 9.x [\#1135](https://github.com/voxpupuli/puppet-jenkins/pull/1135) ([evgeni](https://github.com/evgeni))
+- puppetlabs/apt: Allow 11.x [\#1134](https://github.com/voxpupuli/puppet-jenkins/pull/1134) ([evgeni](https://github.com/evgeni))
+
+**Fixed bugs:**
+
+- add commons-lang3-api and commons-text-api to default\_plugins [\#1136](https://github.com/voxpupuli/puppet-jenkins/pull/1136) ([evgeni](https://github.com/evgeni))
+
 ## [v6.1.0](https://github.com/voxpupuli/puppet-jenkins/tree/v6.1.0) (2025-07-18)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v6.0.0...v6.1.0)
