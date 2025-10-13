@@ -205,6 +205,8 @@ describe 'jenkins_credentials' do
               'eddsa-api',
               'gson-api',
               'jackson2-api',
+              'jakarta-activation-api',
+              'jakarta-xml-bind-api',
               'jaxb',
               'joda-time-api',
               'json-api',
@@ -247,6 +249,7 @@ describe 'jenkins_credentials' do
             include jenkins::cli::config
             package { 'git': }
             jenkins::plugin { [
+              'antisamy-markup-formatter',
               'asm-api',
               'apache-httpcomponents-client-4-api',
               'bootstrap5-api',
@@ -265,6 +268,7 @@ describe 'jenkins_credentials' do
               'jackson2-api',
               'jakarta-activation-api',
               'jakarta-mail-api',
+              'jakarta-xml-bind-api',
               'jaxb',
               'jersey2-api',
               'joda-time-api',
@@ -279,6 +283,7 @@ describe 'jenkins_credentials' do
               'plain-credentials',
               'plugin-util-api',
               'popper2-api',
+              'prism-api',
               'scm-api',
               'script-security',
               'snakeyaml-api',
@@ -320,6 +325,7 @@ describe 'jenkins_credentials' do
           }
           include jenkins::cli::config
           jenkins::plugin { [
+            'antisamy-markup-formatter',
             'asm-api',
             'apache-httpcomponents-client-4-api',
             'bootstrap5-api',
@@ -337,6 +343,7 @@ describe 'jenkins_credentials' do
             'jackson2-api',
             'jakarta-activation-api',
             'jakarta-mail-api',
+            'jakarta-xml-bind-api',
             'jaxb',
             'joda-time-api',
             'jquery3-api',
@@ -346,6 +353,7 @@ describe 'jenkins_credentials' do
             'plain-credentials',
             'plugin-util-api',
             'popper2-api',
+            'prism-api',
             'scm-api',
             'script-security',
             'snakeyaml-api',
