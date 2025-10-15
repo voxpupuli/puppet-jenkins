@@ -1,8 +1,6 @@
 # @summary Set up the apt repo on Debian-based distros
 # @api private
-class jenkins::repo::debian (
-  String $gpg_key_id = '63667EE74BBA1F0A08A698725BA31D57EF5975CA',
-) {
+class jenkins::repo::debian {
   assert_private()
 
   include apt
@@ -20,7 +18,7 @@ class jenkins::repo::debian (
       'src' => false,
     },
     key      => {
-      'id'     => $gpg_key_id,
+      'name'   => 'jenkins.asc',
       'source' => "${location}/${jenkins::repo::gpg_key_filename}",
     },
   }
