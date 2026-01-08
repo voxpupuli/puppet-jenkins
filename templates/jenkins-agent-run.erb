@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -e
+
+fail() {
+  echo -e "$@"
+  exit 1
+}
+
+# mandatory input vars
+[[ -x "$JAVA" ]] || (fail "$JAVA is not executable")
+[[ -f "$JENKINS_AGENT_JAR" ]] || (fail "$JENKINS_AGENT_JAR not accessible")
+
+AGENT_ARGS=()
+
+[[ -n "$JAVA_ARGS" ]] &&
+  AGENT_ARGS+=("$JAVA_ARGS")
+
+AGENT_ARGS+=(-jar "$JENKINS_AGENT_JAR")
+
+[[ -n "$JENKINS_AGENT_MODE" ]] &&
+  AGENT_ARGS+=(-mode "$JENKINS_AGENT_MODE")
+
+[[ -n "$EXECUTORS" ]] &&
+  AGENT_ARGS+=(-executors "$EXECUTORS")
+
+[[ -n "$JENKINS_USERNAME" ]] &&
+  AGENT_ARGS+=(-username "$JENKINS_USERNAME")
+
+[[ -n "$JENKINS_PASSWORD" ]] &&
+  AGENT_ARGS+=(-passwordEnvVariable JENKINS_PASSWORD)
+
+[[ -n "$CLIENT_NAME" ]] &&
+  AGENT_ARGS+=(-name "$CLIENT_NAME")
+
+[[ -n "$CONTROLLER_URL" ]] &&
+  AGENT_ARGS+=(-controller "$CONTROLLER_URL")
+
+[[ -n "$LABELS" ]] &&
+  AGENT_ARGS+=(-labels "$LABELS")
+
+[[ -n "$FSROOT" ]] &&
+  AGENT_ARGS+=(-fsroot "$FSROOT")
+
+[[ "$DISABLE_CLIENTS_UNIQUE_ID" == true ]] &&
+  AGENT_ARGS+=(-disableClientsUniqueId)
+
+[[ "$DISABLE_SSL_VERIFICATION" == true ]] &&
+  AGENT_ARGS+=(-disableSslVerification)
+
+[[ "$DELETE_EXISTING_CLIENTS" == true ]] &&
+  AGENT_ARGS+=(-deleteExistingClients)
+
+[[ -n "$DESCRIPTION" ]] &&
+ AGENT_ARGS+=(-description "$DESCRIPTION")
+
+[[ -n "$TUNNEL" ]] &&
+ AGENT_ARGS+=(-tunnel "$TUNNEL")
+
+[[ -n "$AUTO_DISCOVERY_ADDRESS" ]] &&
+  AGENT_ARGS+=(-autoDiscoveryAddress "$AUTO_DISCOVERY_ADDRESS")
+
+if [ -n "$TOOL_LOCATIONS" ]; then
+  for t in $TOOL_LOCATIONS; do
+    AGENT_ARGS+=(--toolLocation "$t")
+  done
+fi
+
+[[ -n "$OTHER_ARGS" ]] &&
+  AGENT_ARGS+=($OTHER_ARGS)
+
+$JAVA "${AGENT_ARGS[@]}"

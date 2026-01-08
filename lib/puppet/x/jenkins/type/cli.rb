@@ -7,7 +7,7 @@ module Puppet::X::Jenkins::Type::Cli
   def self.newtype(*args, &block)
     type = Puppet::Type.newtype(*args, &block)
 
-    # The jenkins master needs to be avaiable in order to interact with it via
+    # The jenkins controller needs to be avaiable in order to interact with it via
     # the cli jar.
     type.autorequire(:service) do
       ['jenkins']

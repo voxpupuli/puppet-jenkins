@@ -2,7 +2,7 @@
 
 require 'spec_helper_acceptance'
 
-describe 'jenkins::slave class' do
+describe 'jenkins::agent class' do
   context 'default parameters' do
     sysconfdirs = {
       'RedHat' => '/etc/sysconfig',
@@ -11,25 +11,25 @@ describe 'jenkins::slave class' do
     }
 
     include_examples 'an idempotent resource' do
-      let(:manifest) { 'include jenkins::slave' }
+      let(:manifest) { 'include jenkins::agent' }
     end
 
-    describe file('/etc/systemd/system/jenkins-slave.service') do
+    describe file('/etc/systemd/system/jenkins-agent.service') do
       it { is_expected.to be_file }
-      it { is_expected.to contain 'ExecStart=/home/jenkins-slave/jenkins-slave-run' }
+      it { is_expected.to contain 'ExecStart=/home/jenkins-agent/jenkins-agent-run' }
     end
 
-    describe file("#{sysconfdirs[fact('os.family')]}/jenkins-slave") do
+    describe file("#{sysconfdirs[fact('os.family')]}/jenkins-agent") do
       it { is_expected.to be_file }
       it { is_expected.to be_mode 600 }
     end
 
-    describe file('/home/jenkins-slave/swarm-client-2.2-jar-with-dependencies.jar') do
+    describe file('/home/jenkins-agent/swarm-client-2.2-jar-with-dependencies.jar') do
       it { is_expected.to be_file }
       it { is_expected.to be_mode 644 }
     end
 
-    describe service('jenkins-slave') do
+    describe service('jenkins-agent') do
       it { is_expected.to be_running }
       it { is_expected.to be_enabled }
     end
@@ -49,7 +49,7 @@ describe 'jenkins::slave class' do
       include_examples 'an idempotent resource' do
         let(:manifest) do
           <<~PUPPET
-            class { 'jenkins::slave':
+            class { 'jenkins::agent':
               ui_user => 'imauser',
               ui_pass => 'imapass',
             }
@@ -58,7 +58,7 @@ describe 'jenkins::slave class' do
       end
 
       describe process('java') do
-        its(:user) { is_expected.to eq 'jenkins-slave' }
+        its(:user) { is_expected.to eq 'jenkins-agent' }
         its(:args) { is_expected.to match %r{-username imauser} }
         its(:args) { is_expected.to match %r{-passwordEnvVariable JENKINS_PASSWORD} }
         its(:args) { is_expected.not_to match %r{imapass} }
@@ -70,7 +70,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 disable_clients_unique_id => true,
               }
             PUPPET
@@ -78,7 +78,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{-disableClientsUniqueId} }
         end
       end
@@ -87,7 +87,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 disable_clients_unique_id => false,
               }
             PUPPET
@@ -95,7 +95,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.not_to match %r{-disableClientsUniqueId} }
         end
       end
@@ -106,7 +106,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 disable_ssl_verification => true,
               }
             PUPPET
@@ -114,7 +114,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{-disableSslVerification} }
         end
       end
@@ -123,7 +123,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 disable_ssl_verification => false,
               }
             PUPPET
@@ -131,7 +131,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.not_to match %r{-disableSslVerification} }
         end
       end
@@ -142,7 +142,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 delete_existing_clients => true,
               }
             PUPPET
@@ -150,7 +150,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{-deleteExistingClients} }
         end
       end
@@ -159,7 +159,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 delete_existing_clients => false,
               }
             PUPPET
@@ -167,7 +167,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.not_to match %r{-deleteExistingClients} }
         end
       end
@@ -178,7 +178,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 labels => ['foo', 'bar', 'baz'],
               }
             PUPPET
@@ -186,7 +186,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{-labels foo bar baz} }
         end
       end
@@ -199,7 +199,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 tool_locations => '#{tool_locations}',
               }
             PUPPET
@@ -207,7 +207,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{--toolLocation Python-2\.7=/usr/bin/python2\.7} }
           its(:args) { is_expected.to match %r{--toolLocation Java-1\.8=/usr/bin/java} }
         end
@@ -221,7 +221,7 @@ describe 'jenkins::slave class' do
         include_examples 'an idempotent resource' do
           let(:manifest) do
             <<~PUPPET
-              class { 'jenkins::slave':
+              class { 'jenkins::agent':
                 tunnel => '#{tunnel}',
               }
             PUPPET
@@ -229,7 +229,7 @@ describe 'jenkins::slave class' do
         end
 
         describe process('java') do
-          its(:user) { is_expected.to eq 'jenkins-slave' }
+          its(:user) { is_expected.to eq 'jenkins-agent' }
           its(:args) { is_expected.to match %r{-tunnel localhost:9000} }
         end
       end
