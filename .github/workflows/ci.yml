@@ -23,3 +23,6 @@ jobs:
   puppet:
     name: Puppet
     uses: voxpupuli/gha-puppet/.github/workflows/beaker.yml@v4
+    with:
+      unit_runs_on: 'runnerset-voxpupuli'
+      additional_packages: 'build-essential ruby-dev'

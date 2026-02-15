@@ -1,3 +1,7 @@
 ---
 .rubocop.yml:
   unmanaged: true
+.github/workflows/ci.yml:
+  with:
+    unit_runs_on: 'runnerset-voxpupuli'
+    additional_packages: 'build-essential ruby-dev'
