@@ -12,13 +12,11 @@ describe 'jenkins::cli::exec' do
 
       describe 'relationships' do
         it do
-          is_expected.to contain_jenkins__cli__exec('foo').
-            that_requires('Class[jenkins::cli_helper]')
+          is_expected.to contain_jenkins__cli__exec('foo').that_requires('Class[jenkins::cli_helper]')
         end
 
         it do
-          is_expected.to contain_jenkins__cli__exec('foo').
-            that_comes_before('Anchor[jenkins::end]')
+          is_expected.to contain_jenkins__cli__exec('foo').that_comes_before('Anchor[jenkins::end]')
         end
       end
 
@@ -31,7 +29,7 @@ describe 'jenkins::cli::exec' do
               command: "#{helper_cmd} foo",
               tries: 10,
               try_sleep: 10,
-              unless: nil
+              unless: nil,
             )
           end
 
@@ -46,7 +44,7 @@ describe 'jenkins::cli::exec' do
               command: "#{helper_cmd} bar",
               tries: 10,
               try_sleep: 10,
-              unless: nil
+              unless: nil,
             )
           end
 
@@ -63,7 +61,7 @@ describe 'jenkins::cli::exec' do
               command: "#{helper_cmd} bar",
               tries: 10,
               try_sleep: 10,
-              unless: nil
+              unless: nil,
             )
           end
         end
@@ -76,7 +74,7 @@ describe 'jenkins::cli::exec' do
               command: "#{helper_cmd} bar",
               tries: 10,
               try_sleep: 10,
-              unless: nil
+              unless: nil,
             )
           end
         end
@@ -89,7 +87,7 @@ describe 'jenkins::cli::exec' do
               command: "#{helper_cmd} bar baz",
               tries: 10,
               try_sleep: 10,
-              unless: nil
+              unless: nil,
             )
           end
         end
@@ -105,7 +103,7 @@ describe 'jenkins::cli::exec' do
               environment: ["HELPER_CMD=eval #{helper_cmd}"],
               unless: 'bar',
               tries: 10,
-              try_sleep: 10
+              try_sleep: 10,
             )
           end
         end

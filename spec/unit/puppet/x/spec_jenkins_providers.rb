@@ -10,10 +10,7 @@ shared_examples 'confines to cli dependencies' do
 
     context 'commands :java' do
       it do
-        expect(confines).to include(
-          be_a(Puppet::Confine::Exists).
-          and(have_attributes(values: ['java']))
-        )
+        expect(confines).to include(be_a(Puppet::Confine::Exists).and(have_attributes(values: ['java'])))
       end
     end
   end

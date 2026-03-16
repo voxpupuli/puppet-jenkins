@@ -102,7 +102,7 @@ describe 'jenkins' do
           it do
             is_expected.to contain_jenkins__cli__exec('set_num_executors').with(
               command: ['set_num_executors', 42],
-              unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]'
+              unless: '[ $($HELPER_CMD get_num_executors) -eq 42 ]',
             )
           end
 
@@ -123,7 +123,7 @@ describe 'jenkins' do
           it do
             is_expected.to contain_jenkins__cli__exec('set_slaveagent_port').with(
               command: ['set_slaveagent_port', port],
-              unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]"
+              unless: "[ $($HELPER_CMD get_slaveagent_port) -eq #{port} ]",
             )
           end
 
@@ -158,7 +158,7 @@ describe 'jenkins' do
         context 'false' do
           let(:params) do
             {
-              manage_service: false
+              manage_service: false,
             }
           end
 
@@ -175,7 +175,7 @@ describe 'jenkins' do
               gid: 'jenkins',
               home: '/var/lib/jenkins',
               managehome: false,
-              system: true
+              system: true,
             )
           end
         end
@@ -189,7 +189,7 @@ describe 'jenkins' do
               gid: 'jenkins',
               home: '/var/lib/jenkins',
               managehome: false,
-              system: true
+              system: true,
             )
           end
         end
@@ -216,10 +216,7 @@ describe 'jenkins' do
       describe 'group =>' do
         context '(default)' do
           it do
-            is_expected.to contain_group('jenkins').with(
-              ensure: 'present',
-              system: true
-            )
+            is_expected.to contain_group('jenkins').with(ensure: 'present', system: true)
           end
         end
 
@@ -227,10 +224,7 @@ describe 'jenkins' do
           let(:params) { { group: 'fred' } }
 
           it do
-            is_expected.to contain_group('fred').with(
-              ensure: 'present',
-              system: true
-            )
+            is_expected.to contain_group('fred').with(ensure: 'present', system: true)
           end
         end
       end
@@ -239,14 +233,14 @@ describe 'jenkins' do
         [
           '/var/lib/jenkins',
           '/var/lib/jenkins/jobs',
-          '/var/lib/jenkins/plugins'
+          '/var/lib/jenkins/plugins',
         ].each do |dir|
           it do
             is_expected.to contain_file(dir).with(
               ensure: 'directory',
               owner: 'jenkins',
               group: 'jenkins',
-              mode: '0755'
+              mode: '0755',
             )
           end
         end
@@ -267,10 +261,7 @@ describe 'jenkins' do
           let(:params) { { purge_plugins: false } }
 
           it do
-            is_expected.to contain_file('/var/lib/jenkins/plugins').
-              without('purge').
-              without('recurse').
-              without('force')
+            is_expected.to contain_file('/var/lib/jenkins/plugins').without('purge').without('recurse').without('force')
           end
         end
 
@@ -281,18 +272,14 @@ describe 'jenkins' do
             is_expected.to contain_file('/var/lib/jenkins/plugins').with(
               purge: true,
               recurse: true,
-              force: true
+              force: true,
             ).that_notifies('Service[jenkins]')
           end
         end
 
         context '(default)' do
           it do
-            is_expected.to contain_file('/var/lib/jenkins/plugins').
-              without('purge').
-              without('recurse').
-              without('force').
-              without('notify')
+            is_expected.to contain_file('/var/lib/jenkins/plugins').without('purge').without('recurse').without('force').without('notify')
           end
         end
       end

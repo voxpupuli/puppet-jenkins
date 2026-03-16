@@ -11,7 +11,7 @@ describe 'jenkins::slave' do
         it do
           is_expected.to contain_archive('get_swarm_client').with(
             cleanup: false,
-            extract: false
+            extract: false,
           )
         end
 
@@ -69,9 +69,7 @@ describe 'jenkins::slave' do
           let(:params) { { tool_locations: 'Python-2.7:/usr/bin/python2.7 Java-1.8:/usr/bin/java' } }
 
           it do
-            is_expected.to contain_file(slave_runtime_file).
-              with_content(%r{Python-2\.7=/usr/bin/python2\.7}).
-              with_content(%r{Java-1\.8=/usr/bin/java})
+            is_expected.to contain_file(slave_runtime_file).with_content(%r{Python-2\.7=/usr/bin/python2\.7}).with_content(%r{Java-1\.8=/usr/bin/java})
           end
         end
 
@@ -81,7 +79,7 @@ describe 'jenkins::slave' do
           let(:params) do
             {
               ui_user: user,
-              ui_pass: password
+              ui_pass: password,
             }
           end
 
@@ -98,7 +96,7 @@ describe 'jenkins::slave' do
           let(:args) { ['-Xmx2g', '-Xms128m'] }
           let(:params) do
             {
-              java_args: args
+              java_args: args,
             }
           end
 
@@ -111,7 +109,7 @@ describe 'jenkins::slave' do
           let(:args) { ['-disableSslVerification', '-disableClientsUniqueId'] }
           let(:params) do
             {
-              swarm_client_args: args
+              swarm_client_args: args,
             }
           end
 
@@ -123,7 +121,7 @@ describe 'jenkins::slave' do
         describe 'with valid tunnel specified' do
           let(:params) do
             {
-              tunnel: 'localhost:9000'
+              tunnel: 'localhost:9000',
             }
           end
 
@@ -133,7 +131,7 @@ describe 'jenkins::slave' do
         describe 'with invalid tunnel specified' do
           let(:params) do
             {
-              tunnel: ':'
+              tunnel: ':',
             }
           end
 
@@ -147,7 +145,7 @@ describe 'jenkins::slave' do
             let(:params) do
               {
                 version: '2.0',
-                source: source
+                source: source,
               }
             end
 
@@ -158,7 +156,7 @@ describe 'jenkins::slave' do
             let(:params) do
               {
                 version: '3.1',
-                source: source
+                source: source,
               }
             end
 
@@ -169,7 +167,7 @@ describe 'jenkins::slave' do
         describe 'with LABELS as an array' do
           let(:params) do
             {
-              labels: %w[hello world]
+              labels: %w[hello world],
             }
           end
 
@@ -181,13 +179,12 @@ describe 'jenkins::slave' do
         describe 'disable unique client id' do
           let(:params) do
             {
-              disable_clients_unique_id: true
+              disable_clients_unique_id: true,
             }
           end
 
           it 'has disable variable' do
-            is_expected.to contain_file(slave_runtime_file).
-              with_content(%r{^DISABLE_CLIENTS_UNIQUE_ID="true"$})
+            is_expected.to contain_file(slave_runtime_file).with_content(%r{^DISABLE_CLIENTS_UNIQUE_ID="true"$})
           end
         end
 
@@ -196,8 +193,7 @@ describe 'jenkins::slave' do
             let(:params) { { delete_existing_clients: true } }
 
             it do
-              is_expected.to contain_file(slave_runtime_file).
-                with_content(%r{^DELETE_EXISTING_CLIENTS="true"$})
+              is_expected.to contain_file(slave_runtime_file).with_content(%r{^DELETE_EXISTING_CLIENTS="true"$})
             end
           end
 
@@ -205,8 +201,7 @@ describe 'jenkins::slave' do
             let(:params) { { delete_existing_clients: false } }
 
             it do
-              is_expected.to contain_file(slave_runtime_file).
-                with_content(%r{^DELETE_EXISTING_CLIENTS=""$})
+              is_expected.to contain_file(slave_runtime_file).with_content(%r{^DELETE_EXISTING_CLIENTS=""$})
             end
           end
         end
@@ -232,13 +227,11 @@ describe 'jenkins::slave' do
 
           it_behaves_like 'a jenkins::slave catalog'
           it do
-            is_expected.to contain_file(slave_startup_script).
-              that_notifies('Service[jenkins-slave]')
+            is_expected.to contain_file(slave_startup_script).that_notifies('Service[jenkins-slave]')
           end
 
           it do
-            is_expected.to contain_systemd__unit_file('jenkins-slave.service').
-              that_notifies('Service[jenkins-slave]')
+            is_expected.to contain_systemd__unit_file('jenkins-slave.service').that_notifies('Service[jenkins-slave]')
           end
         end
       when 'Debian'

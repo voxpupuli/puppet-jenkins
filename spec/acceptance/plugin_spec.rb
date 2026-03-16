@@ -12,12 +12,12 @@ describe 'jenkins class', order: :defined do
     "#{PDIR}/c.txt",
     "#{PDIR}/a/foo",
     "#{PDIR}/b/bar",
-    "#{PDIR}/c/baz"
+    "#{PDIR}/c/baz",
   ].freeze
   DIRS = [
     "#{PDIR}/a",
     "#{PDIR}/b",
-    "#{PDIR}/c"
+    "#{PDIR}/c",
   ].freeze
 
   shared_examples 'has_plugin' do |plugin|

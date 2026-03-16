@@ -33,7 +33,7 @@ describe 'jenkins_plugins', type: :fact do
     context 'with one plugin' do
       let(:plugins) do
         {
-          'greenballs' => { plugin_version: '1.1', description: 'rspec' }
+          'greenballs' => { plugin_version: '1.1', description: 'rspec' },
         }
       end
 
@@ -45,7 +45,7 @@ describe 'jenkins_plugins', type: :fact do
       let(:plugins) do
         {
           'greenballs' => { plugin_version: '1.1', description: 'rspec' },
-          'git' => { plugin_version: '1.7', description: 'rspec' }
+          'git' => { plugin_version: '1.7', description: 'rspec' },
         }
       end
 
