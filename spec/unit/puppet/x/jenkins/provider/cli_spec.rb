@@ -48,6 +48,12 @@ describe Puppet::X::Jenkins::Provider::Cli do
   end
 
   describe '::suitable?' do
+    before do
+      # stub the confine collection to report that all confines are satisfied (e.g. `java` exists)
+      confine_collection = described_class.confine_collection
+      allow(confine_collection).to receive(:valid?).and_return(true)
+    end
+
     it { expect(described_class.suitable?).to eq true }
   end
 
