@@ -8,7 +8,9 @@ name: Release
 on:
   push:
     tags:
-      - '*'
+      # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore
+      # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#filter-pattern-cheat-sheet
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: write
@@ -16,7 +18,7 @@ permissions:
 jobs:
   release:
     name: Release
-    uses: voxpupuli/gha-puppet/.github/workflows/release.yml@v3
+    uses: voxpupuli/gha-puppet/.github/workflows/release.yml@v4
     with:
       allowed_owner: 'voxpupuli'
     secrets:
