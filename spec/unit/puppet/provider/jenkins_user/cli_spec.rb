@@ -65,8 +65,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:user_info_all).
-          with(nil) { user_info }
+        expect(described_class).to receive(:user_info_all).with(nil) { user_info }
       end
 
       it 'returns the correct number of instances' do
@@ -94,8 +93,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       it 'passes it on ::user_info_all' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:user_info_all).
-          with(catalog) { user_info }
+        expect(described_class).to receive(:user_info_all).with(catalog) { user_info }
 
         described_class.instances(catalog)
       end
@@ -183,7 +181,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['user_update'],
-        stdinjson: mutable_user_info
+        stdinjson: mutable_user_info,
       )
 
       provider.send :user_update
@@ -195,7 +193,7 @@ describe Puppet::Type.type(:jenkins_user).provider(:cli) do
       provider = described_class.send :from_hash, user_info[0]
 
       expect(described_class).to receive(:clihelper).with(
-        %w[delete_user test]
+        %w[delete_user test],
       )
 
       provider.send :delete_user

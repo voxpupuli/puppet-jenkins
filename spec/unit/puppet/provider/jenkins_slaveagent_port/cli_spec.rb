@@ -7,8 +7,8 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:get_slaveagent_port).
-          with(nil).and_return(42)
+        expect(described_class).to receive(:get_slaveagent_port)
+          .with(nil).and_return(42)
       end
 
       it 'returns the correct number of instances' do
@@ -26,8 +26,8 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
       it 'passes it on ::get_slaveagent_port' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:get_slaveagent_port).
-          with(catalog).and_return(42)
+        expect(described_class).to receive(:get_slaveagent_port)
+          .with(catalog).and_return(42)
 
         described_class.instances(catalog)
       end
@@ -47,8 +47,7 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
       provider = described_class.new
       provider.destroy
 
-      expect { provider.flush }.
-        to raise_error(Puppet::Error, %r{invalid :ensure value: absent})
+      expect { provider.flush }.to raise_error(Puppet::Error, %r{invalid :ensure value: absent})
     end
   end
 
@@ -58,8 +57,8 @@ describe Puppet::Type.type(:jenkins_slaveagent_port).provider(:cli) do
 
   describe '::get_slaveagent_port' do
     it do
-      expect(described_class).to receive(:clihelper).
-        with(['get_slaveagent_port'], catalog: nil).and_return(42)
+      expect(described_class).to receive(:clihelper)
+        .with(['get_slaveagent_port'], catalog: nil).and_return(42)
 
       n = described_class.send :get_slaveagent_port
       expect(n).to eq 42

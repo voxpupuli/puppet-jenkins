@@ -10,7 +10,7 @@ describe Puppet::X::Jenkins::Config do
     url: 'http://localhost:8080',
     ssh_private_key: nil,
     puppet_helper: '/usr/share/java/puppet_helper.groovy',
-    cli_tries: 30
+    cli_tries: 30,
   }.freeze
 
   shared_context 'facts' do
@@ -34,7 +34,7 @@ describe Puppet::X::Jenkins::Config do
   shared_examples 'returns fact values' do |_param|
     it 'returns fact values' do
       DEFAULTS.each_key do |k|
-        expect(config[k]).to eq Facter.value("jenkins_#{k}".to_sym)
+        expect(config[k]).to eq Facter.value(:"jenkins_#{k}")
       end
     end
   end
@@ -60,8 +60,7 @@ describe Puppet::X::Jenkins::Config do
   describe '#[]' do
     context 'unknown config key' do
       it do
-        expect { described_class.new[:foo] }.
-          to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
+        expect { described_class.new[:foo] }.to raise_error(Puppet::X::Jenkins::Config::UnknownConfig)
       end
     end
 
@@ -99,7 +98,7 @@ describe Puppet::X::Jenkins::Config do
         context 'with no params' do
           before do
             jenkins = Puppet::Type.type(:component).new(
-              name: 'jenkins::cli::config'
+              name: 'jenkins::cli::config',
             )
 
             catalog.add_resource jenkins
@@ -124,7 +123,7 @@ describe Puppet::X::Jenkins::Config do
               url: 'http://localhost:111',
               ssh_private_key: 'cat.id_rsa',
               puppet_helper: 'cat.groovy',
-              cli_tries: 222
+              cli_tries: 222,
             )
 
             catalog.add_resource jenkins

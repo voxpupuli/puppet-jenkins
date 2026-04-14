@@ -15,14 +15,14 @@ describe 'jenkins' do
           [
             '/var/lib/jenkins',
             '/var/lib/jenkins/plugins',
-            '/var/lib/jenkins/jobs'
+            '/var/lib/jenkins/jobs',
           ].each do |datadir|
             it do
               is_expected.to contain_file(datadir).with(
                 ensure: 'directory',
                 mode: '0755',
                 group: 'jenkins',
-                owner: 'jenkins'
+                owner: 'jenkins',
               )
             end
           end
@@ -33,7 +33,7 @@ describe 'jenkins' do
             {
               manage_user: false,
               manage_group: false,
-              manage_datadirs: false
+              manage_datadirs: false,
             }
           end
 
@@ -47,7 +47,7 @@ describe 'jenkins' do
         context 'custom home' do
           let(:params) do
             {
-              localstatedir: '/custom/jenkins'
+              localstatedir: '/custom/jenkins',
             }
           end
 

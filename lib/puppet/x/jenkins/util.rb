@@ -4,7 +4,7 @@ require_relative '../jenkins'
 
 module Puppet::X::Jenkins::Util
   def unundef(data)
-    iterate(data) { |x| x == :undef ? nil : x }
+    iterate(data) { |x| (x == :undef) ? nil : x }
   end
   module_function :unundef
 

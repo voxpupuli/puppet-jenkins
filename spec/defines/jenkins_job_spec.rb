@@ -18,13 +18,11 @@ describe 'jenkins::job' do
         let(:params) { { config: quotes } }
 
         it do
-          is_expected.to contain_jenkins__job('myjob').
-            that_requires('Class[jenkins::cli]')
+          is_expected.to contain_jenkins__job('myjob').that_requires('Class[jenkins::cli]')
         end
 
         it do
-          is_expected.to contain_jenkins__job('myjob').
-            that_comes_before('Anchor[jenkins::end]')
+          is_expected.to contain_jenkins__job('myjob').that_comes_before('Anchor[jenkins::end]')
         end
       end
 
@@ -67,7 +65,7 @@ describe 'jenkins::job' do
         let(:params) do
           {
             config: '',
-            difftool: true
+            difftool: true,
           }
         end
 
@@ -95,13 +93,12 @@ describe 'jenkins::job' do
         let(:params) do
           {
             ensure: 'present',
-            config: unformatted_config
+            config: unformatted_config,
           }
         end
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(formatted_config)
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(formatted_config)
         end
       end
 
@@ -110,8 +107,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', config: quotes } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(%r{version="1\.0" encoding="UTF-8"})
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(%r{version="1\.0" encoding="UTF-8"})
         end
       end
 
@@ -120,8 +116,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', config: empty_tags } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content('<xml><notempty><empty/></notempty><emptytwo/></xml>')
         end
       end
 
@@ -130,8 +125,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', config: quotes } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content('<config>the dog said "woof"</config>')
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content('<config>the dog said "woof"</config>')
         end
       end
 
@@ -140,8 +134,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', source: thesource, config: '' } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(%r{sourcedconfig})
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(%r{sourcedconfig})
         end
       end
 
@@ -151,8 +144,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', source: thesource, config: quotes } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(%r{sourcedconfig})
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(%r{sourcedconfig})
         end
       end
 
@@ -168,8 +160,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', template: thetemplate, config: '' } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(%r{sourcedconfig})
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(%r{sourcedconfig})
         end
       end
 
@@ -179,8 +170,7 @@ describe 'jenkins::job' do
         let(:params) { { ensure: 'present', template: thetemplate, config: quotes } }
 
         it do
-          is_expected.to contain_file('/tmp/myjob-config.xml').
-            with_content(%r{sourcedconfig})
+          is_expected.to contain_file('/tmp/myjob-config.xml').with_content(%r{sourcedconfig})
         end
       end
 
