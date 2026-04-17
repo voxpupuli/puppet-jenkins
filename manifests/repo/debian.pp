@@ -1,16 +1,21 @@
 # @summary Set up the apt repo on Debian-based distros
 # @api private
-class jenkins::repo::debian (
-  String $gpg_key_id = '63667EE74BBA1F0A08A698725BA31D57EF5975CA',
-) {
+class jenkins::repo::debian {
   assert_private()
 
   include apt
 
   if $jenkins::lts {
     $location = "${jenkins::repo::base_url}/debian-stable"
+    $location_key = "${jenkins::repo::base_url}/debian-stable/${jenkins::repo::gpg_key_filename}"
   } else {
     $location = "${jenkins::repo::base_url}/debian"
+    $location_key = "${jenkins::repo::base_url}/debian/${jenkins::repo::gpg_key_filename}"
+  }
+
+  apt::keyring { 'jenkins':
+    source   => $location_key,
+    filename => 'jenkins-keyring.asc',
   }
 
   apt::source { 'jenkins':
@@ -19,9 +24,6 @@ class jenkins::repo::debian (
     include  => {
       'src' => false,
     },
-    key      => {
-      'id'     => $gpg_key_id,
-      'source' => "${location}/${jenkins::repo::gpg_key_filename}",
-    },
+    keyring  => '/etc/apt/keyrings/jenkins-keyring.asc',
   }
 }
