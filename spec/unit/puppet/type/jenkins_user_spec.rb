@@ -33,10 +33,10 @@ describe Puppet::Type.type(:jenkins_user) do
         expect do
           described_class.new(
             name: 'nobody',
-            api_token_plain: value
+            api_token_plain: value,
           )
-        end.
-          not_to raise_error
+        end
+          .not_to raise_error
       end
 
       %w[ 51a8b1dd95bc76b1a2869356c043e8b
@@ -45,10 +45,10 @@ describe Puppet::Type.type(:jenkins_user) do
           expect do
             described_class.new(
               name: 'nobody',
-              api_token_plain: value
+              api_token_plain: value,
             )
-          end.
-            to raise_error(Puppet::ResourceError, %r{is not a 32char hex string})
+          end
+            .to raise_error(Puppet::ResourceError, %r{is not a 32char hex string})
         end
       end
     end

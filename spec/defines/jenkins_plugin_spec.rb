@@ -13,21 +13,17 @@ describe 'jenkins::plugin' do
 
       describe 'without version' do
         it do
-          is_expected.to contain_archive("#{title}.hpi").with(
-            source: "#{plugin_host}/latest/myplug.hpi",
-            path: "#{pdir}/#{title}.hpi",
-            cleanup: false,
-            extract: false
-          ).that_requires("File[#{pdir}]").
-            that_notifies('Service[jenkins]')
+          is_expected.to contain_archive("#{title}.hpi")
+            .with(
+              source: "#{plugin_host}/latest/myplug.hpi",
+              path: "#{pdir}/#{title}.hpi",
+              cleanup: false,
+              extract: false,
+            ).that_requires("File[#{pdir}]").that_notifies('Service[jenkins]')
         end
 
         it do
-          is_expected.to contain_file("#{pdir}/#{title}.hpi").with(
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: '0644'
-          ).that_comes_before('Service[jenkins]')
+          is_expected.to contain_file("#{pdir}/#{title}.hpi").with(owner: 'jenkins', group: 'jenkins', mode: '0644').that_comes_before('Service[jenkins]')
         end
       end
 
@@ -35,9 +31,7 @@ describe 'jenkins::plugin' do
         let(:params) { { version: '1.2.3' } }
 
         it do
-          is_expected.to contain_archive('myplug.hpi').with(
-            source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi"
-          )
+          is_expected.to contain_archive('myplug.hpi').with(source: "#{plugin_host}/download/plugins/myplug/1.2.3/myplug.hpi")
         end
 
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
@@ -106,13 +100,14 @@ describe 'jenkins::plugin' do
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
 
         it do
-          is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
-            ensure: 'present',
-            owner: 'jenkins',
-            group: 'jenkins',
-            mode: '0644'
-          ).that_requires("Archive[#{title}.hpi]").
-            that_notifies('Service[jenkins]')
+          is_expected.to contain_file("#{pdir}/myplug.hpi.disabled")
+            .with(
+              ensure: 'present',
+              owner: 'jenkins',
+              group: 'jenkins',
+              mode: '0644',
+            ).that_requires("Archive[#{title}.hpi]")
+            .that_notifies('Service[jenkins]')
         end
       end
 
@@ -123,9 +118,7 @@ describe 'jenkins::plugin' do
         it { is_expected.to contain_file("#{pdir}/myplug.hpi") }
 
         it do
-          is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(
-            ensure: 'absent'
-          )
+          is_expected.to contain_file("#{pdir}/myplug.hpi.disabled").with(ensure: 'absent')
         end
       end
 
@@ -140,9 +133,7 @@ describe 'jenkins::plugin' do
         end
 
         it do
-          is_expected.to contain_archive('myplug.hpi').with(
-            proxy_server: 'http://proxy.company.com:8080'
-          )
+          is_expected.to contain_archive('myplug.hpi').with(proxy_server: 'http://proxy.company.com:8080')
         end
       end
 
@@ -156,9 +147,7 @@ describe 'jenkins::plugin' do
         end
 
         it do
-          is_expected.to contain_archive('myplug.hpi').with(
-            source: 'https://update.jenkins.custom/latest/myplug.hpi'
-          )
+          is_expected.to contain_archive('myplug.hpi').with(source: 'https://update.jenkins.custom/latest/myplug.hpi')
         end
       end
 
@@ -218,10 +207,11 @@ describe 'jenkins::plugin' do
       describe 'source' do
         shared_examples 'should download from $source url' do
           it 'downloads from $source url' do
-            is_expected.to contain_archive('myplug.hpi').with(
-              source: 'http://e.org/myplug.hpi'
-            ).
-              that_requires("File[#{pdir}]")
+            is_expected.to contain_archive('myplug.hpi')
+              .with(
+                source: 'http://e.org/myplug.hpi',
+              )
+              .that_requires("File[#{pdir}]")
           end
         end
 
@@ -266,13 +256,14 @@ describe 'jenkins::plugin' do
             let(:params) { { pin: true } }
 
             it do
-              is_expected.to contain_file("#{pdir}/foo.hpi.pinned").with(
-                ensure: 'file',
-                owner: 'jenkins',
-                group: 'jenkins'
-              ).
-                that_requires('Archive[foo.hpi]').
-                that_notifies('Service[jenkins]')
+              is_expected.to contain_file("#{pdir}/foo.hpi.pinned")
+                .with(
+                  ensure: 'file',
+                  owner: 'jenkins',
+                  group: 'jenkins',
+                )
+                .that_requires('Archive[foo.hpi]')
+                .that_notifies('Service[jenkins]')
             end
           end
 

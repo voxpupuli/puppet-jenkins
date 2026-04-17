@@ -16,7 +16,7 @@ describe 'jenkins' do
           let(:params) do
             { user_hash: { 'user' => {
               'email' => 'user@example.com',
-              'password' => 'test'
+              'password' => 'test',
             } } }
           end
 
