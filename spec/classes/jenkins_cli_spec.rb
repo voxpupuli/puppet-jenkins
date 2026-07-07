@@ -45,6 +45,20 @@ describe 'jenkins' do
           end
         end
 
+        context '$cli => true and user/pw and custom url' do
+          let(:params) do
+            { cli: true,
+              cli_username: 'myuser',
+              cli_password: 'mypassword',
+              port: 8443,
+              urlbase: 'https://myjenkins.dom' }
+          end
+
+          it { is_expected.to contain_class('jenkins::cli') }
+          it { is_expected.to contain_exec('jenkins-cli') }
+          it { is_expected.to contain_exec('reload-jenkins').with_command(%r{https://myjenkins.dom:8443}) }
+        end
+
         context '$cli => false' do
           let(:params) { { cli: false } }
 

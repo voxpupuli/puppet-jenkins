@@ -11,6 +11,7 @@ class jenkins::cli_helper {
   $cli_jar = $jenkins::cli::jar
   $port = jenkins_port()
   $prefix = jenkins_prefix()
+  $urlbase = $jenkins::urlbase
   $helper_groovy = "${libdir}/puppet_helper.groovy"
 
   file { $helper_groovy:
@@ -28,7 +29,7 @@ class jenkins::cli_helper {
       '|',
       '/usr/bin/java',
       "-jar ${cli_jar}",
-      "-s http://127.0.0.1:${port}${prefix}",
+      "-s ${urlbase}:${port}${prefix}",
       $jenkins::_cli_auth_arg,
       'groovy =',
     ]),

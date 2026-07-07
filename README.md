@@ -205,9 +205,12 @@ interact with the Jenkins API. Users, Credentials, and security model
 configuration are all driven through this script.
 
 When an API-based resource is defined, the Jenkins' CLI is installed and run
-against the local system (127.0.0.1). Jenkins is assumed to be listening on
+against the local system (localhost). Jenkins is assumed to be listening on
 port 8080, but the module is smart enough to notice if you've configured an
-alternate port using jenkins::config_hash['JENKINS_PORT'].
+alternate port using jenkins::config_hash['JENKINS_PORT'].  Unless you are using
+ssh for the cli authentication, the urlbase and port params should be set to
+match up to what you configure in Jenkins Location in your system configuration
+to avoid unexpected origin errors.
 
 Users and credentials are Puppet-managed, meaning that changes made to them
 from outside Puppet will be reset at the next puppet run. In this way, you can
