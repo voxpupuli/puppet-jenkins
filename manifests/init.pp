@@ -199,7 +199,7 @@
 # @param urlbase
 #  Jenkins base url including protocol (http/https) and hostname
 #
-#  Note that this value is use for CLI communication and does not configure your Jenkins system location
+#  Note that this value is used for CLI communication and does not configure your Jenkins system location.
 #  It should however match the base of your Jenkins Location in system config to prevent CORS
 #  unexpected Origin errors.
 #
