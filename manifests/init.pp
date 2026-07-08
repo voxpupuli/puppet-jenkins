@@ -196,6 +196,13 @@
 # @param cli_try_sleep
 #   Seconds between tries to contact jenkins API
 #
+# @param urlbase
+#  Jenkins base url including protocol (http/https) and hostname
+#
+#  Note that this value is used for CLI communication and does not configure your Jenkins system location.
+#  It should however match the base of your Jenkins Location in system config to prevent CORS
+#  unexpected Origin errors.
+#
 # @param port
 #   Jenkins listening HTTP port
 #
@@ -303,6 +310,7 @@ class jenkins (
   Optional[String] $cli_password_file             = undef,
   Integer $cli_tries                              = 10,
   Integer $cli_try_sleep                          = 10,
+  String $urlbase                                 = 'http://localhost',
   Integer $port                                   = 8080,
   Stdlib::Absolutepath $libdir                    = '/usr/share/java',
   Boolean $manage_datadirs                        = true,

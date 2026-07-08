@@ -50,13 +50,14 @@ class jenkins::cli {
 
   $port = jenkins_port()
   $prefix = jenkins_prefix()
+  $urlbase = $jenkins::urlbase
 
   # The jenkins cli command with required parameter(s)
   $cmd = join(
     delete_undef_values([
       'java',
       "-jar ${jar}",
-      "-s http://localhost:${port}${prefix}",
+      "-s ${urlbase}:${port}${prefix}",
       $jenkins::_cli_auth_arg,
     ]),
     ' '

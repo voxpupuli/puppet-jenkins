@@ -8,7 +8,7 @@ describe 'jenkins::cli::exec' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
-      let(:helper_cmd) { '/bin/cat /usr/share/java/puppet_helper.groovy | /usr/bin/java -jar /usr/share/java/jenkins-cli.jar -s http://127.0.0.1:8080 groovy =' }
+      let(:helper_cmd) { '/bin/cat /usr/share/java/puppet_helper.groovy | /usr/bin/java -jar /usr/share/java/jenkins-cli.jar -s http://localhost:8080 groovy =' }
 
       describe 'relationships' do
         it do

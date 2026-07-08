@@ -56,7 +56,7 @@ have proper permissions setup.
 
 ### Functions
 
-* [`jenkins_port`](#jenkins_port): Return the configurad Jenkins port value (corresponds to /etc/defaults/jenkins -> JENKINS_PORT  Example:      $port = jenkins_port()
+* [`jenkins_port`](#jenkins_port): Return the configured Jenkins port value (corresponds to /etc/defaults/jenkins -> JENKINS_PORT  Example:      $port = jenkins_port()
 * [`jenkins_prefix`](#jenkins_prefix): Return the configured Jenkins prefix value (corresponds to /etc/defaults/jenkins -> PREFIX)  Example:      $prefix = jenkins_prefix()
 
 ### Data types
@@ -198,6 +198,7 @@ The following parameters are available in the `jenkins` class:
 * [`cli_password_file`](#-jenkins--cli_password_file)
 * [`cli_tries`](#-jenkins--cli_tries)
 * [`cli_try_sleep`](#-jenkins--cli_try_sleep)
+* [`urlbase`](#-jenkins--urlbase)
 * [`port`](#-jenkins--port)
 * [`libdir`](#-jenkins--libdir)
 * [`manage_datadirs`](#-jenkins--manage_datadirs)
@@ -503,6 +504,18 @@ Data type: `Integer`
 Seconds between tries to contact jenkins API
 
 Default value: `10`
+
+##### <a name="-jenkins--urlbase"></a>`urlbase`
+
+Data type: `String`
+
+Jenkins base url including protocol (http/https) and hostname
+
+Note that this value is used for CLI communication and does not configure your Jenkins system location.
+It should however match the base of your Jenkins Location in system config to prevent CORS
+unexpected Origin errors.
+
+Default value: `'http://localhost'`
 
 ##### <a name="-jenkins--port"></a>`port`
 
@@ -1520,7 +1533,7 @@ Default value: `'present'`
 
 Type: Ruby 3.x API
 
-Return the configurad Jenkins port value
+Return the configured Jenkins port value
 (corresponds to /etc/defaults/jenkins -> JENKINS_PORT
 
 Example:
@@ -1529,7 +1542,7 @@ Example:
 
 #### `jenkins_port()`
 
-Return the configurad Jenkins port value
+Return the configured Jenkins port value
 (corresponds to /etc/defaults/jenkins -> JENKINS_PORT
 
 Example:

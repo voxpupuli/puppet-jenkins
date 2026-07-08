@@ -30,6 +30,20 @@ describe 'jenkins_port' do
           is_expected.to run.with_params.and_return('1337')
         end
       end
+
+      context 'with overwritten parameter' do
+        let(:pre_condition) do
+          <<-ENDPUPPET
+          class { 'jenkins':
+            port => 1337,
+          }
+          ENDPUPPET
+        end
+
+        it 'is our port parameter' do
+          is_expected.to run.with_params.and_return(1337)
+        end
+      end
     end
   end
 end
