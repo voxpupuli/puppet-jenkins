@@ -1,7 +1,7 @@
 # @summary Set up the apt repo on Debian-based distros
 # @api private
 class jenkins::repo::debian (
-  String $gpg_key_id = '63667EE74BBA1F0A08A698725BA31D57EF5975CA',
+  String $gpg_key_id = '5E386EADB55F01504CAE8BCF7198F4B714ABFC68',
 ) {
   assert_private()
 

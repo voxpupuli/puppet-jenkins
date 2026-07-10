@@ -15,7 +15,15 @@ describe 'jenkins' do
 
         describe 'default' do
           it_behaves_like 'an apt catalog'
-          it { is_expected.to contain_apt__source('jenkins').with_location('https://pkg.jenkins.io/debian-stable') }
+          it do
+            is_expected.to contain_apt__source('jenkins').with(
+              location: 'https://pkg.jenkins.io/debian-stable',
+              key: {
+                'id' => '5E386EADB55F01504CAE8BCF7198F4B714ABFC68',
+                'source' => 'https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key',
+              },
+            )
+          end
         end
 
         describe 'lts = true' do

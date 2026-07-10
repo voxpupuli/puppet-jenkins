@@ -9,7 +9,12 @@ describe 'jenkins' do
 
       context 'repo::el' do
         describe 'default' do
-          it { is_expected.to contain_yumrepo('jenkins').with_baseurl('https://pkg.jenkins.io/redhat-stable/') }
+          it do
+            is_expected.to contain_yumrepo('jenkins').with(
+              baseurl: 'https://pkg.jenkins.io/redhat-stable/',
+              gpgkey: 'https://pkg.jenkins.io/redhat-stable/jenkins.io-2026.key',
+            )
+          end
           it { is_expected.to contain_yumrepo('jenkins').with_proxy(nil) }
         end
 
