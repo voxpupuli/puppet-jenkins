@@ -21,7 +21,7 @@ describe 'jenkins' do
               key: {
                 'id' => '5E386EADB55F01504CAE8BCF7198F4B714ABFC68',
                 'source' => 'https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key',
-              },
+              }
             )
           end
         end

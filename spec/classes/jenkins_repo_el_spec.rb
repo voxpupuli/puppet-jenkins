@@ -12,9 +12,10 @@ describe 'jenkins' do
           it do
             is_expected.to contain_yumrepo('jenkins').with(
               baseurl: 'https://pkg.jenkins.io/redhat-stable/',
-              gpgkey: 'https://pkg.jenkins.io/redhat-stable/jenkins.io-2026.key',
+              gpgkey: 'https://pkg.jenkins.io/redhat-stable/jenkins.io-2026.key'
             )
           end
+
           it { is_expected.to contain_yumrepo('jenkins').with_proxy(nil) }
         end
 
