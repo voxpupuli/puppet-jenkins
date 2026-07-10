@@ -68,6 +68,10 @@ describe Puppet::X::Jenkins::Provider::Cli do
   describe '::prefetch' do
     let(:catalog) { Puppet::Resource::Catalog.new }
 
+    before do
+      allow(File).to receive(:file?).with('/usr/share/java/jenkins-cli.jar').and_return(true)
+    end
+
     it 'associates a provider with an instance' do
       resource = Puppet::Type.type(:notify).new(name: 'test')
       catalog.add_resource resource
@@ -80,6 +84,16 @@ describe Puppet::X::Jenkins::Provider::Cli do
       described_class.prefetch(resource.name => resource)
 
       expect(resource.provider).to eq provider
+    end
+
+    it 'skips instance discovery when the CLI jar does not exist yet' do
+      resource = Puppet::Type.type(:notify).new(name: 'test')
+      catalog.add_resource resource
+
+      allow(File).to receive(:file?).with('/usr/share/java/jenkins-cli.jar').and_return(false)
+      expect(described_class).not_to receive(:instances)
+
+      described_class.prefetch(resource.name => resource)
     end
 
     it 'does not break an existing resource/provider association' do

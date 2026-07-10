@@ -52,14 +52,12 @@ describe 'jenkins' do
       end
 
       describe 'with firewall, configure_firewall => true' do
-        let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
         let(:params) { { configure_firewall: true } }
 
         it { is_expected.to contain_class 'jenkins::firewall' }
       end
 
       describe 'with firewall, configure_firewall => false' do
-        let(:pre_condition) { ['define firewall ($action, $state, $dport, $proto) {}'] }
         let(:params) { { configure_firewall: false } }
 
         it { is_expected.not_to contain_class 'jenkins::firewall' }

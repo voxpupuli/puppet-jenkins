@@ -50,6 +50,12 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     Puppet.debug("#{sname} prefetch: #{resources.each_key.collect.to_a}")
 
     catalog = resources.first[1].catalog
+    cli_jar = Puppet::X::Jenkins::Config.new(catalog)[:cli_jar]
+
+    unless File.file?(cli_jar)
+      Puppet.debug("#{sname} prefetch skipped: #{cli_jar} does not exist")
+      return
+    end
 
     instances(catalog).each do |prov|
       if (resource = resources[prov.name])
