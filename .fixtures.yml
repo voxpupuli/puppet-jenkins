@@ -4,6 +4,7 @@ fixtures:
     apt: https://github.com/puppetlabs/puppetlabs-apt
     archive: https://github.com/voxpupuli/puppet-archive.git
     augeas_core: https://github.com/puppetlabs/puppetlabs-augeas_core.git
+    firewall: https://github.com/puppetlabs/puppetlabs-firewall.git
     java: https://github.com/puppetlabs/puppetlabs-java
     stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
     systemd: https://github.com/voxpupuli/puppet-systemd
