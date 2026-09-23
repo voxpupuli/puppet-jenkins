@@ -28,7 +28,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('foo').with(
-              command: "#{helper_cmd} foo",
+              command: sensitive("#{helper_cmd} foo"),
               tries: 10,
               try_sleep: 10,
               unless: nil
@@ -43,7 +43,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('bar').with(
-              command: "#{helper_cmd} bar",
+              command: sensitive("#{helper_cmd} bar"),
               tries: 10,
               try_sleep: 10,
               unless: nil
@@ -60,7 +60,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('foo').with(
-              command: "#{helper_cmd} bar",
+              command: sensitive("#{helper_cmd} bar"),
               tries: 10,
               try_sleep: 10,
               unless: nil
@@ -73,7 +73,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('foo').with(
-              command: "#{helper_cmd} bar",
+              command: sensitive("#{helper_cmd} bar"),
               tries: 10,
               try_sleep: 10,
               unless: nil
@@ -86,7 +86,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('foo').with(
-              command: "#{helper_cmd} bar baz",
+              command: sensitive("#{helper_cmd} bar baz"),
               tries: 10,
               try_sleep: 10,
               unless: nil
@@ -101,7 +101,7 @@ describe 'jenkins::cli::exec' do
 
           it do
             is_expected.to contain_exec('foo').with(
-              command: "#{helper_cmd} foo",
+              command: sensitive("#{helper_cmd} foo"),
               environment: ["HELPER_CMD=eval #{helper_cmd}"],
               unless: 'bar',
               tries: 10,

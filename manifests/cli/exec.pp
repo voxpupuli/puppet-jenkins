@@ -35,7 +35,7 @@ define jenkins::cli::exec (
 
   exec { $title:
     provider    => 'shell',
-    command     => $run,
+    command     => Sensitive($run),
     environment => $environment_run,
     unless      => $unless,
     tries       => $jenkins::cli_tries,
