@@ -15,12 +15,12 @@ describe Puppet::X::Jenkins::Util do
           c: nil,
           d: [
             :undef,
-            1
+            1,
           ],
-          e: 1
-        }
+          e: 1,
+        },
       ],
-      f: 1
+      f: 1,
     }
   end
 
@@ -34,10 +34,10 @@ describe Puppet::X::Jenkins::Util do
                                                       c: nil,
                                                       d: [
                                                         nil,
-                                                        1
+                                                        1,
                                                       ],
-                                                      e: 1
-                                                    }
+                                                      e: 1,
+                                                    },
                                                   ],
                                                   f: 1)
     end
@@ -53,10 +53,10 @@ describe Puppet::X::Jenkins::Util do
                                                        c: :undef,
                                                        d: [
                                                          :undef,
-                                                         1
+                                                         1,
                                                        ],
-                                                       e: 1
-                                                     }
+                                                       e: 1,
+                                                     },
                                                    ],
                                                    f: 1)
     end
@@ -76,10 +76,10 @@ describe Puppet::X::Jenkins::Util do
                                                             c: 5,
                                                             d: [
                                                               5,
-                                                              5
+                                                              5,
                                                             ],
-                                                            e: 5
-                                                          }
+                                                            e: 5,
+                                                          },
                                                         ],
                                                         f: 5)
     end

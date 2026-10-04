@@ -58,8 +58,8 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:job_list_json).
-          with(nil) { job_list_json_info }
+        expect(described_class).to receive(:job_list_json)
+          .with(nil) { job_list_json_info }
       end
 
       it 'returns the correct number of instances' do
@@ -89,8 +89,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       it 'passes it on ::get_job_list' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:job_list_json).
-          with(kind_of(Puppet::Resource::Catalog)) { job_list_json_info }
+        expect(described_class).to receive(:job_list_json).with(kind_of(Puppet::Resource::Catalog)) { job_list_json_info }
 
         described_class.instances(catalog)
       end
@@ -152,7 +151,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:cli).with(
         ['list-jobs'],
-        catalog: nil
+        catalog: nil,
       ) { list_jobs_output }
 
       ret = described_class.send :list_jobs
@@ -164,7 +163,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:cli).with(
         %w[get-job foo],
-        catalog: nil
+        catalog: nil,
       ) { foo_xml }
 
       ret = described_class.send :get_job, 'foo'
@@ -176,7 +175,7 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         %w[job_enabled foo],
-        catalog: nil
+        catalog: nil,
       ).and_return('true')
 
       ret = described_class.send :job_enabled, 'foo'
@@ -188,12 +187,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml
+        config: foo_xml,
       )
 
       expect(described_class).to receive(:cli).with(
         %w[create-job foo],
-        stdin: foo_xml
+        stdin: foo_xml,
       )
 
       provider.send :create_job
@@ -204,12 +203,12 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml
+        config: foo_xml,
       )
 
       expect(described_class).to receive(:cli).with(
         %w[update-job foo],
-        stdin: foo_xml
+        stdin: foo_xml,
       )
 
       provider.send :update_job
@@ -220,11 +219,11 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
     it do
       provider = described_class.new(
         name: 'foo',
-        config: foo_xml
+        config: foo_xml,
       )
 
       expect(described_class).to receive(:cli).with(
-        %w[delete-job foo]
+        %w[delete-job foo],
       )
 
       provider.send :delete_job

@@ -44,7 +44,7 @@ Puppet::Type.type(:jenkins_credentials).provide(:cli, parent: Puppet::X::Jenkins
 
     params = {
       name: info['id'],
-      ensure: :present
+      ensure: :present,
     }
 
     %i[impl domain scope].each { |k| copy_key(params, info, k) }

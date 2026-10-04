@@ -11,6 +11,29 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
+    inputs:
+      beaker_staging_url:
+        description: |-
+          URL to a staging Server to test unreleased packages.
+          We will append the version to the Server and assume all packages are in the same directory.
+          Only supported for AIO packages.
+        required: false
+        type: string
+        default: 'https://artifacts.voxpupuli.org/openvox-agent'
+      beaker_collection:
+        description: |-
+          When set to staging, we will download the packages from staging_url.
+          Otherwise we will use the official repos. Supported values: puppet7, puppet8, openvox7, openvox8, staging.
+          When unset, we will generate a list of supported collections based on metadata.json.
+        required: false
+        type: string
+      beaker_staging_version:
+        description: |-
+          The package version we want to test.
+          Only used for beaker_collection = staging
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.ref_name }}
@@ -23,3 +46,7 @@ jobs:
   puppet:
     name: Puppet
     uses: voxpupuli/gha-puppet/.github/workflows/beaker.yml@v4
+    with:
+      beaker_staging_url: ${{ inputs.beaker_staging_url }}
+      beaker_collection: ${{ inputs.beaker_collection }}
+      beaker_staging_version: ${{ inputs.beaker_staging_version }}

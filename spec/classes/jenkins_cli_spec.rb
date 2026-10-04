@@ -20,7 +20,7 @@ describe 'jenkins' do
               cli_ssh_keyfile: '/path/to/key',
               cli_username: 'myuser',
               libdir: '/path/to/libdir',
-              config_hash: { 'JENKINS_PORT' => { 'value' => '9000' } } }
+              config_hash: { 'JENKINS_PORT' => { 'value' => '9000' } }, }
           end
 
           it { is_expected.to contain_class('jenkins::cli') }
@@ -33,13 +33,11 @@ describe 'jenkins' do
           describe 'jenkins::cli' do
             describe 'relationships' do
               it do
-                is_expected.to contain_class('jenkins::cli').
-                  that_requires('Class[jenkins::service]')
+                is_expected.to contain_class('jenkins::cli').that_requires('Class[jenkins::service]')
               end
 
               it do
-                is_expected.to contain_class('jenkins::cli').
-                  that_comes_before('Anchor[jenkins::end]')
+                is_expected.to contain_class('jenkins::cli').that_comes_before('Anchor[jenkins::end]')
               end
             end
           end

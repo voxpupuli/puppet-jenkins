@@ -21,7 +21,7 @@ class Puppet::X::Jenkins::Config
     cli_username: nil,
     cli_password: nil,
     cli_password_file: '/tmp/jenkins_credentials_for_puppet',
-    cli_password_file_exists: false
+    cli_password_file_exists: false,
   }.freeze
   CONFIG_CLASS = 'jenkins::cli::config'
   FACT_PREFIX = 'jenkins_'

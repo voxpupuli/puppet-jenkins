@@ -68,8 +68,7 @@ describe Puppet::Type.type(:jenkins_job) do
 
         context 'changed with replace' do
           it do
-            expect(property.change_to_s('foo', 'bar')).
-              to match(%r{content changed '{md5}\w+' to '{md5}\w+'})
+            expect(property.change_to_s('foo', 'bar')).to match(%r{content changed '{md5}\w+' to '{md5}\w+'})
           end
         end
 
@@ -91,11 +90,11 @@ describe Puppet::Type.type(:jenkins_job) do
     describe 'folders' do
       it 'autorequires parent folder resource' do
         folder = described_class.new(
-          name: 'foo'
+          name: 'foo',
         )
 
         job = described_class.new(
-          name: 'foo/bar'
+          name: 'foo/bar',
         )
 
         folder[:ensure] = :present
@@ -113,15 +112,15 @@ describe Puppet::Type.type(:jenkins_job) do
 
       it 'autorequires multiple nested parent folder resources' do
         folder1 = described_class.new(
-          name: 'foo'
+          name: 'foo',
         )
 
         folder2 = described_class.new(
-          name: 'foo/bar'
+          name: 'foo/bar',
         )
 
         job = described_class.new(
-          name: 'foo/bar/baz'
+          name: 'foo/bar/baz',
         )
 
         folder1[:ensure] = :present
@@ -144,15 +143,15 @@ describe Puppet::Type.type(:jenkins_job) do
       it 'autobefores multiple nested parent folder resources',
          unless: Puppet.version.to_f < 4.0 do
         folder1 = described_class.new(
-          name: 'foo'
+          name: 'foo',
         )
 
         folder2 = described_class.new(
-          name: 'foo/bar'
+          name: 'foo/bar',
         )
 
         job = described_class.new(
-          name: 'foo/bar/baz'
+          name: 'foo/bar/baz',
         )
 
         folder1[:ensure] = :absent

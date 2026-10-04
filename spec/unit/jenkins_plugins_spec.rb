@@ -14,12 +14,12 @@ describe Puppet::Jenkins::Plugins do
        { 'name' => 'credentials', 'optional' => false, 'version' => '1.9.3' },
        { 'name' => 'multiple-scms', 'optional' => true, 'version' => '0.2' },
        { 'name' => 'parameterized-trigger', 'optional' => true, 'version' => '2.4' },
-       { 'name' => 'git-client', 'optional' => false, 'version' => '1.6.0' }],
+       { 'name' => 'git-client', 'optional' => false, 'version' => '1.6.0' },],
       'developers' =>
       [{ 'developerId' => 'kohsuke', 'name' => 'Kohsuke Kawaguchi' },
        { 'developerId' => 'ndeloof',
          'email' => 'nicolas.deloof@gmail.com',
-         'name' => 'Nicolas De Loof' }],
+         'name' => 'Nicolas De Loof', },],
       'excerpt' =>
       "This plugin allows use of <a href='http://git-scm.com/'>Git</a> as a build SCM. A recent Git runtime is required (1.7.9 minimum, 1.8.x recommended). Plugin is only tested on official <a href='http://git-scm.com/'>git client</a>. Use exotic installations at your own risks.",
       'gav' => 'org.jenkins-ci.plugins:git:2.0.1',
@@ -34,7 +34,7 @@ describe Puppet::Jenkins::Plugins do
       'title' => 'Git Plugin',
       'url' => 'http://updates.jenkins-ci.org/download/plugins/git/2.0.1/git.hpi',
       'version' => '2.0.1',
-      'wiki' => 'https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin' }
+      'wiki' => 'https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin', }
   end
 
   describe '.exists?' do

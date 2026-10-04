@@ -23,7 +23,7 @@ describe 'jenkins' do
             {
               service_ensure: 'stopped',
               cli: false,
-              job_hash: { 'build' => { 'config' => '<xml/>' } }
+              job_hash: { 'build' => { 'config' => '<xml/>' } },
             }
           end
 

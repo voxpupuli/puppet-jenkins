@@ -21,7 +21,7 @@ describe 'jenkins' do
             is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(
               owner: 'jenkins',
               group: 'jenkins',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -39,7 +39,7 @@ describe 'jenkins' do
             is_expected.to contain_file('/var/lib/jenkins/proxy.xml').with(
               owner: 'jenkins',
               group: 'jenkins',
-              mode: '0644'
+              mode: '0644',
             )
           end
 

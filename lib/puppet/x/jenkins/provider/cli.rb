@@ -179,7 +179,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       command(:java),
       '-jar', cli_jar,
       '-s', url,
-      '-logger', 'WARNING'
+      '-logger', 'WARNING',
     ]
 
     cli_cmd = base_cmd + [command]
@@ -244,7 +244,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       'You must authenticate to access this Jenkins.',
       'anonymous is missing the Overall/Read permission',
       'anonymous is missing the Overall/RunScripts permission',
-      'anonymous is missing the Overall/Administer permission'
+      'anonymous is missing the Overall/Administer permission',
     ]
     # network errors / jenkins not ready for connections not related to
     # authenication failures
@@ -253,7 +253,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
       'java.net.SocketException: Connection reset',
       'java.net.ConnectException: Connection refused',
       'java.io.IOException: Failed to connect',
-      'java.io.IOException: Server returned HTTP response code: 503'
+      'java.io.IOException: Server returned HTTP response code: 503',
     ]
 
     if options.key?(:tmpfile_as_param)
