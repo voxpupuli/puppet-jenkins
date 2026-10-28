@@ -249,7 +249,7 @@ These should not affect the functionality of the module.
 - Reference jenkins\_plugins via $facts [\#949](https://github.com/voxpupuli/puppet-jenkins/pull/949) ([ekohl](https://github.com/ekohl))
 - Remove redundant code [\#948](https://github.com/voxpupuli/puppet-jenkins/pull/948) ([ekohl](https://github.com/ekohl))
 - Simplify the fact definition [\#947](https://github.com/voxpupuli/puppet-jenkins/pull/947) ([ekohl](https://github.com/ekohl))
-- Switch to open source UUID generator [\#938](https://github.com/voxpupuli/puppet-jenkins/pull/938) ([aarreedd](https://github.com/aarreedd))
+- Switch to open source UUID generator [\#938](https://github.com/voxpupuli/puppet-jenkins/pull/938) ([th-alanreed](https://github.com/th-alanreed))
 - Update references to rtyler/jenkins [\#935](https://github.com/voxpupuli/puppet-jenkins/pull/935) ([gguillotte](https://github.com/gguillotte))
 - Clean up acceptance spec helper [\#931](https://github.com/voxpupuli/puppet-jenkins/pull/931) ([ekohl](https://github.com/ekohl))
 - Rely more on stdlib and apt modules [\#917](https://github.com/voxpupuli/puppet-jenkins/pull/917) ([ekohl](https://github.com/ekohl))
