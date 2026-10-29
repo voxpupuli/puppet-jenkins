@@ -79,7 +79,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.19.0 < 10.0.0"
+      "version_requirement": ">= 4.19.0 < 11.0.0"
     },
     {
       "name": "puppetlabs/apt",
