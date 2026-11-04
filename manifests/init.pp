@@ -256,6 +256,15 @@
 #   removed.  Only enable this option if you want to manage all plugins (and
 #   plugin dependencies) explicitly.
 #
+# @param casc_config
+#   Jenkins Configuration as Code (JCasC) settings, written as YAML to
+#   `${localstatedir}/jenkins.yaml`, where the configuration-as-code plugin
+#   reads them by default. Use it for anything JCasC can configure, such as an
+#   LDAP/Active Directory security realm and authorization strategy (see the
+#   README). Jenkins is restarted when the file changes. Requires the
+#   `configuration-as-code` plugin (and its dependencies) in `plugin_hash`.
+#   Nothing is managed when empty.
+#
 # @example Explicitly manage *all* plugins (hiera)
 #   jenkins::default_plugins: []
 #   jenkins::purge_plugins: true
@@ -316,6 +325,7 @@ class jenkins (
   Array $default_plugins                          = $jenkins::params::default_plugins,
   String $default_plugins_host                    = 'https://updates.jenkins.io',
   Boolean $purge_plugins                          = false,
+  Hash $casc_config                               = {},
 ) inherits jenkins::params {
   if $purge_plugins and ! $manage_datadirs {
     warning('jenkins::purge_plugins has no effect unless jenkins::manage_datadirs is true')
@@ -374,6 +384,7 @@ class jenkins (
   include jenkins::jobs
   include jenkins::users
   include jenkins::proxy
+  include jenkins::casc
 
   if $manage_service {
     include jenkins::service

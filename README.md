@@ -359,6 +359,53 @@ The Jenkins security model can be set to one of two modes:
 
 Jenkins security is not managed by puppet unless jenkins::security is defined.
 
+### Configuration as Code (LDAP / Active Directory)
+
+For anything beyond the two modes above, such as an LDAP or Active Directory
+login with a permission matrix, use `jenkins::casc_config`. It is written as
+YAML to `${localstatedir}/jenkins.yaml` (owner `jenkins`, mode `0600`, content
+`Sensitive`), where the
+[configuration-as-code](https://plugins.jenkins.io/configuration-as-code/)
+plugin reads it by default, and Jenkins is restarted when it changes.
+
+The `configuration-as-code` plugin and its dependencies (e.g.
+`snakeyaml-api`), plus the plugins the configuration uses (here `ldap` and
+`matrix-auth`), must be installed, for example via `plugin_hash`.
+
+```yaml
+jenkins::casc_config:
+  jenkins:
+    securityRealm:
+      ldap:
+        configurations:
+          - server: 'ldaps://dc1.example.com:636 ldaps://dc2.example.com:636'
+            rootDN: 'DC=example,DC=com'
+            userSearch: 'sAMAccountName={0}'
+            groupMembershipStrategy:
+              fromUserRecord:
+                attributeName: 'memberOf'
+            managerDN: 'CN=svc-jenkins,OU=Service Accounts,DC=example,DC=com'
+            managerPasswordSecret: ENC[PKCS7,...] # e.g. hiera-eyaml
+            displayNameAttributeName: 'displayName'
+            mailAddressAttributeName: 'mail'
+    authorizationStrategy:
+      globalMatrix:
+        entries:
+          - user:
+              name: 'admin'
+              permissions:
+                - 'Overall/Administer'
+          - group:
+              name: 'authenticated'
+              permissions:
+                - 'Overall/Read'
+                - 'Job/Read'
+                - 'Job/Build'
+```
+
+Do not combine this with `jenkins::security` or `jenkins::user`: once LDAP is
+enabled, the CLI used by those can no longer authenticate as a local user.
+
 ## Using from Github / source
 
 ### With librarian
