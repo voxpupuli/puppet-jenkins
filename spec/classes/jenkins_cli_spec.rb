@@ -49,7 +49,7 @@ describe 'jenkins' do
               cli_username: 'myuser',
               cli_password: 'mypassword',
               port: 8443,
-              urlbase: 'https://myjenkins.dom' }
+              urlbase: 'https://myjenkins.dom', }
           end
 
           it { is_expected.to contain_class('jenkins::cli') }
