@@ -204,6 +204,7 @@ describe 'jenkins_credentials' do
               'credentials-binding',
               'eddsa-api',
               'gson-api',
+              'jackson-annotations2-api',
               'jackson2-api',
               'jakarta-activation-api',
               'jakarta-xml-bind-api',
@@ -216,6 +217,7 @@ describe 'jenkins_credentials' do
               'ssh-credentials',
               'trilead-api',
               'variant',
+              'woodstox-core-api',
               'workflow-step-api',
             ]: }
 
@@ -264,18 +266,18 @@ describe 'jenkins_credentials' do
               'git-client',
               'gitlab-plugin',
               'gson-api',
-              'ionicons-api',
+              'jackson-annotations2-api',
               'jackson2-api',
+              'jackson3-api',
               'jakarta-activation-api',
               'jakarta-mail-api',
               'jakarta-xml-bind-api',
               'jaxb',
-              'jersey2-api',
+              'jersey3-api',
               'joda-time-api',
               'jquery3-api',
               'jsch',
               'json-api',
-              'junit',
               'mailer',
               'matrix-project',
               'mina-sshd-api-common',
@@ -287,16 +289,21 @@ describe 'jenkins_credentials' do
               'scm-api',
               'script-security',
               'snakeyaml-api',
+              'snakeyaml-engine-api',
               'ssh-credentials',
               'sshd',
               'trilead-api',
               'variant',
+              'woodstox-core-api',
               'workflow-api',
               'workflow-job',
               'workflow-scm-step',
               'workflow-step-api',
               'workflow-support',
             ]: }
+            jenkins::plugin { 'junit':
+              version => '1458.1460.vd53b_087eeb_2c'
+            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -339,8 +346,9 @@ describe 'jenkins_credentials' do
             'eddsa-api',
             'font-awesome-api',
             'gson-api',
-            'ionicons-api',
+            'jackson-annotations2-api',
             'jackson2-api',
+            'jackson3-api',
             'jakarta-activation-api',
             'jakarta-mail-api',
             'jakarta-xml-bind-api',
@@ -348,7 +356,6 @@ describe 'jenkins_credentials' do
             'joda-time-api',
             'jquery3-api',
             'json-api',
-            'junit',
             'mailer',
             'plain-credentials',
             'plugin-util-api',
@@ -357,9 +364,11 @@ describe 'jenkins_credentials' do
             'scm-api',
             'script-security',
             'snakeyaml-api',
+            'snakeyaml-engine-api',
             'ssh-credentials',
             'trilead-api',
             'variant',
+            'woodstox-core-api',
             'workflow-api',
             'workflow-basic-steps',
             'workflow-cps',
@@ -369,6 +378,9 @@ describe 'jenkins_credentials' do
             'workflow-step-api',
             'workflow-support',
           ]: }
+          jenkins::plugin { 'junit':
+            version => '1458.1460.vd53b_087eeb_2c'
+          }
 
           jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
             ensure      => 'present',
