@@ -84,7 +84,7 @@ describe 'jenkins::cli::config' do
             let(:params) do
               {
                 ssh_private_key: '/dne',
-                ssh_private_key_content: 'foo'
+                ssh_private_key_content: 'foo',
               }
             end
 
@@ -99,7 +99,7 @@ describe 'jenkins::cli::config' do
                   mode: '0400',
                   backup: false,
                   owner: nil,
-                  group: nil
+                  group: nil,
                 )
               end
 
@@ -117,7 +117,7 @@ describe 'jenkins::cli::config' do
                   mode: '0400',
                   backup: false,
                   owner: 'jenkins',
-                  group: 'jenkins'
+                  group: 'jenkins',
                 )
               end
 

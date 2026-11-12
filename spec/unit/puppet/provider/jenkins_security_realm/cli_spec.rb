@@ -49,8 +49,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:get_security_realm).
-          with(nil) { realm_oauth }
+        expect(described_class).to receive(:get_security_realm).with(nil) { realm_oauth }
       end
 
       it 'returns the correct number of instances' do
@@ -69,8 +68,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
       it 'passes it on ::get_security_realm' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:get_security_realm).
-          with(catalog) { realm_oauth }
+        expect(described_class).to receive(:get_security_realm).with(catalog) { realm_oauth }
 
         described_class.instances(catalog)
       end
@@ -133,7 +131,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['get_security_realm'],
-        catalog: nil
+        catalog: nil,
       ) { realm_oauth_json }
 
       raw = described_class.send :get_security_realm
@@ -147,7 +145,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
-        stdinjson: realm_oauth
+        stdinjson: realm_oauth,
       )
 
       provider.send :set_jenkins_instance
@@ -160,7 +158,7 @@ describe Puppet::Type.type(:jenkins_security_realm).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['set_jenkins_instance'],
-        stdinjson: realm_none
+        stdinjson: realm_none,
       )
 
       provider.send :set_security_none

@@ -25,7 +25,7 @@ describe 'jenkins::augeas' do
               incl: '/var/lib/jenkins/foo.xml',
               context: '/files/var/lib/jenkins/foo.xml/',
               changes: ['set foo bar'],
-              lens: 'Xml.lns'
+              lens: 'Xml.lns',
             )
             is_expected.not_to contain_jenkins__plugin('myplug')
           end
@@ -63,7 +63,7 @@ describe 'jenkins::augeas' do
             config_filename: 'foo.xml',
             changes: [],
             plugin_version: '0.1',
-            plugin: true
+            plugin: true,
           }
         end
 
@@ -81,7 +81,7 @@ describe 'jenkins::augeas' do
           {
             plugin: false,
             config_filename: 'foo.xml',
-            changes: []
+            changes: [],
           }
         end
 
@@ -89,7 +89,7 @@ describe 'jenkins::augeas' do
           is_expected.to contain_augeas('jenkins::augeas: myplug').with(
             incl: '/var/lib/jenkins/foo.xml',
             context: '/files/var/lib/jenkins/foo.xml/',
-            lens: 'Xml.lns'
+            lens: 'Xml.lns',
           )
         end
       end
@@ -100,7 +100,7 @@ describe 'jenkins::augeas' do
             plugin: false,
             config_filename: 'foo.xml',
             context: '/foo/bar',
-            changes: []
+            changes: [],
           }
         end
 
@@ -108,7 +108,7 @@ describe 'jenkins::augeas' do
           is_expected.to contain_augeas('jenkins::augeas: myplug').with(
             incl: '/var/lib/jenkins/foo.xml',
             context: '/files/var/lib/jenkins/foo.xml/foo/bar',
-            lens: 'Xml.lns'
+            lens: 'Xml.lns',
           )
         end
       end
@@ -127,7 +127,7 @@ describe 'jenkins::augeas' do
               plugin: false,
               config_filename: 'foo.xml',
               changes: ['set foo bar'],
-              onlyif: pval
+              onlyif: pval,
             }
           end
 
@@ -136,7 +136,7 @@ describe 'jenkins::augeas' do
               incl: '/var/lib/jenkins/foo.xml',
               context: '/files/var/lib/jenkins/foo.xml/',
               changes: ['set foo bar'],
-              onlyif: pval
+              onlyif: pval,
             )
           end
         end
@@ -154,14 +154,14 @@ describe 'jenkins::augeas' do
             {
               plugin: false,
               config_filename: 'foo.xml',
-              changes: pval
+              changes: pval,
             }
           end
 
           it do
             is_expected.to contain_augeas('jenkins::augeas: myplug').with(
               incl: '/var/lib/jenkins/foo.xml',
-              changes: pval
+              changes: pval,
             )
           end
         end
@@ -175,7 +175,7 @@ describe 'jenkins::augeas' do
       #                                        |
       {
         true => 'safe-restart-jenkins',
-        false => 'reload-jenkins'
+        false => 'reload-jenkins',
       }.each do |pval, expected|
         describe "with param restart set to '#{pval}' (#{pval.class})" do
           let(:params) do
@@ -183,7 +183,7 @@ describe 'jenkins::augeas' do
               plugin: false,
               config_filename: 'foo.xml',
               changes: [],
-              restart: pval
+              restart: pval,
             }
           end
 

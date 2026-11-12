@@ -10,13 +10,11 @@ describe 'jenkins::security' do
 
       describe 'relationships' do
         it do
-          is_expected.to contain_class('jenkins::security').
-            that_requires('Class[jenkins::cli_helper]')
+          is_expected.to contain_class('jenkins::security').that_requires('Class[jenkins::cli_helper]')
         end
 
         it do
-          is_expected.to contain_class('jenkins::security').
-            that_comes_before('Anchor[jenkins::end]')
+          is_expected.to contain_class('jenkins::security').that_comes_before('Anchor[jenkins::end]')
         end
 
         it { is_expected.to compile }

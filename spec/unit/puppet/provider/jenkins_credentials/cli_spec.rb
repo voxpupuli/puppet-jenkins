@@ -309,8 +309,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
   describe '::instances' do
     context 'without any params' do
       before do
-        expect(described_class).to receive(:credentials_list_json).
-          with(nil) { credentials }
+        expect(described_class).to receive(:credentials_list_json).with(nil) { credentials }
       end
 
       it 'returns the correct number of instances' do
@@ -346,8 +345,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       it 'passes it on ::credentials_list_json' do
         catalog = Puppet::Resource::Catalog.new
 
-        expect(described_class).to receive(:credentials_list_json).
-          with(kind_of(Puppet::Resource::Catalog)) { credentials }
+        expect(described_class).to receive(:credentials_list_json).with(kind_of(Puppet::Resource::Catalog)) { credentials }
 
         described_class.instances(catalog)
       end
@@ -418,7 +416,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
     it do
       expect(described_class).to receive(:clihelper).with(
         ['credentials_list_json'],
-        catalog: nil
+        catalog: nil,
       ) { JSON.pretty_generate(credentials[0]) }
 
       raw = described_class.send :credentials_list_json
@@ -436,7 +434,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
 
       expect(described_class).to receive(:clihelper).with(
         ['credentials_update_json'],
-        stdinjson: credentials[0]
+        stdinjson: credentials[0],
       )
 
       provider.send :credentials_update_json
@@ -448,7 +446,7 @@ describe Puppet::Type.type(:jenkins_credentials).provider(:cli) do
       provider = described_class.send :from_hash, credentials[0]
 
       expect(described_class).to receive(:clihelper).with(
-        %w[credentials_delete_id 9b07d668-a87e-4877-9407-ae05056e32ac]
+        %w[credentials_delete_id 9b07d668-a87e-4877-9407-ae05056e32ac],
       )
 
       provider.send :credentials_delete_id
