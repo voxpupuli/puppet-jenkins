@@ -17,7 +17,7 @@ class Puppet::X::Jenkins::Config
     url: 'http://localhost:8080',
     ssh_private_key: nil,
     puppet_helper: '/usr/share/java/puppet_helper.groovy',
-    cli_tries: 30,
+    cli_tries: 7,
     cli_username: nil,
     cli_password: nil,
     cli_password_file: '/tmp/jenkins_credentials_for_puppet',
