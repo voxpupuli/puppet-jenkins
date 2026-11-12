@@ -50,6 +50,7 @@ class jenkins::cli {
 
   $port = jenkins_port()
   $prefix = jenkins_prefix()
+  $urlbase = $jenkins::urlbase
 
   # The jenkins cli command with required parameter(s)
   $cmd = join(
@@ -57,7 +58,7 @@ class jenkins::cli {
       'java',
       "-jar ${jar}",
       '-http',
-      "-s http://localhost:${port}${prefix}",
+      "-s ${urlbase}:${port}${prefix}",
       $jenkins::_cli_auth_arg,
     ]),
     ' '

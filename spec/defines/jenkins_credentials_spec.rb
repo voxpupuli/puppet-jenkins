@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'jenkins::credentials' do
   let(:title) { 'foo' }
-  let(:helper_cmd) { '/usr/bin/java -jar cli.jar -s http://127.0.0.1:8080 groovy /var/lib/jenkins/puppet_helper.groovy' }
+  let(:helper_cmd) { '/usr/bin/java -jar cli.jar -s http://localhost:8080 groovy /var/lib/jenkins/puppet_helper.groovy' }
   let(:pre_condition) do
     "class jenkins::cli_helper { $helper_cmd = '#{helper_cmd}' }"
   end
