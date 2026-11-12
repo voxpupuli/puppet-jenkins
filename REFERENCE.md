@@ -17,6 +17,7 @@
 
 #### Private Classes
 
+* `jenkins::casc`: Manage the Jenkins Configuration as Code (JCasC) file
 * `jenkins::cli`: Allow Jenkins commands to be issued from the command line
 * `jenkins::cli::reload`: Command Jenkins to reload config.xml via the CLI.
 * `jenkins::config`: Wire up the configuration
@@ -211,6 +212,7 @@ The following parameters are available in the `jenkins` class:
 * [`default_plugins`](#-jenkins--default_plugins)
 * [`default_plugins_host`](#-jenkins--default_plugins_host)
 * [`purge_plugins`](#-jenkins--purge_plugins)
+* [`casc_config`](#-jenkins--casc_config)
 
 ##### <a name="-jenkins--version"></a>`version`
 
@@ -620,6 +622,20 @@ removed.  Only enable this option if you want to manage all plugins (and
 plugin dependencies) explicitly.
 
 Default value: `false`
+
+##### <a name="-jenkins--casc_config"></a>`casc_config`
+
+Data type: `Hash`
+
+Jenkins Configuration as Code (JCasC) settings, written as YAML to
+`${localstatedir}/jenkins.yaml`, where the configuration-as-code plugin
+reads them by default. Use it for anything JCasC can configure, such as an
+LDAP/Active Directory security realm and authorization strategy (see the
+README). Jenkins is restarted when the file changes. Requires the
+`configuration-as-code` plugin (and its dependencies) in `plugin_hash`.
+Nothing is managed when empty.
+
+Default value: `{}`
 
 ### <a name="jenkins--cli--config"></a>`jenkins::cli::config`
 
