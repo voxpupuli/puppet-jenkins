@@ -477,8 +477,8 @@ describe Puppet::X::Jenkins::Provider::Cli do
       context 'without ssh_private_key' do
         CLI_NET_ERRORS.each do |error|
           it 'retries cli on NetError exception' do
-            expect(described_class).to receive(:execute_with_auth).exactly(31).times.and_raise(NetError, error)
-            expect(Puppet::Util::RetryAction).to receive(:sleep).exactly(30).times
+            expect(described_class).to receive(:execute_with_auth).exactly(8).times.and_raise(NetError, error)
+            expect(Puppet::Util::RetryAction).to receive(:sleep).exactly(7).times
 
             expect { described_class.cli('foo') }.
               to raise_error(Puppet::Util::RetryAction::RetryException::RetriesExceeded)
@@ -498,7 +498,7 @@ describe Puppet::X::Jenkins::Provider::Cli do
           )
           catalog.add_resource jenkins
 
-          expect(Puppet::Util::RetryAction).to receive(:retry_action).with(retries: 30, retry_exceptions: [UnknownError, NetError]).and_raise(UnknownError, 'foo')
+          expect(Puppet::Util::RetryAction).to receive(:retry_action).with(retries: 7, retry_exceptions: [UnknownError, NetError]).and_raise(UnknownError, 'foo')
 
           expect { described_class.cli('foo', catalog: catalog) }.
             to raise_error(UnknownError, 'foo')

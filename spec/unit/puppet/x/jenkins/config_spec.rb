@@ -10,7 +10,7 @@ describe Puppet::X::Jenkins::Config do
     url: 'http://localhost:8080',
     ssh_private_key: nil,
     puppet_helper: '/usr/share/java/puppet_helper.groovy',
-    cli_tries: 30
+    cli_tries: 7
   }.freeze
 
   shared_context 'facts' do
