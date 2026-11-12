@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v8.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v8.0.0) (2026-11-12)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v7.0.0...v8.0.0)
+
+**Breaking changes:**
+
+- Drop support for Debian 12, add support for Debian 13 [\#1170](https://github.com/voxpupuli/puppet-jenkins/pull/1170) ([evgeni](https://github.com/evgeni))
+
+**Implemented enhancements:**
+
+- Add support for EL10 [\#1174](https://github.com/voxpupuli/puppet-jenkins/pull/1174) ([evgeni](https://github.com/evgeni))
+- Add support for Ubuntu 26.04 [\#1173](https://github.com/voxpupuli/puppet-jenkins/pull/1173) ([evgeni](https://github.com/evgeni))
+- Update dependency puppetlabs/java to v12 [\#1163](https://github.com/voxpupuli/puppet-jenkins/pull/1163) ([pccibot](https://github.com/pccibot))
+- Update dependency puppet/zypprepo to v6 [\#1162](https://github.com/voxpupuli/puppet-jenkins/pull/1162) ([pccibot](https://github.com/pccibot))
+- Update dependency puppet/archive to v9 [\#1159](https://github.com/voxpupuli/puppet-jenkins/pull/1159) ([pccibot](https://github.com/pccibot))
+- puppetlabs/stdlib: Allow 10.x [\#1158](https://github.com/voxpupuli/puppet-jenkins/pull/1158) ([bastelfreak](https://github.com/bastelfreak))
+- puppet/systemd: Allow 11.x [\#1156](https://github.com/voxpupuli/puppet-jenkins/pull/1156) ([bastelfreak](https://github.com/bastelfreak))
+- Update requirements to allow OpenVox 9 [\#1155](https://github.com/voxpupuli/puppet-jenkins/pull/1155) ([sebastianrakel](https://github.com/sebastianrakel))
+- Redact Jenkins CLI commands [\#1154](https://github.com/voxpupuli/puppet-jenkins/pull/1154) ([yutingx-claire](https://github.com/yutingx-claire))
+- Allow a custom CLI URL [\#1151](https://github.com/voxpupuli/puppet-jenkins/pull/1151) ([pwillworth](https://github.com/pwillworth))
+
+**Fixed bugs:**
+
+- Management of resources via WebSocket CLI fails with Unexpected Request Origin after Jenkins 2.555 security update [\#1150](https://github.com/voxpupuli/puppet-jenkins/issues/1150)
+- set\_slaveagent\_port fails [\#1144](https://github.com/voxpupuli/puppet-jenkins/issues/1144)
+- Also use -http in the CLI provider [\#1175](https://github.com/voxpupuli/puppet-jenkins/pull/1175) ([evgeni](https://github.com/evgeni))
+- add -http option to jenkins cli on localhost [\#1171](https://github.com/voxpupuli/puppet-jenkins/pull/1171) ([evgeni](https://github.com/evgeni))
+- Update repository key to 2026 version [\#1169](https://github.com/voxpupuli/puppet-jenkins/pull/1169) ([evgeni](https://github.com/evgeni))
+- Lower the default for `cli_tries` to 7 [\#1167](https://github.com/voxpupuli/puppet-jenkins/pull/1167) ([bwitt](https://github.com/bwitt))
+
 ## [v7.0.0](https://github.com/voxpupuli/puppet-jenkins/tree/v7.0.0) (2025-10-13)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-jenkins/compare/v6.1.0...v7.0.0)
@@ -249,7 +279,7 @@ These should not affect the functionality of the module.
 - Reference jenkins\_plugins via $facts [\#949](https://github.com/voxpupuli/puppet-jenkins/pull/949) ([ekohl](https://github.com/ekohl))
 - Remove redundant code [\#948](https://github.com/voxpupuli/puppet-jenkins/pull/948) ([ekohl](https://github.com/ekohl))
 - Simplify the fact definition [\#947](https://github.com/voxpupuli/puppet-jenkins/pull/947) ([ekohl](https://github.com/ekohl))
-- Switch to open source UUID generator [\#938](https://github.com/voxpupuli/puppet-jenkins/pull/938) ([aarreedd](https://github.com/aarreedd))
+- Switch to open source UUID generator [\#938](https://github.com/voxpupuli/puppet-jenkins/pull/938) ([th-alanreed](https://github.com/th-alanreed))
 - Update references to rtyler/jenkins [\#935](https://github.com/voxpupuli/puppet-jenkins/pull/935) ([gguillotte](https://github.com/gguillotte))
 - Clean up acceptance spec helper [\#931](https://github.com/voxpupuli/puppet-jenkins/pull/931) ([ekohl](https://github.com/ekohl))
 - Rely more on stdlib and apt modules [\#917](https://github.com/voxpupuli/puppet-jenkins/pull/917) ([ekohl](https://github.com/ekohl))
