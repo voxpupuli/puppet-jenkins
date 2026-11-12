@@ -178,6 +178,7 @@ class Puppet::X::Jenkins::Provider::Cli < Puppet::Provider
     base_cmd = cli_pre_cmd + [
       command(:java),
       '-jar', cli_jar,
+      '-http',
       '-s', url,
       '-logger', 'WARNING',
     ]
