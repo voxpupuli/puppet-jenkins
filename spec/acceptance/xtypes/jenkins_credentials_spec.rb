@@ -278,7 +278,6 @@ describe 'jenkins_credentials' do
               'jquery3-api',
               'jsch',
               'json-api',
-              'junit',
               'mailer',
               'matrix-project',
               'mina-sshd-api-common',
@@ -302,6 +301,9 @@ describe 'jenkins_credentials' do
               'workflow-step-api',
               'workflow-support',
             ]: }
+            jenkins::plugin { 'junit':
+              version => '1458.1460.vd53b_087eeb_2c'
+            }
 
             jenkins_credentials { '7e86e9fb-a8af-480f-b596-7191dc02bf38':
               ensure      => 'present',
@@ -354,7 +356,6 @@ describe 'jenkins_credentials' do
             'joda-time-api',
             'jquery3-api',
             'json-api',
-            'junit',
             'mailer',
             'plain-credentials',
             'plugin-util-api',
@@ -377,6 +378,9 @@ describe 'jenkins_credentials' do
             'workflow-step-api',
             'workflow-support',
           ]: }
+          jenkins::plugin { 'junit':
+            version => '1458.1460.vd53b_087eeb_2c'
+          }
 
           jenkins_credentials { '562fa23d-a441-4cab-997f-58df6e245813':
             ensure      => 'present',
