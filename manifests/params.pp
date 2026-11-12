@@ -10,6 +10,7 @@ class jenkins::params {
     'commons-lang3-api', # required by credentials plugin
     'commons-text-api', # required by credentials plugin
     'credentials', # required by puppet_helper.groovy
+    'ionicons-api', # required by credentials plugin
     'instance-identity', # implied by structs
     'javax-activation-api', # implied by all plugin
     'javax-mail-api', # implied by all plugins
