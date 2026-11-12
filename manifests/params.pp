@@ -3,7 +3,7 @@
 class jenkins::params {
   $swarm_version = '2.2'
   $config_hash_defaults = {
-    'JAVA_OPTS' => { value => '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.cli.CLIAction.ACCEPT_URL_FROM_REQUEST=true' },
+    'JAVA_OPTS' => { value => '-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false' },
   }
   $default_plugins = [
     'bouncycastle-api', # required by instance-identity
