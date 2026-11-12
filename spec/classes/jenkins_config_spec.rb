@@ -16,7 +16,7 @@ describe 'jenkins' do
             is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf')
               .with_content <<~CONFIG
                 [Service]
-                Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.cli.CLIAction.ACCEPT_URL_FROM_REQUEST=true"
+                Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
               CONFIG
           end
         end
@@ -28,7 +28,7 @@ describe 'jenkins' do
             is_expected.to contain_file('/etc/systemd/system/jenkins.service.d/puppet-overrides.conf')
               .with_content <<~CONFIG
                 [Service]
-                Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dhudson.cli.CLIAction.ACCEPT_URL_FROM_REQUEST=true"
+                Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
                 Environment="AJP_PORT=1234"
                 WorkingDirectory=/example/path
               CONFIG
