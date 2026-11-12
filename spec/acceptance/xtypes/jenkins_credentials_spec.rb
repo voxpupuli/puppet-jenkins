@@ -273,7 +273,7 @@ describe 'jenkins_credentials' do
               'jakarta-mail-api',
               'jakarta-xml-bind-api',
               'jaxb',
-              'jersey2-api',
+              'jersey3-api',
               'joda-time-api',
               'jquery3-api',
               'jsch',
