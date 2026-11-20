@@ -73,6 +73,14 @@ describe 'jenkins::slave' do
           end
         end
 
+        describe 'with env_vars' do
+          let(:params) { { env_vars: { "PATH" => "/more/path:$PATH", "MYVAR" => "MYVALUE" } } }
+
+          it do
+            is_expected.to contain_file(slave_runtime_file).with_content(%r{PATH=/more/path:\$PATH}).with_content(%r{MYVAR=MYVALUE})
+          end
+        end
+
         describe 'with a UI user/password' do
           let(:user) { '"frank"' }
           let(:password) { "abignale's" }

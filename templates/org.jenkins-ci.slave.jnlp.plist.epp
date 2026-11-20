@@ -70,6 +70,12 @@
     <string><%= $location -%></string>
     <% } -%>
     <% } -%>
+    <% if $jenkins::slave::env_vars { -%>
+    <% $jenkins::slave::env_vars.each |$env_name, $env_value| { -%>
+    <string>-env</string>
+    <string><%= $env_name %>=<%= $env_value %></string>
+    <% } -%>
+    <% } -%>
     <% unless empty($jenkins::slave::swarm_client_args) { -%>
     <string><%= join($jenkins::slave::swarm_client_args, ' ') -%></string>
     <% } -%>
