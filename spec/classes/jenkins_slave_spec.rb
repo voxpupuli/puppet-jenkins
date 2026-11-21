@@ -73,11 +73,22 @@ describe 'jenkins::slave' do
           end
         end
 
-        describe 'with env_vars' do
-          let(:params) { { env_vars: { 'PATH' => '/more/path:$PATH', 'MYVAR' => 'MYVALUE' } } }
+	case os_facts[:os]['kernel']
+        when 'Linux'
+          describe 'with env_vars on Linux' do
+            let(:params) { { env_vars: { 'PATH' => '/more/path:$PATH', 'MYVAR' => 'MYVALUE' } } }
 
-          it do
-            is_expected.to contain_file(slave_runtime_file).with_content(%r{PATH=/more/path:\$PATH}).with_content(%r{MYVAR=MYVALUE})
+            it do
+              is_expected.to contain_file(slave_startup_script).with_content(%r{PATH=/more/path:\$PATH}).with_content(%r{MYVAR=MYVALUE})
+            end
+          end
+	when 'Darwin'
+          describe 'with env_vars on Darwin' do
+            let(:params) { { env_vars: { 'PATH' => '/more/path:$PATH', 'MYVAR' => 'MYVALUE' } } }
+
+            it do
+              is_expected.to contain_file(slave_runtime_file).with_content(%r{PATH=/more/path:\$PATH}).with_content(%r{MYVAR=MYVALUE})
+            end
           end
         end
 
@@ -246,6 +257,7 @@ describe 'jenkins::slave' do
         describe 'Debian' do
           let(:slave_runtime_file) { '/etc/default/jenkins-slave' }
           let(:slave_service_file) { '/etc/systemd/system/jenkins-slave.service' }
+          let(:slave_startup_script) { '/home/jenkins-slave/jenkins-slave-run' }
 
           it_behaves_like 'a jenkins::slave catalog'
 
