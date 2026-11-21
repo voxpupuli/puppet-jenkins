@@ -826,6 +826,7 @@ The following parameters are available in the `jenkins::slave` class:
 * [`ui_user`](#-jenkins--slave--ui_user)
 * [`ui_pass`](#-jenkins--slave--ui_pass)
 * [`tool_locations`](#-jenkins--slave--tool_locations)
+* [`env_vars`](#-jenkins--slave--env_vars)
 * [`source`](#-jenkins--slave--source)
 * [`proxy_server`](#-jenkins--slave--proxy_server)
 * [`tunnel`](#-jenkins--slave--tunnel)
@@ -900,6 +901,14 @@ Default value: `undef`
 ##### <a name="-jenkins--slave--tool_locations"></a>`tool_locations`
 
 Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
+##### <a name="-jenkins--slave--env_vars"></a>`env_vars`
+
+Data type: `Optional[Hash[String, String]]`
 
 
 
