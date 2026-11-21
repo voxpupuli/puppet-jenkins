@@ -73,7 +73,7 @@ describe 'jenkins::slave' do
           end
         end
 
-	case os_facts[:os]['kernel']
+        case os_facts[:os]['kernel']
         when 'Linux'
           describe 'with env_vars on Linux' do
             let(:params) { { env_vars: { 'PATH' => '/more/path:$PATH', 'MYVAR' => 'MYVALUE' } } }
@@ -82,7 +82,7 @@ describe 'jenkins::slave' do
               is_expected.to contain_file(slave_startup_script).with_content(%r{PATH=/more/path:\$PATH}).with_content(%r{MYVAR=MYVALUE})
             end
           end
-	when 'Darwin'
+        when 'Darwin'
           describe 'with env_vars on Darwin' do
             let(:params) { { env_vars: { 'PATH' => '/more/path:$PATH', 'MYVAR' => 'MYVALUE' } } }
 
