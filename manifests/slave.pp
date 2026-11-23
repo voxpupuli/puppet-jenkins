@@ -67,6 +67,9 @@
 #   Not required.  Single string of whitespace-separated list of tool locations to be defined on this slave. A tool location is specified
 #   as 'toolName:location'.
 #
+# [*env_vars*]
+#   Not required.  Hash of Environment Variables to be defined on this slave. Must be a hash with some number of string keys and string values
+#
 # [*description*]
 #   Not required.  Description which will appear on the jenkins master UI.
 #
@@ -114,35 +117,36 @@
 #
 # Copyright 2013 Matthew Barr , but can be used for anything by anyone..
 class jenkins::slave (
-  Optional[String] $slave_name            = undef,
-  Optional[String] $description           = undef,
-  Optional[String] $masterurl             = undef,
-  Optional[String] $autodiscoveryaddress  = undef,
-  Optional[String] $ui_user               = undef,
-  Optional[String] $ui_pass               = undef,
-  Optional[String] $tool_locations        = undef,
-  Optional[String] $source                = undef,
-  Optional[String] $proxy_server          = undef,
-  Optional[Jenkins::Tunnel] $tunnel       = undef,
-  String $version                         = $jenkins::params::swarm_version,
-  Integer $executors                      = 2,
-  Boolean $manage_slave_user              = true,
-  String $slave_user                      = 'jenkins-slave',
-  Optional[String] $slave_groups          = undef,
-  Optional[Integer] $slave_uid            = undef,
-  Stdlib::Absolutepath $slave_home        = '/home/jenkins-slave',
-  Enum['normal', 'exclusive'] $slave_mode = 'normal',
-  Boolean $disable_ssl_verification       = false,
-  Boolean $disable_clients_unique_id      = false,
-  Array[String[1]] $labels                = [],
-  Any $install_java                       = true,
-  Boolean $manage_client_jar              = true,
-  Enum['running', 'stopped'] $ensure      = 'running',
-  Boolean $enable                         = true,
-  Array[String[1]] $java_args             = [],
-  Array[String[1]] $swarm_client_args     = [],
-  Boolean $delete_existing_clients        = false,
-  Any $java_cmd                           = '/usr/bin/java',
+  Optional[String] $slave_name             = undef,
+  Optional[String] $description            = undef,
+  Optional[String] $masterurl              = undef,
+  Optional[String] $autodiscoveryaddress   = undef,
+  Optional[String] $ui_user                = undef,
+  Optional[String] $ui_pass                = undef,
+  Optional[String] $tool_locations         = undef,
+  Optional[Hash[String, String]] $env_vars = undef,
+  Optional[String] $source                 = undef,
+  Optional[String] $proxy_server           = undef,
+  Optional[Jenkins::Tunnel] $tunnel        = undef,
+  String $version                          = $jenkins::params::swarm_version,
+  Integer $executors                       = 2,
+  Boolean $manage_slave_user               = true,
+  String $slave_user                       = 'jenkins-slave',
+  Optional[String] $slave_groups           = undef,
+  Optional[Integer] $slave_uid             = undef,
+  Stdlib::Absolutepath $slave_home         = '/home/jenkins-slave',
+  Enum['normal', 'exclusive'] $slave_mode  = 'normal',
+  Boolean $disable_ssl_verification        = false,
+  Boolean $disable_clients_unique_id       = false,
+  Array[String[1]] $labels                 = [],
+  Any $install_java                        = true,
+  Boolean $manage_client_jar               = true,
+  Enum['running', 'stopped'] $ensure       = 'running',
+  Boolean $enable                          = true,
+  Array[String[1]] $java_args              = [],
+  Array[String[1]] $swarm_client_args      = [],
+  Boolean $delete_existing_clients         = false,
+  Any $java_cmd                            = '/usr/bin/java',
 ) inherits jenkins::params {
   if versioncmp($version, '3.0') < 0 {
     $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
