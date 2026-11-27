@@ -13,8 +13,12 @@ define jenkins::job::absent (
     fail('Management of Jenkins jobs requires \$jenkins::service_ensure to be set to \'running\'')
   }
 
-  $tmp_config_path  = "/tmp/${jobname}-config.xml"
-  $job_dir          = "${jenkins::job_dir}/${jobname}"
+  # in case of a cloudbees-folder element replace all '/' with underscore so only a file without subdirectory is deleted
+  $replaced_jobname = regsubst($jobname, /\//, '_', 'G')
+  $tmp_config_path  = "/tmp/${replaced_jobname}-config.xml"
+  # in case of a cloudbees-folder element inserting sub-directory '/jobs' for every folder level so the existing config file is deleted
+  $job_subdir_name  = regsubst($jobname, /\//, '/jobs/', 'G')
+  $job_dir          = "${jenkins::job_dir}/${job_subdir_name}"
   $config_path      = "${job_dir}/config.xml"
 
   # Temp file to use as stdin for Jenkins CLI executable
